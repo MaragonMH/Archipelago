@@ -160,3 +160,15 @@ int _itemLoopContinue(int* ptr, int enemies, int boxes, int idx){
 	if(idx < num) return 1;
 	return 0;
 }
+
+extern int _bladeTerminalScenarioFlagPtr, _shopTerminalScenarioFlagPtr;
+void _prepareBladeTerminal(){
+	if(_bladeTerminalScenarioFlagPtr == 3001){
+		if(_hasPreciousItem(24 + 5 - 1)) _bladeTerminalScenarioFlagPtr = 0;
+		else _bladeTerminalScenarioFlagPtr = 0x7fffff;
+	}
+	if(_shopTerminalScenarioFlagPtr == 2001){
+		if(_hasPreciousItem(24 + 5 - 1)) _shopTerminalScenarioFlagPtr = 0;
+		else _shopTerminalScenarioFlagPtr = 0x7fffff;
+	}
+}

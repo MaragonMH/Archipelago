@@ -353,6 +353,61 @@ _keyChanges_L33:
         lwz r31,-4(r11)
         mr r1,r11
         blr
+_prepareBladeTerminal:
+        stwu r1,-16(r1)
+        mflr r0
+        stw r0,20(r1)
+        stw r31,12(r1)
+        mr r31,r1
+        lis r9,_bladeTerminalScenarioFlagPtr@ha
+        lwz r9,_bladeTerminalScenarioFlagPtr@l(r9)
+        cmpwi cr0,r9,3001
+        bne cr0,_keyChanges_L35
+        li r3,28
+        bl _hasPreciousItem
+        mr r9,r3
+        addic r10,r9,-1
+        subfe r9,r10,r9
+        cmpwi cr0,r9,0
+        beq cr0,_keyChanges_L36
+        lis r9,_bladeTerminalScenarioFlagPtr@ha
+        li r10,0
+        stw r10,_bladeTerminalScenarioFlagPtr@l(r9)
+        b _keyChanges_L35
+_keyChanges_L36:
+        lis r9,_bladeTerminalScenarioFlagPtr@ha
+        lis r10,0x7f
+        ori r10,r10,0xffff
+        stw r10,_bladeTerminalScenarioFlagPtr@l(r9)
+_keyChanges_L35:
+        lis r9,_shopTerminalScenarioFlagPtr@ha
+        lwz r9,_shopTerminalScenarioFlagPtr@l(r9)
+        cmpwi cr0,r9,2001
+        bne cr0,_keyChanges_L39
+        li r3,28
+        bl _hasPreciousItem
+        mr r9,r3
+        addic r10,r9,-1
+        subfe r9,r10,r9
+        cmpwi cr0,r9,0
+        beq cr0,_keyChanges_L38
+        lis r9,_shopTerminalScenarioFlagPtr@ha
+        li r10,0
+        stw r10,_shopTerminalScenarioFlagPtr@l(r9)
+        b _keyChanges_L39
+_keyChanges_L38:
+        lis r9,_shopTerminalScenarioFlagPtr@ha
+        lis r10,0x7f
+        ori r10,r10,0xffff
+        stw r10,_shopTerminalScenarioFlagPtr@l(r9)
+_keyChanges_L39:
+        nop
+        addi r11,r31,16
+        lwz r0,4(r11)
+        mtlr r0
+        lwz r31,-4(r11)
+        mr r1,r11
+        blr
 
 # VERSION SPECIFIC ###############################################################
 # assumes that boxNum in r22, dropNum in r20, idx in r18, ptr in r31, offset in r23
@@ -411,6 +466,12 @@ _itemLoopEnd = 0x02b076e8
 
 #disable affinity quest arts reward
 0x029c7dc0 = li r3,0
+
+# reconfigure BladeTerminal Locks
+_bladeTerminalScenarioFlagPtr = 0x20343604
+_shopTerminalScenarioFlagPtr = 0x20343634
+0x02814cf4 = b _prepareBladeTerminal # in loadEnd::ScriptManager
+
 
 # mandatory disable shops
 0x02a32770 = nop # skell frame
