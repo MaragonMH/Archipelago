@@ -7,7 +7,6 @@ from .Locations import XenobladeXLocation
 xenobladeXRegions: dict[str, set[str]] = {
     "Menu": set(),
     "Chapter 1": {
-        "Final Boss",
         "Irina 2nd Heart-to-Heart (5, 0, -5)",
         "L 3rd Heart-to-Heart (5, 1, -6)",
         "Murderess 5th Heart-to-Heart (5, 2, -7)",
@@ -1054,7 +1053,7 @@ xenobladeXRegions: dict[str, set[str]] = {
     "Chapter 10": set(),
     "Chapter 11": set(),
     "Chapter 12": set(),
-    "Epilogue": {"Final Boss"},
+    "Epilogue": set(),
 }
 
 

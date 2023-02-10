@@ -1,8 +1,9 @@
 from __future__ import annotations
 from functools import partial
 from ..generic.Rules import add_rule
+from .Locations import create_location_event
 from .Regions import connect_regions
-from .Items import has_items, get_generated_item_by_name
+from .Items import has_items, create_item_event
 
 # Requirements to reach this region
 # Use dict to specify the quantity you need
@@ -37,13 +38,16 @@ xenobladeXRules = {
 
 def set_rules(world, player):
     """Setting all the rules for region connections and region->item connections"""
-    # supposed to use create_event, but that crashes with this version
-    # victoryEvent = create_event("Victory")
-    victory_event = get_generated_item_by_name("Victory")
-    victory_location = world.get_location("Final Boss", player)
-    victory_location.place_locked_item(victory_event)
-    world.completion_condition[player] = lambda state: state.has(
-        "Victory", player)
+
+    # Testin code here, because it does not work
+    # victory_item= get_generated_item_by_name("Victory")
+    # victory_item = create_item_event(world, "Victory", player)
+    # world.get_location("Final Boss", self.player).place_locked_item(victory_item)
+    # victory_item_event = create_item_event(world, "VICTORY", player)
+    # final_boss_location_event = create_location_event(world, "Epilogue", "FINAL BOSS", player)
+    # final_boss_location_event.place_locked_item(victory_item_event)
+    # world.completion_condition[player] = lambda state: state.has("VICTORY", player) or state.has("Victory", player)
+    world.completion_condition[player] = lambda state: state.has("Skell License", player) or state.has("Skell Flight Module", player)
 
     last_chapter = "Menu"
     for chapter, requirements in xenobladeXRegionRules.items():

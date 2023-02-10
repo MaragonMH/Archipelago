@@ -4,10 +4,15 @@ from BaseClasses import Location
 class XenobladeXLocation(Location):
     game: str = "XenobladeX"
 
+    # override constructor to automatically mark event locations as such
+    def __init__(self, player: int, name = "", code = None, parent = None):
+        super(XenobladeXLocation, self).__init__(player, name, code, parent)
+        if code is None:
+            self.event = True
+            self.locked = True
+
+
 xenobladeXLocations: dict[str, dict[str, set[str] | dict[str, int]]] = {
-    "Victory": { # 1
-        "Final Boss": {}
-    },
     "Segment": { # 693
         "Irina 2nd Heart-to-Heart (5, 0, -5)": {},
         "L 3rd Heart-to-Heart (5, 1, -6)": {},
@@ -1071,3 +1076,10 @@ xenobladeXLocationGroups = {
     "FN Probe": {},
     "Treasure": {},
 }
+
+def create_location_event(world, region_name, location_name, player):
+    """Create a location event"""
+    region = world.get_region(region_name, player)
+    location_event = XenobladeXLocation(player, location_name, None, region)
+    region.locations += [location_event]
+    return location_event

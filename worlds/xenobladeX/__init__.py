@@ -1,9 +1,9 @@
 from __future__ import annotations
 from BaseClasses import Tutorial
-from .Items import xenobladeXItems, create_items, create_item, create_data
+from .Items import xenobladeXItems, create_items, create_item, create_data, create_item_event
 from .Rules import set_rules
 from .Regions import create_regions
-from .Locations import xenobladeXLocations
+from .Locations import xenobladeXLocations, create_location_event
 from .Options import xenobladeX_options
 from ..AutoWorld import World, WebWorld
 

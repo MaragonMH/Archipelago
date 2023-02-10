@@ -6,6 +6,11 @@ class XenobladeXItem(Item):
     """A generated item"""
     game: str = "XenobladeX"
 
+    def __init__(self, name, classification, code = None, player = None):
+        super(XenobladeXItem, self).__init__(name, classification, code, player)
+        if code == None:
+            self.event = True
+            self.locked = True
 
 # Specifies the items you can receive
 # The first layer is for the object group
@@ -22,7 +27,6 @@ xenobladeXItems: dict[str, dict[str, set[str] | dict[str, ItemClassification | i
         "Shop Terminal": {},
         "Ls Shop": {},
         "AM Terminal": {},
-        "Filler": {"count": 1},
     },
     "Field Skill": {
         "Mechanical": {"count": 4, "class": ItemClassification.progression},
@@ -198,50 +202,50 @@ xenobladeXItems: dict[str, dict[str, set[str] | dict[str, ItemClassification | i
         "M3x0ME Katar": {},
         "R3x0ME Cracker-PD": {},
     },
-    "Skell Superweapon": {
-        "SRM-USP140SA Hexad-Partican": {},
-        "SRM-USP160SA Hexad-Partican": {},
-        "SRM-USP180SA Hexad-Partican": {},
-        "SRM-USP240SA Zenith-Cannon": {},
-        "SRM-USP260SA Zenith-Cannon": {},
-        "SRM-USP280SA Zenith-Cannon": {},
-        "SRM-USP340GG Zweihand-Q": {},
-        "SRM-USP360GG Zweihand-Q": {},
-        "SRM-USP380GG Zweihand-Q": {},
-        "SRM-USP440ME Trident-Anchor": {},
-        "SRM-USP460ME Trident-Anchor": {},
-        "SRM-USP480ME Trident-Anchor": {},
-        "SSM-USP540GG Electric-Flood": {},
-        "SSM-USP560GG Electric-Flood": {},
-        "SSM-USP580GG Electric-Flood": {},
-        "SSM-USP640ME Voltaic-Tusk": {},
-        "SSM-USP660ME Voltaic-Tusk": {},
-        "SSM-USP680ME Voltaic-Tusk": {},
-        "SRM-USP740SA Antimatter-R": {},
-        "SRM-USP760SA Antimatter-R": {},
-        "SRM-USP780SA Antimatter-R": {},
-        "SRM-USP840SA G-Piledriver": {},
-        "SRM-USP860SA G-Piledriver": {},
-        "SRM-USP880SA G-Piledriver": {},
-        "SRM-USP940GG Dragoon-Lance": {},
-        "SRM-USP960GG Dragoon-Lance": {},
-        "SRM-USP980GG Dragoon-Lance": {},
-        "SRM-USP1040GG Drone-Storm": {},
-        "SRM-USP1060GG Drone-Storm": {},
-        "SRM-USP1080GG Drone-Storm": {},
-        "SSM-USP1140SA Deus-Crusher": {},
-        "SSM-USP1160SA Deus-Crusher": {},
-        "SSM-USP1180SA Deus-Crusher": {},
-        "SSM-USP1240ME Barrage-Cloak": {},
-        "SSM-USP1260ME Barrage-Cloak": {},
-        "SSM-USP1280ME Barrage-Cloak": {},
-        "SRM-USP1340SA Detonation-F": {},
-        "SRM-USP1360SA Detonation-F": {},
-        "SRM-USP1380SA Detonation-F": {},
-        "SSM-USP1440SA Megaflame-B": {},
-        "SSM-USP1460SA Megaflame-B": {},
-        "SSM-USP1480SA Megaflame-B": {},
-    },
+    # "Skell Superweapon": {
+    #     "SRM-USP140SA Hexad-Partican": {},
+    #     "SRM-USP160SA Hexad-Partican": {},
+    #     "SRM-USP180SA Hexad-Partican": {},
+    #     "SRM-USP240SA Zenith-Cannon": {},
+    #     "SRM-USP260SA Zenith-Cannon": {},
+    #     "SRM-USP280SA Zenith-Cannon": {},
+    #     "SRM-USP340GG Zweihand-Q": {},
+    #     "SRM-USP360GG Zweihand-Q": {},
+    #     "SRM-USP380GG Zweihand-Q": {},
+    #     "SRM-USP440ME Trident-Anchor": {},
+    #     "SRM-USP460ME Trident-Anchor": {},
+    #     "SRM-USP480ME Trident-Anchor": {},
+    #     "SSM-USP540GG Electric-Flood": {},
+    #     "SSM-USP560GG Electric-Flood": {},
+    #     "SSM-USP580GG Electric-Flood": {},
+    #     "SSM-USP640ME Voltaic-Tusk": {},
+    #     "SSM-USP660ME Voltaic-Tusk": {},
+    #     "SSM-USP680ME Voltaic-Tusk": {},
+    #     "SRM-USP740SA Antimatter-R": {},
+    #     "SRM-USP760SA Antimatter-R": {},
+    #     "SRM-USP780SA Antimatter-R": {},
+    #     "SRM-USP840SA G-Piledriver": {},
+    #     "SRM-USP860SA G-Piledriver": {},
+    #     "SRM-USP880SA G-Piledriver": {},
+    #     "SRM-USP940GG Dragoon-Lance": {},
+    #     "SRM-USP960GG Dragoon-Lance": {},
+    #     "SRM-USP980GG Dragoon-Lance": {},
+    #     "SRM-USP1040GG Drone-Storm": {},
+    #     "SRM-USP1060GG Drone-Storm": {},
+    #     "SRM-USP1080GG Drone-Storm": {},
+    #     "SSM-USP1140SA Deus-Crusher": {},
+    #     "SSM-USP1160SA Deus-Crusher": {},
+    #     "SSM-USP1180SA Deus-Crusher": {},
+    #     "SSM-USP1240ME Barrage-Cloak": {},
+    #     "SSM-USP1260ME Barrage-Cloak": {},
+    #     "SSM-USP1280ME Barrage-Cloak": {},
+    #     "SRM-USP1340SA Detonation-F": {},
+    #     "SRM-USP1360SA Detonation-F": {},
+    #     "SRM-USP1380SA Detonation-F": {},
+    #     "SSM-USP1440SA Megaflame-B": {},
+    #     "SSM-USP1460SA Megaflame-B": {},
+    #     "SSM-USP1480SA Megaflame-B": {},
+    # },
     "Augment": {
         "Appendage Crusher": {},
         "Brimstone Rain Screen": {},
@@ -895,11 +899,12 @@ xenobladeXItems: dict[str, dict[str, set[str] | dict[str, ItemClassification | i
 
 xenobladeXGeneratedItems: dict[str, XenobladeXItem] = {}
 
-def _create_data(result, item_name, creation_id):
-    result[item_name] = creation_id
-    return creation_id + 1
 
-def create_data(data: dict[str, dict[str, set[str] | dict[str, ItemClassification | int]]], creation_id: int):
+def _create_data(result, item_name, base_id):
+    result[item_name] = len(xenobladeXGeneratedItems) + base_id
+
+
+def create_data(data: dict[str, dict[str, set[str] | dict[str, ItemClassification | int]]], base_id: int):
     result = {}
     for group in data.values():
         for name, item in group.items():
@@ -908,43 +913,47 @@ def create_data(data: dict[str, dict[str, set[str] | dict[str, ItemClassificatio
                 count = item["count"]
                 for idx in range(count):
                     appendix = " #" + str(idx)
-                    creation_id = _create_data(result, name + appendix, creation_id)
+                    _create_data(result, name + appendix, base_id)
             else:
-                creation_id = _create_data(result, name, creation_id)
+                _create_data(result, name, base_id)
     return result
 
-def _create_item(world, item_name: str, item_classification, item_id, player):
+
+def _create_item(world, item_name: str, item_classification, base_id, player):
     """Create one item"""
-    generated_item = XenobladeXItem(
-        item_name, item_classification, item_id, player)
+    generated_item = XenobladeXItem(item_name, item_classification, len(xenobladeXGeneratedItems) + base_id, player)
     world.itempool += [generated_item]
     xenobladeXGeneratedItems[item_name] = generated_item
-    return item_id + 1
+    return generated_item
 
 
-def create_items(world, player, item_id):
+def create_items(world, player, base_id):
     """Create all items"""
     for item_group in xenobladeXItems.values():
         for item_name, item in item_group.items():
             item_classification = item["class"] if isinstance(
-                item, dict) and "class" in item else ItemClassification.useful
+                item, dict) and "class" in item else ItemClassification.filler
             # Multiple items of the same kind
             if isinstance(item, dict) and "count" in item:
                 count = item["count"]
                 for idx in range(count):
                     appendix = " #" + str(idx)
-                    item_id = _create_item(world, item_name + appendix,
-                                           item_classification, item_id, player)
+                    _create_item(world, item_name + appendix, item_classification, base_id, player)
             # Only one item of a kind
             else:
-                item_id = _create_item(world, item_name,
-                                       item_classification, item_id, player)
+                _create_item(world, item_name, item_classification, base_id, player)
 
 
 def create_item(world, item_name, player, base_id):
     """Creates another item only used from Ap"""
-    item_classification = ItemClassification.useful
-    _create_item(world, item_name, item_classification, len(xenobladeXGeneratedItems) + base_id, player)
+    item_classification = ItemClassification.filler
+    _create_item(world, item_name, item_classification, base_id, player)
+
+
+def create_item_event(world, name: str, player):
+    """Create an event, which get attached to the items"""
+    event = XenobladeXItem(name, ItemClassification.useful, None, player)
+    return event
 
 
 def _get_item_count_by_name(name):
@@ -982,8 +991,3 @@ def get_generated_item_by_name(name: str):
     if name in xenobladeXGeneratedItems:
         return xenobladeXGeneratedItems[name]
     raise Exception(f"Generated item :{name}: was not found")
-
-# Supposed to work, but currently it does not, so the replacement above is used
-# def create_event(player, name: str):
-#     """Create an event, which get attached to the items"""
-#     return XenobladeXItem(name, True, None, player)
