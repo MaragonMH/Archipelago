@@ -14,6 +14,8 @@ class Loc(NamedTuple):
     type: int
     id: int
     regions: list[str]
+    def get_location(self):
+        return f"{self.prefix}: {self.name}"
 
 
 class XenobladeXLocation(Location):
@@ -40,7 +42,7 @@ def create_locations(world:MultiWorld, player:int):
         region_name = "+".join(sorted(location.regions))
         init_region(world, player, region_name)
         add_region_location(world, player, region_name, XenobladeXLocation(player, 
-            f"{location.prefix}: {location.name}", i, world.get_region(region_name, player)))
+            location.get_location(), i, world.get_region(region_name, player)))
 
 def create_location_event(world:MultiWorld, region_name:str, location_name:str, player:int):
     """Create a location event"""

@@ -33,8 +33,8 @@ class XenobladeXWorld(World):
 
     option_definitions = xenobladeX_options
 
-    item_name_to_id = { item.prefix + item.name: id for id, item in enumerate(xenobladeXItems, base_id)}
-    location_name_to_id = { location.prefix + location.name: id for id, location in enumerate(xenobladeXLocations, base_id)}
+    item_name_to_id = { item.get_item(): id for id, item in enumerate(xenobladeXItems, base_id)}
+    location_name_to_id = { location.get_location(): id for id, location in enumerate(xenobladeXLocations, base_id)}
 
     def create_regions(self):
         create_locations(self.multiworld, self.player)
@@ -55,4 +55,4 @@ class XenobladeXWorld(World):
         pass
 
     def fill_slot_data(self) -> Dict[str, object]:
-        return generate_slot_data(self.base_id)
+        return generate_slot_data(self.base_id, self.multiworld, self.player)

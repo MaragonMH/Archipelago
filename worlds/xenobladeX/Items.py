@@ -23,6 +23,8 @@ class Itm(NamedTuple):
     type: int
     id: int
     progression: ItemClassification = ItemClassification.filler
+    def get_item(self):
+        return f"{self.prefix}: {self.name}"
 
 
 class XenobladeXItem(Item):
@@ -71,7 +73,7 @@ xenobladeXItems = [
 def create_items(world: MultiWorld, player, base_id):
     """Create all items"""
     for abs_id, item in enumerate(xenobladeXItems, base_id):
-        world.itempool += [XenobladeXItem(f"{item.prefix}: {item.name}", item.progression, abs_id, player)]
+        world.itempool += [XenobladeXItem(item.get_item(), item.progression, abs_id, player)]
 
 
 def create_item(world: MultiWorld, item_name, player, abs_id) -> Item:

@@ -147,15 +147,14 @@ class XenobladeXContext(CommonContext):
     http_server = XenobladeXHttpServer(('localhost', 45872), XenobladeXHTTPRequestHandler)
     connected = False
     death_link_pending = False
-    settings_file_path:str = "Settings.xml"
 
     # get from slot data
     base_id = 0
+    options:Dict[str,str] = {}
     archipelago_item_to_name:Dict[int, str] = {}
     archipelago_item_to_game_item:list[GameItem] = []
     game_type_item_to_archipelago_item:Dict[int, Dict[int, int]] = {}
     game_type_location_to_archipelago_location:Dict[int, Dict[int,int]] = {}
-    options:Dict[str,str] = {}
     
 
     async def server_auth(self, password_requested: bool = False):
@@ -235,18 +234,29 @@ class XenobladeXContext(CommonContext):
 
     def set_cemu_graphic_packs(self):
         try:
-            file_path = Utils.local_path(self.settings_file_path)
+            cemu_path = Utils.get_options()["xenobladeX_options"]["cemu_path"]
+            settings_path = cemu_path + "Settings.xml"
+            file_path = Utils.local_path(settings_path)
             with open(file_path, "r") as file :
                 filedata = file.read()
 
             # Cleanup
-            for pack in self.options.keys():
-                filedata = re.sub(pack, "", filedata, flags=re.M)
-            # Addition
-            pack_options:str = "\n".join([option for option in self.options.values()])
-            filedata = re.sub(rf'(<GraphicPack>\n)', f"$1{pack_options}", filedata, flags=re.M )
+            for pack_name in {pack.rsplit("/", 1)[0] for pack in self.options}:
+                pack_regex = rf'<Entry filename="graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/{pack_name}/rules.txt"(/>\n|>.*?</Entry>\n)'
+                filedata = re.sub(pack_regex, "", filedata, flags=re.DOTALL)
 
-            with open(file_path, "w") as file:
+            cemu_packs = {pack.rsplit("/", 1)[0] : {pack.rsplit("/", 1)[1]: value} for pack, value in self.options.items() if value != "off"}
+            cemu_packs["Archipelago"] = {"Active preset": ""}
+            # Addition
+            for pack_name, categories in cemu_packs.items():
+                content = "".join([f'<Preset>\n{f"<category>{pack_category}</category>" if pack_category != "Active preset" else ""}<preset>{category_value}</preset>\n</Preset>\n' 
+                    for pack_category, category_value in categories.items()])
+                pack_content = (f'<Entry filename="graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/'
+                    f'{pack_name}/rules.txt">\n{content}</Entry>\n\n')
+                filedata = re.sub(rf'</GraphicPack>', f"{pack_content}</GraphicPack>", filedata)
+                filedata = re.sub(rf'<GraphicPack/>', f"<GraphicPack>\n{pack_content}</GraphicPack>", filedata)
+
+            with open(settings_path, "w") as file:
                 file.write(filedata)
         except FileNotFoundError:
             logger.error(CEMU_SETTINGS_NOT_FOUND)

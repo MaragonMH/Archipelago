@@ -52,7 +52,7 @@ def set_rules(world: MultiWorld, player: int):
     final_boss_location.access_rule = lambda state: True
     final_boss_location.place_locked_item(victory_item)
     finish: Callable[[CollectionState], bool] = lambda state: state.has("Victory", player)
-    world.completion_condition[player] = finish
+    # world.completion_condition[player] = finish
 
     for region in world.regions:
         requirements:list[Req] = []

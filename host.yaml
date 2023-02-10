@@ -139,6 +139,9 @@ pokemon_rb_options:
   # True for operating system default program
   # Alternatively, a path to a program to open the .gb file with
   rom_start: true
+xenobladeX_options:
+  cemu_path: "C:/Software/Cemu/"
+  cemu_archipelago_rel_path: "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/Archipelago/"
 zillion_options:
   # File name of the Zillion US rom
   rom_file: "Zillion (UE) [!].sms"
