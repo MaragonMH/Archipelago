@@ -1,17 +1,21 @@
-classes_data = [ "Drifter", #https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html
-"Striker",
-"Samurai Gunner",
-"Duelist",
-"Shield Trooper",
-"Bastion Warrior",
-"Commando",
-"Winged Viper",
-"Full Metal Jaguar",
-"Partisan Eagle",
-"Astral Crusader",
-"Enforcer",
-"Psycorruptor",
-"Mastermind",
-"Blast Fencer",
-"Galactic Knight",
+from ..dataType import Data
+
+#https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html
+classes_data:list[Data] = [ 
+Data("Drifter"),
+Data("Striker"),
+Data("Samurai Gunner"),
+Data("Duelist"),
+Data("Shield Trooper"),
+Data("Bastion Warrior"),
+Data("Commando"),
+Data("Winged Viper"),
+Data("Full Metal Jaguar"),
+Data("Partisan Eagle"),
+Data("Astral Crusader"),
+Data("Enforcer"),
+Data("Psycorruptor"),
+Data("Mastermind"),
+Data("Blast Fencer"),
+Data("Galactic Knight"),
 ]

@@ -1,4 +1,3 @@
-from __future__ import annotations
 import typing
 from Options import Option, DeathLink, Toggle, DefaultOnToggle, Choice
 

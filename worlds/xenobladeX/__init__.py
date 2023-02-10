@@ -1,9 +1,10 @@
-from __future__ import annotations
-from BaseClasses import Tutorial
-from .Items import xenobladeXItems, create_items, create_item, create_data, create_item_event
+from typing import Callable, Dict
+from BaseClasses import CollectionState, Tutorial
+from .Slot import generate_slot_data
+from .Items import xenobladeXItems, create_items, create_item
 from .Rules import set_rules
 from .Regions import create_regions
-from .Locations import xenobladeXLocations, create_location_event
+from .Locations import create_locations, xenobladeXLocations
 from .Options import xenobladeX_options
 from ..AutoWorld import World, WebWorld
 
@@ -15,14 +16,14 @@ class XenobladeXWeb(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["MaragonMH"]
+        ["Maragon"]
     )]
 
 
 class XenobladeXWorld(World):
     """
      Xenoblade Chronicles X another 100+ hour game. Sounds like fun?
-    """  # Lifted from Store Page
+    """
 
     game: str = "XenobladeX"
     topology_present = True
@@ -30,14 +31,16 @@ class XenobladeXWorld(World):
 
     data_version = 0
     base_id = 4001000
+    max_type_count = 5000
 
     option_definitions = xenobladeX_options
 
-    item_name_to_id = create_data(xenobladeXItems, base_id)
-    location_name_to_id = create_data(xenobladeXLocations, base_id)
+    item_name_to_id = {item.name: id for id, item in enumerate(xenobladeXItems, base_id)}
+    location_name_to_id = {location.name: id for id, location in enumerate(xenobladeXLocations, base_id)}
 
     def create_regions(self):
-        create_regions(self.multiworld, self.player, self.location_name_to_id)
+        create_regions(self.multiworld, self.player)
+        create_locations(self.multiworld, self.player)
 
     def set_rules(self):
         set_rules(self.multiworld, self.player)
@@ -46,4 +49,16 @@ class XenobladeXWorld(World):
         create_items(self.multiworld, self.player, self.base_id)
 
     def create_item(self, name: str):
-        create_item(self.multiworld, name, self.player, self.base_id)
+        create_item(self.multiworld, name, self.player, self.item_name_to_id[name])
+
+    def generate_early(self):
+        pass
+
+    def generate_basic(self):
+        victory_item = create_item(self.multiworld, "Victory", self.player, self.item_name_to_id["Victory"])
+        self.multiworld.get_location("EBK: Lao", self.player).place_locked_item(victory_item)
+        finish: Callable[[CollectionState], bool] = lambda state: state.has("Victory", self.player)
+        self.multiworld.completion_condition[self.player] = finish
+
+    def fill_slot_data(self) -> Dict[str, object]:
+        return generate_slot_data(self.base_id, self.max_type_count)
