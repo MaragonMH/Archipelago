@@ -1,5 +1,7 @@
+from __future__ import annotations
 import typing
 from Options import Option, DeathLink, Toggle, DefaultOnToggle, Choice
+
 
 class CollectionRange(Choice):
     """Increases the collection range of items in the field"""
@@ -8,6 +10,7 @@ class CollectionRange(Choice):
     option_big = 1
     option_bigger = 2
 
+
 class ArmorSlotUpgrades(Choice):
     """Allows you to further upgrade armor slots. Optional without ressources"""
     display_name = "Armor Slot Upgrades"
@@ -15,6 +18,7 @@ class ArmorSlotUpgrades(Choice):
     option_3 = 1
     option_unlimited = 2
     option_cheat = 3
+
 
 class LvPointsModifier(Choice):
     """Modifies the level experience gain"""
@@ -28,6 +32,7 @@ class LvPointsModifier(Choice):
     option_100 = 6
     option_1000 = 7
 
+
 class BattlePointsModifier(Choice):
     """Modifies the battle experience gain"""
     display_name = "Battle-Points Modifier"
@@ -39,6 +44,7 @@ class BattlePointsModifier(Choice):
     option_50 = 5
     option_100 = 6
     option_1000 = 7
+
 
 class BladePointsModifier(Choice):
     """Modifies the BLADE experience gain"""
@@ -52,6 +58,7 @@ class BladePointsModifier(Choice):
     option_100 = 6
     option_1000 = 7
 
+
 class FrontierNavFrequency(Choice):
     """Alters the frequency of the Frontier-Nav bonuses"""
     display_name = "Froniter-Nav Frequency"
@@ -62,6 +69,7 @@ class FrontierNavFrequency(Choice):
     option_10 = 4
     option_15 = 5
     option_20 = 6
+
 
 class FrontierNavQuantity(Choice):
     """Alters the quantity of the Frontier-Nav bonuses"""
@@ -74,19 +82,23 @@ class FrontierNavQuantity(Choice):
     option_50 = 5
     option_100 = 6
 
+
 class FrontierNavNoMiraniumCap(Toggle):
     """Removes the Miranium cap caused by missing storage probes"""
     display_name = "Frontier-Nav no Miranium Cap"
+
 
 class EManualChangeTime(Toggle):
     """The E-Manual allows you to change the time from your menu"""
     display_name = "E-Manual Change Time"
 
+
 class TreasureAlternateRatio(Toggle):
-    """In vanilla, equipment traits have a percent chance to be selected, some of them have 90 or 100%, 
-    while others have 10%. This mod changes that: everything above 80% is capped at 80%, 
-    and everything else is set to 20%"""
+    """In vanilla, equipment traits have a percent chance to be selected, some of them have 90 or 100%
+    , while others have 10%. This mod changes that: everything above 80% is capped at 80%
+    , and everything else is set to 20%"""
     display_name = "Treasure Alternate Ratio"
+
 
 class TreasureChestCount(Choice):
     """Alters the guranteed treasure chest count"""
@@ -95,6 +107,7 @@ class TreasureChestCount(Choice):
     option_1 = 1
     option_2 = 2
     option_3 = 3
+
 
 class TreasureTraits(Choice):
     """Alters the guranteed treasure trait count"""
@@ -105,6 +118,7 @@ class TreasureTraits(Choice):
     option_2 = 3
     option_3 = 4
 
+
 class TreasureSlots(Choice):
     """Alters the guranteed treasure augments slots count"""
     display_name = "Augment Slots"
@@ -114,6 +128,7 @@ class TreasureSlots(Choice):
     option_2 = 3
     option_3 = 4
 
+
 class TreasureType(Choice):
     """Alters the treasure type"""
     display_name = "Treasure Type"
@@ -122,12 +137,14 @@ class TreasureType(Choice):
     option_ground_armor = 2
     option_skell_armor = 3
 
+
 class BrokenTreasure(Choice):
     """Alters chance to get broken equipment"""
     display_name = "Broken Treasure"
     option_none = 0
     option_never = 1
     option_always = 2
+
 
 class TreasureDropRatio(Choice):
     """Alters the treasure drop ratio"""
@@ -139,6 +156,7 @@ class TreasureDropRatio(Choice):
     option_drop_30 = 4
     option_drop_0 = 5
 
+
 class TreasureQuality(Choice):
     """Forces a specific quality"""
     display_name = "Treasure Quality"
@@ -147,6 +165,7 @@ class TreasureQuality(Choice):
     option_silver_quality = 2
     option_bronze_quality = 3
     option_no_treasure = 4
+
 
 class MoonJumpWidth(Choice):
     """Alters the jump width"""
@@ -163,6 +182,7 @@ class MoonJumpWidth(Choice):
     option_distance_x5_0 = 9
     option_cheat_x100_0 = 10
 
+
 class MoonJumpHeight(Choice):
     """Alters the jump height"""
     display_name = "Moon Jump Height"
@@ -178,6 +198,7 @@ class MoonJumpHeight(Choice):
     option_height_x1_50 = 9
     option_height_x25_0 = 10
 
+
 class MoonJumpType(Choice):
     """Alters the landing type after the jump"""
     display_name = "Moon Jump Type"
@@ -189,6 +210,7 @@ class MoonJumpType(Choice):
     option_half_stop = 5
     option_never_land_softlocks = 6
 
+
 class RunForrestRun(Choice):
     """Alters the running speed"""
     display_name = "Run Forrest, Run"
@@ -199,26 +221,31 @@ class RunForrestRun(Choice):
     option_speed_x3 = 4
     option_cheat_x20 = 5
 
+
 class WeatherForce(Toggle):
     """Allows you to force a weather condition. This option needs to be invoked manually through the graphic packs"""
     display_name = "Force Weather"
 
+
 class SkellWeaponFamily(DefaultOnToggle):
-    """There is only one check for each Skell-Weapon. If enabled, you will receive ALL Weapon tiers (20, 30, 40, 50, 60) 
-    and rarity (_, X, XX), when you receive the item. If disabled, you will receive one Weapon tier and rarity, 
-    choosen at random."""
+    """There is only one check for each Skell-Weapon. If enabled, you will receive ALL Weapon tiers (20, 30, 40, 50, 60)
+     and rarity (_, X, XX), when you receive the item. If disabled, you will receive one Weapon tier and rarity,
+     choosen at random."""
     display_name = "Receive Entire Skell-Weapon-Family"
 
+
 class AugmentFamily(DefaultOnToggle):
-    """There is only one check for each Augment. If enabled, you will receive ALL Augment tiers (I, V, X, XV, XX), 
-    when you receive the item. If disabled, you will receive one Augment tier, choosen at random."""
+    """There is only one check for each Augment. If enabled, you will receive ALL Augment tiers (I, V, X, XV, XX),
+     when you receive the item. If disabled, you will receive one Augment tier, choosen at random."""
     display_name = "Receive Entire Augment-Family"
+
 
 class LogicCheating(Toggle):
     """Allows you to get the randomized items the regular way."""
     display_name = "Logic Cheating"
 
-xenobladeX_options: typing.Dict[str, type(Option)] = {
+
+xenobladeX_options: typing.Dict[str, type[Option]] = {
     "collection_range": CollectionRange,
     "armor_slot_upgrades": ArmorSlotUpgrades,
     "lv_points_modifier": LvPointsModifier,
@@ -242,6 +269,6 @@ xenobladeX_options: typing.Dict[str, type(Option)] = {
     "weather_force": WeatherForce,
     "skell_weapon_family": SkellWeaponFamily,
     "augment_family": AugmentFamily,
-    "logic_cheating" : LogicCheating,
+    "logic_cheating": LogicCheating,
     "death_link": DeathLink,
 }

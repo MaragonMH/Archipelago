@@ -1,11 +1,12 @@
-import typing
-from .Options import xenobladeX_options
-from .Locations import xenobladeXLocations
-from .Items import xenobladeXItems, create_items
+from __future__ import annotations
+from BaseClasses import Tutorial
+from .Items import xenobladeXItems, create_items, create_item, create_data
 from .Rules import set_rules
 from .Regions import create_regions
-from BaseClasses import Tutorial
+from .Locations import xenobladeXLocations
+from .Options import xenobladeX_options
 from ..AutoWorld import World, WebWorld
+
 
 class XenobladeXWeb(WebWorld):
     tutorials = [Tutorial(
@@ -19,36 +20,21 @@ class XenobladeXWeb(WebWorld):
 
 
 class XenobladeXWorld(World):
-    """ 
+    """
      Xenoblade Chronicles X another 100+ hour game. Sounds like fun?
-    """ #Lifted from Store Page
+    """  # Lifted from Store Page
 
     game: str = "XenobladeX"
-    topology_present = False
+    topology_present = True
     web = XenobladeXWeb()
 
     data_version = 0
-    item_base_id = 4001000
-    location_base_id = 4101000
+    base_id = 4001000
 
     option_definitions = xenobladeX_options
 
-    def _createData(data, baseId):
-        result = {}
-        id = baseId
-        for xenobladeXGroup in data.values():
-            for name, item in xenobladeXGroup.items():
-                count = item["count"] if "count" in item else 1
-                for idx in range(count):
-                    appendix = " #" + str(idx) if idx > 1 else ""
-                    result[name + appendix] = id
-                    id += 1
-        return result
-
-    print(len(_createData(xenobladeXItems, 0)))
-    print(len(_createData(xenobladeXLocations, 0)))
-    item_name_to_id = _createData(xenobladeXItems, item_base_id)
-    location_name_to_id = _createData(xenobladeXLocations, location_base_id)
+    item_name_to_id = create_data(xenobladeXItems, base_id)
+    location_name_to_id = create_data(xenobladeXLocations, base_id)
 
     def create_regions(self):
         create_regions(self.multiworld, self.player, self.location_name_to_id)
@@ -57,4 +43,7 @@ class XenobladeXWorld(World):
         set_rules(self.multiworld, self.player)
 
     def create_items(self):
-        create_items(self)
+        create_items(self.multiworld, self.player, self.base_id)
+
+    def create_item(self, name: str):
+        create_item(self.multiworld, name, self.player, self.base_id)
