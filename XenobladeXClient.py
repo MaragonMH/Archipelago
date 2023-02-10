@@ -15,12 +15,15 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/plain")
         self.end_headers()
         # remove duplicate lines
-        "\n".join(list(OrderedDict.fromkeys(self.server.items.split("\n")))) # type: ignore
+        self.server.items = "\n".join(list(OrderedDict.fromkeys(self.server.items.split("\n")))) # type: ignore
         self.wfile.write(self.server.items.encode()) # type: ignore
         self.server.items = "" # type: ignore
 
     def post_locations(self):
         locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":","\n")
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain")
+        self.end_headers()
         upload_ended = "$" in locations[-1]
         if "^" in locations[0]:
             self.server.upload_in_progress = True # type: ignore
@@ -33,9 +36,6 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
             self.server.upload_in_progress = False # type: ignore
         logger.debug("Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) +
             " FileLines: " +  str(self.server.locations.count('\n'))) # type: ignore
-        self.send_response(200)
-        self.send_header("Content-type", "text/plain")
-        self.end_headers()
 
     def do_GET(self):
         if self.path == '/items':
@@ -106,22 +106,27 @@ class XenobladeXHttpServer(HTTPServer):
             return locations
 
         match = re.findall(r'^CP Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1})\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for collepedia_entry in match:
             if collepedia_entry[1] > 0:
                 locations = self._get_lvl_ids(locations, base_id, 0, collepedia_entry[0], base_id, locations_count)
         match = re.findall(r'^EN Id=([0-9a-fA-F]{3}) Dc=([0-9a-fA-F]{1})\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for enemy_book_entry in match:
             if enemy_book_entry[1] > 1:
                 locations = self._get_lvl_ids(locations, base_id, 1, enemy_book_entry[0], base_id, locations_count)
         match = re.findall(r'^FN Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1}) AId=[0-9a-fA-F]{2}\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for fn_node_entry in match:
             if fn_node_entry[1] > 0:
                 locations = self._get_lvl_ids(locations, base_id, 2, fn_node_entry[0], base_id, locations_count)
         match = re.findall(r'^SG Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1}) AId=[0-9a-fA-F]{2}\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for segment_entry in match:
             if segment_entry[1] > 0:
                 locations = self._get_lvl_ids(locations, base_id, 3, segment_entry[0], base_id, locations_count)
         match = re.findall(r'^LC Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1}) Tp=[0-9a-fA-F]{1}\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for location_entry in match:
             if location_entry[1] > 0:
                 locations = self._get_lvl_ids(locations, base_id, 4, location_entry[0], base_id, locations_count)
@@ -135,13 +140,16 @@ class XenobladeXHttpServer(HTTPServer):
             return items
 
         match = re.findall(r'^KY Id=([0-9a-fA-F]{1}) Fg=([0-9a-fA-F]{1})\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for key_entry in match:
             if key_entry[1] > 0:
                 items = self._get_lvl_ids(items, base_id, 0, key_entry[0], base_id, items_count)
         match = re.findall(r'^IT Id=([0-9a-fA-F]{3}) Tp=([0-9a-fA-F]{2})\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for item_entry in match:
             items = self._get_lvl_ids(items, base_id, item_entry[1], item_entry[0], base_id, items_count)
         match = re.findall(r'^IT Id=([0-9a-fA-F]{3}) Tp=([0-9a-fA-F]{2}) S1Id=[0-9a-fA-F]{3} U1=[0-9a-fA-F]{1} S2Id=[0-9a-fA-F]{3} U2=[0-9a-fA-F]{1} S3Id=[0-9a-fA-F]{3} U3=[0-9a-fA-F]{1} A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4}) Na=.*\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for item_entry in match:
             items = self._get_lvl_ids(items, base_id, item_entry[1], item_entry[0], base_id, items_count)
             for idx in range(2,5):
@@ -149,6 +157,7 @@ class XenobladeXHttpServer(HTTPServer):
                     # use player character augment type for these
                     items = self._get_lvl_ids(items, base_id, item_entry[idx], 0x14, base_id, items_count)
         match = re.findall(r'^EQ CId=[0-9a-fA-F]{2} Id=([0-9a-fA-F]{3}) Ix=[0-9a-fA-F]{1} S1Id=[0-9a-fA-F]{3} U1=[0-9a-fA-F]{1} S2Id=[0-9a-fA-F]{3} U2=[0-9a-fA-F]{1} S3Id=[0-9a-fA-F]{3} U3=[0-9a-fA-F]{1} A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4}) Na=.*\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for equip_entry in match:
             if equip_entry[1] < 3:
                 items = self._get_lvl_ids(items, base_id, 0x6, equip_entry[0], base_id, items_count)
@@ -159,6 +168,7 @@ class XenobladeXHttpServer(HTTPServer):
                     # use player character augment type for these
                     items = self._get_lvl_ids(items, base_id, equip_entry[idx], 0x14, base_id, items_count)
         match = re.findall(r'^DL GIx=[0-9a-fA-F]{2} Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1}) S1Id=[0-9a-fA-F]{3} U1=[0-9a-fA-F]{1} S2Id=[0-9a-fA-F]{3} U2=[0-9a-fA-F]{1} S3Id=[0-9a-fA-F]{3} U3=[0-9a-fA-F]{1} A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4}) Na=.*\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for doll_entry in match:
             if doll_entry[1] < 0xA:
                 items = self._get_lvl_ids(items, base_id, 0xF, doll_entry[0], base_id, items_count)
@@ -171,20 +181,25 @@ class XenobladeXHttpServer(HTTPServer):
                     # use player doll augment type for these
                     items = self._get_lvl_ids(items, base_id, doll_entry[idx], 0x16, base_id, items_count)
         match = re.findall(r'^AT Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for art_entry in match:
             if art_entry[1] > 0:
                 items = self._get_lvl_ids(items, base_id, 0x20, art_entry[0], items_count)
         match = re.findall(r'^SK Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for skill_entry in match:
             if skill_entry[1] > 0:
                 items = self._get_lvl_ids(items, base_id, 0x21, skill_entry[0], items_count)
         match = re.findall(r'^FS Id=([0-9a-fA-F]{1}) Lv=([0-9a-fA-F]{1})\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for field_skill_entry in match:
             items = self._get_lvl_ids(items, base_id, 0x22, field_skill_entry[0], items_count, field_skill_entry[1] - 1, 4)
         match = re.findall(r'^FD Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{2}) Ch=.*\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for friend_entry in match:
             items = self._get_lvl_ids(items, base_id, 0x23, friend_entry[0], items_count, friend_entry[1] // 10, 5)
         match = re.findall(r'^CL Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n', self.locations, re.MULTILINE)
+        match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         for class_entry in match:
             if class_entry[1] > 9:
                 items = self._get_lvl_ids(items, base_id, 0x24, class_entry[0], items_count)
@@ -255,7 +270,7 @@ async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
     while not ctx.exit_event.is_set():
         ctx.download_game_locations()
         ctx.upload_game_items()
-        await asyncio.get_event_loop().run_in_executor(None, ctx.http_server.handle_request)
+        await asyncio.sleep(2)
     logger.debug("terminated xenobladeX sync task")
 
 async def main() -> None:
@@ -270,6 +285,7 @@ async def main() -> None:
         ctx.run_gui()
     ctx.run_cli()
 
+    asyncio.get_event_loop().run_in_executor(None, ctx.http_server.serve_forever)
     sync_task = asyncio.create_task(xenoblade_x_sync_task(ctx))
 
     await ctx.exit_event.wait()

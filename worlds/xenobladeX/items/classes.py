@@ -1,0 +1,17 @@
+classes_data = [ "Drifter", #https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html
+"Striker",
+"Samurai Gunner",
+"Duelist",
+"Shield Trooper",
+"Bastion Warrior",
+"Commando",
+"Winged Viper",
+"Full Metal Jaguar",
+"Partisan Eagle",
+"Astral Crusader",
+"Enforcer",
+"Psycorruptor",
+"Mastermind",
+"Blast Fencer",
+"Galactic Knight",
+]
