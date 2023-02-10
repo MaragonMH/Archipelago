@@ -1,9 +1,8 @@
-from typing import Callable, Dict
-from BaseClasses import CollectionState, Tutorial
+from typing import Dict
+from BaseClasses import Tutorial
 from .Slot import generate_slot_data
 from .Items import xenobladeXItems, create_items, create_item
 from .Rules import set_rules
-from .Regions import create_regions
 from .Locations import create_locations, xenobladeXLocations
 from .Options import xenobladeX_options
 from ..AutoWorld import World, WebWorld
@@ -35,15 +34,14 @@ class XenobladeXWorld(World):
 
     option_definitions = xenobladeX_options
 
-    item_name_to_id = {item.name: id for id, item in enumerate(xenobladeXItems, base_id)}
-    location_name_to_id = {location.name: id for id, location in enumerate(xenobladeXLocations, base_id)}
+    item_name_to_id = { item.prefix + item.name: id for id, item in enumerate(xenobladeXItems, base_id)}
+    location_name_to_id = { location.prefix + location.name: id for id, location in enumerate(xenobladeXLocations, base_id)}
 
     def create_regions(self):
-        create_regions(self.multiworld, self.player)
         create_locations(self.multiworld, self.player)
 
     def set_rules(self):
-        set_rules(self.multiworld, self.player)
+        set_rules(self.multiworld, self.player, self.item_name_to_id)
 
     def create_items(self):
         create_items(self.multiworld, self.player, self.base_id)
@@ -55,10 +53,7 @@ class XenobladeXWorld(World):
         pass
 
     def generate_basic(self):
-        victory_item = create_item(self.multiworld, "Victory", self.player, self.item_name_to_id["Victory"])
-        self.multiworld.get_location("EBK: Lao", self.player).place_locked_item(victory_item)
-        finish: Callable[[CollectionState], bool] = lambda state: state.has("Victory", self.player)
-        self.multiworld.completion_condition[self.player] = finish
+        pass
 
     def fill_slot_data(self) -> Dict[str, object]:
         return generate_slot_data(self.base_id, self.max_type_count)

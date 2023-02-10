@@ -1,3 +1,4 @@
+import logging
 from BaseClasses import Item, ItemClassification, CollectionState, MultiWorld
 from .items.arts import arts_data
 from .items.classes import classes_data
@@ -17,6 +18,7 @@ from .dataType import Requirement
 from typing import NamedTuple, Optional
 
 class Itm(NamedTuple):
+    prefix: str
     name: str
     type: int
     id: int
@@ -32,28 +34,27 @@ class XenobladeXItem(Item):
         if code is None: self.type = "Event" 
 
 xenobladeXItems = [
-    Itm("Victory", -1, 1),
-    *(Itm(f"KEY:   {e.name}", 0, i + 1, ItemClassification.progression) for i, e in enumerate(keys_data)),
-    *(Itm(f"AMR:   {e.name}", 1, i + 1) for i, e in enumerate(ground_armor_data)), 
-    *(Itm(f"WPN:   {e.name}", 6, i + 1) for i, e in enumerate(ground_weapons_data)), 
-    *(Itm(f"SKF:   {e.name}", 9, i + 1, ItemClassification.progression) for i, e in enumerate(doll_frames_data)), 
-    *(Itm(f"SKAUG: {e.name}", 0xa, i + 1) for i, e in enumerate(doll_armor_data)), 
-    *(Itm(f"SKWPN: {e.name}", 0xf, i + 1) for i, e in enumerate(doll_weapons_data)), 
-    *(Itm(f"AUG:   {e.name}", 0x14, i + 1) for i, e in enumerate(ground_augments_data)), 
-    *(Itm(f"SKAUG: {e.name}", 0x16, i + 1) for i, e in enumerate(doll_augment_data)), 
-    *(Itm(f"DP:    {e.name}", 0x1c, i + 1, ItemClassification.progression) for i, e in enumerate(dataprobes_data) for c in range(e.count)), 
-    *(Itm(f"ART:   {e.name}", 0x20, i + 1, ItemClassification.useful) for i, e in enumerate(arts_data)), 
-    *(Itm(f"SKL:   {e.name}", 0x21, i + 1, ItemClassification.useful) for i, e in enumerate(skills_data)), 
-    *(Itm(f"FRD:   {e.name}", 0x22, i + 1, ItemClassification.progression) for i, e in enumerate(friends_data) for c in range(e.count)), 
-    *(Itm(f"FLDSK: {e.name}", 0x23, i + 1, ItemClassification.progression) for i, e in enumerate(field_skills_data) for c in range(e.count)), 
-    *(Itm(f"CL:    {e.name}", 0x24, i + 1, ItemClassification.useful) for i, e in enumerate(classes_data)),
+    *(Itm(f"KEY: ", e.name, 0, i + 1, ItemClassification.progression) for i, e in enumerate(keys_data) if e.valid),
+    *(Itm(f"AMR: ", e.name, 1, i + 1) for i, e in enumerate(ground_armor_data) if e.valid), 
+    *(Itm(f"WPN: ", e.name, 6, i + 1) for i, e in enumerate(ground_weapons_data) if e.valid), 
+    *(Itm(f"SKF: ", e.name, 9, i + 1, ItemClassification.progression) for i, e in enumerate(doll_frames_data) if e.valid), 
+    *(Itm(f"SKAUG: ", e.name, 0xa, i + 1) for i, e in enumerate(doll_armor_data) if e.valid), 
+    *(Itm(f"SKWPN: ", e.name, 0xf, i + 1) for i, e in enumerate(doll_weapons_data) if e.valid), 
+    *(Itm(f"AUG: ", e.name, 0x14, i + 1) for i, e in enumerate(ground_augments_data) if e.valid), 
+    *(Itm(f"SKAUG: ", e.name, 0x16, i + 1) for i, e in enumerate(doll_augment_data) if e.valid), 
+    *(Itm(f"DP: ", e.name, 0x1c, i + 1, ItemClassification.progression) for i, e in enumerate(dataprobes_data) for c in range(e.count) if e.valid), 
+    *(Itm(f"ART: ", e.name, 0x20, i + 1, ItemClassification.useful) for i, e in enumerate(arts_data) if e.valid), 
+    *(Itm(f"SKL: ", e.name, 0x21, i + 1, ItemClassification.useful) for i, e in enumerate(skills_data) if e.valid), 
+    *(Itm(f"FRD: ", e.name, 0x22, i + 1, ItemClassification.progression) for i, e in enumerate(friends_data) for c in range(e.count) if e.valid), 
+    *(Itm(f"FLDSK: ", e.name, 0x23, i + 1, ItemClassification.progression) for i, e in enumerate(field_skills_data) for c in range(e.count) if e.valid), 
+    *(Itm(f"CL: ", e.name, 0x24, i + 1, ItemClassification.useful) for i, e in enumerate(classes_data) if e.valid),
 ]
 
 
 def create_items(world: MultiWorld, player, base_id):
     """Create all items"""
     for abs_id, item in enumerate(xenobladeXItems, base_id):
-        world.itempool += [XenobladeXItem(item.name, item.progression, abs_id, player)]
+        world.itempool += [XenobladeXItem(item.prefix + item.name, item.progression, abs_id, player)]
 
 
 def create_item(world: MultiWorld, item_name, player, abs_id) -> Item:
@@ -63,9 +64,10 @@ def create_item(world: MultiWorld, item_name, player, abs_id) -> Item:
     return item
 
 
-def create_item_event(name: str, player) -> Item:
+def create_item_event(world:MultiWorld, name: str, player) -> Item:
     """Create an event, which gets attached to the items"""
     event = XenobladeXItem(name, ItemClassification.useful, None, player)
+    world.itempool += [event]
     return event
 
 
@@ -78,4 +80,4 @@ def has_items(state: CollectionState, player, requirements: list[Requirement]) -
 
 def debug_print_duplicates():
     xs = [i.name for i in xenobladeXItems]
-    print(set([x for x in xs if xs.count(x) > 1]))
+    logging.info(set([x for x in xs if xs.count(x) > 1]))

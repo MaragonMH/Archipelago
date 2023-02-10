@@ -1,4 +1,4 @@
-from ..dataType import Data
+from ..dataType import LocData as Data
 
 #https://xenoblade.github.io/xbx/bdat/common_local_us/FLD_Location.html
 locations_data:list[Data] = [

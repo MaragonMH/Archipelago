@@ -1,4 +1,4 @@
-from ..dataType import Data
+from ..dataType import LocData as Data
 
 # from helper folder
 fn_nodes_data:list[Data] = [

@@ -1,7 +1,7 @@
 from ..dataType import Requirement as Req, Rule
 
 def generate_friend_region(friend:str):
-	return [ Rule("Menu"), *(Rule(f"{friend} {i}", [Req(friend, i)]) for i in range(1,6)) ]
+	return [ Rule("Menu"), *(Rule(f"{friend} {i}", [Req(f"FRD: {friend}", i)]) for i in range(1,6)) ]
 
 friends_nagi_regions = generate_friend_region("Nagi")
 friends_l_regions = generate_friend_region("L")

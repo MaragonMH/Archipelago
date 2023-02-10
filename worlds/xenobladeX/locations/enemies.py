@@ -1,4 +1,4 @@
-from ..dataType import Data
+from ..dataType import LocData as Data
 
 #https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_EnBook.html
 enemies_data = [
@@ -30,7 +30,7 @@ Data("Pursuit Satellis Alpha"),
 Data("Pursuit Satellis Beta"),
 Data("Pursuit Satellis Gamma"),
 Data("Soldier Chimera"),
-Data("Lao"),
+Data("Lao", valid=False, regions=["Epilogue"]),
 Data("Queen Chimera"),
 Data("Minor Chimera"),
 Data("Mezzo Chimera"),
@@ -51,7 +51,7 @@ Data("Dadaan, the Strongest Prone"),
 Data("The Dadaan Girls"),
 Data("Dadaan Squad Member"),
 Data("Gradivus, the Headless Emperor"),
-Data("Telethia, the Endbringer"),
+Data("Telethia, the Endbringer", regions=["Epilogue"]),
 Data("HH100: Hierana"),
 Data("Briggs"),
 Data("Fosdyke"),
