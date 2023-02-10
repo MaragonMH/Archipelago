@@ -117,6 +117,7 @@ char* _postSkillsList(char* stringStartPtr, char* stringCurrentPtr, char* string
 char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postEquipList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postDollList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
+char* _postVeinList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 
 void _free(void * ptr){
 	__free(ptr);
@@ -150,6 +151,7 @@ void _postArchipelago(){
 	stringCurrentPtr = _postKeyList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postEquipList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postDollList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
+	stringCurrentPtr = _postVeinList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 
 	stringCurrentPtr[0] = '$';
 	stringCurrentPtr[1] = 0;

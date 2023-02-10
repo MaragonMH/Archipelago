@@ -84,13 +84,15 @@
 // },
 // Run the new ruleset to adjust your .asm code
 #include <cstddef>
+int _itemListBase;
 char* fieldSkillBasePtr;
-char* classBasePtr;
 
-void _AddItemEquipment(int type, int id, char* buffer, int param);
+void _reqMenuAddItemFromId(int type, int id, int count);
 void _reqMenuSetArtsLevel(char* characterBasePtr, int id, int lvl, int filler);
 void _reqMenuSetSkillsLevel(char* characterBasePtr, int id, int lvl, int filler);
 void _SetFriendRank(int id, int lvl);
+char* _getClassDataPtr(int id);
+unsigned int** _getItemTypeInfo(int*, int);
 
 int * GetCharaDataPtr(int charaId); //::Util
 void _setLocal(int width, int position, int value); //::GameFlag
@@ -121,7 +123,7 @@ void _addGarage(int* idPtr); // ::CmdCommon::SceneCmdPrm
 // 16 = Augment Skell Frame			https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ItemSkill_doll.html
 // 17 = Augment Skell Weapon
 // 18 = Augment Skell Armor
-// 19 = Precious Ressources			https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_PreciousList.html
+// 19 = Precious Ressources			https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_RareRscList.html
 // 1a = Materials					https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_MaterialList.html
 // 1b = Collectable					https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_CollectList.html
 // 1c = Data Probes					https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_BeaconList.html
@@ -130,11 +132,23 @@ void _addGarage(int* idPtr); // ::CmdCommon::SceneCmdPrm
 // 1f = Consumeable Items			https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_BattleItem.html
 void _addItem(int type, int id){
 	if(type != 9){
-		char buffer[12];
-		_AddItemEquipment(type, id, buffer, 1);
+		_reqMenuAddItemFromId(type, id, 1);
 	} else {
 		_addGarage(&id);
 	}
+}
+
+int _hasPreciousItem(int id){
+	int * basePtr = &_itemListBase;
+	unsigned int* itemListPtr = *_getItemTypeInfo(basePtr, 0x1d);
+	for(int idx = 0; idx < 300; idx++){
+		unsigned int itemType = itemListPtr[0] << 13 >> 26;
+		if(itemType != 0x1d) break;
+		unsigned int itemId = itemListPtr[0] >> 19;
+		if(id == itemId) return 1;
+		itemListPtr += 3;
+	}
+	return 0;
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ArtsList.html
@@ -162,31 +176,50 @@ void _addFieldSkill(int id, int lv){
 	*fieldSkillOffset = (char)lv;
 }
 
-// 1 = Skell License, 2 = Flight Module, 3 = Overdrive, 4 = FNet
+// 1 = Skell License, 2 = Flight Module, 3 = Overdrive, 4 = FNet, 5=Blade
+// Some important unlocks are tied to the scenario flag, which is not desired
+// Replace all functions with a call to our own for these items
+// To anchor them in the savedata we use unused items from the "Important Items" Category
+// Specifically 24-31 from https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_PreciousList.html
 void _addKey(int id, int flag){
 	switch(id){
+		case 0:
+		// just for debugging purposes
+		_setLocal(0x10, 1, flag);
+		break;
+
 		case 1:
+		// only checked if you buy a doll and not if you assign it
 		_setLocal(1, 0x5e5b, flag);
 		break;
 
 		case 2:
-		// has issues as well
+		// does not work
 		_setLocal(1, 0x7610, flag);
 		break;
 
 		case 3:
+		// only for ground and not for skell
 		_setLocal(1, 0x6bc3, flag);
 		break;
 
 		case 4:
-		// no clue how to disable/enable Fnet
+		// from initialize::fnet::FnetTask where param_1 + 0xe must be 2
+		// to accomplish this you need to set the scenerio flag to at least 3001=0xbb9
+		// https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinConfig.html value at idx 8
+		// the game is unable to unload during runtime so you need to save and restart to unset
+		_addItem(0x1d, 24);
+		break;
+
+		case 5:
+		// same as FNet
+		// but here you need at least 3002
+		_addItem(0x1d, 25);
 		break;
 	}
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html
 void _addClass(int id, int lv){
-	char* classOffset = classBasePtr;
-	classOffset += id * 0x1e + 0xf65c; // from getClassLv::menu::MenuDataUtil
-	*classOffset = (char)lv;
+	*_getClassDataPtr(id) = (char)lv;
 }

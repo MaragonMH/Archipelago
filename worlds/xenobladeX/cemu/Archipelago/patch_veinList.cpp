@@ -83,40 +83,33 @@
 //     }
 // },
 // Run the new ruleset to adjust your .asm code
-// Use  https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_SkillClass.html to match the ids
+// Use  https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinList.html to match the ids
 #include <cstddef>
-char _formatSkillsText[] = "SK Id=%02x Lv=%01x:";  // First %05x Second %05x Third %05x Fourth %05x Fifth %05x Sixth %05x Seventh %05x:";
+int** fnetBasePtr;
+char _formatVeinsText[] = "VN Id=%02x Bc=%02x:";  // First %05x Second %05x Third %05x Fourth %05x Fifth %05x Sixth %05x Seventh %05x:";
 
 // Start
 // declare the required functions here. These need to be located inside your game
 // IMPORTANT: If you get the "target NAME out of range" exception, use two leading "_"
 
 int __sprintf_s(char *buffer, size_t sizeOfBuffer, const char *format, ...);
-
-int * GetCharaDataPtr(int charaId); //::Util
+int _getBeacon(int* fnetBasePtr, int id);
 // End
 
 void _postCurl(char[]);
 
-char* _postSkillsList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
-	// Do this only for main character for now
-    for(int characterId = 0; characterId < 0x1; characterId++){
-		char* characterBasePtr = (char*)GetCharaDataPtr(characterId);
+char* _postVeinList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
+	for(int veinId = 1; veinId < 110; veinId++){
 
-		for(int skillId = 1; skillId < 95; skillId++){
+		int beaconId = _getBeacon(fnetBasePtr[2], veinId); // from setBeacon::fnet::FnetTask in line 20
+		stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, _formatVeinsText, veinId, beaconId);
 
-			int level = *(characterBasePtr + skillId + 0x478); // from GetSkillsLevel::Menu::MenuSkillSet
-			// option to log character name with characterBasePtr and %s in format string
-			// option to log character id with characterId and %02x in format string
-			stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, _formatSkillsText, skillId, level);
-
-			// Reset buffer
-			if(stringCurrentPtr > stringEndPtr){
-				_postCurl(stringStartPtr);
-				stringCurrentPtr = stringStartPtr;
-			}
+		// Reset buffer
+		if(stringCurrentPtr > stringEndPtr){
+			_postCurl(stringStartPtr);
+			stringCurrentPtr = stringStartPtr;
 		}
+	}
 
-    }
 	return stringCurrentPtr;
 }

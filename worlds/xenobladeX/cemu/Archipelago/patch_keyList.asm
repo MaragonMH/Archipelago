@@ -14,12 +14,12 @@ _postKeyList:
         stw r4,28(r31)
         stw r5,32(r31)
         stw r6,36(r31)
-        li r9,0
+        li r9,1
         stw r9,8(r31)
         b _keyList_L2
-_keyList_L11:
+_keyList_L12:
         lwz r9,8(r31)
-        cmplwi cr0,r9,4
+        cmplwi cr0,r9,5
         bgt cr0,_keyList_L3
         lwz r9,8(r31)
         slwi r10,r9,2
@@ -33,11 +33,19 @@ _keyList_L11:
         mtctr r9
         bctr
 _keyList_L5:
+        .long _keyList_L10-_keyList_L5
         .long _keyList_L9-_keyList_L5
         .long _keyList_L8-_keyList_L5
         .long _keyList_L7-_keyList_L5
         .long _keyList_L6-_keyList_L5
         .long _keyList_L4-_keyList_L5
+_keyList_L10:
+        li r4,1
+        li r3,16
+        bl getLocal
+        mr r9,r3
+        stw r9,12(r31)
+        b _keyList_L3
 _keyList_L9:
         bl IsDollLicense
         mr r9,r3
@@ -56,14 +64,14 @@ _keyList_L7:
         stw r9,12(r31)
         b _keyList_L3
 _keyList_L6:
-        li r3,1172
-        bl isGameCond
+        li r3,24
+        bl _hasPreciousItem
         mr r9,r3
         stw r9,12(r31)
         b _keyList_L3
 _keyList_L4:
-        li r3,1174
-        bl isGameCond
+        li r3,25
+        bl _hasPreciousItem
         mr r9,r3
         stw r9,12(r31)
         nop
@@ -92,19 +100,19 @@ after_keyList__sprintf_s:
         lwz r10,28(r31)
         lwz r9,32(r31)
         cmplw cr0,r10,r9
-        ble cr0,_keyList_L10
+        ble cr0,_keyList_L11
         lwz r3,24(r31)
         bl _postCurl
         lwz r9,24(r31)
         stw r9,28(r31)
-_keyList_L10:
+_keyList_L11:
         lwz r9,8(r31)
         addi r9,r9,1
         stw r9,8(r31)
 _keyList_L2:
         lwz r9,8(r31)
-        cmpwi cr0,r9,4
-        ble cr0,_keyList_L11
+        cmpwi cr0,r9,5
+        ble cr0,_keyList_L12
         lwz r9,28(r31)
         mr r3,r9
         addi r11,r31,48
@@ -113,7 +121,7 @@ _keyList_L2:
         lwz r31,-4(r11)
         mr r1,r11
         blr
-
+        
 # VERSION SPECIFIC ###############################################################
 
 [XCX_Archipelago_keyList_V101E] ; ###############################################
@@ -122,6 +130,7 @@ moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 IsDollLicense = 0x02a6b81c # menu::MenuArmsCompany
 IsPermit = 0x021b70a8 # ::Gear::Gear # Overdrive
 isGameCond = 0x0226747c # ::GameCond
+fnetBasePtr = 0x1039c258 # from getFnetData::fnet::FnetDataAccessor
 
 ##################################################################################
 [XCX_Archipelago_keyList_V102U]

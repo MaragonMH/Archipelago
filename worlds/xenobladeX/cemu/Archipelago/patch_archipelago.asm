@@ -189,6 +189,13 @@ after_archipelago__malloc:
         bl _postDollList
         mr r9,r3
         stw r9,20(r31)
+        lwz r6,12(r31)
+        lwz r5,24(r31)
+        lwz r4,20(r31)
+        lwz r3,16(r31)
+        bl _postVeinList
+        mr r9,r3
+        stw r9,20(r31)
         lwz r9,20(r31)
         li r10,36
         stb r10,0(r9)
@@ -535,8 +542,8 @@ __strtol = 0x03b1b27c
 
 _isFinishTM = 0x02C7A4CC # MenuTask::isFinishTimeManipulate
 
-0x02B83CB4 = bl _mainArchipelago
-0x02B83CCC = bl _mainArchipelago
+# 0x02B83CB4 = bl test
+# 0x02B83CCC = bl test
 
 0x02B83C7C = bl _isFinishTM
 0x02B83C98 = bl _isFinishTM

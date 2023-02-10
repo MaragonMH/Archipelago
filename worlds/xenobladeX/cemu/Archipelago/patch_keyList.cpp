@@ -87,6 +87,7 @@
 // Defeat: Number of enemies you defeated
 // Discovery(Dc): 0, 1, 2. 0 = Not discovered yet (will appear as ??? in menu), 1 = encountered in combat, 2 = fully researched (white dot in menu)
 #include <cstddef>
+int** fnetBasePtr;
 char _formatKeyText[] = "KY Id=%01x Fg=%01x:";  // First %05x Second %05x Third %05x Fourth %05x Fifth %05x Sixth %05x Seventh %05x:";
 
 // Start
@@ -97,31 +98,35 @@ int __sprintf_s(char *buffer, size_t sizeOfBuffer, const char *format, ...);
 
 bool IsDollLicense(); // ::menu::MenuArmsCompany
 bool IsPermit(); // ::Gear::Gear // Overdrive
-int isGameCond(int); //::GameCond // FNet
 int getLocal(int width, int position);
+int _hasPreciousItem(int id);
 // End
 
 void _postCurl(char[]);
 
 char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
-    for(int keyId = 0; keyId < 5; keyId++){
+    for(int keyId = 1; keyId < 6; keyId++){
 		int flag;
 
 		switch(keyId){
 			case 0:
-			flag = IsDollLicense();
+			// just for debugging purposes
+			flag = getLocal(0x10, 1);
 			break;
 			case 1:
-			flag = getLocal(1, 0x7610); // from int getFlightUnitFlag(); // ::SquadUtil
+			flag = IsDollLicense();
 			break;
 			case 2:
-			flag = IsPermit();
+			flag = getLocal(1, 0x7610); // from int getFlightUnitFlag(); // ::SquadUtil
 			break;
 			case 3:
-			flag = isGameCond(0x494); // Unable to figure out where the FNet Flag is located, this is just a guess
+			flag = IsPermit();
 			break;
 			case 4:
-			flag = isGameCond(0x496); // Unable to figure out where the FNet Flag is located, this is just a guess
+			flag = _hasPreciousItem(24);
+			break;
+			case 5:
+			flag = _hasPreciousItem(25);
 			break;
 		}
 
