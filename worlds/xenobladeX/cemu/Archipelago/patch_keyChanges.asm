@@ -333,6 +333,9 @@ moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 _itemLoopStart = 0x02b07584
 _itemLoopEnd = 0x02b076e8
 
+#disable field skills
+0x0238e138 = nop
+
 # mandatory disable shops
 0x02a32770 = nop # skell frame
 0x02a69954 = nop # augment menu
