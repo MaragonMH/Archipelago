@@ -36,8 +36,8 @@ class XenobladeXWorld(World):
     def _createData(data, baseId):
         result = {}
         id = baseId
-        for xenobladeXItemGroup in xenobladeXItems.values():
-            for name, item in xenobladeXItemGroup.items():
+        for xenobladeXGroup in data.values():
+            for name, item in xenobladeXGroup.items():
                 count = item["count"] if "count" in item else 1
                 for idx in range(count):
                     appendix = " #" + str(idx) if idx > 1 else ""
@@ -45,7 +45,8 @@ class XenobladeXWorld(World):
                     id += 1
         return result
 
-    print(_createData(xenobladeXItems, item_base_id))
+    print(len(_createData(xenobladeXItems, 0)))
+    print(len(_createData(xenobladeXLocations, 0)))
     item_name_to_id = _createData(xenobladeXItems, item_base_id)
     location_name_to_id = _createData(xenobladeXLocations, location_base_id)
 
