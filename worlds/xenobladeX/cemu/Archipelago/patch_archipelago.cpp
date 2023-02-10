@@ -86,7 +86,7 @@
 #include <cstddef>
 int* _menuBasePtr;
 int changeTime(int hour, int minute);
-void writeSystemLog(int* menuBasePtr, int p1, char* str);
+void writeSystemLog(int* menuBasePtr, char* str1, char* str2);
 
 void* __malloc (size_t size);
 void __free (void* ptr);
@@ -257,11 +257,15 @@ void _getArchipelago(){
 			case 'M': // Message
 			{
 				outputCurrentPtr += 1 + 1;
-				char* message = outputCurrentPtr;
+				char* messageHead = outputCurrentPtr;
 				while(*outputCurrentPtr != '\n') outputCurrentPtr++;
 				*outputCurrentPtr = 0;
-				writeSystemLog(_menuBasePtr, 1, message);
 				outputCurrentPtr++;
+				char* messageBody = outputCurrentPtr;
+				while(*outputCurrentPtr != '\n') outputCurrentPtr++;
+				*outputCurrentPtr = 0;
+				outputCurrentPtr++;
+				writeSystemLog(_menuBasePtr, messageHead, messageBody);
 			}
 			break;
 
@@ -278,12 +282,12 @@ void _getArchipelago(){
 }
 
 int _mainArchipelago(int hour, int minute) {
-	if(minute % 5 != 0) return changeTime(hour, minute);
+	if(minute % 3 != 0) return changeTime(hour, minute);
 	
 	_initCurl();
 
-	_postArchipelago();
 	_getArchipelago();
+	_postArchipelago();
 
     _cleanupCurl();
 
