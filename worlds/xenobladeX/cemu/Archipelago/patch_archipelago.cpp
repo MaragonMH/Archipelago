@@ -101,6 +101,7 @@ void _addSkill(int id, int lv);
 void _addFriend(int id, int lv);
 void _addFieldSkill(int id, int lv);
 void _addKey(int id, int flag);
+void _addClass(int id, int lv);
 
 char* _postArtsList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postClassList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
@@ -132,7 +133,7 @@ void _postArchipelago(){
     char* stringCurrentPtr = stringStartPtr;
 	char* stringEndPtr = stringStartPtr + allocBufferSize - maxEntrySize;
 
-	stringCurrentPtr[0] = ';';
+	stringCurrentPtr[0] = '^';
 	stringCurrentPtr++;
 
 	stringCurrentPtr = _postArtsList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
@@ -149,6 +150,9 @@ void _postArchipelago(){
 	stringCurrentPtr = _postKeyList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postEquipList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postDollList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
+
+	stringCurrentPtr[0] = '$';
+	stringCurrentPtr[1] = 0;
 
 	_postCurl(stringStartPtr);
 
@@ -231,6 +235,18 @@ void _getArchipelago(){
 				int keyFlag = (int)_strtol(outputCurrentPtr, NULL, 16);
 				outputCurrentPtr += 8;
 				_addKey(keyId, keyFlag);
+			}
+			break;
+
+			case 'C': // Class
+			// Identification Character + Prefix + Id + Prefix + Lvl
+			{
+				outputCurrentPtr += 1 + 4; 
+				int classId = (int)_strtol(outputCurrentPtr, NULL, 16);
+				outputCurrentPtr += 8 + 4;
+				int classLv = (int)_strtol(outputCurrentPtr, NULL, 16);
+				outputCurrentPtr += 8;
+				_addClass(classId, classLv);
 			}
 			break;
 

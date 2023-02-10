@@ -185,6 +185,17 @@ _add_L16:
         lwz r31,-4(r11)
         mr r1,r11
         blr
+_addClass:
+        stwu r1,-32(r1)
+        stw r31,28(r1)
+        mr r31,r1
+        stw r3,8(r31)
+        stw r4,12(r31)
+        nop
+        addi r11,r31,32
+        lwz r31,-4(r11)
+        mr r1,r11
+        blr
 
 # VERSION SPECIFIC ###############################################################
 

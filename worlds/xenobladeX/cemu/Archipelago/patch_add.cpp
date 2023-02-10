@@ -183,3 +183,8 @@ void _addKey(int id, int flag){
 		break;
 	}
 }
+
+// https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html
+void _addClass(int id, int lv){
+	return;
+}
