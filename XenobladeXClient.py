@@ -242,9 +242,9 @@ class XenobladeXContext(CommonContext):
             self.http_server.upload_item(item.type, item.id, archipelago_level)
 
     def set_cemu_graphic_packs(self):
+        cemu_path = Utils.get_options()["xenobladeX_options"]["cemu_path"]
+        settings_path = cemu_path + "Settings.xml"
         try:
-            cemu_path = Utils.get_options()["xenobladeX_options"]["cemu_path"]
-            settings_path = cemu_path + "Settings.xml"
             file_path = Utils.local_path(settings_path)
             with open(file_path, "r") as file :
                 filedata = file.read()
