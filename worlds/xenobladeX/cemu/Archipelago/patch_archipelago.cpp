@@ -98,6 +98,7 @@ char* _getCurl();
 void _cleanupCurl();
 
 void _addItem(int type, int id);
+void _addGear(int type, int id, int affixId1, int affixId2, int affixId3, int slotCount);
 void _addArt(int id, int lv);
 void _addSkill(int id, int lv);
 void _addFriend(int id, int lv);
@@ -179,6 +180,26 @@ void _getArchipelago(){
 				int itemId = (int)_strtol(outputCurrentPtr, NULL, 16);
 				outputCurrentPtr += 8;
 				_addItem(itemType, itemId);
+			}
+			break;
+
+			case 'G': // Gear with Affixes
+			// Identification Character + Prefix + Type + Prefix + Id + 3*(prefix + affixId) + prefix + slotCount
+			{
+				outputCurrentPtr += 1 + 4;
+				int itemType = (int)_strtol(outputCurrentPtr, NULL, 16);
+				outputCurrentPtr += 8 + 4;
+				int itemId = (int)_strtol(outputCurrentPtr, NULL, 16);
+				outputCurrentPtr += 8 + 4;
+				int affixId1 = (int)_strtol(outputCurrentPtr, NULL, 16);
+				outputCurrentPtr += 8 + 4;
+				int affixId2 = (int)_strtol(outputCurrentPtr, NULL, 16);
+				outputCurrentPtr += 8 + 4;
+				int affixId3 = (int)_strtol(outputCurrentPtr, NULL, 16);
+				outputCurrentPtr += 8 + 4;
+				int slotCount = (int)_strtol(outputCurrentPtr, NULL, 16);
+				outputCurrentPtr += 8;
+				_addGear(itemType, itemId, affixId1, affixId2, affixId3, slotCount);
 			}
 			break;
 

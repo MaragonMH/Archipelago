@@ -84,11 +84,12 @@
 // },
 // Run the new ruleset to adjust your .asm code
 #include <cstddef>
-int _itemListBase;
-int* fnetBasePtr;
-char* fieldSkillBasePtr;
+extern int _itemListBase;
+extern int* fnetBasePtr;
+extern char* fieldSkillBasePtr;
 
 void _reqMenuAddItemFromId(int type, int id, int count);
+void _reqMenuAddItemFromInfo(short* item, int count);
 void _reqMenuSetArtsLevel(char* characterBasePtr, int id, int lvl, int filler);
 void _reqMenuSetSkillsLevel(char* characterBasePtr, int id, int lvl, int filler);
 void _SetFriendRank(int id, int lvl);
@@ -141,6 +142,19 @@ void _addItem(int type, int id){
 	} else {
 		_addGarage(&id);
 	}
+}
+
+void _addGear(int type, int id, int affixId1, int affixId2, int affixId3, int slotCount){
+	short item[8];
+	*(int*)item = (id << 19) + (type << 13) + (1 << 3);
+	item[6] = affixId1 << 4;
+	item[7] = affixId2 << 4;
+	item[8] = affixId3 << 4;
+	for(int i = 0; i < 3; i++){
+		if (i < slotCount) item[9+i] = 0x0;
+		else item[9+i] = 0xFFFF;
+	}
+	_reqMenuAddItemFromInfo(item, 1);
 }
 
 int _hasPreciousItem(int id){
