@@ -4,6 +4,7 @@ from socketserver import BaseServer
 from typing import Type
 import colorama  # type: ignore
 
+
 # CommonClient import first to trigger ModuleUpdater
 from CommonClient import CommonContext, server_loop, gui_enabled, \
     ClientCommandProcessor, logger, get_base_parser
@@ -15,6 +16,17 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.items = ""
         self.locations = "Nothing uploaded yet"
         super().__init__(request, client_address, server)
+
+    def upload_item_from_id(self, id):
+        pass
+
+    def squash_ids(self):
+        pass
+
+    def download_location_ids(self):
+        locations = set()
+        items = set()
+        return (locations, items)
 
     def get_items(self):
         self.send_response(200)
@@ -44,33 +56,70 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
             self.post_locations()
 
 
-class XenobladeXCommandProcessor(ClientCommandProcessor):
-    ctx: "XenobladeXContext"
-
-
 class XenobladeXContext(CommonContext):
+    tags = {"AP", "XenobladeX"}
     game = "XenobladeX"
-    command_processor: Type[ClientCommandProcessor] = XenobladeXCommandProcessor
     items_handling = 0b011  # get items from your own world
+    want_slot_data = False
     http_server = HTTPServer(('localhost', 45872), XenobladeXHTTPRequestHandler)
 
     def __init__(self, server_address: str, password: str) -> None:
         super().__init__(server_address, password)
 
 
+    async def server_auth(self, password_requested: bool = False):
+        if password_requested and not self.password:
+            await super(XenobladeXContext, self).server_auth(password_requested)
+        await self.get_username()
+        await self.send_connect()
+
+
+    def on_package(self, cmd: str, args: dict):
+        if cmd == "Connected":
+            self.game = self.slot_info[self.slot].game
+
+
+    def run_gui(self):
+        from kvui import GameManager
+        class XenobladeXManager(GameManager):
+            logging_pairs = [
+                ("Client", "Archipelago")
+            ]
+            base_title = "Archipelago Xenoblade X Client"
+
+        self.ui = XenobladeXManager(self)
+        self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
+
+
     def download_game_locations(self) -> None:
+        # Get all the locations from the game and
+        # Calc the differance between those and the server and
+        # Send them to the server
         return
 
 
     def upload_game_items(self) -> None:
+        # Get all the items in locations from the game and
+        # Get all the items from the server and
+        # Calc the differance between those and 
+        # Add items to the game
+        # Big problem here is, if you are able to get rid of the items,
+        # because there is no way to know which items you already received if you 
+        # already disposed them
         return
 
+async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
+    logger.info("started xenobladeX sync task")
+    while not ctx.exit_event.is_set():
+        # ctx.missing_locations
+        ctx.download_game_locations()
+        ctx.upload_game_items()
+        await asyncio.sleep(1)
+    logger.info("terminated xenobladeX sync task")
 
 async def main() -> None:
     parser = get_base_parser()
-
     args = parser.parse_args()
-    print(args)
 
     ctx = XenobladeXContext(args.connect, args.password)
     if ctx.server_task is None:
@@ -81,13 +130,15 @@ async def main() -> None:
     ctx.run_cli()
 
     asyncio.get_event_loop().run_in_executor(None, ctx.http_server.serve_forever)
+    sync_task = asyncio.create_task(xenoblade_x_sync_task(ctx))
 
     await ctx.exit_event.wait()
 
     ctx.server_address = None
     logger.debug("waiting for game server task to end")
     await asyncio.get_event_loop().run_in_executor(None, ctx.http_server.shutdown)
-
+    logger.debug("waiting for sync task to end")
+    await sync_task
     await ctx.shutdown()
 
 
