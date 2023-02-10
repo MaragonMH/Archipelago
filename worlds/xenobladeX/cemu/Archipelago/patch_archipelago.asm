@@ -215,21 +215,21 @@ after_archipelago__malloc:
         mr r1,r11
         blr
 _getArchipelago:
-        stwu r1,-80(r1)
+        stwu r1,-96(r1)
         mflr r0
-        stw r0,84(r1)
-        stw r31,76(r1)
+        stw r0,100(r1)
+        stw r31,92(r1)
         mr r31,r1
         bl _getCurl
         mr r9,r3
         stw r9,12(r31)
         lwz r9,12(r31)
         cmpwi cr0,r9,0
-        beq cr0,_archipelago_L20
+        beq cr0,_archipelago_L23
         lwz r9,12(r31)
         stw r9,8(r31)
         b _archipelago_L8
-_archipelago_L19:
+_archipelago_L22:
         lwz r9,8(r31)
         lbz r9,0(r9)
         cmpwi cr0,r9,10
@@ -254,13 +254,15 @@ _archipelago_L19:
         mtctr r9
         bctr
 _archipelago_L12:
-        .long _archipelago_L18-_archipelago_L12
+        .long _archipelago_L19-_archipelago_L12
         .long _archipelago_L10-_archipelago_L12
+        .long _archipelago_L18-_archipelago_L12
         .long _archipelago_L17-_archipelago_L12
+        .long _archipelago_L10-_archipelago_L12
         .long _archipelago_L16-_archipelago_L12
         .long _archipelago_L10-_archipelago_L12
-        .long _archipelago_L15-_archipelago_L12
         .long _archipelago_L10-_archipelago_L12
+        .long _archipelago_L15-_archipelago_L12
         .long _archipelago_L10-_archipelago_L12
         .long _archipelago_L14-_archipelago_L12
         .long _archipelago_L10-_archipelago_L12
@@ -270,21 +272,10 @@ _archipelago_L12:
         .long _archipelago_L10-_archipelago_L12
         .long _archipelago_L10-_archipelago_L12
         .long _archipelago_L10-_archipelago_L12
-        .long _archipelago_L10-_archipelago_L12
-        .long _archipelago_L10-_archipelago_L12
         .long _archipelago_L11-_archipelago_L12
-_archipelago_L14:
+_archipelago_L15:
         lwz r9,8(r31)
         addi r9,r9,5
-        stw r9,8(r31)
-        li r5,16
-        li r4,0
-        lwz r3,8(r31)
-        bl _strtol
-        mr r9,r3
-        stw r9,32(r31)
-        lwz r9,8(r31)
-        addi r9,r9,12
         stw r9,8(r31)
         li r5,16
         li r4,0
@@ -293,13 +284,22 @@ _archipelago_L14:
         mr r9,r3
         stw r9,36(r31)
         lwz r9,8(r31)
+        addi r9,r9,12
+        stw r9,8(r31)
+        li r5,16
+        li r4,0
+        lwz r3,8(r31)
+        bl _strtol
+        mr r9,r3
+        stw r9,40(r31)
+        lwz r9,8(r31)
         addi r9,r9,8
         stw r9,8(r31)
-        lwz r4,36(r31)
-        lwz r3,32(r31)
+        lwz r4,40(r31)
+        lwz r3,36(r31)
         bl _addItem
         b _archipelago_L8
-_archipelago_L18:
+_archipelago_L19:
         lwz r9,8(r31)
         addi r9,r9,5
         stw r9,8(r31)
@@ -308,7 +308,7 @@ _archipelago_L18:
         lwz r3,8(r31)
         bl _strtol
         mr r9,r3
-        stw r9,64(r31)
+        stw r9,68(r31)
         lwz r9,8(r31)
         addi r9,r9,12
         stw r9,8(r31)
@@ -317,12 +317,12 @@ _archipelago_L18:
         lwz r3,8(r31)
         bl _strtol
         mr r9,r3
-        stw r9,68(r31)
+        stw r9,72(r31)
         lwz r9,8(r31)
         addi r9,r9,8
         stw r9,8(r31)
-        lwz r4,68(r31)
-        lwz r3,64(r31)
+        lwz r4,72(r31)
+        lwz r3,68(r31)
         bl _addArt
         b _archipelago_L8
 _archipelago_L11:
@@ -351,32 +351,6 @@ _archipelago_L11:
         lwz r3,16(r31)
         bl _addSkill
         b _archipelago_L8
-_archipelago_L15:
-        lwz r9,8(r31)
-        addi r9,r9,5
-        stw r9,8(r31)
-        li r5,16
-        li r4,0
-        lwz r3,8(r31)
-        bl _strtol
-        mr r9,r3
-        stw r9,40(r31)
-        lwz r9,8(r31)
-        addi r9,r9,12
-        stw r9,8(r31)
-        li r5,16
-        li r4,0
-        lwz r3,8(r31)
-        bl _strtol
-        mr r9,r3
-        stw r9,44(r31)
-        lwz r9,8(r31)
-        addi r9,r9,8
-        stw r9,8(r31)
-        lwz r4,44(r31)
-        lwz r3,40(r31)
-        bl _addFriend
-        b _archipelago_L8
 _archipelago_L16:
         lwz r9,8(r31)
         addi r9,r9,5
@@ -386,48 +360,22 @@ _archipelago_L16:
         lwz r3,8(r31)
         bl _strtol
         mr r9,r3
+        stw r9,44(r31)
+        lwz r9,8(r31)
+        addi r9,r9,12
+        stw r9,8(r31)
+        li r5,16
+        li r4,0
+        lwz r3,8(r31)
+        bl _strtol
+        mr r9,r3
         stw r9,48(r31)
         lwz r9,8(r31)
-        addi r9,r9,12
-        stw r9,8(r31)
-        li r5,16
-        li r4,0
-        lwz r3,8(r31)
-        bl _strtol
-        mr r9,r3
-        stw r9,52(r31)
-        lwz r9,8(r31)
         addi r9,r9,8
         stw r9,8(r31)
-        lwz r4,52(r31)
-        lwz r3,48(r31)
-        bl _addFieldSkill
-        b _archipelago_L8
-_archipelago_L13:
-        lwz r9,8(r31)
-        addi r9,r9,5
-        stw r9,8(r31)
-        li r5,16
-        li r4,0
-        lwz r3,8(r31)
-        bl _strtol
-        mr r9,r3
-        stw r9,24(r31)
-        lwz r9,8(r31)
-        addi r9,r9,12
-        stw r9,8(r31)
-        li r5,16
-        li r4,0
-        lwz r3,8(r31)
-        bl _strtol
-        mr r9,r3
-        stw r9,28(r31)
-        lwz r9,8(r31)
-        addi r9,r9,8
-        stw r9,8(r31)
-        lwz r4,28(r31)
-        lwz r3,24(r31)
-        bl _addKey
+        lwz r4,48(r31)
+        lwz r3,44(r31)
+        bl _addFriend
         b _archipelago_L8
 _archipelago_L17:
         lwz r9,8(r31)
@@ -438,7 +386,7 @@ _archipelago_L17:
         lwz r3,8(r31)
         bl _strtol
         mr r9,r3
-        stw r9,56(r31)
+        stw r9,52(r31)
         lwz r9,8(r31)
         addi r9,r9,12
         stw r9,8(r31)
@@ -447,13 +395,94 @@ _archipelago_L17:
         lwz r3,8(r31)
         bl _strtol
         mr r9,r3
-        stw r9,60(r31)
+        stw r9,56(r31)
         lwz r9,8(r31)
         addi r9,r9,8
         stw r9,8(r31)
-        lwz r4,60(r31)
-        lwz r3,56(r31)
+        lwz r4,56(r31)
+        lwz r3,52(r31)
+        bl _addFieldSkill
+        b _archipelago_L8
+_archipelago_L14:
+        lwz r9,8(r31)
+        addi r9,r9,5
+        stw r9,8(r31)
+        li r5,16
+        li r4,0
+        lwz r3,8(r31)
+        bl _strtol
+        mr r9,r3
+        stw r9,28(r31)
+        lwz r9,8(r31)
+        addi r9,r9,12
+        stw r9,8(r31)
+        li r5,16
+        li r4,0
+        lwz r3,8(r31)
+        bl _strtol
+        mr r9,r3
+        stw r9,32(r31)
+        lwz r9,8(r31)
+        addi r9,r9,8
+        stw r9,8(r31)
+        lwz r4,32(r31)
+        lwz r3,28(r31)
+        bl _addKey
+        b _archipelago_L8
+_archipelago_L18:
+        lwz r9,8(r31)
+        addi r9,r9,5
+        stw r9,8(r31)
+        li r5,16
+        li r4,0
+        lwz r3,8(r31)
+        bl _strtol
+        mr r9,r3
+        stw r9,60(r31)
+        lwz r9,8(r31)
+        addi r9,r9,12
+        stw r9,8(r31)
+        li r5,16
+        li r4,0
+        lwz r3,8(r31)
+        bl _strtol
+        mr r9,r3
+        stw r9,64(r31)
+        lwz r9,8(r31)
+        addi r9,r9,8
+        stw r9,8(r31)
+        lwz r4,64(r31)
+        lwz r3,60(r31)
         bl _addClass
+        b _archipelago_L8
+_archipelago_L13:
+        lwz r9,8(r31)
+        addi r9,r9,2
+        stw r9,8(r31)
+        lwz r9,8(r31)
+        stw r9,24(r31)
+        b _archipelago_L20
+_archipelago_L21:
+        lwz r9,8(r31)
+        addi r9,r9,1
+        stw r9,8(r31)
+_archipelago_L20:
+        lwz r9,8(r31)
+        lbz r9,0(r9)
+        cmpwi cr0,r9,10
+        bne cr0,_archipelago_L21
+        lwz r9,8(r31)
+        li r10,0
+        stb r10,0(r9)
+        lis r9,_menuBasePtr@ha
+        lwz r9,_menuBasePtr@l(r9)
+        lwz r5,24(r31)
+        li r4,1
+        mr r3,r9
+        bl writeSystemLog
+        lwz r9,8(r31)
+        addi r9,r9,1
+        stw r9,8(r31)
         b _archipelago_L8
 _archipelago_L9:
         lwz r9,8(r31)
@@ -468,14 +497,14 @@ _archipelago_L8:
         lwz r9,8(r31)
         lbz r9,0(r9)
         cmpwi cr0,r9,0
-        bne cr0,_archipelago_L19
+        bne cr0,_archipelago_L22
         lwz r3,12(r31)
         bl _free
         b _archipelago_L5
-_archipelago_L20:
+_archipelago_L23:
         nop
 _archipelago_L5:
-        addi r11,r31,80
+        addi r11,r31,96
         lwz r0,4(r11)
         mtlr r0
         lwz r31,-4(r11)
@@ -499,13 +528,13 @@ _mainArchipelago:
         mulli r9,r9,5
         subf r9,r9,r10
         cmpwi cr0,r9,0
-        beq cr0,_archipelago_L22
+        beq cr0,_archipelago_L25
         lwz r4,12(r31)
         lwz r3,8(r31)
         bl changeTime
         mr r9,r3
-        b _archipelago_L23
-_archipelago_L22:
+        b _archipelago_L26
+_archipelago_L25:
         bl _initCurl
         bl _postArchipelago
         bl _getArchipelago
@@ -515,7 +544,7 @@ _archipelago_L22:
         bl changeTime
         mr r9,r3
         nop
-_archipelago_L23:
+_archipelago_L26:
         mr r3,r9
         addi r11,r31,32
         lwz r0,4(r11)
@@ -530,6 +559,7 @@ _archipelago_L23:
 moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 
 changeTime = 0x022b36f4 #::GameManager
+writeSystemLog = 0x02c7441c #::MenuTask
 
 __sprintf_s = 0x03133354
 __malloc = 0x03b1aeb0

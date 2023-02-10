@@ -84,7 +84,9 @@
 // },
 // Run the new ruleset to adjust your .asm code
 #include <cstddef>
+int* _menuBasePtr;
 int changeTime(int hour, int minute);
+void writeSystemLog(int* menuBasePtr, int p1, char* str);
 
 void* __malloc (size_t size);
 void __free (void* ptr);
@@ -249,6 +251,17 @@ void _getArchipelago(){
 				int classLv = (int)_strtol(outputCurrentPtr, NULL, 16);
 				outputCurrentPtr += 8;
 				_addClass(classId, classLv);
+			}
+			break;
+
+			case 'M': // Message
+			{
+				outputCurrentPtr += 1 + 1;
+				char* message = outputCurrentPtr;
+				while(*outputCurrentPtr != '\n') outputCurrentPtr++;
+				*outputCurrentPtr = 0;
+				writeSystemLog(_menuBasePtr, 1, message);
+				outputCurrentPtr++;
 			}
 			break;
 
