@@ -306,8 +306,35 @@ _add_L26:
         bl _addItem
 _add_L24:
         lwz r9,24(r31)
+        cmpwi cr0,r9,1
+        bne cr0,_add_L27
+        lwz r5,28(r31)
+        li r4,24155
+        li r3,1
+        bl _setLocal
+        b _add_L31
+_add_L27:
+        lwz r9,24(r31)
+        cmpwi cr0,r9,2
+        bne cr0,_add_L29
+        lwz r5,28(r31)
+        li r4,30224
+        li r3,1
+        bl _setLocal
+        b _add_L31
+_add_L29:
+        lwz r9,24(r31)
+        cmpwi cr0,r9,3
+        bne cr0,_add_L30
+        lwz r5,28(r31)
+        li r4,27587
+        li r3,1
+        bl _setLocal
+        b _add_L31
+_add_L30:
+        lwz r9,24(r31)
         cmpwi cr0,r9,4
-        bne cr0,_add_L28
+        bne cr0,_add_L31
         lis r9,fnetBasePtr@ha
         lwz r10,fnetBasePtr@l(r9)
         lwz r9,28(r31)
@@ -315,7 +342,7 @@ _add_L24:
         mr r4,r9
         mr r3,r10
         bl _changeScenarioFlagFNet
-_add_L28:
+_add_L31:
         nop
         addi r11,r31,48
         lwz r0,4(r11)

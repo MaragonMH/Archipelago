@@ -218,11 +218,12 @@ void _addKey(int id, int flag){
 		_SetDead(0, charaHandle);
 	}
 	else if(id == 7) _reqForceDamagePlayerTargetGoner(0);
-	// 1: _setLocal(1, 0x5e5b, flag);
-	// 2: _setLocal(1, 0x7610, flag);
-	// 3: _setLocal(1, 0x6bc3, flag);
 	else _addItem(0x1d, 24 + id - 1);
-	if(id == 4) _changeScenarioFlagFNet(fnetBasePtr, flag*3001);
+	
+	if(id == 1)_setLocal(1, 0x5e5b, flag);
+	else if(id == 2)_setLocal(1, 0x7610, flag);
+	else if(id == 3)_setLocal(1, 0x6bc3, flag);
+	else if(id == 4) _changeScenarioFlagFNet(fnetBasePtr, flag*3001);
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html

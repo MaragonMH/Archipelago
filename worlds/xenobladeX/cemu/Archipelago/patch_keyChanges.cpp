@@ -172,3 +172,14 @@ void _prepareBladeTerminal(){
 		else _shopTerminalScenarioFlagPtr = 0x7fffff;
 	}
 }
+
+int __strcmp (const char* str1, const char* str2);
+int _beginScript(int** scriptPtr);
+int _prepareRentalCharTerminal(int** scriptPtr){
+	int* fldConsoleParamPtr = scriptPtr[0x29];
+	if(__strcmp((char*)fldConsoleParamPtr,"fld_console.sb")) return _beginScript(scriptPtr);
+	int fldConsoleScriptId = fldConsoleParamPtr[9];
+	if(fldConsoleScriptId == 2) return _beginScript(scriptPtr + 0x98);
+	if(fldConsoleScriptId == 0xb) return _beginScript(scriptPtr - 0x98);
+	return _beginScript(scriptPtr);
+}

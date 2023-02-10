@@ -408,6 +408,74 @@ _keyChanges_L39:
         lwz r31,-4(r11)
         mr r1,r11
         blr
+_keyChanges_LC0:
+        .string "fld_console.sb"
+_prepareRentalCharTerminal:
+        stwu r1,-48(r1)
+        mflr r0
+        stw r0,52(r1)
+        stw r31,44(r1)
+        mr r31,r1
+        stw r3,24(r31)
+        lwz r9,24(r31)
+        lwz r9,164(r9)
+        stw r9,8(r31)
+        lis r9,_keyChanges_LC0@ha
+        addi r4,r9,_keyChanges_LC0@l
+        lwz r3,8(r31)
+        lis r12, after_keyChanges__strcmp@ha
+		addi r12,r12,after_keyChanges__strcmp@l
+		mtlr r12
+		lis r12,__strcmp@ha
+		addi r12,r12,__strcmp@l
+		mtctr r12
+		bctr
+after_keyChanges__strcmp:
+        mr r9,r3
+        addic r10,r9,-1
+        subfe r9,r10,r9
+        cmpwi cr0,r9,0
+        beq cr0,_keyChanges_L41
+        lwz r3,24(r31)
+        bl _beginScript
+        mr r9,r3
+        b _keyChanges_L42
+_keyChanges_L41:
+        lwz r9,8(r31)
+        lwz r9,36(r9)
+        stw r9,12(r31)
+        lwz r9,12(r31)
+        cmpwi cr0,r9,2
+        bne cr0,_keyChanges_L43
+        lwz r9,24(r31)
+        addi r9,r9,608
+        mr r3,r9
+        bl _beginScript
+        mr r9,r3
+        b _keyChanges_L42
+_keyChanges_L43:
+        lwz r9,12(r31)
+        cmpwi cr0,r9,11
+        bne cr0,_keyChanges_L44
+        lwz r9,24(r31)
+        addi r9,r9,-608
+        mr r3,r9
+        bl _beginScript
+        mr r9,r3
+        b _keyChanges_L42
+_keyChanges_L44:
+        lwz r3,24(r31)
+        bl _beginScript
+        mr r9,r3
+        nop
+_keyChanges_L42:
+        mr r3,r9
+        addi r11,r31,48
+        lwz r0,4(r11)
+        mtlr r0
+        lwz r31,-4(r11)
+        mr r1,r11
+        blr
 
 # VERSION SPECIFIC ###############################################################
 # assumes that boxNum in r22, dropNum in r20, idx in r18, ptr in r31, offset in r23
@@ -472,6 +540,10 @@ _bladeTerminalScenarioFlagPtr = 0x20343604
 _shopTerminalScenarioFlagPtr = 0x20343634
 0x02814cf4 = b _prepareBladeTerminal # in loadEnd::ScriptManager
 
+# reconfigure rentalCharTerminal to LShop
+__strcmp = 0x03b16c50
+0x028eacc8 = bl _prepareRentalCharTerminal
+_beginScript = 0x028cb70c # ::Gimmick::GimmickMapObj
 
 # mandatory disable shops
 0x02a32770 = nop # skell frame
@@ -482,16 +554,6 @@ _shopTerminalScenarioFlagPtr = 0x20343634
 0x02a326f8 = nop # ground armor
 0x02a32720 = nop # skell weapon
 0x02a32748 = nop # skell armor
-0x029e8a70 = nop # lu shop for augment upgrades
-
-# experimental code to integrate l shop into replaced develop menu
-# _openLShop = 0x02c89a9c
-# _isFinishLShop = 0x02c89c78
-# _closeLShop = 0x02c89c00
-# 0x02B83CB4 = bl _openLShop
-# 0x02B83CCC = bl _openLShop
-# 0x02B83C7C = bl _closeLShop
-# 0x02B83C98 = bl _closeLShop
 
 _menuBasePtr = 0x1038ae50 # from error::menu::BladeHomeMenu
 _openHudTelop = 0x02c91f3c # ::MenuTask
