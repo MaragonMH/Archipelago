@@ -32,37 +32,37 @@ _postItemList:
         stw r6,140(r31)
         lis r9,_itemTypes@ha
         addi r9,r9,_itemTypes@l
-        stw r9,48(r31)
+        stw r9,52(r31)
         lis r9,_itemTypes@ha
         addi r9,r9,_itemTypes@l
         stw r9,32(r31)
         lis r9,_itemTypes@ha
         addi r9,r9,_itemTypes@l
-        addi r9,r9,52
-        stw r9,52(r31)
+		addi r9,r9,52
+        stw r9,56(r31)
         b _itemList_L2
-_itemList_L18:
+_itemList_L19:
         lwz r9,32(r31)
         lwz r9,0(r9)
-        stw r9,56(r31)
+        stw r9,60(r31)
         lis r9,_itemListBase@ha
         addi r9,r9,_itemListBase@l
-        stw r9,60(r31)
-        lwz r4,56(r31)
-        lwz r3,60(r31)
+        stw r9,64(r31)
+        lwz r4,60(r31)
+        lwz r3,64(r31)
         bl _getItemTypeInfo
         mr r9,r3
         lwz r9,0(r9)
         stw r9,36(r31)
         li r9,999
         stw r9,40(r31)
-        lwz r9,56(r31)
+        lwz r9,60(r31)
         cmpwi cr0,r9,25
         beq cr0,_itemList_L3
-        lwz r9,56(r31)
+        lwz r9,60(r31)
         cmpwi cr0,r9,28
         beq cr0,_itemList_L3
-        lwz r9,56(r31)
+        lwz r9,60(r31)
         cmpwi cr0,r9,31
         bne cr0,_itemList_L4
 _itemList_L3:
@@ -70,28 +70,28 @@ _itemList_L3:
         stw r9,40(r31)
         b _itemList_L5
 _itemList_L4:
-        lwz r9,56(r31)
+        lwz r9,60(r31)
         cmpwi cr0,r9,26
         bne cr0,_itemList_L6
         li r9,800
         stw r9,40(r31)
         b _itemList_L5
 _itemList_L6:
-        lwz r9,56(r31)
+        lwz r9,60(r31)
         cmpwi cr0,r9,27
         bne cr0,_itemList_L7
         li r9,500
         stw r9,40(r31)
         b _itemList_L5
 _itemList_L7:
-        lwz r9,56(r31)
+        lwz r9,60(r31)
         cmpwi cr0,r9,29
         bne cr0,_itemList_L8
         li r9,300
         stw r9,40(r31)
         b _itemList_L5
 _itemList_L8:
-        lwz r9,56(r31)
+        lwz r9,60(r31)
         cmpwi cr0,r9,30
         bne cr0,_itemList_L5
         li r9,14
@@ -100,12 +100,12 @@ _itemList_L5:
         li r9,0
         stw r9,44(r31)
         b _itemList_L9
-_itemList_L17:
-        lwz r9,56(r31)
+_itemList_L18:
+        lwz r9,60(r31)
         addi r10,r9,-20
         or r9,r9,r10
         srwi r9,r9,31
-        stb r9,64(r31)
+        stb r9,68(r31)
         lwz r9,36(r31)
         lwz r9,0(r9)
         cmpwi cr0,r9,0
@@ -114,15 +114,22 @@ _itemList_L17:
         lwz r9,0(r9)
         slwi r9,r9,13
         srwi r9,r9,26
-        stw r9,68(r31)
-        lwz r9,56(r31)
-        cmpwi cr0,r9,24
+        stw r9,48(r31)
+        lwz r9,48(r31)
+        cmplwi cr0,r9,32
         ble cr0,_itemList_L11
-        lwz r9,56(r31)
-        lwz r10,68(r31)
-        cmpw cr0,r10,r9
-        bne cr0,_itemList_L20
+        lwz r9,48(r31)
+        addi r9,r9,-32
+        stw r9,48(r31)
 _itemList_L11:
+        lwz r9,60(r31)
+        cmpwi cr0,r9,24
+        ble cr0,_itemList_L12
+        lwz r9,60(r31)
+        lwz r10,48(r31)
+        cmpw cr0,r10,r9
+        bne cr0,_itemList_L21
+_itemList_L12:
         lwz r9,36(r31)
         lwz r9,0(r9)
         srwi r9,r9,19
@@ -132,9 +139,9 @@ _itemList_L11:
         slwi r9,r9,19
         srwi r9,r9,22
         stw r9,76(r31)
-        lbz r9,64(r31)
+        lbz r9,68(r31)
         cmpwi cr0,r9,0
-        beq cr0,_itemList_L13
+        beq cr0,_itemList_L14
         lwz r9,36(r31)
         addi r9,r9,12
         lhz r9,0(r9)
@@ -196,7 +203,7 @@ _itemList_L11:
         lwz r10,84(r31)
         lwz r9,92(r31)
         lwz r8,80(r31)
-        lwz r7,68(r31)
+        lwz r7,48(r31)
         lwz r6,72(r31)
         lis r5,_formatItemGearText@ha
         addi r5,r5,_formatItemGearText@l
@@ -216,10 +223,10 @@ after_itemList__sprintf_s:
         add r9,r9,r10
         stw r9,132(r31)
         b _itemList_L10
-_itemList_L13:
+_itemList_L14:
         lwz r10,140(r31)
         lwz r8,76(r31)
-        lwz r7,68(r31)
+        lwz r7,48(r31)
         lwz r6,72(r31)
         lis r9,_formatItemText@ha
         addi r5,r9,_formatItemText@l
@@ -240,27 +247,27 @@ after_itemList1__sprintf_s:
         add r9,r9,r10
         stw r9,132(r31)
 _itemList_L10:
-        lbz r9,64(r31)
+        lbz r9,68(r31)
         cmpwi cr0,r9,0
-        beq cr0,_itemList_L14
+        beq cr0,_itemList_L15
         lwz r9,36(r31)
         addi r9,r9,24
         stw r9,36(r31)
-        b _itemList_L15
-_itemList_L14:
+        b _itemList_L16
+_itemList_L15:
         lwz r9,36(r31)
         addi r9,r9,12
         stw r9,36(r31)
-_itemList_L15:
+_itemList_L16:
         lwz r10,132(r31)
         lwz r9,136(r31)
         cmplw cr0,r10,r9
-        ble cr0,_itemList_L16
+        ble cr0,_itemList_L17
         lwz r3,128(r31)
         bl _postCurl
         lwz r9,128(r31)
         stw r9,132(r31)
-_itemList_L16:
+_itemList_L17:
         lwz r9,44(r31)
         addi r9,r9,1
         stw r9,44(r31)
@@ -268,19 +275,19 @@ _itemList_L9:
         lwz r10,44(r31)
         lwz r9,40(r31)
         cmpw cr0,r10,r9
-        blt cr0,_itemList_L17
-        b _itemList_L12
-_itemList_L20:
+        blt cr0,_itemList_L18
+        b _itemList_L13
+_itemList_L21:
         nop
-_itemList_L12:
+_itemList_L13:
         lwz r9,32(r31)
         addi r9,r9,4
         stw r9,32(r31)
 _itemList_L2:
         lwz r10,32(r31)
-        lwz r9,52(r31)
+        lwz r9,56(r31)
         cmpw cr0,r10,r9
-        bne cr0,_itemList_L18
+        bne cr0,_itemList_L19
         lwz r9,132(r31)
         mr r3,r9
         addi r11,r31,160

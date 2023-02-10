@@ -27,6 +27,8 @@ char* _postItemList(char* stringStartPtr, char* stringCurrentPtr, char* stringEn
             bool isEquip = type < 0x14;
             if(*itemListPtr != 0){
                 unsigned int itemType = itemListPtr[0] << 13 >> 26;
+                // Check for GhostItems
+                if(itemType > 0x20) itemType -= 0x20;
                 if(type > 0x18 && type != itemType) break;
                 unsigned int itemId = itemListPtr[0] >> 19;
                 unsigned int itemCount = itemListPtr[0] << 19 >> 22;
