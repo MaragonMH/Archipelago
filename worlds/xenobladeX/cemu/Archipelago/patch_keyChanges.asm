@@ -336,6 +336,9 @@ _itemLoopEnd = 0x02b076e8
 #disable field skills
 0x0238e138 = nop
 
+#disable affinity quest arts reward
+0x029c7dc0 = li r3,0
+
 # mandatory disable shops
 0x02a32770 = nop # skell frame
 0x02a69954 = nop # augment menu
