@@ -1,5 +1,5 @@
 import typing
-from Options import Option, DeathLink, Range, Toggle, DefaultOnToggle, Choice
+from Options import Option, DeathLink, Toggle, DefaultOnToggle, Choice
 
 class CollectionRange(Choice):
     """Increases the collection range of items in the field"""
@@ -218,7 +218,7 @@ class LogicCheating(Toggle):
     """Allows you to get the randomized items the regular way."""
     display_name = "Logic Cheating"
 
-xenobladeX_options: typing.Dict[str, Option] = {
+xenobladeX_options: typing.Dict[str, type(Option)] = {
     "collection_range": CollectionRange,
     "armor_slot_upgrades": ArmorSlotUpgrades,
     "lv_points_modifier": LvPointsModifier,

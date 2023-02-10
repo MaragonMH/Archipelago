@@ -1,27 +1,97 @@
-from BaseClasses import Item
+from BaseClasses import Item, ItemClassification
 
 class XenobladeXItem(Item):
     game: str = "XenobladeX"
 
-item_table = {
-    "Trinket 01": 2515000,
-    "Trinket 02": 2515001,
-    "Trinket 03": 2515002,
-    "Trinket 04": 2515003,
-    "Trinket 05": 2515004,
-    "Trinket 06": 2515005,
-    "Trinket 07": 2515006,
-    "Trinket 08": 2515007,
-    "Trinket 09": 2515008,
-    "Trinket 10": 2515009,
-    "Trinket 11": 2515010,
-    "Trinket 12": 2515011,
-    "Trinket 13": 2515012,
-    "Trinket 14": 2515013,
-    "Trinket 15": 2515014,
-    "Trinket 16": 2515015,
-    "Trinket 17": 2515016,
-    "Trinket 18": 2515017,
-    "Trinket 19": 2515018,
-    "Trinket 20": 2515019
+# Specifies the items you can receive
+# The first layer is for the object group
+# The second one is for the items itself
+# Use a dict to specifiy multiple
+xenobladeXItems = {
+    "Key": {
+        "Skell License": {"class": ItemClassification.progression}, 
+        "Skell Flight Module": {"class": ItemClassification.progression}, 
+        "Frontier Nav": {"class": ItemClassification.progression}, 
+        "BLADE Terminal": {"class": ItemClassification.progression}, 
+        "Overdrive": {}, 
+        "Shop Terminal": {}, 
+        "Ls Shop": {}, 
+        "AM Terminal": {}, 
+    },
+    "Field Skill": {
+        "Mechanical": {"count": 4, "class": ItemClassification.progression},
+        "Biological": {"count": 4, "class": ItemClassification.progression},
+        "Archaeological": {"count": 4, "class": ItemClassification.progression},
+    },
+    "Skell": {
+        "Urban 20": {"class": ItemClassification.progression},
+    },
+    "Skell Weapon": {
+
+    },
+    "Skell Superweapon": {
+
+    },
+    "Skell Augment": {
+
+    },
+    "Ground Augment": {
+
+    },
+    "Class": {
+
+    },
+    "Art": {
+
+    },
+    "Skill": {
+
+    },
+    "Heart": {
+        "Gwin Heart": {"count": 5, "class": ItemClassification.progression},
+        "Lao Heart": {"count": 5, "class": ItemClassification.progression},
+    },
+    # Needs verification, source was not credible
+    "Data Probe": {
+        "Mining G1": {"count": 20, "class": ItemClassification.progression},
+        "Mining G2": {"count": 24},
+        "Mining G3": {"count": 7},
+        "Mining G4": {"count": 15},
+        "Mining G5": {"count": 9},
+        "Mining G6": {"count": 9},
+        "Mining G7": {"count": 4},
+        "Mining G8": {"count": 23},
+        "Mining G9": {"count": 10},
+        "Mining G10": {"count": 4},
+
+        "Research G1": {"count": 3, "class": ItemClassification.progression},
+        "Research G2": {"count": 4},
+        "Research G3": {"count": 2},
+        "Research G4": {"count": 6},
+        "Research G5": {"count": 7},
+        "Research G6": {"count": 3},
+
+        "Booster G1": {"count": 3},
+        "Booster G2": {"count": 3},
+        "Storage": {"count": 11, "class": ItemClassification.progression},
+        "Duplicator": {"count": 4},
+
+        "Fuel Recovery": {"count": 3},
+        "Melee Attack": {"count": 3},
+        "Ranged Attack": {"count": 3},
+        "EZ Debuff": {"count": 3},
+        "Attribute Resistance": {"count": 3},
+    },
 }
+
+def create_items(self):
+    id = self.base_id
+    for itemGroupName, itemGroup in xenobladeXItems.items():
+        for itemName, item in itemGroup:
+            # itemName = "[" + itemGroupName + "] "
+            count = item["count"] if "count" in item else 1
+            itemClassification = item["class"] if "class" in item else ItemClassification.useful
+            for idx in range(count):
+                appendix = " #" + str(idx) if idx > 1 else ""
+                self.multiworld.itempool += XenobladeXItem(itemName + appendix, itemClassification, id, self.player)
+                id += 1

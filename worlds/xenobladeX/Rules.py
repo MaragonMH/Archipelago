@@ -1,43 +1,61 @@
 import typing
+from collections import OrderedDict
 from ..generic.Rules import add_rule
-from .Regions import connect_regions, v6areas
+from .Regions import connect_regions
 
+# Requirements to advance to the next region
+# Use dict to specify the quantity you need
+xenobladeXRegionRules = OrderedDict({
+    "Chapter 1": {},
+    "Chapter 2": {},
+    "Chapter 3": {},
+    "Chapter 4": {
+        "Data Probe G1": {"count": 3}, 
+        "Research Probe G1": {"count": 1}, 
+        "Frontier Nav": {}
+    },
+    "Chapter 5": {},
+    "Chapter 6": {},
+    "Chapter 7": {},
+    "Chapter 8": {"Lao Heart": {"count": 1}},
+    "Chapter 9": {},
+    "Chapter 10": {},
+    "Chapter 11": {"Gwin Heart": {"count": 1}},
+    "Chapter 12": {"Skell-License": {}, "Skell-Flight-Module": {}},
+    "Epilogue": {}
+})
 
-def _has_trinket_range(state, player, start, end) -> bool:
-    for i in range(start, end):
-        if not state.has("Trinket " + str(i + 1).zfill(2), player):
+# Specifiy a location and a list of required items
+# Use dict for count
+# Use Array for or rules
+xenobladeXRegionRules = {
+    "Segment 1": [{"Frontier Nav"}],
+}
+
+def _has_items(state, player, requirements) -> bool:
+    result = True
+    for locationName, requirement in requirements.items():
+        count = requirement["count"] if "count" in requirement else 0
+        received = 0
+        for idx in range(count):
+            appendix = " #" + str(idx) if count > 0 else ""
+            if state.has(locationName + appendix, player): 
+                received += 1
+        if count == 0:
+            count += 1
+        if received < count:
             return False
-    return True
+    return result
 
 
-def set_rules(world, player, area_connections: typing.Dict[int, int], area_cost_map: typing.Dict[int, int]):
-    areashuffle = list(range(len(v6areas)))
-    if world.AreaRandomizer[player].value:
-        world.random.shuffle(areashuffle)
-    area_connections.update({(index + 1): (value + 1) for index, value in enumerate(areashuffle)})
-    area_connections.update({0: 0})
-    if world.AreaCostRandomizer[player].value:
-        world.random.shuffle(areashuffle)
-    area_cost_map.update({(index + 1): (value + 1) for index, value in enumerate(areashuffle)})
-    area_cost_map.update({0: 0})
+def set_rules(world, player):
+    world.completion_condition[player] = lambda state: state.can_reach("Epilogue", 'Location', player)
 
-    for i in range(1, 5):
-        connect_regions(world, player, "Menu", v6areas[area_connections[i] - 1],
-                        lambda state, i=i: _has_trinket_range(state, player,
-                                                              world.DoorCost[player].value * (area_cost_map[i] - 1),
-                                                              world.DoorCost[player].value * area_cost_map[i]))
+    for i, (chapter, requirements) in enumerate (xenobladeXRegionRules.items()):
+        # Region connection. Only for advancing chapters
+        connect_regions(world, player, chapter, xenobladeXRegionRules.items()[i + 1], lambda state: _has_items(state, player, requirements))
 
-    # Special Rule for V
-    add_rule(world.get_location("V", player), lambda state: state.can_reach("Laboratory", 'Region', player) and
-                                                            state.can_reach("The Tower", 'Region', player) and
-                                                            state.can_reach("Space Station 2", 'Region', player) and
-                                                            state.can_reach("Warp Zone", 'Region', player))
-
-    # Special Rule for NPC Trinket
-    add_rule(world.get_location("NPC Trinket", player),
-             lambda state: state.can_reach("Laboratory", 'Region', player) or
-                           (state.can_reach("The Tower", 'Region', player) and
-                            state.can_reach("Space Station 2", 'Region', player) and
-                            state.can_reach("Warp Zone", 'Region', player)))
-
-    world.completion_condition[player] = lambda state: state.can_reach("V", 'Location', player)
+    for (location, rules) in xenobladeXRegionRules.items():
+        for requirements in rules:
+            # Location connection. Further requirements, if the chapter criteria is fullfilled
+            add_rule(world.get_location(location, player), lambda state: _has_items(state, player, requirements))

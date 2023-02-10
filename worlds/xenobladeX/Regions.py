@@ -1,37 +1,30 @@
 import typing
 from BaseClasses import MultiWorld, Region, Entrance, Location, RegionType
-from .Locations import XenobladeXLocation, location_table
+from .Locations import XenobladeXLocation
 
-xenobladeXareas = ["Administrative District", "BLADE Barracks", "Commercial District", "Industrial District", "Ma-non Ship", 
-"Residential District", "Primordia", "Noctilum", "Oblivia", "Sylvalum", "Cauldros"]
+# specifiy all the locations inside a region
+xenobladeXRegions = {
+    "Menu" : {},
+    "Chapter 1": {"Segment 1"},
+    "Chapter 2": {},
+    "Chapter 3": {},
+    "Chapter 4": {},
+    "Chapter 5": {},
+    "Chapter 6": {},
+    "Chapter 7": {},
+    "Chapter 8": {},
+    "Chapter 9": {},
+    "Chapter 10": {},
+    "Chapter 11": {},
+    "Chapter 12": {},
+    "Epilogue": {},
+}
 
-
-def create_regions(world: MultiWorld, player: int):
-    regOvr = Region("Menu", RegionType.Generic, "Dimension VVVVVV", player, world)
-    locOvr_names = ["Overworld (Pipe-shaped Segment)", "Overworld (Left of Ship)", "Overworld (Square Room)", "Overworld (Sad Elephant)",
-                    "It's a Secret to Nobody", "Trench Warfare", "NPC Trinket", "V"]
-    regOvr.locations += [XenobladeXLocation(player, loc_name, location_table[loc_name], regOvr) for loc_name in locOvr_names]
-    world.regions.append(regOvr)
-
-    regLab = Region("Laboratory", RegionType.Generic, "Laboratory", player, world)
-    locLab_names = ["Young Man, It's Worth the Challenge", "Overworld (Outside Entanglement Generator)", "The Tantalizing Trinket", "Purest Unobtainium"]
-    regLab.locations += [XenobladeXLocation(player, loc_name, location_table[loc_name], regLab) for loc_name in locLab_names]
-    world.regions.append(regLab)
-
-    regTow = Region("The Tower", RegionType.Generic, "The Tower", player, world)
-    locTow_names = ["The Tower 1", "The Tower 2"]
-    regTow.locations += [XenobladeXLocation(player, loc_name, location_table[loc_name], regTow) for loc_name in locTow_names]
-    world.regions.append(regTow)
-
-    regSp2 = Region("Space Station 2", RegionType.Generic, "Space Station 2", player, world)
-    locSp2_names = ["One Way Room", "You Just Keep Coming Back", "Clarion Call", "Prize for the Reckless", "Doing things the hard way"]
-    regSp2.locations += [XenobladeXLocation(player, loc_name, location_table[loc_name], regSp2) for loc_name in locSp2_names]
-    world.regions.append(regSp2)
-
-    regWrp = Region("Warp Zone", RegionType.Generic, "Warp Zone", player, world)
-    locWrp_names = ["Edge Games"]
-    regWrp.locations += [XenobladeXLocation(player, loc_name, location_table[loc_name], regWrp) for loc_name in locWrp_names]
-    world.regions.append(regWrp)
+def create_regions(world: MultiWorld, player: int, location_name_to_id):
+    for chapter in xenobladeXRegions:
+        region = Region(chapter, RegionType.Generic, chapter, player, world)
+        region.locations += [XenobladeXLocation(player, location_name, location_name_to_id[location_name], region) for location_name in xenobladeXRegions[chapter]]
+        world.regions.append(region)
 
 
 def connect_regions(world: MultiWorld, player: int, source: str, target: str, rule):
