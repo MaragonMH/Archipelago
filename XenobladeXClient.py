@@ -31,7 +31,7 @@ class XenobladeXHttpServer(HTTPServer):
         elif item_game_type < 0x22:
             self.items += f"S Id={item_game_id:08x} Lv={1:08x}\n"
         elif item_game_type < 0x23:
-            self.items += f"F Id={item_game_id:08x} Lv={item_game_level:08x}\n"
+            self.items += f"F Id={item_game_id:08x} Lv={item_game_level*10:08x}\n"
         elif item_game_type < 0x24:
             self.items += f"D Id={item_game_id:08x} Lv={item_game_level:08x}\n"
         elif item_game_type < 0x25:

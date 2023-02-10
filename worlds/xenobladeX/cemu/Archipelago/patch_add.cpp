@@ -85,10 +85,11 @@
 // Run the new ruleset to adjust your .asm code
 #include <cstddef>
 char* fieldSkillBasePtr;
+char* classBasePtr;
 
 void _AddItemEquipment(int type, int id, char* buffer, int param);
-void _SetArtsLevel(char* characterBasePtr, int id, int lvl);
-void _SetSkillLevel(char* characterBasePtr, int id, int lvl);
+void _reqMenuSetArtsLevel(char* characterBasePtr, int id, int lvl, int filler);
+void _reqMenuSetSkillsLevel(char* characterBasePtr, int id, int lvl, int filler);
 void _SetFriendRank(int id, int lvl);
 
 int * GetCharaDataPtr(int charaId); //::Util
@@ -104,7 +105,7 @@ void _addGarage(int* idPtr); // ::CmdCommon::SceneCmdPrm
 // 6 = Ground Weapon Ranged			https://xenoblade.github.io/xbx/bdat/common_local_us/WPN_PcList.html
 // 7 = Ground Weapon Melee
 // 8 = Probably Avatar Creation 	// Don't use
-// 9 = Skell Frame					https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_DlList.html(FrameId) => https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_DlList.html
+// 9 = Skell Frame					https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_DlList.html (FrameId) => https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_DlList.html
 // a = Skell Armor Head				https://xenoblade.github.io/xbx/bdat/common_local_us/AMR_DlList.html
 // b = Skell Armor Torso
 // c = Skell Armor Arm R
@@ -139,15 +140,13 @@ void _addItem(int type, int id){
 // https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ArtsList.html
 void _addArt(int id, int lv){
 	int mainCharacterId = 0;
-	char* characterBasePtr = (char*)GetCharaDataPtr(mainCharacterId) - 0x47c; // from SetArtsLevel::menu::MenuArtsSet line 9
-	_SetArtsLevel(characterBasePtr, id, lv);
+	_reqMenuSetArtsLevel((char*)GetCharaDataPtr(mainCharacterId), id, lv, 0);
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_SkillClass.html
 void _addSkill(int id, int lv){
 	int mainCharacterId = 0;
-	char* characterBasePtr = (char*)GetCharaDataPtr(mainCharacterId) - 0x47c; // from SetSkillLevel::menu::MenuSkillSet line 9
-	_SetArtsLevel(characterBasePtr, id, lv);
+	_reqMenuSetSkillsLevel((char*)GetCharaDataPtr(mainCharacterId), id, lv, 0);
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_PcList.html
@@ -155,30 +154,31 @@ void _addFriend(int id, int lv){
 	_SetFriendRank(id, lv);
 }
 
-// 0 = Mechanical, 1 = Biological, 2 = Archeological
+// 1 = Mechanical, 2 = Biological, 3 = Archeological
 void _addFieldSkill(int id, int lv){
 	char* fieldSkillOffset = fieldSkillBasePtr;
 	fieldSkillOffset += 0x48b18; // from updateStatus::menu::MenuTotalSimpleStatus line 413
-	fieldSkillOffset += id;
+	fieldSkillOffset += id - 1;
 	*fieldSkillOffset = (char)lv;
 }
 
-// 0 = Skell License, 1 = Flight Module, 2 = Overdrive, 3 = FNet
+// 1 = Skell License, 2 = Flight Module, 3 = Overdrive, 4 = FNet
 void _addKey(int id, int flag){
 	switch(id){
-		case 0:
+		case 1:
 		_setLocal(1, 0x5e5b, flag);
 		break;
 
-		case 1:
+		case 2:
+		// has issues as well
 		_setLocal(1, 0x7610, flag);
 		break;
 
-		case 2:
+		case 3:
 		_setLocal(1, 0x6bc3, flag);
 		break;
 
-		case 3:
+		case 4:
 		// no clue how to disable/enable Fnet
 		break;
 	}
@@ -186,5 +186,7 @@ void _addKey(int id, int flag){
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html
 void _addClass(int id, int lv){
-	return;
+	char* classOffset = classBasePtr;
+	classOffset += id * 0x1e + 0xf65c; // from getClassLv::menu::MenuDataUtil
+	*classOffset = (char)lv;
 }
