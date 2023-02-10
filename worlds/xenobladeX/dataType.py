@@ -12,6 +12,10 @@ class LocData(NamedTuple):
 	count: int = 1
 	regions: list[str] = ["Menu"]
 
+class GroupType(NamedTuple):
+	type: int
+	count: int = 1
+
 class Requirement(NamedTuple):
 	name: str
 	count: int = 1

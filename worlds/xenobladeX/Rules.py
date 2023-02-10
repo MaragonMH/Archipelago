@@ -45,10 +45,11 @@ def _get_requirements_by_subregion(subregion:str) -> list[Req]:
                 return requirements
     return []
 
-def set_rules(world: MultiWorld, player: int, item_name_to_id: Dict[str, int]):
+def set_rules(world: MultiWorld, player: int):
     """Setting all the rules for region connections and region->item connections"""
     victory_item = create_item_event(world, "Victory", player)
-    final_boss_location = create_location_event(world, "Epilogue", "EBK: Lao", player)
+    final_boss_location = create_location_event(world, "Menu", "EBK: Lao", player)
+    final_boss_location.access_rule = lambda state: True
     final_boss_location.place_locked_item(victory_item)
     finish: Callable[[CollectionState], bool] = lambda state: state.has("Victory", player)
     world.completion_condition[player] = finish

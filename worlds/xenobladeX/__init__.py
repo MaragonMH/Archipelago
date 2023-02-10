@@ -30,7 +30,6 @@ class XenobladeXWorld(World):
 
     data_version = 0
     base_id = 4001000
-    max_type_count = 5000
 
     option_definitions = xenobladeX_options
 
@@ -41,7 +40,7 @@ class XenobladeXWorld(World):
         create_locations(self.multiworld, self.player)
 
     def set_rules(self):
-        set_rules(self.multiworld, self.player, self.item_name_to_id)
+        set_rules(self.multiworld, self.player)
 
     def create_items(self):
         create_items(self.multiworld, self.player, self.base_id)
@@ -56,4 +55,4 @@ class XenobladeXWorld(World):
         pass
 
     def fill_slot_data(self) -> Dict[str, object]:
-        return generate_slot_data(self.base_id, self.max_type_count)
+        return generate_slot_data(self.base_id)
