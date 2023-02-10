@@ -2,6 +2,19 @@
 moduleMatches = 0xF882D5CF, 0x30B6E091, 0x7672271D, 0x218F6E07, 0xAB97DE6B, 0x676EB33E, 0x785CA8A9 ; 1.0.1E, 1.0.2U, 1.0.2J, 1.0.0E, 1.0.1U, 1.0.0U, 1.0.0J
 .origin = codecave
 
+disableGroundArmor: 
+        .int $disableGroundArmor
+disableGroundWeapons: 
+        .int $disableGroundWeapons
+disableSkellArmor: 
+        .int $disableSkellArmor
+disableSkellWeapons: 
+        .int $disableSkellWeapons
+disableGroundAugments: 
+        .int $disableGroundAugments
+disableSkellAugments: 
+        .int $disableSkellAugments
+
 _IsPermit:
         stwu r1,-16(r1)
         mflr r0
@@ -110,8 +123,8 @@ _checkType:
         lwz r9,8(r31)
         cmpwi cr0,r9,5
         bgt cr0,_keyChanges_L12
-        lis r9,$disableGroundArmor@ha
-        lwz r9,$disableGroundArmor@l(r9)
+        lis r9,disableGroundArmor@ha
+        lwz r9,disableGroundArmor@l(r9)
         b _keyChanges_L13
 _keyChanges_L12:
         lwz r9,8(r31)
@@ -120,8 +133,8 @@ _keyChanges_L12:
         lwz r9,8(r31)
         cmpwi cr0,r9,7
         bgt cr0,_keyChanges_L14
-        lis r9,$disableGroundWeapons@ha
-        lwz r9,$disableGroundWeapons@l(r9)
+        lis r9,disableGroundWeapons@ha
+        lwz r9,disableGroundWeapons@l(r9)
         b _keyChanges_L13
 _keyChanges_L14:
         lwz r9,8(r31)
@@ -130,8 +143,8 @@ _keyChanges_L14:
         lwz r9,8(r31)
         cmpwi cr0,r9,14
         bgt cr0,_keyChanges_L15
-        lis r9,$disableSkellArmor@ha
-        lwz r9,$disableSkellArmor@l(r9)
+        lis r9,disableSkellArmor@ha
+        lwz r9,disableSkellArmor@l(r9)
         b _keyChanges_L13
 _keyChanges_L15:
         lwz r9,8(r31)
@@ -140,8 +153,8 @@ _keyChanges_L15:
         lwz r9,8(r31)
         cmpwi cr0,r9,19
         bgt cr0,_keyChanges_L16
-        lis r9,$disableSkellWeapons@ha
-        lwz r9,$disableSkellWeapons@l(r9)
+        lis r9,disableSkellWeapons@ha
+        lwz r9,disableSkellWeapons@l(r9)
         b _keyChanges_L13
 _keyChanges_L16:
         lwz r9,8(r31)
@@ -150,8 +163,8 @@ _keyChanges_L16:
         lwz r9,8(r31)
         cmpwi cr0,r9,21
         bgt cr0,_keyChanges_L17
-        lis r9,$disableGroundAugments@ha
-        lwz r9,$disableGroundAugments@l(r9)
+        lis r9,disableGroundAugments@ha
+        lwz r9,disableGroundAugments@l(r9)
         b _keyChanges_L13
 _keyChanges_L17:
         lwz r9,8(r31)
@@ -160,8 +173,8 @@ _keyChanges_L17:
         lwz r9,8(r31)
         cmpwi cr0,r9,24
         bgt cr0,_keyChanges_L18
-        lis r9,$disableSkellAugments@ha
-        lwz r9,$disableSkellAugments@l(r9)
+        lis r9,disableSkellAugments@ha
+        lwz r9,disableSkellAugments@l(r9)
         b _keyChanges_L13
 _keyChanges_L18:
         lwz r9,8(r31)
