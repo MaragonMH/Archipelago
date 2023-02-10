@@ -10,5 +10,8 @@ Data("Skell License"),
 Data("Flight Module"),
 Data("Overdrive"),
 Data("FNet"),
+Data("Blade"),
+Data("Death", count=0),
+Data("Kill Enemy", count=0),
 *other_data,
 ]

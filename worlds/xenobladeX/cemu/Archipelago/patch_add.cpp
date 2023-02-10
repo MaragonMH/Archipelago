@@ -94,6 +94,9 @@ void _reqMenuSetSkillsLevel(char* characterBasePtr, int id, int lvl, int filler)
 void _SetFriendRank(int id, int lvl);
 char* _getClassDataPtr(int id);
 unsigned int** _getItemTypeInfo(int*, int);
+void _reqForceDamagePlayerTargetGoner(int player);
+void _SetDead(int unused, char* charaHandle);
+void _getCharaHandle(char* charaHandle, int partyIndex);
 
 int * GetCharaDataPtr(int charaId); //::Util
 void _setLocal(int width, int position, int value); //::GameFlag
@@ -195,6 +198,12 @@ void _addKey(int id, int flag){
 	// but here you need at least 3002
 
 	if(id == 0) _setLocal(0x10, 1, flag);
+	else if(id == 6){
+		char charaHandle[8];
+		_getCharaHandle(charaHandle, 0);
+		_SetDead(0, charaHandle);
+	}
+	else if(id == 7) _reqForceDamagePlayerTargetGoner(0);
 	// 1: _setLocal(1, 0x5e5b, flag);
 	// 2: _setLocal(1, 0x7610, flag);
 	// 3: _setLocal(1, 0x6bc3, flag);

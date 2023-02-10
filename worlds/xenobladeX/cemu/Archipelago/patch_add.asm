@@ -189,41 +189,61 @@ _addFieldSkill:
         mr r1,r11
         blr
 _addKey:
-        stwu r1,-32(r1)
+        stwu r1,-48(r1)
         mflr r0
-        stw r0,36(r1)
-        stw r31,28(r1)
+        stw r0,52(r1)
+        stw r31,44(r1)
         mr r31,r1
-        stw r3,8(r31)
-        stw r4,12(r31)
-        lwz r9,8(r31)
+        stw r3,24(r31)
+        stw r4,28(r31)
+        lwz r9,24(r31)
         cmpwi cr0,r9,0
         bne cr0,_add_L18
-        lwz r5,12(r31)
+        lwz r5,28(r31)
         li r4,1
         li r3,16
         bl _setLocal
         b _add_L19
 _add_L18:
-        lwz r9,8(r31)
+        lwz r9,24(r31)
+        cmpwi cr0,r9,6
+        bne cr0,_add_L20
+        li r4,0
+        addi r9,r31,8
+        mr r3,r9
+        bl _getCharaHandle
+        addi r9,r31,8
+        mr r4,r9
+        li r3,0
+        bl _SetDead
+        b _add_L19
+_add_L20:
+        lwz r9,24(r31)
+        cmpwi cr0,r9,7
+        bne cr0,_add_L21
+        li r3,0
+        bl _reqForceDamagePlayerTargetGoner
+        b _add_L19
+_add_L21:
+        lwz r9,24(r31)
         addi r9,r9,23
         mr r4,r9
         li r3,29
         bl _addItem
 _add_L19:
-        lwz r9,8(r31)
+        lwz r9,24(r31)
         cmpwi cr0,r9,4
-        bne cr0,_add_L21
+        bne cr0,_add_L23
         lis r9,fnetBasePtr@ha
         lwz r10,fnetBasePtr@l(r9)
-        lwz r9,12(r31)
+        lwz r9,28(r31)
         mulli r9,r9,3001
         mr r4,r9
         mr r3,r10
         bl _changeScenarioFlagFNet
-_add_L21:
+_add_L23:
         nop
-        addi r11,r31,32
+        addi r11,r31,48
         lwz r0,4(r11)
         mtlr r0
         lwz r31,-4(r11)
@@ -267,6 +287,9 @@ _getClassDataPtr = 0x027fa7a0 # ::Util
 
 _setLocal = 0x0228f008 # ::GameFlag
 _changeScenarioFlagFNet = 0x027d5638
+_reqForceDamagePlayerTargetGoner = 0x021a88e4
+_SetDead = 0x0298f2f0
+_getCharaHandle = 0x02373b9c
 
 ##################################################################################
 [XCX_Archipelago_Add_V102U]

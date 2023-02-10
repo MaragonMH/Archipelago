@@ -87,8 +87,9 @@
 // Defeat: Number of enemies you defeated
 // Discovery(Dc): 0, 1, 2. 0 = Not discovered yet (will appear as ??? in menu), 1 = encountered in combat, 2 = fully researched (white dot in menu)
 #include <cstddef>
-int** fnetBasePtr;
-char _formatKeyText[] = "KY Id=%01x Fg=%01x:";  // First %05x Second %05x Third %05x Fourth %05x Fifth %05x Sixth %05x Seventh %05x:";
+extern int** fnetBasePtr;
+extern int* _menuBasePtr;
+extern int _charaHasDied;
 
 // Start
 // declare the required functions here. These need to be located inside your game
@@ -106,16 +107,20 @@ void _postCurl(char[]);
 
 char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
     for(int keyId = 0; keyId < 6; keyId++){
-		int flag;
+		int flag = 0;
 
 		// just for debugging purposes
 		if(keyId == 0) flag = getLocal(0x10, 1);
+		else if(keyId == 6){
+			if (_charaHasDied) _charaHasDied = 0;
+			else continue;
+		}
 		// 1: flag = IsDollLicense();
 		// 2: flag = getLocal(1, 0x7610); // from int getFlightUnitFlag(); // ::SquadUtil
 		// 3: flag = IsPermit();
 		else _hasPreciousItem(24 + keyId - 1);
 
-		stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, _formatKeyText, keyId, flag);
+		stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, "KY Id=%01x Fg=%01x:", keyId, flag);
 
 		// Reset buffer
 		if(stringCurrentPtr > stringEndPtr){
@@ -124,4 +129,16 @@ char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEnd
 		}
     }
 	return stringCurrentPtr;
+}
+
+int _request(int* requestCtrlPtr, int code, int placeholder);
+void writeDebug(char* output);
+int _notifyDead(int* requestCtrlPtr, int code, int placeholder){
+	int* backupRequestCtrlPtr = requestCtrlPtr;
+	asm("stw 29,24(31)");
+	if(code == 0x2e && *requestCtrlPtr == 0x100){ 
+		_charaHasDied = 1;
+		writeDebug("Sending Death");
+	}
+	return _request(backupRequestCtrlPtr, code, placeholder);
 }

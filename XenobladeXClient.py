@@ -96,7 +96,10 @@ class XenobladeXHttpServer(HTTPServer):
     def download_death(self) -> bool:
         if self.upload_in_progress:
             return False
-        return re.match(r'^KY Id=0 Fg=1\n', self.locations) is not None
+        pattern = r'^KY Id=6 .*\n'
+        result:bool = re.match(pattern, self.locations) is not None
+        re.sub(pattern, "", self.locations)
+        return result
 
 
 class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -178,7 +181,7 @@ class XenobladeXContext(CommonContext):
     def on_deathlink(self, data: dict):
         if self.connected and self.death_link_enabled:
             self.death_link_pending = True
-            self.http_server.upload_item(item_game_type=0, item_game_id=0)
+            self.http_server.upload_item(item_game_type=6, item_game_id=0)
         super().on_deathlink(data)
 
     def run_gui(self):
@@ -272,9 +275,11 @@ async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
     logger.debug("started xenobladeX sync task")
     while not ctx.exit_event.is_set():
         if ctx.connected:
-            ctx.download_game_locations()
             if ctx.http_server.download_death() and not ctx.death_link_pending:
                 await ctx.send_death()
+            else:
+                ctx.death_link_pending = False
+            ctx.download_game_locations()
             ctx.upload_game_items()
         await asyncio.sleep(2)
     logger.debug("terminated xenobladeX sync task")
