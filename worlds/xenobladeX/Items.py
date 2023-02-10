@@ -926,7 +926,6 @@ def create_items(world, player, item_id):
     """Create all items"""
     for item_group in xenobladeXItems.values():
         for item_name, item in item_group.items():
-            # itemName = "[" + itemGroupName + "] "
             item_classification = item["class"] if isinstance(
                 item, dict) and "class" in item else ItemClassification.useful
             # Multiple items of the same kind

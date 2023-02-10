@@ -29,6 +29,7 @@ xenobladeXRegionRules = {
 # Specifiy a location and a list of required items
 # Use dict for count
 # Use Array for or rules
+# Big TODO
 xenobladeXRules = {
     "FN Site 102 (2, 7, -9)": [{"Frontier Nav": {}}],
 }
