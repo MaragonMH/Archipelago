@@ -1,7 +1,5 @@
 from functools import partial
-from typing import Callable
-from BaseClasses import CollectionState, MultiWorld
-from .Locations import create_location_event
+from BaseClasses import MultiWorld
 from .Regions import connect_regions
 from .Items import has_items, create_item_event
 from .dataType import Rule, Requirement as Req
@@ -45,14 +43,11 @@ def _get_requirements_by_subregion(subregion:str) -> list[Req]:
                 return requirements
     return []
 
-def set_rules(world: MultiWorld, player: int):
+def set_rules(world: MultiWorld, player: int, item_name_to_id):
     """Setting all the rules for region connections and region->item connections"""
-    victory_item = create_item_event(world, "Victory", player)
-    final_boss_location = create_location_event(world, "Menu", "EBK: Lao", player)
-    final_boss_location.access_rule = lambda state: True
-    final_boss_location.place_locked_item(victory_item)
-    finish: Callable[[CollectionState], bool] = lambda state: state.has("Victory", player)
-    # world.completion_condition[player] = finish
+    world.get_location("EBK: Lao", player).place_locked_item(
+        create_item_event("KEY: Victory", player, item_name_to_id["KEY: Victory"]))
+    world.completion_condition[player] = lambda state: state.has("KEY: Victory", player)
 
     for region in world.regions:
         requirements:list[Req] = []

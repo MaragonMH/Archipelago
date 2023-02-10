@@ -1,22 +1,23 @@
 from typing import NamedTuple
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-class Data(NamedTuple):
-	name: str
+@dataclass(frozen=True)
+class Data:
+	name: str = ""
 	valid: bool = True
 	count: int = 1
 
-class LocData(NamedTuple):
-	name: str
-	valid: bool = True
-	count: int = 1
-	regions: list[str] = ["Menu"]
+@dataclass(frozen=True)
+class LocData(Data):
+	regions: list[str] = field(default_factory=lambda: ['Menu'])
 
 @dataclass
 class GroupType:
+	prefix: str
 	type: int
+	offset: int
+	length: int
 	count: int = 1
-	offset: int = 1
 
 class Requirement(NamedTuple):
 	name: str

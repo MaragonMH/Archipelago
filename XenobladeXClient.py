@@ -152,7 +152,6 @@ class XenobladeXContext(CommonContext):
     death_link_enabled = False
 
     # get from slot data
-    base_id = 0
     options:dict[str,str] = {}
     game_type_item_to_offset:dict[int, int] = {}
     game_type_location_to_offset:dict[int, int] = {}
@@ -169,7 +168,6 @@ class XenobladeXContext(CommonContext):
         if cmd == "Connected":
             slot_data = args.get('slot_data', None)
             if slot_data:
-                self.base_id = slot_data.get('base_id', 0)
                 self.game_type_item_to_offset = slot_data.get("game_type_item_to_offset",{})
                 self.game_type_location_to_offset = slot_data.get("game_type_location_to_offset", {})
                 self.options = slot_data.get("options", {})
@@ -200,13 +198,13 @@ class XenobladeXContext(CommonContext):
 
     def archipelago_item_to_game_item(self, archipelago_item_id: int) -> GameItem:
         game_item_type = max([id for id in self.game_type_item_to_offset.values() if id <= archipelago_item_id])
-        return GameItem(game_item_type, (archipelago_item_id // game_item_type) + 1)
+        return GameItem(game_item_type, (archipelago_item_id // game_item_type))
 
     def game_item_to_archipelago_item(self, game_item:GameItem) -> int:
-        return self.game_type_item_to_offset[game_item.type] + game_item.id - 1
+        return self.game_type_item_to_offset[game_item.type] + game_item.id
 
     def game_location_to_archipelago_location(self, game_location:GameItem) -> int:
-        return self.game_type_location_to_offset[game_location.type] + game_location.id - 1
+        return self.game_type_location_to_offset[game_location.type] + game_location.id
 
 
     def download_game_locations(self) -> None:

@@ -32,13 +32,14 @@ xenobladeXRegions = { rule.region for rule in [
 
 def init_region(world: MultiWorld, player: int, region_name:str):
     if region_name not in [region.name for region in world.regions] and set(region_name.split("+")) <= xenobladeXRegions:
-        logging.info(f"Region Name: {region_name}")
+        logging.debug(f"Region Name: {region_name}")
         world.regions += [Region(region_name, RegionType.Generic, region_name, player, world)]
 
 
-def add_region_location(world: MultiWorld, player: int, region_name: str, location:Location):
+def add_region_location(world: MultiWorld, player: int, region_name: str, location:Location) -> Location:
     region = world.get_region(region_name, player)
     region.locations += [location]
+    return location
 
 
 def connect_regions(world: MultiWorld, player: int, source: str, target: str, rule):
