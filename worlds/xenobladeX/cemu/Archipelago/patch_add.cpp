@@ -85,6 +85,7 @@
 // Run the new ruleset to adjust your .asm code
 #include <cstddef>
 int _itemListBase;
+int* fnetBasePtr;
 char* fieldSkillBasePtr;
 
 void _reqMenuAddItemFromId(int type, int id, int count);
@@ -96,6 +97,7 @@ unsigned int** _getItemTypeInfo(int*, int);
 
 int * GetCharaDataPtr(int charaId); //::Util
 void _setLocal(int width, int position, int value); //::GameFlag
+void _changeScenarioFlagFNet(int* basePtr, int flag);
 void _addGarage(int* idPtr); // ::CmdCommon::SceneCmdPrm
 
 
@@ -182,41 +184,22 @@ void _addFieldSkill(int id, int lv){
 // To anchor them in the savedata we use unused items from the "Important Items" Category
 // Specifically 24-31 from https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_PreciousList.html
 void _addKey(int id, int flag){
-	switch(id){
-		case 0:
-		// just for debugging purposes
-		_setLocal(0x10, 1, flag);
-		break;
 
-		case 1:
-		// only checked if you buy a doll and not if you assign it
-		_setLocal(1, 0x5e5b, flag);
-		break;
+	// 4: FNET
+	// from initialize::fnet::FnetTask where param_1 + 0xe must be 2
+	// to accomplish this you need to set the scenerio flag to at least 3001=0xbb9
+	// https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinConfig.html value at idx 8
+	// the game is unable to unload during runtime so you need to save and restart to unset
 
-		case 2:
-		// does not work
-		_setLocal(1, 0x7610, flag);
-		break;
+	// 5: BLADE
+	// but here you need at least 3002
 
-		case 3:
-		// only for ground and not for skell
-		_setLocal(1, 0x6bc3, flag);
-		break;
-
-		case 4:
-		// from initialize::fnet::FnetTask where param_1 + 0xe must be 2
-		// to accomplish this you need to set the scenerio flag to at least 3001=0xbb9
-		// https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinConfig.html value at idx 8
-		// the game is unable to unload during runtime so you need to save and restart to unset
-		_addItem(0x1d, 24);
-		break;
-
-		case 5:
-		// same as FNet
-		// but here you need at least 3002
-		_addItem(0x1d, 25);
-		break;
-	}
+	if(id == 0) _setLocal(0x10, 1, flag);
+	// 1: _setLocal(1, 0x5e5b, flag);
+	// 2: _setLocal(1, 0x7610, flag);
+	// 3: _setLocal(1, 0x6bc3, flag);
+	else _addItem(0x1d, 24 + id - 1);
+	if(id == 4) _changeScenarioFlagFNet(fnetBasePtr, flag*3001);
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html

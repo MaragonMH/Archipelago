@@ -197,62 +197,31 @@ _addKey:
         stw r3,8(r31)
         stw r4,12(r31)
         lwz r9,8(r31)
-        cmplwi cr0,r9,5
-        bgt cr0,_add_L26
-        lwz r9,8(r31)
-        slwi r10,r9,2
-        lis r9,_add_L20@ha
-        addi r9,r9,_add_L20@l
-        add r9,r10,r9
-        lwz r10,0(r9)
-        lis r9,_add_L20@ha
-        addi r9,r9,_add_L20@l
-        add r9,r10,r9
-        mtctr r9
-        bctr
-_add_L20:
-        .long _add_L25-_add_L20
-        .long _add_L24-_add_L20
-        .long _add_L23-_add_L20
-        .long _add_L22-_add_L20
-        .long _add_L21-_add_L20
-        .long _add_L19-_add_L20
-_add_L25:
+        cmpwi cr0,r9,0
+        bne cr0,_add_L18
         lwz r5,12(r31)
         li r4,1
         li r3,16
         bl _setLocal
-        b _add_L18
-_add_L24:
-        lwz r5,12(r31)
-        li r4,24155
-        li r3,1
-        bl _setLocal
-        b _add_L18
-_add_L23:
-        lwz r5,12(r31)
-        li r4,30224
-        li r3,1
-        bl _setLocal
-        b _add_L18
-_add_L22:
-        lwz r5,12(r31)
-        li r4,27587
-        li r3,1
-        bl _setLocal
-        b _add_L18
-_add_L21:
-        li r4,24
-        li r3,29
-        bl _addItem
-        b _add_L18
-_add_L19:
-        li r4,25
-        li r3,29
-        bl _addItem
-        nop
+        b _add_L19
 _add_L18:
-_add_L26:
+        lwz r9,8(r31)
+        addi r9,r9,23
+        mr r4,r9
+        li r3,29
+        bl _addItem
+_add_L19:
+        lwz r9,8(r31)
+        cmpwi cr0,r9,4
+        bne cr0,_add_L21
+        lis r9,fnetBasePtr@ha
+        lwz r10,fnetBasePtr@l(r9)
+        lwz r9,12(r31)
+        mulli r9,r9,3001
+        mr r4,r9
+        mr r3,r10
+        bl _changeScenarioFlagFNet
+_add_L21:
         nop
         addi r11,r31,32
         lwz r0,4(r11)
@@ -297,6 +266,7 @@ _SetFriendRank = 0x027faee0 # ::Util
 _getClassDataPtr = 0x027fa7a0 # ::Util
 
 _setLocal = 0x0228f008 # ::GameFlag
+_changeScenarioFlagFNet = 0x027d5638
 
 ##################################################################################
 [XCX_Archipelago_Add_V102U]

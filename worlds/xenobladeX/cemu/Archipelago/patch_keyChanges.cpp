@@ -83,45 +83,37 @@
 //     }
 // },
 // Run the new ruleset to adjust your .asm code
-// Use  https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_EnBook.html to match the ids
-// Defeat: Number of enemies you defeated
-// Discovery(Dc): 0, 1, 2. 0 = Not discovered yet (will appear as ??? in menu), 1 = encountered in combat, 2 = fully researched (white dot in menu)
 #include <cstddef>
-int** fnetBasePtr;
-char _formatKeyText[] = "KY Id=%01x Fg=%01x:";  // First %05x Second %05x Third %05x Fourth %05x Fifth %05x Sixth %05x Seventh %05x:";
-
-// Start
-// declare the required functions here. These need to be located inside your game
-// IMPORTANT: If you get the "target NAME out of range" exception, use two leading "_"
-
-int __sprintf_s(char *buffer, size_t sizeOfBuffer, const char *format, ...);
-
-// bool IsDollLicense(); // ::menu::MenuArmsCompany
-// bool IsPermit(); // ::Gear::Gear // Overdrive
-int getLocal(int width, int position);
+int* _menuBasePtr;
 int _hasPreciousItem(int id);
-// End
+void _openHudTelop(int* menuBasePtr, int errorIdx);
+int _chkLvl(int p1, int p2);
 
-void _postCurl(char[]);
+int _IsPermit(){
+	return _hasPreciousItem(24 + 3 - 1);
+}
 
-char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
-    for(int keyId = 0; keyId < 6; keyId++){
-		int flag;
+int _assignDollCheck(int p1, int p2){
+	if(!_hasPreciousItem(24 + 1 - 1)){
+		// display error message for missing skell license
+		// check https://xenoblade.github.io/xbx/bdat/common_local_us/MNU_CommonTelop.html
+		// -> https://xenoblade.github.io/xbx/bdat/common_ms/MNU_CommonTelop_ms.html
+		_openHudTelop(_menuBasePtr, 12);
+		return 0;
+	}
+	if(_chkLvl(p1,p2) == 0){	
+		_openHudTelop(_menuBasePtr, 0x1ae);
+		return 0;
+	}
+	return 1;
+}
 
-		// just for debugging purposes
-		if(keyId == 0) flag = getLocal(0x10, 1);
-		// 1: flag = IsDollLicense();
-		// 2: flag = getLocal(1, 0x7610); // from int getFlightUnitFlag(); // ::SquadUtil
-		// 3: flag = IsPermit();
-		else _hasPreciousItem(24 + keyId - 1);
+// keep in mind that you need to reload your skell to trigger this
+// best way is to go into active members and press confirm once
+int _loadSkyUnit(){
+	return _hasPreciousItem(24 + 2 - 1);
+}
 
-		stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, _formatKeyText, keyId, flag);
-
-		// Reset buffer
-		if(stringCurrentPtr > stringEndPtr){
-			_postCurl(stringStartPtr);
-			stringCurrentPtr = stringStartPtr;
-		}
-    }
-	return stringCurrentPtr;
+int _loadFNet(){
+	return _hasPreciousItem(24 + 4 - 1) * 3001;
 }
