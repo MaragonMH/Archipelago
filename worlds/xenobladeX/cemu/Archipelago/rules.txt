@@ -1,6 +1,68 @@
 [Definition]
-titleIds = 0005000010116100,00050000101C4C00,00050000101C4D00
+titleIds = 1005000010116100,00050000101C4C00,00050000101C4D00
 name = "Archipelago"
 path = "Xenoblade Chronicles X/Extensions/Archipelago"
 description = Archipelago extension for Xenoblade Chronicles X
 version = 6
+
+[Default]
+$disableGroundArmor = 0
+$disableGroundWeapons = 0
+$disableSkellArmor = 0
+$disableSkellWeapons = 0
+$disableGroundAugments = 0
+$disableSkellAugments = 0
+
+[Preset]
+name = "on"
+category = "disableGroundArmor"
+
+[Preset]
+name = "off"
+category = "disableGroundArmor"
+$disableGroundArmor = 1
+
+[Preset]
+name = "on"
+category = "disableGroundWeapons"
+
+[Preset]
+name = "off"
+category = "disableGroundWeapons"
+$disableGroundWeapons = 1
+
+[Preset]
+name = "on"
+category = "disableGroundAugments"
+
+[Preset]
+name = "off"
+category = "disableGroundAugments"
+$disableGroundAugments = 1
+
+[Preset]
+name = "on"
+category = "disableSkellArmor"
+
+[Preset]
+name = "off"
+category = "disableSkellArmor"
+$disableSkellArmor = 1
+
+[Preset]
+name = "on"
+category = "disableSkellWeapons"
+
+[Preset]
+name = "off"
+category = "disableSkellWeapons"
+$disableSkellWeapons = 1
+
+[Preset]
+name = "on"
+category = "disableSkellAugments"
+
+[Preset]
+name = "off"
+category = "disableSkellAugments"
+$disableSkellAugments = 1

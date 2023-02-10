@@ -84,6 +84,7 @@
 // },
 // Run the new ruleset to adjust your .asm code
 #include <cstddef>
+int $disableGroundArmor, $disableGroundWeapons, $disableSkellArmor, $disableSkellWeapons, $disableGroundAugments, $disableSkellAugments;
 int* _menuBasePtr;
 int _hasPreciousItem(int id);
 void _openHudTelop(int* menuBasePtr, int errorIdx);
@@ -120,7 +121,13 @@ int _loadFNet(){
 
 int _checkType(int type){
 	// use this for now, but use options later
-	if(type > 0x18 && type != 0x1c) return 1;
+	if(type >= 0x1 && type <= 0x5) return $disableGroundArmor;
+	if(type >= 0x6 && type <= 0x7) return $disableGroundWeapons;
+	if(type >= 0xa && type <= 0xe) return $disableSkellArmor;
+	if(type >= 0xf && type <= 0x13) return $disableSkellWeapons;
+	if(type >= 0x14 && type <= 0x15) return $disableGroundAugments;
+	if(type >= 0x16 && type <= 0x18) return $disableSkellAugments;
+	if(type >= 0x18 && type != 0x1c) return 1;
 	return 0;
 }
 

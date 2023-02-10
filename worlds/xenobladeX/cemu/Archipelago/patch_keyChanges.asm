@@ -105,14 +105,74 @@ _checkType:
         mr r31,r1
         stw r3,8(r31)
         lwz r9,8(r31)
-        cmpwi cr0,r9,24
+        cmpwi cr0,r9,0
         ble cr0,_keyChanges_L12
         lwz r9,8(r31)
-        cmpwi cr0,r9,28
-        beq cr0,_keyChanges_L12
-        li r9,1
+        cmpwi cr0,r9,5
+        bgt cr0,_keyChanges_L12
+        lis r9,$disableGroundArmor@ha
+        lwz r9,$disableGroundArmor@l(r9)
         b _keyChanges_L13
 _keyChanges_L12:
+        lwz r9,8(r31)
+        cmpwi cr0,r9,5
+        ble cr0,_keyChanges_L14
+        lwz r9,8(r31)
+        cmpwi cr0,r9,7
+        bgt cr0,_keyChanges_L14
+        lis r9,$disableGroundWeapons@ha
+        lwz r9,$disableGroundWeapons@l(r9)
+        b _keyChanges_L13
+_keyChanges_L14:
+        lwz r9,8(r31)
+        cmpwi cr0,r9,9
+        ble cr0,_keyChanges_L15
+        lwz r9,8(r31)
+        cmpwi cr0,r9,14
+        bgt cr0,_keyChanges_L15
+        lis r9,$disableSkellArmor@ha
+        lwz r9,$disableSkellArmor@l(r9)
+        b _keyChanges_L13
+_keyChanges_L15:
+        lwz r9,8(r31)
+        cmpwi cr0,r9,14
+        ble cr0,_keyChanges_L16
+        lwz r9,8(r31)
+        cmpwi cr0,r9,19
+        bgt cr0,_keyChanges_L16
+        lis r9,$disableSkellWeapons@ha
+        lwz r9,$disableSkellWeapons@l(r9)
+        b _keyChanges_L13
+_keyChanges_L16:
+        lwz r9,8(r31)
+        cmpwi cr0,r9,19
+        ble cr0,_keyChanges_L17
+        lwz r9,8(r31)
+        cmpwi cr0,r9,21
+        bgt cr0,_keyChanges_L17
+        lis r9,$disableGroundAugments@ha
+        lwz r9,$disableGroundAugments@l(r9)
+        b _keyChanges_L13
+_keyChanges_L17:
+        lwz r9,8(r31)
+        cmpwi cr0,r9,21
+        ble cr0,_keyChanges_L18
+        lwz r9,8(r31)
+        cmpwi cr0,r9,24
+        bgt cr0,_keyChanges_L18
+        lis r9,$disableSkellAugments@ha
+        lwz r9,$disableSkellAugments@l(r9)
+        b _keyChanges_L13
+_keyChanges_L18:
+        lwz r9,8(r31)
+        cmpwi cr0,r9,23
+        ble cr0,_keyChanges_L19
+        lwz r9,8(r31)
+        cmpwi cr0,r9,28
+        beq cr0,_keyChanges_L19
+        li r9,1
+        b _keyChanges_L13
+_keyChanges_L19:
         li r9,0
 _keyChanges_L13:
         mr r3,r9
@@ -136,17 +196,17 @@ _addRewardItemEquipment:
         addic r10,r9,-1
         subfe r9,r10,r9
         cmpwi cr0,r9,0
-        beq cr0,_keyChanges_L15
+        beq cr0,_keyChanges_L21
         lwz r6,20(r31)
         lwz r5,16(r31)
         lwz r4,12(r31)
         lwz r3,8(r31)
         bl _addItemEquipment
         mr r9,r3
-        b _keyChanges_L16
-_keyChanges_L15:
+        b _keyChanges_L22
+_keyChanges_L21:
         li r9,0
-_keyChanges_L16:
+_keyChanges_L22:
         mr r3,r9
         addi r11,r31,32
         lwz r0,4(r11)
@@ -173,8 +233,8 @@ _getItemNumAdjusted:
         stw r9,16(r31)
         li r9,0
         stw r9,12(r31)
-        b _keyChanges_L18
-_keyChanges_L20:
+        b _keyChanges_L24
+_keyChanges_L26:
         lwz r6,12(r31)
         lwz r5,32(r31)
         lwz r4,28(r31)
@@ -189,19 +249,19 @@ _keyChanges_L20:
         addic r10,r9,-1
         subfe r9,r10,r9
         cmpwi cr0,r9,0
-        beq cr0,_keyChanges_L19
+        beq cr0,_keyChanges_L25
         lwz r9,8(r31)
         addi r9,r9,1
         stw r9,8(r31)
-_keyChanges_L19:
+_keyChanges_L25:
         lwz r9,12(r31)
         addi r9,r9,1
         stw r9,12(r31)
-_keyChanges_L18:
+_keyChanges_L24:
         lwz r10,12(r31)
         lwz r9,16(r31)
         cmpw cr0,r10,r9
-        blt cr0,_keyChanges_L20
+        blt cr0,_keyChanges_L26
         lwz r9,8(r31)
         mr r3,r9
         addi r11,r31,48
@@ -235,11 +295,11 @@ _itemLoopAdjustment:
         addic r10,r9,-1
         subfe r9,r10,r9
         cmpwi cr0,r9,0
-        beq cr0,_keyChanges_L23
+        beq cr0,_keyChanges_L29
         lwz r9,40(r31)
         addi r9,r9,28
         stw r9,40(r31)
-_keyChanges_L23:
+_keyChanges_L29:
         lwz r9,40(r31)
         mr r3,r9
         addi r11,r31,64
@@ -267,12 +327,12 @@ _itemLoopContinue:
         lwz r10,36(r31)
         lwz r9,8(r31)
         cmpw cr0,r10,r9
-        bge cr0,_keyChanges_L26
+        bge cr0,_keyChanges_L32
         li r9,1
-        b _keyChanges_L27
-_keyChanges_L26:
+        b _keyChanges_L33
+_keyChanges_L32:
         li r9,0
-_keyChanges_L27:
+_keyChanges_L33:
         mr r3,r9
         addi r11,r31,48
         lwz r0,4(r11)
