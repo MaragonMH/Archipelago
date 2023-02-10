@@ -2,12 +2,15 @@ import asyncio
 from collections import OrderedDict
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import re
+import Utils
 from typing import Dict, NamedTuple, Optional
 import colorama  # type: ignore
 
 # CommonClient import first to trigger ModuleUpdater
 from CommonClient import CommonContext, server_loop, gui_enabled, logger, get_base_parser
 import Utils
+
+CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. Please check your installation directory and Cemu installation"
 
 class GameItem(NamedTuple):
     type: int
@@ -107,7 +110,7 @@ class XenobladeXHttpServer(HTTPServer):
         if self.upload_in_progress:
             return items
 
-        self._match_line(items, 0, r'^KY Id=([0-9a-fA-F]{1}) Fg=([0-9a-fA-F]{1})\n')
+        self._match_line(items, 0, r'^KY Id=([1-9a-fA-F]{1}) Fg=([0-9a-fA-F]{1})\n')
         self._match_line(items, None, r'^IT Id=([0-9a-fA-F]{3}) Tp=([0-9a-fA-F]{2})(?:\n| S1Id)')
         self._match_line(items, 0x1c, r'^IT Id=([0-9a-fA-F]{3}) Tp=1[cC] Lv=([0-9a-fA-F]{2})', has_lvl=True)
         equip_regex = r'^EQ CId=[0-9a-fA-F]{2} Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1})'
@@ -130,6 +133,11 @@ class XenobladeXHttpServer(HTTPServer):
 
         return items
 
+    def download_death(self) -> bool:
+        if self.upload_in_progress:
+            return False
+        return re.match(r'^KY Id=0 Fg=1\n', self.locations) is not None
+
 
 class XenobladeXContext(CommonContext):
     tags = {"AP", "XenobladeX"}
@@ -138,6 +146,8 @@ class XenobladeXContext(CommonContext):
     want_slot_data = True
     http_server = XenobladeXHttpServer(('localhost', 45872), XenobladeXHTTPRequestHandler)
     connected = False
+    death_link_pending = False
+    settings_file_path:str = "Settings.xml"
 
     # get from slot data
     base_id = 0
@@ -145,6 +155,8 @@ class XenobladeXContext(CommonContext):
     archipelago_item_to_game_item:list[GameItem] = []
     game_type_item_to_archipelago_item:Dict[int, Dict[int, int]] = {}
     game_type_location_to_archipelago_location:Dict[int, Dict[int,int]] = {}
+    options:Dict[str,str] = {}
+    
 
     async def server_auth(self, password_requested: bool = False):
         if password_requested and not self.password:
@@ -163,8 +175,15 @@ class XenobladeXContext(CommonContext):
                 self.game_type_item_to_archipelago_item = slot_data.get("game_type_item_to_archipelago_item",{})
                 self.game_type_location_to_archipelago_location = \
                     slot_data.get("game_type_location_to_archipelago_location", {})
+                self.options = slot_data.get("options", {})
+                self.set_cemu_graphic_packs()
                 self.connected = True
 
+    def on_deathlink(self, data: dict):
+        if self.connected:
+            self.death_link_pending = True
+            self.http_server.upload_item(item_game_type=0, item_game_id=0)
+        super().on_deathlink(data)
 
     def run_gui(self):
         from kvui import GameManager
@@ -187,9 +206,10 @@ class XenobladeXContext(CommonContext):
         self.locations_checked.update(game_locations)
         return
 
-    def get_level(self, archipelago_item_id: int) -> int:
+    def get_level(self, server_items:set[int], archipelago_item_id: int) -> int:
         archipelago_item:str = self.archipelago_item_to_name[archipelago_item_id]
-        return list(self.archipelago_item_to_name.values()).count(archipelago_item)
+        item_ids = {item[0] for item in self.archipelago_item_to_name.items() if item[1] == archipelago_item}
+        return len(server_items.intersection(item_ids))
 
     def upload_game_items(self) -> None:
         # Get all the items in locations from the game and
@@ -209,10 +229,27 @@ class XenobladeXContext(CommonContext):
 
         # handle item levels
         for item in uploaded_items: 
-            archipelago_level = self.get_level(self.game_type_item_to_archipelago_item[item.type][item.id])
+            archipelago_level = self.get_level(server_items, self.game_type_item_to_archipelago_item[item.type][item.id])
             if archipelago_level <= 1 or item.level >= archipelago_level: continue
             self.http_server.upload_item(item.type, item.id, archipelago_level)
 
+    def set_cemu_graphic_packs(self):
+        try:
+            file_path = Utils.local_path(self.settings_file_path)
+            with open(file_path, "r") as file :
+                filedata = file.read()
+
+            # Cleanup
+            for pack in self.options.keys():
+                filedata = re.sub(pack, "", filedata, flags=re.M)
+            # Addition
+            pack_options:str = "\n".join([option for option in self.options.values()])
+            filedata = re.sub(rf'(<GraphicPack>\n)', f"$1{pack_options}", filedata, flags=re.M )
+
+            with open(file_path, "w") as file:
+                file.write(filedata)
+        except FileNotFoundError:
+            logger.error(CEMU_SETTINGS_NOT_FOUND)
 
 
 async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
@@ -220,6 +257,8 @@ async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
     while not ctx.exit_event.is_set():
         if ctx.connected:
             ctx.download_game_locations()
+            if ctx.http_server.download_death() and not ctx.death_link_pending:
+                await ctx.send_death()
             ctx.upload_game_items()
         await asyncio.sleep(2)
     logger.debug("terminated xenobladeX sync task")

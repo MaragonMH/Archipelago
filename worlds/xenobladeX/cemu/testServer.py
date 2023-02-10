@@ -21,9 +21,11 @@ def get_locations(self):
 def post_items(self):
     global ITEMS
     items = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":","\n")
-    if ";" in items[0]:
+    if "^" in items[0]:
         ITEMS = ""
         items = items[1:]
+    if "$" in items[-1]:
+        locations = items[0:-2]
     ITEMS += items
     print("Received ITEM: " + items[0:2] + " Lines: " + str(items.count('\n')) +
         " FileLines: " +  str(ITEMS.count('\n')))
@@ -34,9 +36,11 @@ def post_items(self):
 def post_locations(self):
     global LOCATIONS
     locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":","\n")
-    if ";" in locations[0]:
+    if "^" in locations[0]:
         LOCATIONS = ""
         locations = locations[1:]
+    if "$" in locations[-1]:
+        locations = locations[0:-2]
     LOCATIONS += locations
     print("Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) +
         " FileLines: " +  str(LOCATIONS.count('\n')))
@@ -61,8 +65,8 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
 
 print("Starting...")
 
+httpServer = HTTPServer(('localhost', 45872), SimpleHTTPRequestHandler)
 try:
-    httpServer = HTTPServer(('localhost', 45872), SimpleHTTPRequestHandler)
     httpServer.serve_forever()
 except KeyboardInterrupt:
     httpServer.shutdown()
