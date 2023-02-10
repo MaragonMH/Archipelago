@@ -117,3 +117,39 @@ int _loadSkyUnit(){
 int _loadFNet(){
 	return _hasPreciousItem(24 + 4 - 1) * 3001;
 }
+
+int _checkType(int type){
+	// use this for now, but use options later
+	if(type > 0x18 && type != 0x1c) return 1;
+	return 0;
+}
+
+int _addItemEquipment(int type, int id, int* data, int flag);
+int _addRewardItemEquipment(int type, int id, int* data, int flag){
+	if(_checkType(type)){
+		return _addItemEquipment(type, id, data, flag);
+	}
+	return 0;
+}
+
+int _getItemNum(int* ptr, int enemies, int boxes);
+int* _getItem(int* ptr, int enemies, int boxes, int items);
+int _getItemNumAdjusted(int* ptr, int enemies, int boxes){
+	int count = 0;
+	int num = _getItemNum(ptr, enemies, boxes);
+	for(int i = 0; i < num; i++){
+		int itemType = *(char*)_getItem(ptr, enemies, boxes, i);
+		if(_checkType(itemType)) count++;
+	}
+	return count;
+}
+int _itemLoopAdjustment(int* ptr, int enemies, int boxes, int idx, int offset){
+	int type = *(char*)_getItem(ptr, enemies, boxes, idx);
+	if(_checkType(type)) offset += 0x1c;
+	return offset;
+}
+int _itemLoopContinue(int* ptr, int enemies, int boxes, int idx){
+	int num = _getItemNum(ptr, enemies, boxes);
+	if(idx < num) return 1;
+	return 0;
+}
