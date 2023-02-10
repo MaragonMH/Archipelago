@@ -18,7 +18,6 @@ class XenobladeXItem(Item):
 # Use a dict to specifiy extra parameters
 xenobladeXItems: dict[str, dict[str, set[str] | dict[str, ItemClassification | int]]] = {
     "Key": {
-        "Victory": {},
         "Skell License": {"class": ItemClassification.progression},
         "Skell Flight Module": {"class": ItemClassification.progression},
         "Frontier Nav": {"class": ItemClassification.progression},

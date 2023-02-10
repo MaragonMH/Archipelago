@@ -43,9 +43,9 @@ def set_rules(world, player):
     # victory_item= get_generated_item_by_name("Victory")
     # victory_item = create_item_event(world, "Victory", player)
     # world.get_location("Final Boss", self.player).place_locked_item(victory_item)
-    # victory_item_event = create_item_event(world, "VICTORY", player)
-    # final_boss_location_event = create_location_event(world, "Epilogue", "FINAL BOSS", player)
-    # final_boss_location_event.place_locked_item(victory_item_event)
+    victory_item_event = create_item_event(world, "Victory", player)
+    final_boss_location_event = create_location_event(world, "Epilogue", "FINAL BOSS", player)
+    final_boss_location_event.place_locked_item(victory_item_event)
     # world.completion_condition[player] = lambda state: state.has("VICTORY", player) or state.has("Victory", player)
     world.completion_condition[player] = lambda state: state.has("Skell License", player) or state.has("Skell Flight Module", player)
 
