@@ -1,4 +1,3 @@
-from typing import Dict
 from BaseClasses import Tutorial
 from .Slot import generate_slot_data
 from .Items import xenobladeXItems, create_items, create_item
@@ -54,5 +53,5 @@ class XenobladeXWorld(World):
     def generate_basic(self):
         pass
 
-    def fill_slot_data(self) -> Dict[str, object]:
+    def fill_slot_data(self) -> dict[str, object]:
         return generate_slot_data(self.base_id, self.multiworld, self.player)

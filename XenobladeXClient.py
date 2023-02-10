@@ -1,10 +1,9 @@
 import asyncio
-from collections import OrderedDict
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import re
 import Utils
-from typing import Dict, NamedTuple, Optional
-import colorama  # type: ignore
+from typing import NamedTuple, Optional
+import colorama
 
 # CommonClient import first to trigger ModuleUpdater
 from CommonClient import CommonContext, server_loop, gui_enabled, logger, get_base_parser
@@ -16,45 +15,6 @@ class GameItem(NamedTuple):
     type: int
     id: int
     level: int = 1
-
-class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
-    def get_items(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/plain")
-        self.end_headers()
-        # remove duplicate lines
-        self.server.items = "\n".join(list(OrderedDict.fromkeys(self.server.items.split("\n")))) # type: ignore
-        self.wfile.write(self.server.items.encode()) # type: ignore
-        self.server.items = "" # type: ignore
-
-    def post_locations(self):
-        locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":","\n")
-        self.send_response(200)
-        self.send_header("Content-type", "text/plain")
-        self.end_headers()
-        upload_ended = "$" in locations[-1]
-        if "^" in locations[0]:
-            self.server.upload_in_progress = True # type: ignore
-            self.server.locations = "" # type: ignore
-            locations = locations[1:]
-        if upload_ended:
-            locations = locations[0:-2]
-        self.server.locations += locations # type: ignore
-        if upload_ended:
-            self.server.upload_in_progress = False # type: ignore
-        logger.debug("Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) +
-            " FileLines: " +  str(self.server.locations.count('\n'))) # type: ignore
-
-    # Silence connection request logging
-    def log_request(self, code='-', size='-'): return
-
-    def do_GET(self):
-        if self.path == '/items':
-            self.get_items()
-
-    def do_POST(self):
-        if self.path == '/locations':
-            self.post_locations()
 
 class XenobladeXHttpServer(HTTPServer):
     locations = ""
@@ -139,6 +99,48 @@ class XenobladeXHttpServer(HTTPServer):
         return re.match(r'^KY Id=0 Fg=1\n', self.locations) is not None
 
 
+class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
+    server:XenobladeXHttpServer
+
+    def get_items(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain")
+        self.end_headers()
+        # remove duplicate lines
+        self.server.items = "\n".join(set(self.server.items.split("\n")))
+        self.wfile.write(self.server.items.encode())
+        self.server.items = ""
+
+    def post_locations(self):
+        locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":","\n")
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain")
+        self.end_headers()
+        if "^" in locations[0]:
+            self.server.upload_in_progress = True
+            self.server.locations = ""
+            locations = locations[1:]
+        upload_ended = "$" in locations[-1]
+        if upload_ended:
+            locations = locations[0:-2]
+        self.server.locations += locations
+        if upload_ended:
+            self.server.upload_in_progress = False
+        logger.debug("Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) +
+            " FileLines: " +  str(self.server.locations.count('\n')))
+
+    # Silence connection request logging
+    def log_request(self, code='-', size='-'): return
+
+    def do_GET(self):
+        if self.path == '/items':
+            self.get_items()
+
+    def do_POST(self):
+        if self.path == '/locations':
+            self.post_locations()
+
+
 class XenobladeXContext(CommonContext):
     tags = {"AP", "XenobladeX"}
     game = "XenobladeX"
@@ -147,14 +149,13 @@ class XenobladeXContext(CommonContext):
     http_server = XenobladeXHttpServer(('localhost', 45872), XenobladeXHTTPRequestHandler)
     connected = False
     death_link_pending = False
+    death_link_enabled = False
 
     # get from slot data
     base_id = 0
-    options:Dict[str,str] = {}
-    archipelago_item_to_name:Dict[int, str] = {}
-    archipelago_item_to_game_item:list[GameItem] = []
-    game_type_item_to_archipelago_item:Dict[int, Dict[int, int]] = {}
-    game_type_location_to_archipelago_location:Dict[int, Dict[int,int]] = {}
+    options:dict[str,str] = {}
+    game_type_item_to_offset:dict[int, int] = {}
+    game_type_location_to_offset:dict[int, int] = {}
     
 
     async def server_auth(self, password_requested: bool = False):
@@ -169,17 +170,15 @@ class XenobladeXContext(CommonContext):
             slot_data = args.get('slot_data', None)
             if slot_data:
                 self.base_id = slot_data.get('base_id', 0)
-                self.archipelago_item_to_name = slot_data.get('archipelago_item_to_name', {})
-                self.archipelago_item_to_game_item = slot_data.get("archipelago_item_to_game_item", [])
-                self.game_type_item_to_archipelago_item = slot_data.get("game_type_item_to_archipelago_item",{})
-                self.game_type_location_to_archipelago_location = \
-                    slot_data.get("game_type_location_to_archipelago_location", {})
+                self.game_type_item_to_offset = slot_data.get("game_type_item_to_offset",{})
+                self.game_type_location_to_offset = slot_data.get("game_type_location_to_offset", {})
                 self.options = slot_data.get("options", {})
+                self.death_link_enabled = slot_data.get("death_link_enabled", False)
                 self.set_cemu_graphic_packs()
                 self.connected = True
 
     def on_deathlink(self, data: dict):
-        if self.connected:
+        if self.connected and self.death_link_enabled:
             self.death_link_pending = True
             self.http_server.upload_item(item_game_type=0, item_game_id=0)
         super().on_deathlink(data)
@@ -196,19 +195,28 @@ class XenobladeXContext(CommonContext):
         self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
 
 
+    def get_level(self, archipelago_item_id: int) -> int:
+        return len([item.item for item in self.items_received if item.item == archipelago_item_id])
+
+    def archipelago_item_to_game_item(self, archipelago_item_id: int) -> GameItem:
+        game_item_type = max([id for id in self.game_type_item_to_offset.values() if id <= archipelago_item_id])
+        return GameItem(game_item_type, (archipelago_item_id // game_item_type) + 1)
+
+    def game_item_to_archipelago_item(self, game_item:GameItem) -> int:
+        return self.game_type_item_to_offset[game_item.type] + game_item.id - 1
+
+    def game_location_to_archipelago_location(self, game_location:GameItem) -> int:
+        return self.game_type_location_to_offset[game_location.type] + game_location.id - 1
+
+
     def download_game_locations(self) -> None:
         # Get all the locations from the game and
         # Calc the differance between those and the server and
         # Send them to the server
-        game_locations = {self.game_type_location_to_archipelago_location[location.type][location.id]
-            for location in self.http_server.download_locations()}
+        game_locations = {self.game_location_to_archipelago_location(location) for location in self.http_server.download_locations()}
         self.locations_checked.update(game_locations)
         return
 
-    def get_level(self, server_items:set[int], archipelago_item_id: int) -> int:
-        archipelago_item:str = self.archipelago_item_to_name[archipelago_item_id]
-        item_ids = {item[0] for item in self.archipelago_item_to_name.items() if item[1] == archipelago_item}
-        return len(server_items.intersection(item_ids))
 
     def upload_game_items(self) -> None:
         # Get all the items in locations from the game and
@@ -219,17 +227,17 @@ class XenobladeXContext(CommonContext):
         # because there is no way to know which items you already received if you
         # already disposed them
         uploaded_items = self.http_server.download_items()
-        game_items = {self.game_type_item_to_archipelago_item[item.type][item.id] for item in uploaded_items if item.level == 1}
+        game_items = {self.game_item_to_archipelago_item(item) for item in uploaded_items if item.level == 1}
         server_items = {network_item.item for network_item in self.items_received if self.slot_concerns_self(network_item.player)}
         missing_items = { item for item in server_items.difference(game_items)}
         for item in missing_items:
-            game_item = self.archipelago_item_to_game_item[item]
+            game_item = self.archipelago_item_to_game_item(item)
             self.http_server.upload_item(game_item.type, game_item.id)
 
         # handle item levels
         for item in uploaded_items: 
-            archipelago_level = self.get_level(server_items, self.game_type_item_to_archipelago_item[item.type][item.id])
-            if archipelago_level <= 1 or item.level >= archipelago_level: continue
+            archipelago_level = self.get_level(self.game_item_to_archipelago_item(item))
+            if archipelago_level < 1 or archipelago_level <= item.level: continue
             self.http_server.upload_item(item.type, item.id, archipelago_level)
 
     def set_cemu_graphic_packs(self):

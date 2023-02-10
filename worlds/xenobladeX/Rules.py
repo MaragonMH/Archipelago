@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Callable, Dict
+from typing import Callable
 from BaseClasses import CollectionState, MultiWorld
 from .Locations import create_location_event
 from .Regions import connect_regions

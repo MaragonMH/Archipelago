@@ -6,7 +6,7 @@ from .locations.fnNodes import fn_nodes_data
 from .locations.locations import locations_data
 from .locations.segments import segments_data
 from .Regions import add_region_location, init_region
-from typing import Dict, NamedTuple
+from typing import NamedTuple
 
 class Loc(NamedTuple):
     prefix: str
@@ -21,7 +21,7 @@ class Loc(NamedTuple):
 class XenobladeXLocation(Location):
     game: str = "XenobladeX"
 
-locTypes:Dict[str, GroupType] = {
+locTypes:dict[str, GroupType] = {
     "CLP": GroupType(0),
     "EBK": GroupType(1),
     "FNO": GroupType(2),
@@ -36,6 +36,10 @@ xenobladeXLocations = [
     *(Loc(f"SEG", e.name, locTypes["SEG"].type, i + 1, e.regions) for i, e in enumerate(segments_data) if e.valid),
     *(Loc(f"LOC", e.name, locTypes["LOC"].type, i + 1, e.regions) for i, e in enumerate(locations_data) if e.valid),
 ]
+
+def calculate_location_type_offsets():
+    for prefix, group in locTypes.items():
+        group.offset = next(i for i, loc in enumerate(xenobladeXLocations) if loc.prefix == prefix)
 
 def create_locations(world:MultiWorld, player:int):
     for i, location in enumerate(xenobladeXLocations):

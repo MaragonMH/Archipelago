@@ -1,5 +1,5 @@
 from typing import NamedTuple
-
+from dataclasses import dataclass
 
 class Data(NamedTuple):
 	name: str
@@ -12,9 +12,11 @@ class LocData(NamedTuple):
 	count: int = 1
 	regions: list[str] = ["Menu"]
 
-class GroupType(NamedTuple):
+@dataclass
+class GroupType:
 	type: int
 	count: int = 1
+	offset: int = 1
 
 class Requirement(NamedTuple):
 	name: str

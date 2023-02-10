@@ -15,7 +15,7 @@ from .items.groundWeapons import ground_weapons_data
 from .items.keys import keys_data
 from .items.skills import skills_data
 from .dataType import Requirement, GroupType
-from typing import Dict, NamedTuple, Optional
+from typing import NamedTuple, Optional
 
 class Itm(NamedTuple):
     prefix: str
@@ -23,6 +23,7 @@ class Itm(NamedTuple):
     type: int
     id: int
     progression: ItemClassification = ItemClassification.filler
+    count: int = 1
     def get_item(self):
         return f"{self.prefix}: {self.name}"
 
@@ -35,7 +36,7 @@ class XenobladeXItem(Item):
         super().__init__(name, classification, code, player)
         if code is None: self.type = "Event"
 
-itemTypes:Dict[str, GroupType] = {
+itemTypes:dict[str, GroupType] = {
     "KEY": GroupType(0), 
     "AMR": GroupType(1, 5), 
     "WPN": GroupType(6, 2), 
@@ -52,6 +53,7 @@ itemTypes:Dict[str, GroupType] = {
     "CL": GroupType(0x24), 
 }
 
+# Be careful all item_data tables are starting with index 1
 xenobladeXItems = [
     *(Itm(f"KEY", e.name, itemTypes["KEY"].type, i + 1, ItemClassification.progression) for i, e in enumerate(keys_data) if e.valid),
     *(Itm(f"AMR", e.name, itemTypes["AMR"].type, i + 1) for i, e in enumerate(ground_armor_data) if e.valid), 
@@ -61,19 +63,23 @@ xenobladeXItems = [
     *(Itm(f"SKWPN", e.name, itemTypes["SKWPN"].type, i + 1) for i, e in enumerate(doll_weapons_data) if e.valid), 
     *(Itm(f"AUG", e.name, itemTypes["AUG"].type, i + 1) for i, e in enumerate(ground_augments_data) if e.valid), 
     *(Itm(f"SKAUG", e.name, itemTypes["SKAUG"].type, i + 1) for i, e in enumerate(doll_augment_data) if e.valid), 
-    *(Itm(f"DP", e.name, itemTypes["DP"].type, i + 1, ItemClassification.progression) for i, e in enumerate(dataprobes_data) for c in range(e.count) if e.valid), 
+    *(Itm(f"DP", e.name, itemTypes["DP"].type, i + 1, ItemClassification.progression, e.count) for i, e in enumerate(dataprobes_data) if e.valid), 
     *(Itm(f"ART", e.name, itemTypes["ART"].type, i + 1, ItemClassification.useful) for i, e in enumerate(arts_data) if e.valid), 
     *(Itm(f"SKL", e.name, itemTypes["SKL"].type, i + 1, ItemClassification.useful) for i, e in enumerate(skills_data) if e.valid), 
-    *(Itm(f"FRD", e.name, itemTypes["FRD"].type, i + 1, ItemClassification.progression) for i, e in enumerate(friends_data) for c in range(e.count) if e.valid), 
-    *(Itm(f"FLDSK", e.name, itemTypes["FLDSK"].type, i + 1, ItemClassification.progression) for i, e in enumerate(field_skills_data) for c in range(e.count) if e.valid), 
+    *(Itm(f"FRD", e.name, itemTypes["FRD"].type, i + 1, ItemClassification.progression, e.count) for i, e in enumerate(friends_data) if e.valid), 
+    *(Itm(f"FLDSK", e.name, itemTypes["FLDSK"].type, i + 1, ItemClassification.progression, e.count) for i, e in enumerate(field_skills_data) if e.valid), 
     *(Itm(f"CL", e.name, itemTypes["CL"].type, i + 1, ItemClassification.useful) for i, e in enumerate(classes_data) if e.valid),
 ]
+
+def calculate_item_type_offsets():
+    for prefix, group in itemTypes.items():
+        group.offset=next(i for i, item in enumerate(xenobladeXItems) if item.prefix == prefix)
 
 
 def create_items(world: MultiWorld, player, base_id):
     """Create all items"""
     for abs_id, item in enumerate(xenobladeXItems, base_id):
-        world.itempool += [XenobladeXItem(item.get_item(), item.progression, abs_id, player)]
+        world.itempool += [XenobladeXItem(item.get_item(), item.progression, abs_id, player) for i in range(item.count)]
 
 
 def create_item(world: MultiWorld, item_name, player, abs_id) -> Item:

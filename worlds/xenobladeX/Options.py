@@ -1,4 +1,3 @@
-import typing
 from Options import Option, DeathLink, Toggle, DefaultOnToggle, Choice
 
 class NamedChoice(Choice):
@@ -566,26 +565,61 @@ class WeatherForce(Toggle):
     """Allows you to force a weather condition. This option needs to be invoked manually through the graphic packs"""
     display_name = "Force Weather"
 
-
+# currently unused
 class SkellWeaponFamily(DefaultOnToggle):
     """There is only one check for each Skell-Weapon. If enabled, you will receive ALL Weapon tiers (20, 30, 40, 50, 60)
      and rarity (_, X, XX), when you receive the item. If disabled, you will receive one Weapon tier and rarity,
      choosen at random."""
     display_name = "Receive Entire Skell-Weapon-Family"
 
-
+# currently unused
 class AugmentFamily(DefaultOnToggle):
     """There is only one check for each Augment. If enabled, you will receive ALL Augment tiers (I, V, X, XV, XX),
      when you receive the item. If disabled, you will receive one Augment tier, choosen at random."""
     display_name = "Receive Entire Augment-Family"
 
+class IncludeCollectopediaLocations(DefaultOnToggle):
+    """Allows you to get items from collectopedia entries and adds those locations to the pool"""
+    display_name = "Include Collectopedia Locations"
+
+class IncludeEnemyBookLocations(DefaultOnToggle):
+    """Allows you to get items from completing enemy entries(white dot in the menu) and adds those locations to the pool"""
+    display_name = "Include Enemy Book Locations"
+
+class IncludeLocationLocations(DefaultOnToggle):
+    """Allows you to get items from locations and adds those locations to the pool"""
+    display_name = "Include Location Locations"
+
+class IncludeGroundArmor(DefaultOnToggle):
+    """Allows you to receive ground armor as items and adds those items to the pool"""
+    display_name = "Include Ground Armor Items"
+
+class IncludeGroundWeapons(DefaultOnToggle):
+    """Allows you to receive ground weapons as items and adds those items to the pool"""
+    display_name = "Include Ground Weapon Items"
+
+class IncludeGroundAugments(DefaultOnToggle):
+    """Allows you to receive ground augments as items and adds those items to the pool"""
+    display_name = "Include Ground Augment Items"
+
+class IncludeSkellArmor(DefaultOnToggle):
+    """Allows you to receive skell armor as items and adds those items to the pool"""
+    display_name = "Include Skell Armor Items"
+
+class IncludeSkellWeapons(DefaultOnToggle):
+    """Allows you to receive skell weapons as items and adds those items to the pool"""
+    display_name = "Include Skell Weapons Items"
+
+class IncludeSkellAugments(DefaultOnToggle):
+    """Allows you to receive skell augments as items and adds those items to the pool"""
+    display_name = "Include Skell Augment Items"
 
 class LogicCheating(Toggle):
     """Allows you to get the randomized items the regular way."""
     display_name = "Logic Cheating"
 
 
-mod_options:typing.Dict[str, type[Option]] = {
+mod_options:dict[str, type[Option]] = {
     "BattleEscapeDistance/Active preset": EnemyAggro,
     "BattleEnemyStats/Active preset": EnemyStats,
     "BattleDamageModGround2/Damage Divisor": DamageDivisor,
@@ -620,10 +654,17 @@ mod_options:typing.Dict[str, type[Option]] = {
     "PhysicsRunForrestRun/Active preset": RunForrestRun,
 }
 
-xenobladeX_options: typing.Dict[str, type[Option]] = {
+xenobladeX_options: dict[str, type[Option]] = {
     **mod_options,
-    "skell_weapon_family": SkellWeaponFamily,
-    "augment_family": AugmentFamily,
+    "collectopedia_locations": IncludeCollectopediaLocations,
+    "enemy_book_locations": IncludeEnemyBookLocations,
+    "location_locations": IncludeLocationLocations,
+    "ground_armor": IncludeGroundArmor,
+    "ground_weapons": IncludeGroundWeapons,
+    "ground_augments": IncludeGroundAugments,
+    "skell_weapons": IncludeSkellWeapons,
+    "skell_armors": IncludeSkellArmor,
+    "skell_augments": IncludeSkellAugments,
     "logic_cheating": LogicCheating,
     "death_link": DeathLink,
     "force_weather": WeatherForce,

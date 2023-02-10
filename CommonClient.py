@@ -568,8 +568,7 @@ async def server_loop(ctx: CommonContext, address: typing.Optional[str] = None) 
 
     logger.info(f'Connecting to Archipelago server at {address}')
     try:
-        # XenobladeX Note: Increased maximum size, because the default was too small
-        socket = await websockets.connect(address, max_size=20000000, port=port, ping_timeout=None, ping_interval=None)
+        socket = await websockets.connect(address, port=port, ping_timeout=None, ping_interval=None)
         if ctx.ui is not None:
             ctx.ui.update_address_bar(server_url.netloc)
         ctx.server = Endpoint(socket)
