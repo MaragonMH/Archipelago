@@ -1,4 +1,4 @@
-from ..dataType import Data
+from ..Items import Itm as Data
 
 field_skills_data:list[Data] = [
 Data("Mechanical", count = 4),

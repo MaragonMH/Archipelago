@@ -1,4 +1,4 @@
-from ..dataType import LocData as Data
+from ..Locations import Loc as Data
 
 #https://xenoblade.github.io/xbx/bdat/common_ms/ITM_CollectList_ms.html
 collepedia_data:list[Data] = [

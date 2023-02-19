@@ -1,17 +1,10 @@
 from BaseClasses import MultiWorld
 from .Options import mod_options
-from .Items import itemTypes
-from .Locations import locTypes
 
 
-def generate_slot_data(base_id: int, world: MultiWorld, player:int) -> dict[str, object]:
+def generate_slot_data(world: MultiWorld, player:int) -> dict[str, object]:
 	slot_data: dict[str, object] = {}
-	slot_data["death_link_enabled"] = getattr(world, "death_link")[player].value
-
-	item_types = { item.type + count: base_id + item.offset for item in itemTypes for count in range(item.count)}
-	location_types = { location.type + count: base_id + location.offset for location in locTypes for count in range(location.count)}
-	slot_data["game_type_item_to_offset"] = item_types
-	slot_data["game_type_location_to_offset"] = location_types
+	slot_data["death_link"] = getattr(world, "death_link")[player].value
 
 	options:dict[str, str] = {}
 	for path, option in mod_options.items():

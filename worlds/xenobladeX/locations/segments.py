@@ -1,4 +1,4 @@
-from ..dataType import LocData as Data
+from ..Locations import Loc as Data
 
 # from helper
 segments_data:list[Data]= [

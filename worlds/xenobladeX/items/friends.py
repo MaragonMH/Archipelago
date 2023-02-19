@@ -1,4 +1,4 @@
-from ..dataType import Data
+from ..Items import Itm as Data
 
 #https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_PcList.html
 friends_data:list[Data] = [

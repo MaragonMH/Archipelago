@@ -15,54 +15,54 @@ $disableSkellAugments = 0
 
 [Preset]
 name = "on"
-category = "disableGroundArmor"
+category = GroundArmor"
 
 [Preset]
-name = "off"
-category = "disableGroundArmor"
+name = "disable"
+category = "GroundArmor"
 $disableGroundArmor = 1
 
 [Preset]
 name = "on"
-category = "disableGroundWeapons"
+category = "GroundWeapons"
 
 [Preset]
-name = "off"
-category = "disableGroundWeapons"
+name = "disable"
+category = "GroundWeapons"
 $disableGroundWeapons = 1
 
 [Preset]
 name = "on"
-category = "disableGroundAugments"
+category = GroundAugments"
 
 [Preset]
-name = "off"
-category = "disableGroundAugments"
+name = "disable"
+category = GroundAugments"
 $disableGroundAugments = 1
 
 [Preset]
 name = "on"
-category = "disableSkellArmor"
+category = SkellArmor"
 
 [Preset]
-name = "off"
-category = "disableSkellArmor"
+name = "disable"
+category = SkellArmor"
 $disableSkellArmor = 1
 
 [Preset]
 name = "on"
-category = "disableSkellWeapons"
+category = SkellWeapons"
 
 [Preset]
-name = "off"
-category = "disableSkellWeapons"
+name = "disable"
+category = SkellWeapons"
 $disableSkellWeapons = 1
 
 [Preset]
 name = "on"
-category = "disableSkellAugments"
+category = SkellAugments"
 
 [Preset]
-name = "off"
-category = "disableSkellAugments"
+name = "disable"
+category = SkellAugments"
 $disableSkellAugments = 1

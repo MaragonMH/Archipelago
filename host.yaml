@@ -141,7 +141,6 @@ pokemon_rb_options:
   rom_start: true
 xenobladeX_options:
   cemu_path: "C:/Software/Cemu/"
-  cemu_archipelago_rel_path: "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/Archipelago/"
 zillion_options:
   # File name of the Zillion US rom
   rom_file: "Zillion (UE) [!].sms"

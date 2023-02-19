@@ -5,11 +5,11 @@ $Autostart = $true
 
 Set-Location $PSScriptRoot
 $CemuGraphicPacksPath = $CemuPath + "graphicPacks/"
+$ClientFilesRelPath = "../cemuGraphicPack/"
 Write-Output "The target destination is: $CemuGraphicPacksPath"
-Get-ChildItem . -Directory | ForEach-Object{
-	Write-Output "Copy folder: $($_.Name)"
-	Copy-Item -Force -Recurse $_.Name "$CemuGraphicPacksPath$($_.Name)"
-}
+Write-Output "Copy folder: $ClientFilesRelPath"
+Copy-Item -Force -Recurse $ClientFilesRelPath "$($CemuGraphicPacksPath)Archipelago"
+
 if($Autostart){
 	Write-Output "Open Cemu"
 	& "$($CemuPath)Cemu.exe"

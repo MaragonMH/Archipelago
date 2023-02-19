@@ -560,10 +560,83 @@ class RunForrestRun(NamedChoice):
         "CHEAT x20",
     ]
 
+class IncludeCollectopediaLocations(DefaultOnToggle):
+    """Allows you to get items from collectopedia entries and adds those locations to the pool"""
+    display_name = "Include Collectopedia Locations"
 
-class WeatherForce(Toggle):
-    """Allows you to force a weather condition. This option needs to be invoked manually through the graphic packs"""
-    display_name = "Force Weather"
+class IncludeEnemyBookLocations(DefaultOnToggle):
+    """Allows you to get items from completing enemy entries(white dot in the menu) and adds those locations to the pool"""
+    display_name = "Include Enemy Book Locations"
+
+class IncludeLocationLocations(DefaultOnToggle):
+    """Allows you to get items from locations and adds those locations to the pool"""
+    display_name = "Include Location Locations"
+
+class IncludeGroundArmor(NamedChoice):
+    """Allows you to receive ground armor as items and adds those items to the pool"""
+    display_name = "Include Ground Armor Items"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+class IncludeGroundWeapons(NamedChoice):
+    """Allows you to receive ground weapons as items and adds those items to the pool"""
+    display_name = "Include Ground Weapon Items"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+class IncludeGroundAugments(NamedChoice):
+    """Allows you to receive ground augments as items and adds those items to the pool"""
+    display_name = "Include Ground Augment Items"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+class IncludeSkellArmor(NamedChoice):
+    """Allows you to receive skell armor as items and adds those items to the pool"""
+    display_name = "Include Skell Armor Items"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+class IncludeSkellWeapons(NamedChoice):
+    """Allows you to receive skell weapons as items and adds those items to the pool"""
+    display_name = "Include Skell Weapons Items"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+class IncludeSkellAugments(NamedChoice):
+    """Allows you to receive skell augments as items and adds those items to the pool"""
+    display_name = "Include Skell Augment Items"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
 
 # currently unused
 class SkellWeaponFamily(DefaultOnToggle):
@@ -578,42 +651,7 @@ class AugmentFamily(DefaultOnToggle):
      when you receive the item. If disabled, you will receive one Augment tier, choosen at random."""
     display_name = "Receive Entire Augment-Family"
 
-class IncludeCollectopediaLocations(DefaultOnToggle):
-    """Allows you to get items from collectopedia entries and adds those locations to the pool"""
-    display_name = "Include Collectopedia Locations"
-
-class IncludeEnemyBookLocations(DefaultOnToggle):
-    """Allows you to get items from completing enemy entries(white dot in the menu) and adds those locations to the pool"""
-    display_name = "Include Enemy Book Locations"
-
-class IncludeLocationLocations(DefaultOnToggle):
-    """Allows you to get items from locations and adds those locations to the pool"""
-    display_name = "Include Location Locations"
-
-class IncludeGroundArmor(DefaultOnToggle):
-    """Allows you to receive ground armor as items and adds those items to the pool"""
-    display_name = "Include Ground Armor Items"
-
-class IncludeGroundWeapons(DefaultOnToggle):
-    """Allows you to receive ground weapons as items and adds those items to the pool"""
-    display_name = "Include Ground Weapon Items"
-
-class IncludeGroundAugments(DefaultOnToggle):
-    """Allows you to receive ground augments as items and adds those items to the pool"""
-    display_name = "Include Ground Augment Items"
-
-class IncludeSkellArmor(DefaultOnToggle):
-    """Allows you to receive skell armor as items and adds those items to the pool"""
-    display_name = "Include Skell Armor Items"
-
-class IncludeSkellWeapons(DefaultOnToggle):
-    """Allows you to receive skell weapons as items and adds those items to the pool"""
-    display_name = "Include Skell Weapons Items"
-
-class IncludeSkellAugments(DefaultOnToggle):
-    """Allows you to receive skell augments as items and adds those items to the pool"""
-    display_name = "Include Skell Augment Items"
-
+# currently unused
 class LogicCheating(Toggle):
     """Allows you to get the randomized items the regular way."""
     display_name = "Logic Cheating"
@@ -652,6 +690,12 @@ mod_options:dict[str, type[Option]] = {
     "PhysicsJumpToTheMoon/Vertical Velocity (height)": MoonJumpHeight,
     "PhysicsJumpToTheMoon/Landing type": MoonJumpType,
     "PhysicsRunForrestRun/Active preset": RunForrestRun,
+    "AP/AMR": IncludeGroundArmor,
+    "AP/WPN": IncludeGroundWeapons,
+    "AP/AUG": IncludeGroundAugments,
+    "AP/SKWPN": IncludeSkellWeapons,
+    "AP/SKAMR": IncludeSkellArmor,
+    "AP/SKAUG": IncludeSkellAugments,
 }
 
 xenobladeX_options: dict[str, type[Option]] = {
@@ -659,13 +703,5 @@ xenobladeX_options: dict[str, type[Option]] = {
     "CLP": IncludeCollectopediaLocations,
     "EBK": IncludeEnemyBookLocations,
     "LOC": IncludeLocationLocations,
-    "AMR": IncludeGroundArmor,
-    "WPN": IncludeGroundWeapons,
-    "AUG": IncludeGroundAugments,
-    "SKWPN": IncludeSkellWeapons,
-    "SKAMR": IncludeSkellArmor,
-    "SKAUG": IncludeSkellAugments,
-    "logic_cheating": LogicCheating,
     "death_link": DeathLink,
-    "force_weather": WeatherForce,
 }

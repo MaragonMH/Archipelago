@@ -1,4 +1,4 @@
-from ..dataType import Data
+from ..Items import Itm as Data
 
 other_data:list[Data] = [
 Data("Victory", count=0),
@@ -13,5 +13,6 @@ Data("FNet"),
 Data("Blade"),
 Data("Death", count=0),
 Data("Kill Enemy", count=0),
+Data("L Shop"),
 *other_data,
 ]

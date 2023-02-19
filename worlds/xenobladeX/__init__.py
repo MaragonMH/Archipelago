@@ -1,10 +1,11 @@
 from BaseClasses import Tutorial
+from ..AutoWorld import World, WebWorld
 from .Slot import generate_slot_data
+from .Regions import init_region
 from .Items import create_filler, xenobladeXItems, create_items, create_item
 from .Rules import set_rules
 from .Locations import create_locations, xenobladeXLocations
 from .Options import xenobladeX_options
-from ..AutoWorld import World, WebWorld
 
 
 class XenobladeXWeb(WebWorld):
@@ -32,13 +33,11 @@ class XenobladeXWorld(World):
 
     option_definitions = xenobladeX_options
 
-    def _generate_lookup(self, data, b_id:int):
-        return { e.get_item(): b_id + e.id for e in data}
-
-    item_name_to_id = { item.get_item(): sum(b_id, item.id) for b_id in enumerate(range(1), base_id) for item in xenobladeXItems} 
-    location_name_to_id = { location.get_location(): sum(b_id, location.id) for b_id in enumerate(range(1), base_id) for location in xenobladeXLocations }
+    item_name_to_id = (lambda b_id=base_id: { item.get_item(): b_id + item.id for item in xenobladeXItems if item.id is not None})()
+    location_name_to_id = (lambda b_id=base_id: { location.get_location(): b_id + location.id for location in xenobladeXLocations if location.id is not None})()
 
     def create_regions(self):
+        init_region(self.multiworld, self.player, "Menu")
         create_locations(self.multiworld, self.player, self.base_id, self.location_name_to_id)
 
     def create_items(self):
@@ -48,7 +47,7 @@ class XenobladeXWorld(World):
         create_item(self.multiworld, name, self.player, self.item_name_to_id[name])
 
     def set_rules(self):
-        set_rules(self.multiworld, self.player, self.item_name_to_id)
+        set_rules(self.multiworld, self.player, self.item_name_to_id, self.location_name_to_id)
 
     def generate_early(self):
         pass
@@ -57,4 +56,4 @@ class XenobladeXWorld(World):
         create_filler(self.multiworld, self.player, self.item_name_to_id)
 
     def fill_slot_data(self) -> dict[str, object]:
-        return generate_slot_data(self.base_id, self.multiworld, self.player)
+        return generate_slot_data(self.multiworld, self.player)
