@@ -2,7 +2,7 @@ from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ArtsList.html
 arts_data:list[Data] = [ 
-Data("ARTS_ASSAULT_AUTO_Na", valid=False),
+Data("ARTS_ASSAULT_AUTO_Na_1", valid=False),
 Data("Decoy Round"),
 Data("Furious Blast"),
 Data("Burst Grenade"),
@@ -118,7 +118,7 @@ Data("Galactic Cataclysm"),
 Data("Astral Heal"),
 Data("Novalibrium"),
 Data("Starfall Blossom"),
-Data("ARTS_ASSAULT_AUTO_Na", valid=False),
+Data("ARTS_ASSAULT_AUTO_Na_2", valid=False),
 Data("Boost Barrel"),
 Data("Sniper Barrel"),
 Data("Missile Barrel"),

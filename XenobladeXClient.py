@@ -5,13 +5,16 @@ import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import random
 import re
+import sys
+import copy
 import Utils
 from typing import NamedTuple, Optional
+from itertools import groupby
 import colorama
 
 # CommonClient import first to trigger ModuleUpdater
 from CommonClient import CommonContext, server_loop, gui_enabled, logger, get_base_parser
-import Utils
+from settings import get_settings
 
 from worlds.xenobladeX import XenobladeXWorld
 from worlds.xenobladeX.drops.item import dropItemData
@@ -20,6 +23,7 @@ from worlds.xenobladeX.drops.skill import dropSkillsData
 from worlds.xenobladeX.items.groundAugments import ground_augments_data
 from worlds.xenobladeX.Items import game_type_item_to_offset
 from worlds.xenobladeX.Locations import game_type_location_to_offset
+from worlds.xenobladeX.Options import XenobladeXOption
 
 CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu. Please check your installation directory and Cemu installation"
 CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. Please check your installation directory and Cemu installation"
@@ -88,6 +92,7 @@ class XenobladeXHttpServer(HTTPServer):
         if item_game_type == 0x16: return 3
         return 1
 
+    # Example: Invoke-WebRequest http://localhost:45872/items -Method POST -Body "I Tp=00000008 Id=00000039`n"
     def upload_item(self, item_game_type:int, item_game_id:int, seed_name:Optional[str], item_name:Optional[str], item_game_level:int = 1):
         if item_game_type == 0:
             self.items += f"K Id={item_game_id:08x} Fg={1:08x}\n"
@@ -117,6 +122,12 @@ class XenobladeXHttpServer(HTTPServer):
         match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1 if not has_lvl else entry[1]) 
             for entry in match if min <= entry[1] <= max]
+        
+    def upload_message(self, heading:str, body:str):
+        self.items += f"M {self._sanitize_message(heading)}\r{self._sanitize_message(body)}\n"
+
+    def _sanitize_message(self, message:str) -> str:
+        return re.sub(r"[^\w ]", "", message)
 
     def download_locations(self) -> list[GameItem]:
         locations = []
@@ -146,7 +157,7 @@ class XenobladeXHttpServer(HTTPServer):
 
         self._match_line(items, 0, r'^KY Id=([1-9a-fA-F]{1}) Fg=([0-9a-fA-F]{1})\n')
         self._match_line(items, None, r'^IT Id=([0-9a-fA-F]{3}) Tp=([0-9a-fA-F]{2})(?:\n| S1Id)')
-        self._match_line(items, 0x1c, r'^IT Id=([0-9a-fA-F]{3}) Tp=1[cC] Cn=([0-9a-fA-F]{2})', has_lvl=True)
+        self._match_line(items, 0x1c, r'^IT Id=([0-9a-fA-F]{3}) Tp=1[cC] Cn=([0-9a-fA-F]{3})', has_lvl=True)
         equip_regex = r'^EQ CId=[0-9a-fA-F]{2} Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1})'
         self._match_line(items, 0x6, equip_regex, min=0, max=2)
         self._match_line(items, 0x1, equip_regex, min=3)
@@ -168,11 +179,11 @@ class XenobladeXHttpServer(HTTPServer):
         return items
 
     def download_death(self) -> bool:
-        if self.upload_in_progress:
-            return False
+        if self.upload_in_progress: return False
         pattern = r'^KY Id=6 .*\n'
         result:bool = re.match(pattern, self.locations) is not None
         re.sub(pattern, "", self.locations)
+        if result: self.upload_message("Deathlink", "Sent death")
         return result
 
 
@@ -204,8 +215,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.server.locations += locations
         if upload_ended:
             self.server.upload_in_progress = False
-        logger.debug("Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) +
-            " FileLines: " +  str(self.server.locations.count('\n')))
+        # logger.debug(f"Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) + " FileLines: " +  str(self.server.locations.count('\n')))
 
     # Silence connection request logging
     def log_request(self, code='-', size='-'): return
@@ -215,7 +225,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(self.server.locations.encode())
 
     def debug_post_items(self):
-        self.server.items = (self.rfile.read(int(self.headers['content-length']))).decode('cp437')
+        self.server.items += (self.rfile.read(int(self.headers['content-length']))).decode('cp437')
         self.respond_success()
 
     def do_GET(self):
@@ -238,12 +248,15 @@ class XenobladeXContext(CommonContext):
     items_handling = 0b111  # get items from your own world
     want_slot_data = True
 
-    def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool) -> None:
-        self.http_server = XenobladeXHttpServer(('localhost', 45872), debug=debug)
-        super().__init__(server_address, password)
+    connected = False
 
-    # get from slot data
-    options:dict[str,str] = {}
+    # settings
+    cemu_exe = get_settings()["xenobladex_options"]["executable"]
+    debug = get_settings()["xenobladex_options"]["interactable_server"]
+
+    def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
+        self.http_server = XenobladeXHttpServer(('localhost', 45872), debug=self.debug)
+        super().__init__(server_address, password)
 
     async def server_auth(self, password_requested: bool = False):
         if password_requested and not self.password:
@@ -251,20 +264,33 @@ class XenobladeXContext(CommonContext):
         await self.get_username()
         await self.send_connect()
 
+    async def disconnect(self, allow_autoreconnect: bool = False):
+        await super(XenobladeXContext, self).disconnect(allow_autoreconnect)
+        self.connected = False
 
     def on_package(self, cmd: str, args: dict):
         if cmd == "Connected":
             slot_data = args.get('slot_data', None)
             if slot_data:
-                self.options = slot_data.get("options", {})
-                if slot_data.get("death_link", False): self.tags.add("DeathLink")
+                cemu_options: list[XenobladeXOption] = [XenobladeXOption(**option) for option in slot_data["cemu_options"]]
+                options: dict[str, int] = slot_data["options"]
+                if options["death_link"]: self.tags.add("DeathLink")
                 else: self.tags.discard("DeathLink")
-                self.prepare_cemu()
+                self.prepare_cemu(cemu_options)
+                self.connected = True
 
     def on_deathlink(self, data: dict):
         if "DeathLink" in self.tags:
             self.http_server.upload_item(item_game_type=0, item_game_id=6, seed_name=self.seed_name, item_name=None)
+            self.http_server.upload_message("Archipelago", f"Received death from {data['source']}")
         super().on_deathlink(data)
+
+    def on_print_json(self, args: dict):
+        if not self.is_uninteresting_item_send(args):
+            text = self.rawjsontotextparser(copy.deepcopy(args["data"]))
+            self.http_server.upload_message("Archipelago", text)
+        super(XenobladeXContext, self).on_print_json(args)
+    
 
     def run_gui(self):
         from kvui import GameManager
@@ -285,8 +311,9 @@ class XenobladeXContext(CommonContext):
         return re.sub(r"^[A-Z]*?: ", "",XenobladeXWorld.item_id_to_name[archipelago_item_id])
     
     def archipelago_item_to_game_item(self, archipelago_item_id: int) -> GameItem:
-        game_item_type = max([id for id in game_type_item_to_offset.values() if id <= archipelago_item_id - XenobladeXWorld.base_id])
-        return GameItem(game_item_type, ((archipelago_item_id - XenobladeXWorld.base_id) // game_item_type))
+        game_item_type_offset = max([id for id in game_type_item_to_offset.values() if id <= archipelago_item_id - XenobladeXWorld.base_id])
+        game_item_type = min([key for key, offset in game_type_item_to_offset.items() if offset == game_item_type_offset])
+        return GameItem(game_item_type, (archipelago_item_id - XenobladeXWorld.base_id) - game_item_type_offset)
 
     def game_item_to_archipelago_item(self, game_item:GameItem) -> int:
         return XenobladeXWorld.base_id + game_type_item_to_offset[game_item.type] + game_item.id
@@ -295,80 +322,89 @@ class XenobladeXContext(CommonContext):
         return XenobladeXWorld.base_id + game_type_location_to_offset[game_location.type] + game_location.id
 
 
-    def download_game_locations(self) -> None:
+    async def download_game_locations(self) -> None:
         game_locations = {self.game_location_to_archipelago_location(location) for location in self.http_server.download_locations()}
-        self.locations_checked.update(game_locations)
+        await self.send_msgs([{"cmd": 'LocationChecks', "locations": game_locations.difference(self.locations_checked)}])
 
 
     def upload_game_items(self) -> None:
         uploaded_items = self.http_server.download_items()
         server_items = {network_item.item for network_item in self.items_received if self.slot_concerns_self(network_item.player)}
         for item in server_items:
-            game_level = next(itm for itm in uploaded_items if item == self.game_item_to_archipelago_item(itm)).level
+            uploaded_item = next((itm for itm in uploaded_items if item == self.game_item_to_archipelago_item(itm)), None)
             archipelago_level = self.get_level(item)
-            if archipelago_level <= game_level: continue
+            if uploaded_item is not None and archipelago_level <= uploaded_item.level: continue
             game_item = self.archipelago_item_to_game_item(item)
             self.http_server.upload_item(game_item.type, game_item.id, self.seed_name, self.archipelago_item_to_name(item), archipelago_level)
 
-    def prepare_cemu(self):
-        cemu_path = Utils.get_options()["xenobladeX_options"]["cemu_path"]
+    def prepare_cemu(self, options: list[XenobladeXOption]):
+        cemu_path = os.path.dirname(self.cemu_exe)
         mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
         self.copy_cemu_files(cemu_path, mod_path)
-        self.set_cemu_graphic_packs(cemu_path, mod_path)
-        self.open_cemu(cemu_path)
+        self.set_cemu_graphic_packs(cemu_path, mod_path, options)
+        self.open_cemu(self.cemu_exe)
 
     def copy_cemu_files(self, cemu_path:str, mod_path:str):
-        archipelago_graphic_pack_path = "worlds/xenobladeX/cemuGraphicPack/"
-        if not os.path.exists(archipelago_graphic_pack_path): 
+        archipelago_graphic_pack_path = "worlds/xenobladeX/cemu_graphicpack/"
+        if not os.path.isdir(archipelago_graphic_pack_path): 
             archipelago_graphic_pack_path = "lib/" + archipelago_graphic_pack_path
-            if not os.path.exists(archipelago_graphic_pack_path):
-                logger.error(CEMU_GRAPHIC_PACK_MISSING)
-                return
+            if not os.path.isdir(archipelago_graphic_pack_path):
+                print_error_and_close(CEMU_GRAPHIC_PACK_MISSING)
         try:
-            shutil.copytree(archipelago_graphic_pack_path, cemu_path + mod_path + "AP/", dirs_exist_ok=True)
+            shutil.copytree(archipelago_graphic_pack_path, os.path.join(cemu_path, mod_path, "AP"), dirs_exist_ok=True)
         except:
-            logger.error(CEMU_GRAPHIC_PACK_MISSING)
+            print_error_and_close(CEMU_GRAPHIC_PACK_MISSING)
 
-    def set_cemu_graphic_packs(self, cemu_path:str, mod_path:str):
-        settings_path = cemu_path + "Settings.xml"
+    def set_cemu_graphic_packs(self, cemu_path:str, mod_path:str, options: list[XenobladeXOption]):
+        settings_path = os.path.join(cemu_path, "Settings.xml")
         try:
-            file_path = Utils.local_path(settings_path)
-            with open(file_path, "r") as file :
+            with open(settings_path, "r") as file :
                 filedata = file.read()
 
-            # Cleanup
-            for pack_name in {pack.rsplit("/", 1)[0] for pack in self.options}:
-                pack_regex = rf'<Entry filename="{mod_path}{pack_name}/rules.txt"(/>\n|>.*?</Entry>\n)'
+            # Group by cemu pack
+            sorted_options = sorted(options, key=lambda option: option.cemu_pack)
+            grouped_options = [list(result) for key, result in groupby(sorted_options, key=lambda option: option.cemu_pack)]
+            
+            for settings in grouped_options:
+                cemu_pack: str = settings[0].cemu_pack
+
+                # Cleanup
+                pack_regex = rf'<Entry filename="{mod_path}{cemu_pack}/rules.txt"(/>\n|>.*?</Entry>\n)'
                 filedata = re.sub(pack_regex, "", filedata, flags=re.DOTALL)
 
-            cemu_packs = {pack.rsplit("/", 1)[0] : {pack.rsplit("/", 1)[1]: value} for pack, value in self.options.items() if value != "off"}
+                # Abort whenever a single setting of a pack is off
+                if any(setting.cemu_selection == "off" for setting in settings): continue
 
-            # Addition
-            for pack_name, categories in cemu_packs.items():
-                content = "".join([f'<Preset>\n{f"<category>{pack_category}</category>" if pack_category != "Active preset" else ""}<preset>{category_value}</preset>\n</Preset>\n' 
-                    for pack_category, category_value in categories.items()])
-                pack_content = (f'<Entry filename="{mod_path}{pack_name}/rules.txt">\n{content}</Entry>\n\n')
+                # Addition
+                content = "".join([f'<Preset>\n{f"<category>{setting.cemu_option}</category>" if setting.cemu_option != "Active preset" else ""}<preset>{setting.cemu_selection}</preset>\n</Preset>\n' for setting in settings if setting.cemu_option != ""])
+                pack_content = (f'<Entry filename="{mod_path}{cemu_pack}/rules.txt">\n{content}</Entry>\n\n')
                 filedata = re.sub(rf'</GraphicPack>', f"{pack_content}</GraphicPack>", filedata)
-                filedata = re.sub(rf'<GraphicPack/>', f"<GraphicPack>\n{pack_content}</GraphicPack>", filedata)
 
             with open(settings_path, "w") as file:
                 file.write(filedata)
         except FileNotFoundError:
-            logger.error(CEMU_SETTINGS_NOT_FOUND)
+            print_error_and_close(CEMU_SETTINGS_NOT_FOUND)
 
-    def open_cemu(self, cemu_path):
+    def open_cemu(self, cemu_exe):
         try: 
-            subprocess.Popen(cemu_path + "Cemu")
+            subprocess.Popen(cemu_exe)
         except FileNotFoundError:
-            logger.error(CEMU_NOT_FOUND)
+            print_error_and_close(CEMU_NOT_FOUND)
+
+
+def print_error_and_close(msg):
+    logger.error("Error: " + msg)
+    Utils.messagebox("Error", msg, error=True)
+    sys.exit(1)
 
 
 async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
     while not ctx.exit_event.is_set():
-        if "DeathLink" in ctx.tags and ctx.http_server.download_death():
-            await ctx.send_death()
-        ctx.download_game_locations()
-        ctx.upload_game_items()
+        if ctx.connected:
+            if "DeathLink" in ctx.tags and ctx.http_server.download_death():
+                await ctx.send_death()
+            await ctx.download_game_locations()
+            ctx.upload_game_items()
         await asyncio.sleep(0.5)
 
 
@@ -380,7 +416,7 @@ async def main() -> None:
 
     Utils.init_logging("XenobladeXClient", exception_logger="Client", loglevel=args.log_level)
 
-    ctx = XenobladeXContext(args.connect, args.password, args.debug)
+    ctx = XenobladeXContext(args.connect, args.password)
     if ctx.server_task is None:
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
@@ -394,9 +430,7 @@ async def main() -> None:
     await ctx.exit_event.wait()
 
     ctx.server_address = None
-    logger.debug("waiting for game server task to end")
     await asyncio.get_event_loop().run_in_executor(None, ctx.http_server.shutdown)
-    logger.debug("waiting for sync task to end")
     await sync_task
     await ctx.shutdown()
 

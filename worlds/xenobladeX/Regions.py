@@ -1,7 +1,7 @@
 import logging
 from functools import partial
 from collections import OrderedDict
-from BaseClasses import CollectionState, MultiWorld, Region, Entrance, RegionType, Location
+from BaseClasses import CollectionState, MultiWorld, Region, Entrance, Location
 from dataclasses import dataclass, field
 
 @dataclass(frozen=True, eq=True)
@@ -48,7 +48,7 @@ def init_region(world: MultiWorld, player: int, region_name:str):
     """Initialize the new region if it was not done before and establish the connection rules, based on its predecessors, if applicable"""
     if region_name not in [region.name for region in world.regions] and set(region_name.split("+")) <= set(xenobladeXRegions.keys()):
         logging.debug(f"Region Name: {region_name}")
-        world.regions += [Region(region_name, RegionType.Generic, region_name, player, world)]
+        world.regions += [Region(region_name, player, world, region_name)]
         if region_name == "Menu": return
 
         # Add connections to this region

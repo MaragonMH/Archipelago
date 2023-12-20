@@ -8,7 +8,7 @@ Data("FN Site 102"),
 Data("FN Site 104"),
 Data("FN Site 105"),
 Data("FN Site 106"),
-Data("FN Site 516"),
+Data("FN Site 000", valid=False),
 Data("FN Site 108"),
 Data("FN Site 107"),
 Data("FN Site 109"),
@@ -108,3 +108,6 @@ Data("FN Site 418"),
 Data("FN Site 419"),
 Data("FN Site 420"),
 ]
+# use https://xenoblade.github.io/xbx/bdat/common_local_us/SEG_ProbeList.html with vein_ids for
+# https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinList.html to match name in
+# https://xenoblade.github.io/xbx/bdat/common_local_us/FLD_Location.html

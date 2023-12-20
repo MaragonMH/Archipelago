@@ -42,7 +42,8 @@ game_type_item_to_offset:OrderedDict[int, int] = OrderedDict()
 
 def _genItms(prefix:str, type:int, data:list[Itm], prog:ItCl=ItCl.filler, type_count:int = 1) -> Generator[Itm, None, None]:
     _genItms.table_size += _genItms.last_table_size
-    game_type_item_to_offset[type] = _genItms.table_size
+    for typ in range(type, type + type_count):
+        game_type_item_to_offset[typ] = _genItms.table_size
     _genItms.last_table_size = len(data)
     return (replace(e, type=type, id= _genItms.table_size + i + 1, prefix=prefix, progression=prog, type_count=type_count) for i, e in enumerate(data) if e.valid)
 _genItms.table_size = 0
@@ -73,14 +74,14 @@ xenobladeXItems = [
     *xenobladeXOptionalItems,
 ]
 
-def create_items(world: MultiWorld, player, base_id):
+def create_items(world: MultiWorld, player, base_id, options):
     """Create all items"""
     # Add all important Items, these are always added to the item pool
     for item in xenobladeXImportantItems:
         world.itempool += [XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player) for _ in range(item.count)]
 
     # Add all optional Items to the item pool, these are selected at random, depending on how many slots are left in the location pool
-    selected_optional_items:list[Itm] = [item for item in xenobladeXOptionalItems if item.prefix is not None and getattr(world, f"AP/{item.prefix}")[player].value]
+    selected_optional_items:list[Itm] = [item for item in xenobladeXOptionalItems if item.prefix is not None and getattr(options, item.prefix.lower()).value]
     missing_item_count:int = min(len(world.get_locations()) - len(world.get_items()), len(selected_optional_items))
     seed(world.seed)
     random_items:list[Itm] = sample(selected_optional_items, missing_item_count)

@@ -5,7 +5,8 @@ from .Regions import init_region
 from .Items import create_filler, xenobladeXItems, create_items, create_item
 from .Rules import set_rules
 from .Locations import create_locations, xenobladeXLocations
-from .Options import xenobladeX_options
+from .Options import XenobladeXOptions
+from .Settings import XenobladeXSettings
 
 
 class XenobladeXWeb(WebWorld):
@@ -31,7 +32,10 @@ class XenobladeXWorld(World):
     data_version = 0
     base_id = 4100000
 
-    option_definitions = xenobladeX_options
+    options_dataclass = XenobladeXOptions
+    options: XenobladeXOptions
+
+    settings: XenobladeXSettings
 
     item_name_to_id = (lambda b_id=base_id: { item.get_item(): b_id + item.id for item in xenobladeXItems if item.id is not None})()
     location_name_to_id = (lambda b_id=base_id: { location.get_location(): b_id + location.id for location in xenobladeXLocations if location.id is not None})()
@@ -41,7 +45,7 @@ class XenobladeXWorld(World):
         create_locations(self.multiworld, self.player, self.base_id, self.location_name_to_id)
 
     def create_items(self):
-        create_items(self.multiworld, self.player, self.base_id)
+        create_items(self.multiworld, self.player, self.base_id, self.options)
 
     def create_item(self, name: str):
         create_item(self.multiworld, name, self.player, self.item_name_to_id[name])
@@ -56,4 +60,4 @@ class XenobladeXWorld(World):
         create_filler(self.multiworld, self.player, self.item_name_to_id)
 
     def fill_slot_data(self) -> dict[str, object]:
-        return generate_slot_data(self.multiworld, self.player)
+        return generate_slot_data(self.options)
