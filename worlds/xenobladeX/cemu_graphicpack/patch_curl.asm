@@ -70,8 +70,10 @@ _postCurl:
 	stw r3,24(r31)
 	li r9,10015
 	stw r9,8(r31)
-	li r9,1
+	li r9,47
 	stw r9,12(r31)
+	li r9,1
+	stw r9,16(r31)
 	lis r9,_uploadMultiHandle@ha
 	lwz r10,_uploadMultiHandle@l(r9)
 	lis r9,_uploadHandle@ha
@@ -86,12 +88,23 @@ _postCurl:
 	mr r3,r9
 	crxor 6,6,6
 	bl curl_easy_setopt
+	lis r9,_uploadHandle@ha
+	lwz r9,_uploadHandle@l(r9)
+	li r5,1
+	lwz r4,12(r31)
+	mr r3,r9
+	crxor 6,6,6
+	bl curl_easy_setopt
+_curl_L3:
 	lis r9,_uploadMultiHandle@ha
 	lwz r9,_uploadMultiHandle@l(r9)
-	addi r10,r31,12
+	addi r10,r31,16
 	mr r4,r10
 	mr r3,r9
 	bl curl_multi_perform
+	lwz r9,16(r31)
+	cmpwi cr0,r9,0
+	bne cr0,_curl_L3
 	lis r9,_uploadMultiHandle@ha
 	lwz r10,_uploadMultiHandle@l(r9)
 	lis r9,_uploadHandle@ha
@@ -213,7 +226,7 @@ _getCurl:
 	mr r3,r9
 	crxor 6,6,6
 	bl curl_easy_setopt
-_curl_L6:
+_curl_L7:
 	lis r9,_downloadMultiHandle@ha
 	lwz r9,_downloadMultiHandle@l(r9)
 	addi r10,r31,24
@@ -222,7 +235,7 @@ _curl_L6:
 	bl curl_multi_perform
 	lwz r9,24(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_curl_L6
+	bne cr0,_curl_L7
 	lis r9,_downloadMultiHandle@ha
 	lwz r10,_downloadMultiHandle@l(r9)
 	lis r9,_downloadHandle@ha

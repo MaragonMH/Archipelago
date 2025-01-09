@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import socket
 import random
 import re
 import sys
@@ -35,6 +36,7 @@ class GameItem(NamedTuple):
     level: int = 1
 
 class XenobladeXHttpServer(HTTPServer):
+    address_family = socket.AF_INET6
     locations = ""
     items = ""
     upload_in_progress = False
@@ -215,7 +217,8 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.server.locations += locations
         if upload_ended:
             self.server.upload_in_progress = False
-        # logger.debug(f"Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) + " FileLines: " +  str(self.server.locations.count('\n')))
+        if self.server.debug:
+            logger.debug(f"Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) + " FileLines: " +  str(self.server.locations.count('\n')))
 
     # Silence connection request logging
     def log_request(self, code='-', size='-'): return
@@ -252,10 +255,9 @@ class XenobladeXContext(CommonContext):
 
     # settings
     cemu_exe = get_settings()["xenobladex_options"]["executable"]
-    debug = get_settings()["xenobladex_options"]["interactable_server"]
 
-    def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
-        self.http_server = XenobladeXHttpServer(('localhost', 45872), debug=self.debug)
+    def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool = False) -> None:
+        self.http_server = XenobladeXHttpServer(('::', 45872), debug=debug)
         super().__init__(server_address, password)
 
     async def server_auth(self, password_requested: bool = False):
@@ -416,7 +418,7 @@ async def main() -> None:
 
     Utils.init_logging("XenobladeXClient", exception_logger="Client", loglevel=args.log_level)
 
-    ctx = XenobladeXContext(args.connect, args.password)
+    ctx = XenobladeXContext(args.connect, args.password, args.debug)
     if ctx.server_task is None:
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 

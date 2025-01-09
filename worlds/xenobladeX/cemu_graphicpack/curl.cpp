@@ -53,11 +53,15 @@ void _initCurl(){
 
 void _postCurl(char text[]){
 	int curlOptPostFields = 10015;
+	int curlOptPost = 47;
 	int leftRunning = 1;
 
 	curl_multi_add_handle(_uploadMultiHandle, _uploadHandle);
 	curl_easy_setopt(_uploadHandle, curlOptPostFields, text);
-	curl_multi_perform(_uploadMultiHandle, &leftRunning);
+	curl_easy_setopt(_uploadHandle, curlOptPost, 1L);
+	do{
+		curl_multi_perform(_uploadMultiHandle, &leftRunning);
+	} while(leftRunning != 0);
 	curl_multi_remove_handle(_uploadMultiHandle, _uploadHandle);
 }
 
