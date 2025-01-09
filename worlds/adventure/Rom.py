@@ -6,9 +6,8 @@ from typing import Optional, Any
 
 import Utils
 from .Locations import AdventureLocation, LocationData
-from Utils import OptionsType
-from worlds.Files import APDeltaPatch, AutoPatchRegister, APContainer
-from itertools import chain
+from settings import get_settings
+from worlds.Files import APPatch, AutoPatchRegister
 
 import bsdiff4
 
@@ -79,7 +78,7 @@ class BatNoTouchLocation:
         return ret_dict
 
 
-class AdventureDeltaPatch(APContainer, metaclass=AutoPatchRegister):
+class AdventureDeltaPatch(APPatch, metaclass=AutoPatchRegister):
     hash = ADVENTUREHASH
     game = "Adventure"
     patch_file_ending = ".apadvn"
@@ -87,9 +86,7 @@ class AdventureDeltaPatch(APContainer, metaclass=AutoPatchRegister):
 
     # locations: [], autocollect: [], seed_name: bytes,
     def __init__(self, *args: Any, **kwargs: Any) -> None:
-        patch_only = True
         if "autocollect" in kwargs:
-            patch_only = False
             self.foreign_items: [AdventureForeignItemInfo] = [AdventureForeignItemInfo(loc.short_location_id, loc.room_id, loc.room_x, loc.room_y)
                                   for loc in kwargs["locations"]]
 
@@ -313,9 +310,8 @@ def get_base_rom_bytes(file_name: str = "") -> bytes:
 
 
 def get_base_rom_path(file_name: str = "") -> str:
-    options: OptionsType = Utils.get_options()
     if not file_name:
-        file_name = options["adventure_options"]["rom_file"]
+        file_name = get_settings()["adventure_options"]["rom_file"]
     if not os.path.exists(file_name):
         file_name = Utils.user_path(file_name)
     return file_name
