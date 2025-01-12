@@ -229,13 +229,17 @@ void _getArchipelago(){
 	__free(outputPtr);
 }
 
+unsigned int _networkCounter = 0;
 int _mainArchipelago(int hour, int minute) {
-	if(minute % 3 != 0) return changeTime(hour, minute);
+	// if(minute % 3 != 0) return changeTime(hour, minute);
 	
 	_initCurl();
 
-	_getArchipelago();
-	_postArchipelago();
+	_networkCounter = _networkCounter << 31;
+	_networkCounter = _networkCounter >> 31;
+	if(_networkCounter == 0) _getArchipelago();
+	else _postArchipelago();
+	_networkCounter = _networkCounter + 1;
 
     _cleanupCurl();
 

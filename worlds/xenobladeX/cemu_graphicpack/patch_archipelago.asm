@@ -750,6 +750,8 @@ _archipelago_L2:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
+_networkCounter:
+	.int    0
 _mainArchipelago:
 	stwu r1,-32(r1)
 	mflr r0
@@ -758,32 +760,36 @@ _mainArchipelago:
 	mr r31,r1
 	stw r3,8(r31)
 	stw r4,12(r31)
-	lwz r10,12(r31)
-	lis r9,0x5555
-	ori r9,r9,0x5556
-	mulhw r8,r10,r9
-	srawi r9,r10,31
-	subf r9,r9,r8
-	mulli r9,r9,3
-	subf r9,r9,r10
+	bl _initCurl
+	lis r9,_networkCounter@ha
+	lwz r9,_networkCounter@l(r9)
+	slwi r10,r9,31
+	lis r9,_networkCounter@ha
+	stw r10,_networkCounter@l(r9)
+	lis r9,_networkCounter@ha
+	lwz r9,_networkCounter@l(r9)
+	srwi r10,r9,31
+	lis r9,_networkCounter@ha
+	stw r10,_networkCounter@l(r9)
+	lis r9,_networkCounter@ha
+	lwz r9,_networkCounter@l(r9)
 	cmpwi cr0,r9,0
-	beq cr0,_archipelago_L25
-	lwz r4,12(r31)
-	lwz r3,8(r31)
-	bl changeTime
-	mr r9,r3
+	bne cr0,_archipelago_L25
+	bl _getArchipelago
 	b _archipelago_L26
 _archipelago_L25:
-	bl _initCurl
-	bl _getArchipelago
 	bl _postArchipelago
+_archipelago_L26:
+	lis r9,_networkCounter@ha
+	lwz r9,_networkCounter@l(r9)
+	addi r10,r9,1
+	lis r9,_networkCounter@ha
+	stw r10,_networkCounter@l(r9)
 	bl _cleanupCurl
 	lwz r4,12(r31)
 	lwz r3,8(r31)
 	bl changeTime
 	mr r9,r3
-	nop
-_archipelago_L26:
 	mr r3,r9
 	addi r11,r31,32
 	lwz r0,4(r11)
