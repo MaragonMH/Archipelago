@@ -22,7 +22,7 @@ _initCurl:
 	mr r31,r1
 	li r9,10002
 	stw r9,8(r31)
-	bl curl_easy_init
+	bl import.nlibcurl.curl_easy_init
 	mr r10,r3
 	lis r9,_uploadHandle@ha
 	stw r10,_uploadHandle@l(r9)
@@ -33,12 +33,12 @@ _initCurl:
 	lwz r4,8(r31)
 	mr r3,r10
 	crxor 6,6,6
-	bl curl_easy_setopt
-	bl curl_multi_init
+	bl import.nlibcurl.curl_easy_setopt
+	bl import.nlibcurl.curl_multi_init
 	mr r10,r3
 	lis r9,_uploadMultiHandle@ha
 	stw r10,_uploadMultiHandle@l(r9)
-	bl curl_easy_init
+	bl import.nlibcurl.curl_easy_init
 	mr r10,r3
 	lis r9,_downloadHandle@ha
 	stw r10,_downloadHandle@l(r9)
@@ -49,8 +49,8 @@ _initCurl:
 	lwz r4,8(r31)
 	mr r3,r10
 	crxor 6,6,6
-	bl curl_easy_setopt
-	bl curl_multi_init
+	bl import.nlibcurl.curl_easy_setopt
+	bl import.nlibcurl.curl_multi_init
 	mr r10,r3
 	lis r9,_downloadMultiHandle@ha
 	stw r10,_downloadMultiHandle@l(r9)
@@ -80,28 +80,28 @@ _postCurl:
 	lwz r9,_uploadHandle@l(r9)
 	mr r4,r9
 	mr r3,r10
-	bl curl_multi_add_handle
+	bl import.nlibcurl.curl_multi_add_handle
 	lis r9,_uploadHandle@ha
 	lwz r9,_uploadHandle@l(r9)
 	lwz r5,24(r31)
 	lwz r4,8(r31)
 	mr r3,r9
 	crxor 6,6,6
-	bl curl_easy_setopt
+	bl import.nlibcurl.curl_easy_setopt
 	lis r9,_uploadHandle@ha
 	lwz r9,_uploadHandle@l(r9)
 	li r5,1
 	lwz r4,12(r31)
 	mr r3,r9
 	crxor 6,6,6
-	bl curl_easy_setopt
+	bl import.nlibcurl.curl_easy_setopt
 _curl_L3:
 	lis r9,_uploadMultiHandle@ha
 	lwz r9,_uploadMultiHandle@l(r9)
 	addi r10,r31,16
 	mr r4,r10
 	mr r3,r9
-	bl curl_multi_perform
+	bl import.nlibcurl.curl_multi_perform
 	lwz r9,16(r31)
 	cmpwi cr0,r9,0
 	bne cr0,_curl_L3
@@ -111,7 +111,7 @@ _curl_L3:
 	lwz r9,_uploadHandle@l(r9)
 	mr r4,r9
 	mr r3,r10
-	bl curl_multi_remove_handle
+	bl import.nlibcurl.curl_multi_remove_handle
 	nop
 	addi r11,r31,48
 	lwz r0,4(r11)
@@ -165,7 +165,7 @@ _after_curl_1__realloc:
 	lwz r5,8(r31)
 	lwz r4,24(r31)
 	mr r3,r9
-	bl memcpy
+	bl import.coreinit.memcpy
 	lwz r9,12(r31)
 	lwz r10,4(r9)
 	lwz r9,8(r31)
@@ -209,7 +209,7 @@ _getCurl:
 	lwz r9,_downloadHandle@l(r9)
 	mr r4,r9
 	mr r3,r10
-	bl curl_multi_add_handle
+	bl import.nlibcurl.curl_multi_add_handle
 	lis r9,_downloadHandle@ha
 	lwz r10,_downloadHandle@l(r9)
 	lis r9,_WriteCallback@ha
@@ -217,7 +217,7 @@ _getCurl:
 	lwz r4,8(r31)
 	mr r3,r10
 	crxor 6,6,6
-	bl curl_easy_setopt
+	bl import.nlibcurl.curl_easy_setopt
 	lis r9,_downloadHandle@ha
 	lwz r9,_downloadHandle@l(r9)
 	addi r10,r31,16
@@ -225,14 +225,14 @@ _getCurl:
 	lwz r4,12(r31)
 	mr r3,r9
 	crxor 6,6,6
-	bl curl_easy_setopt
+	bl import.nlibcurl.curl_easy_setopt
 _curl_L7:
 	lis r9,_downloadMultiHandle@ha
 	lwz r9,_downloadMultiHandle@l(r9)
 	addi r10,r31,24
 	mr r4,r10
 	mr r3,r9
-	bl curl_multi_perform
+	bl import.nlibcurl.curl_multi_perform
 	lwz r9,24(r31)
 	cmpwi cr0,r9,0
 	bne cr0,_curl_L7
@@ -242,7 +242,7 @@ _curl_L7:
 	lwz r9,_downloadHandle@l(r9)
 	mr r4,r9
 	mr r3,r10
-	bl curl_multi_remove_handle
+	bl import.nlibcurl.curl_multi_remove_handle
 	lwz r9,16(r31)
 	mr r3,r9
 	addi r11,r31,48
@@ -260,19 +260,19 @@ _cleanupCurl:
 	lis r9,_uploadHandle@ha
 	lwz r9,_uploadHandle@l(r9)
 	mr r3,r9
-	bl curl_easy_cleanup
+	bl import.nlibcurl.curl_easy_cleanup
 	lis r9,_uploadMultiHandle@ha
 	lwz r9,_uploadMultiHandle@l(r9)
 	mr r3,r9
-	bl curl_multi_cleanup
+	bl import.nlibcurl.curl_multi_cleanup
 	lis r9,_downloadHandle@ha
 	lwz r9,_downloadHandle@l(r9)
 	mr r3,r9
-	bl curl_easy_cleanup
+	bl import.nlibcurl.curl_easy_cleanup
 	lis r9,_downloadMultiHandle@ha
 	lwz r9,_downloadMultiHandle@l(r9)
 	mr r3,r9
-	bl curl_multi_cleanup
+	bl import.nlibcurl.curl_multi_cleanup
 	lis r9,_uploadHandle@ha
 	li r10,0
 	stw r10,_uploadHandle@l(r9)
@@ -297,17 +297,6 @@ _cleanupCurl:
 [Archipelago_curl_V101E]
 moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
 
-curl_easy_cleanup = 0x00e10280
-curl_easy_init = 0x00e102b0
-curl_easy_getinfo = 0x00e102b4
-curl_easy_setopt = 0x00e102c0
-curl_multi_init = 0x00e10320
-curl_multi_add_handle = 0x00e10330
-curl_multi_perform = 0x00e10340
-curl_multi_remove_handle = 0x00e10390
-curl_multi_cleanup = 0x00e103a0
-
-memcpy = 0x00e10010
 __realloc = 0x03b1af20
 
 

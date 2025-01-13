@@ -77,6 +77,8 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     content = re.sub(r"(lis (r\d+),.*?)\+(\d+)(@.*\n)(\t(?:addi|lwz) r\d+,r\d+,.*?)\+\d+(@.*)", "\\1\\4\taddi \\2,\\2,\\3\n\\5\\6", content)
     # Remove rlwinm, this could lead to errors, but i found no usage for this
     content = re.sub(r".*rlwinm .*[\n]", "", content)
+    # Add support for import with changed namespaces
+    content = re.sub(r"(bl.*)", lambda _ : re.sub(r"::", ".", _.group(1)), content)
 
     # Add Parameters from rules.txt file
     for parameter in parameters:
