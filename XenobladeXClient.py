@@ -18,14 +18,14 @@ import colorama
 from CommonClient import CommonContext, server_loop, gui_enabled, logger, get_base_parser
 from settings import get_settings
 
-from worlds.xenobladeX import XenobladeXWorld
-from worlds.xenobladeX.drops.item import dropItemData
-from worlds.xenobladeX.drops.lot import dropLotData
-from worlds.xenobladeX.drops.skill import dropSkillsData
-from worlds.xenobladeX.items.groundAugments import ground_augments_data
-from worlds.xenobladeX.Items import game_type_item_to_offset
-from worlds.xenobladeX.Locations import game_type_location_to_offset
-from worlds.xenobladeX.Options import XenobladeXOption
+from worlds.xenoblade_x import XenobladeXWorld
+from worlds.xenoblade_x.drops.item import dropItemData
+from worlds.xenoblade_x.drops.lot import dropLotData
+from worlds.xenoblade_x.drops.skill import dropSkillsData
+from worlds.xenoblade_x.items.groundAugments import ground_augments_data
+from worlds.xenoblade_x.Items import game_type_item_to_offset
+from worlds.xenoblade_x.Locations import game_type_location_to_offset
+from worlds.xenoblade_x.Options import XenobladeXOption
 
 CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu. Please check your installation directory and Cemu installation"
 CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. Please check your installation directory and Cemu installation"
@@ -363,7 +363,7 @@ class XenobladeXContext(CommonContext):
         self.open_cemu(self.cemu_exe)
 
     def copy_cemu_files(self, cemu_path:str, mod_path:str):
-        archipelago_graphic_pack_path = "worlds/xenobladeX/cemu_graphicpack/"
+        archipelago_graphic_pack_path = "worlds/xenoblade_x/cemu_graphicpack/"
         if not os.path.isdir(archipelago_graphic_pack_path): 
             archipelago_graphic_pack_path = "lib/" + archipelago_graphic_pack_path
             if not os.path.isdir(archipelago_graphic_pack_path):
