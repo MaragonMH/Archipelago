@@ -143,7 +143,7 @@ class XenobladeXHttpServer(HTTPServer):
         self._match_line(locations, 0, r'^CP Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1})\n')
         self._match_line(locations, 1, r'^EN Id=([0-9a-fA-F]{3}) Dc=([0-9a-fA-F]{1})\n', min=2)
         self._match_line(locations, 2, r'^FN Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1}) AId=[0-9a-fA-F]{2}\n')
-        self._match_line(locations, 3, r'^SG Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1}) AId=[0-9a-fA-F]{2}\n')
+        self._match_line(locations, 3, r'^SG Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1}) AId=[0-9a-fA-F]{2}\n', min=2)
         self._match_line(locations, 4, r'^LC Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1}) Tp=[0-9a-fA-F]{1}\n')
 
         return locations
@@ -332,7 +332,9 @@ class XenobladeXContext(CommonContext):
 
     async def download_game_locations(self) -> None:
         game_locations = {self.game_location_to_archipelago_location(location) for location in self.http_server.download_locations()}
-        await self.send_msgs([{"cmd": 'LocationChecks', "locations": game_locations.difference(self.locations_checked)}])
+        new_locations = game_locations.difference(self.locations_checked)
+        await self.send_msgs([{"cmd": 'LocationChecks', "locations": new_locations}])
+        self.locations_checked.add(new_locations)
 
 
     def upload_death(self) -> None:

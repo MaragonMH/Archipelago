@@ -24,7 +24,7 @@ char* _postSegmentList(char* stringStartPtr, char* stringCurrentPtr, char* strin
     areaOffset += 0x4;
     for(int areaId = 0; areaId < 0x15; areaId++){
         for(int* segmentOffset = areaOffset + 0x506; *segmentOffset != 0; segmentOffset += 0x7){
-            int flag = getLocal(1 /* maybe 2*/, segmentOffset[2] >> 0x10);
+            int flag = getLocal(2 /* maybe 1*/, segmentOffset[2] >> 0x10);
             int segmentId = segmentOffset[3];
             stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, _formatSegmentText, segmentId, flag, areaId);
 

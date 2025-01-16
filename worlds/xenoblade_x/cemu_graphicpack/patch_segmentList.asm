@@ -34,7 +34,7 @@ _segmentList_L5:
 	lwz r9,0(r9)
 	srawi r9,r9,16
 	mr r4,r9
-	li r3,1
+	li r3,2
 	bl getLocal
 	mr r9,r3
 	stw r9,20(r31)
