@@ -1,13 +1,11 @@
 import asyncio
 import os
 import shutil
-import zipfile
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import socket
 import random
 import re
-import sys
 import copy
 import Utils
 from typing import NamedTuple, Optional
@@ -27,6 +25,7 @@ from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
 from .Options import XenobladeXOption
 
+CEMU_APWORLD_NOT_FOUND = "unable to find the Xenoblade X *.apworld"
 CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu. Please check your installation directory and Cemu installation"
 CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. Please check your installation directory and Cemu installation"
 CEMU_NOT_FOUND = "Cemu was not found. Please check your installation directory and Cemu installation"
@@ -256,7 +255,6 @@ class XenobladeXContext(CommonContext):
     want_slot_data = True
 
     connected = False
-    died = False
     death_source = ""
 
     # settings
@@ -289,7 +287,6 @@ class XenobladeXContext(CommonContext):
 
     def on_deathlink(self, data: dict):
         if "DeathLink" in self.tags:
-            self.died = True
             self.death_source = data["source"]
         super().on_deathlink(data)
 
@@ -338,10 +335,10 @@ class XenobladeXContext(CommonContext):
             self.locations_checked = game_locations
 
     def upload_death(self) -> None:
-        if self.died: 
+        if self.death_source: 
             self.http_server.upload_item(item_game_type=0, item_game_id=6, seed_name=self.seed_name, item_name=None)
             self.http_server.upload_message("Archipelago", f"Received death from {self.death_source}")
-            self.died = False
+            self.death_source = ""
 
     def upload_game_items(self) -> None:
         self.http_server.clear_uploaded_items()
@@ -359,10 +356,14 @@ class XenobladeXContext(CommonContext):
         mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
         cemu_appdata_path = os.path.join(os.getenv('APPDATA'), "Cemu")
         if not os.path.isdir(cemu_appdata_path):
-            print_error_and_close(CEMU_SETTINGS_NOT_FOUND)
-        self.copy_cemu_files(cemu_appdata_path, mod_path)
-        self.set_cemu_graphic_packs(cemu_appdata_path, mod_path, options)
-        self.open_cemu(self.cemu_exe)
+            self.print_error(CEMU_SETTINGS_NOT_FOUND)
+        else:
+            try:
+                self.copy_cemu_files(cemu_appdata_path, mod_path)
+                self.set_cemu_graphic_packs(cemu_appdata_path, mod_path, options)
+                self.open_cemu(self.cemu_exe)
+            except Exception:
+                pass
 
     def copy_cemu_files(self, cemu_path:str, mod_path:str):
         archipelago_graphic_pack_path = "worlds/xenoblade_x/cemu_graphicpack/"
@@ -372,16 +373,17 @@ class XenobladeXContext(CommonContext):
         try:
             shutil.copytree(archipelago_graphic_pack_path, os.path.join(cemu_path, mod_path, "AP"), dirs_exist_ok=True)
         except:
-            print_error_and_close(CEMU_GRAPHIC_PACK_MISSING)
+            self.print_error(CEMU_GRAPHIC_PACK_MISSING)
+            raise
 
     def copy_from_apworld(self, cemu_path:str, mod_path:str):
-        apworld = get_settings()["xenobladex_options"]["apworld"]
         try:
-            with zipfile.ZipFile(apworld) as z:
+            with XenobladeXWorld.zip_path as z:
                 with z.open('cemu_graphicpack') as zf:
                     shutil.copytree(zf, os.path.join(cemu_path, mod_path, "AP"), dirs_exist_ok=True)
         except:
-            print_error_and_close(CEMU_GRAPHIC_PACK_MISSING)
+            self.print_error(CEMU_APWORLD_NOT_FOUND)
+            raise
 
     def set_cemu_graphic_packs(self, cemu_path:str, mod_path:str, options: list[XenobladeXOption]):
         settings_path = os.path.join(cemu_path, "settings.xml")
@@ -406,24 +408,26 @@ class XenobladeXContext(CommonContext):
                 # Addition
                 content = "".join([f'<Preset>\n{f"<category>{setting.cemu_option}</category>" if setting.cemu_option != "Active preset" else ""}<preset>{setting.cemu_selection}</preset>\n</Preset>\n' for setting in settings if setting.cemu_option != ""])
                 pack_content = (f'<Entry filename="{mod_path}{cemu_pack}/rules.txt">\n{content}</Entry>\n\n')
-                filedata = re.sub(rf'</GraphicPack>', f"{pack_content}</GraphicPack>", filedata)
+                filedata = re.sub(r'</GraphicPack>', f"{pack_content}</GraphicPack>", filedata)
 
             with open(settings_path, "w") as file:
                 file.write(filedata)
-        except FileNotFoundError:
-            print_error_and_close(CEMU_SETTINGS_NOT_FOUND)
+        except:
+            self.print_error(CEMU_SETTINGS_NOT_FOUND)
+            raise
 
     def open_cemu(self, cemu_exe):
         try: 
             subprocess.Popen(cemu_exe)
-        except FileNotFoundError:
-            print_error_and_close(CEMU_NOT_FOUND)
+        except:
+            self.print_error(CEMU_NOT_FOUND)
+            raise
 
 
-def print_error_and_close(msg):
-    logger.error("Error: " + msg)
-    Utils.messagebox("Error", msg, error=True)
-    sys.exit(1)
+    def print_error(self, msg:str):
+        logger.error(msg)
+        Utils.messagebox("Error", msg, error=True)
+        self.exit_event.set()
 
 
 async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
@@ -438,11 +442,10 @@ async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
 
 async def main() -> None:
     parser = get_base_parser()
-    parser.add_argument('--log_level', default='info', help='Sets log level')
     parser.add_argument("-d", "--debug", action="store_true", help="Enable full server exposure for debugging purposes")
     args = parser.parse_args()
 
-    Utils.init_logging("XenobladeXClient", exception_logger="Client", loglevel=args.log_level)
+    Utils.init_logging("XenobladeXClient", exception_logger="Client")
 
     ctx = XenobladeXContext(args.connect, args.password, args.debug)
     if ctx.server_task is None:
