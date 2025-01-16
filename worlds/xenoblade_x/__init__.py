@@ -1,5 +1,6 @@
 from BaseClasses import Tutorial
 from ..AutoWorld import World, WebWorld
+from worlds.LauncherComponents import Component, components, launch_subprocess, Type
 from .Slot import generate_slot_data
 from .Regions import init_region
 from .Items import create_filler, xenobladeXItems, create_items, create_item
@@ -8,6 +9,12 @@ from .Locations import create_locations, xenobladeXLocations
 from .Options import XenobladeXOptions
 from .Settings import XenobladeXSettings
 
+def launch_client():
+    from .Client import launch
+    launch_subprocess(launch, name="XenobladeXClient")
+
+components.append(Component("Xenoblade X Client", "XenobladeX", func=launch_client,
+                            component_type=Type.CLIENT))
 
 class XenobladeXWeb(WebWorld):
     tutorials = [Tutorial(

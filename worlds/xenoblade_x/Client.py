@@ -19,13 +19,13 @@ from CommonClient import CommonContext, server_loop, gui_enabled, logger, get_ba
 from settings import get_settings
 
 from worlds.xenoblade_x import XenobladeXWorld
-from worlds.xenoblade_x.drops.item import dropItemData
-from worlds.xenoblade_x.drops.lot import dropLotData
-from worlds.xenoblade_x.drops.skill import dropSkillsData
-from worlds.xenoblade_x.items.groundAugments import ground_augments_data
-from worlds.xenoblade_x.Items import game_type_item_to_offset
-from worlds.xenoblade_x.Locations import game_type_location_to_offset
-from worlds.xenoblade_x.Options import XenobladeXOption
+from .drops.item import dropItemData
+from .drops.lot import dropLotData
+from .drops.skill import dropSkillsData
+from .items.groundAugments import ground_augments_data
+from .Items import game_type_item_to_offset
+from .Locations import game_type_location_to_offset
+from .Options import XenobladeXOption
 
 CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu. Please check your installation directory and Cemu installation"
 CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. Please check your installation directory and Cemu installation"
@@ -367,10 +367,8 @@ class XenobladeXContext(CommonContext):
     def copy_cemu_files(self, cemu_path:str, mod_path:str):
         archipelago_graphic_pack_path = "worlds/xenoblade_x/cemu_graphicpack/"
         if not os.path.isdir(archipelago_graphic_pack_path): 
-            archipelago_graphic_pack_path = "lib/" + archipelago_graphic_pack_path
-            if not os.path.isdir(archipelago_graphic_pack_path):
-                self.copy_from_apworld(self, cemu_path, mod_path)
-                return
+            self.copy_from_apworld(cemu_path, mod_path)
+            return
         try:
             shutil.copytree(archipelago_graphic_pack_path, os.path.join(cemu_path, mod_path, "AP"), dirs_exist_ok=True)
         except:
@@ -465,7 +463,7 @@ async def main() -> None:
     await ctx.shutdown()
 
 
-if __name__ == "__main__":
+def launch() -> None:
     colorama.init()
     asyncio.run(main())
     colorama.deinit()
