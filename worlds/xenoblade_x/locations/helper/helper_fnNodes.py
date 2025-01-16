@@ -669,5 +669,5 @@ names = ["Barracks Interior", #https://xenoblade.github.io/xbx/bdat/common_local
 
 with open('helper_fnNodes.txt', 'w') as f:
 	sys.stdout = f
-	for idx in nodes:
-		print(f"{json.dumps(names[veins[idx - 1] - 1])},")
+	for ids in veins:
+		print(f"{json.dumps(names[ids - 1])},")

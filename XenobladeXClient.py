@@ -333,9 +333,9 @@ class XenobladeXContext(CommonContext):
     async def download_game_locations(self) -> None:
         game_locations = {self.game_location_to_archipelago_location(location) for location in self.http_server.download_locations()}
         new_locations = game_locations.difference(self.locations_checked)
-        await self.send_msgs([{"cmd": 'LocationChecks', "locations": new_locations}])
-        self.locations_checked.add(new_locations)
-
+        if new_locations:
+            await self.send_msgs([{"cmd": 'LocationChecks', "locations": new_locations}])
+            self.locations_checked = game_locations
 
     def upload_death(self) -> None:
         if self.died: 
