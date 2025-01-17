@@ -27,6 +27,7 @@ from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
 from .Options import XenobladeXOption
 
+CEMU_MODS_NOT_FOUND = "Unable to find the Cemu Mods please make sure to download the community mods within Cemu settings first"
 CEMU_APPDATA_NOT_FOUND = "Unable to find the Cemu Appdata folder, please make sure to start Cemu once beforehand"
 CEMU_APWORLD_NOT_FOUND = "Unable to find the Xenoblade X *.apworld"
 CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu. Please check your installation directory and Cemu installation"
@@ -268,7 +269,6 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 class XenobladeXContext(CommonContext):
-    tags = {"AP", "XenobladeX"}
     game = "XenobladeX"
     items_handling = 0b111  # get items from your own world
     want_slot_data = True
@@ -277,7 +277,7 @@ class XenobladeXContext(CommonContext):
     death_source = ""
 
     # settings
-    cemu_exe = get_settings()["xenobladex_options"]["executable"]
+    cemu_exe = get_settings()["xenoblade_x_options"]["executable"]
 
     def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool = False) -> None:
         self.http_server = XenobladeXHttpServer(('::', 45872), debug=debug)
@@ -375,43 +375,51 @@ class XenobladeXContext(CommonContext):
             self.http_server.upload_item(game_item.type, game_item.id, self.seed_name, self.archipelago_item_to_name(item), archipelago_level)
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
-        mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
-        appdata = os.getenv('APPDATA')
-        if not appdata:
-            self.print_error(CEMU_APPDATA_NOT_FOUND)
-            return
-        cemu_appdata_path = os.path.join(appdata, "Cemu")
-        if not os.path.isdir(cemu_appdata_path):
-            self.print_error(CEMU_SETTINGS_NOT_FOUND)
-        else:
-            try:
+        try: 
+            mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
+            appdata = os.getenv('APPDATA')
+            if not appdata:
+                raise Exception(CEMU_APPDATA_NOT_FOUND)
+            cemu_appdata_path = os.path.join(appdata, "Cemu")
+            if not os.path.isdir(cemu_appdata_path):
+                raise Exception(CEMU_SETTINGS_NOT_FOUND)
+            else:
                 self.copy_cemu_files(cemu_appdata_path, mod_path)
                 self.set_cemu_graphic_packs(cemu_appdata_path, mod_path, options)
                 self.open_cemu(self.cemu_exe)
-            except Exception:
-                pass
+        except Exception as e:
+            logger.exception(str(e))
+            logger.error(str(e))
+            self.gui_error(str(e), e)
+            self.exit_event.set()
 
     def copy_cemu_files(self, cemu_path:str, mod_path:str):
         archipelago_graphic_pack_path = "worlds/xenoblade_x/cemu_graphicpack/"
+        cemu_mod_path = os.path.join(cemu_path, mod_path)
+        cemu_ap_path = os.path.join(cemu_mod_path, "AP")
+        if not os.path.isdir(cemu_ap_path):
+            raise Exception(CEMU_MODS_NOT_FOUND)
+        if not os.path.exists(cemu_ap_path):
+            os.makedirs(cemu_ap_path)
         if not os.path.isdir(archipelago_graphic_pack_path): 
-            self.copy_from_apworld(cemu_path, mod_path)
+            self.copy_from_apworld(cemu_ap_path)
             return
         try:
-            shutil.copytree(archipelago_graphic_pack_path, os.path.join(cemu_path, mod_path, "AP"), dirs_exist_ok=True)
-        except:
-            self.print_error(CEMU_GRAPHIC_PACK_MISSING)
-            raise
+            shutil.copytree(archipelago_graphic_pack_path, cemu_ap_path, dirs_exist_ok=True)
+        except Exception:
+            raise Exception(CEMU_GRAPHIC_PACK_MISSING)
 
-    def copy_from_apworld(self, cemu_path:str, mod_path:str):
+    def copy_from_apworld(self, cemu_ap_path:str):
         try:
             zip_path = XenobladeXWorld.zip_path
             if not zip_path:
                 raise
             with zipfile.ZipFile(zip_path) as z:
-                z.extract("cemu_graphicpack", os.path.join(cemu_path, mod_path, "AP"))
-        except:
-            self.print_error(CEMU_APWORLD_NOT_FOUND)
-            raise
+                for file in z.namelist():
+                    if file.startswith("xenoblade_x/cemu_graphicpack/"):
+                        z.extract(file, cemu_ap_path)
+        except Exception:
+            raise Exception(CEMU_APWORLD_NOT_FOUND)
 
     def set_cemu_graphic_packs(self, cemu_path:str, mod_path:str, options: list[XenobladeXOption]):
         settings_path = os.path.join(cemu_path, "settings.xml")
@@ -441,22 +449,14 @@ class XenobladeXContext(CommonContext):
 
             with open(settings_path, "w") as file:
                 file.write(filedata)
-        except:
-            self.print_error(CEMU_SETTINGS_NOT_FOUND)
-            raise
+        except Exception:
+            raise Exception(CEMU_SETTINGS_NOT_FOUND)
 
     def open_cemu(self, cemu_exe):
         try: 
             subprocess.Popen(cemu_exe)
-        except:
-            self.print_error(CEMU_NOT_FOUND)
-            raise
-
-
-    def print_error(self, msg:str):
-        logger.error(msg)
-        Utils.messagebox("Error", msg, error=True)
-        self.exit_event.set()
+        except Exception:
+            raise Exception(CEMU_NOT_FOUND)
 
 
 async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:

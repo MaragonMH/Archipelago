@@ -1,19 +1,20 @@
 from BaseClasses import Tutorial
 from ..AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
-from typing import cast
+from typing import cast, ClassVar
 from .Slot import generate_slot_data
 from .Regions import init_region
 from .Items import xenobladeXItems, create_items, create_item, XenobladeXItem
 from .Rules import set_rules
 from .Locations import create_locations, xenobladeXLocations
 from .Options import XenobladeXOptions
+from .Settings import XenobladeXSettings
 
 def launch_client():
     from .Client import launch
     launch_subprocess(launch, name="XenobladeXClient")
 
-components.append(Component("Xenoblade X Client", "XenobladeX", func=launch_client,
+components.append(Component("Xenoblade X Client", "XenobladeXClient", func=launch_client,
                             component_type=Type.CLIENT))
 
 class XenobladeXWeb(WebWorld):
@@ -40,6 +41,7 @@ class XenobladeXWorld(World):
     base_id = 4100000
 
     options_dataclass = XenobladeXOptions
+    settings: ClassVar[XenobladeXSettings]
 
     item_name_to_id = (lambda b_id=base_id: { item.get_item(): b_id + item.id for item in xenobladeXItems if item.id is not None})()
     location_name_to_id = (lambda b_id=base_id: { location.get_location(): b_id + location.id for location in xenobladeXLocations if location.id is not None})()
