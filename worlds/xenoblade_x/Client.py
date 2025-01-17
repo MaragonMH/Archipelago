@@ -1,14 +1,16 @@
 import asyncio
 import os
 import shutil
+import zipfile
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from socketserver import BaseServer
 import socket
 import random
 import re
 import copy
 import Utils
-from typing import NamedTuple, Optional
+from typing import NamedTuple, Optional, cast
 from itertools import groupby
 import colorama
 
@@ -25,7 +27,8 @@ from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
 from .Options import XenobladeXOption
 
-CEMU_APWORLD_NOT_FOUND = "unable to find the Xenoblade X *.apworld"
+CEMU_APPDATA_NOT_FOUND = "Unable to find the Cemu Appdata folder, please make sure to start Cemu once beforehand"
+CEMU_APWORLD_NOT_FOUND = "Unable to find the Xenoblade X *.apworld"
 CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu. Please check your installation directory and Cemu installation"
 CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. Please check your installation directory and Cemu installation"
 CEMU_NOT_FOUND = "Cemu was not found. Please check your installation directory and Cemu installation"
@@ -52,7 +55,8 @@ class XenobladeXHttpServer(HTTPServer):
         slots: int = 0
 
     def generate_gear(self, item_name:Optional[str], seed_name:Optional[str]) -> Optional[Gear]:
-        if not seed_name or not item_name or item_name not in dropItemData: return None
+        if not seed_name or not item_name or item_name not in dropItemData: 
+            return None
         random.seed(seed_name + item_name)
 
         affix_lot = dropItemData[item_name].affixLot
@@ -67,31 +71,44 @@ class XenobladeXHttpServer(HTTPServer):
             slot_lot = dropItemData[item_name].slotNumLotGood
         
         affix_num = 0
-        if random.random() < dropLotData[affix_num_lot].lot1Prob / 100: affix_num += 1
-        if random.random() < dropLotData[affix_num_lot].lot2Prob / 100: affix_num += 1
-        if random.random() < dropLotData[affix_num_lot].lot3Prob / 100: affix_num += 1
+        if random.random() < dropLotData[affix_num_lot].lot1Prob / 100: 
+            affix_num += 1
+        if random.random() < dropLotData[affix_num_lot].lot2Prob / 100: 
+            affix_num += 1
+        if random.random() < dropLotData[affix_num_lot].lot3Prob / 100: 
+            affix_num += 1
 
         affixes = [0,0,0]
         for affix in range(affix_num):
             for skill in dropSkillsData[affix_lot]:
                 if random.random() < skill.prob / 100 and affixes[affix] == 0:
                     affix_id = [x.name for x in ground_augments_data].index(skill.name)
-                    if affix_id not in affixes: affixes[affix] = affix_id
+                    if affix_id not in affixes: 
+                        affixes[affix] = affix_id
 
         slot_num = 0
-        if random.random() < dropLotData[slot_lot].lot1Prob / 100: slot_num += 1
-        if random.random() < dropLotData[slot_lot].lot2Prob / 100: slot_num += 1
-        if random.random() < dropLotData[slot_lot].lot3Prob / 100: slot_num += 1
+        if random.random() < dropLotData[slot_lot].lot1Prob / 100: 
+            slot_num += 1
+        if random.random() < dropLotData[slot_lot].lot2Prob / 100: 
+            slot_num += 1
+        if random.random() < dropLotData[slot_lot].lot3Prob / 100: 
+            slot_num += 1
 
         return self.Gear(affixes[0], affixes[1], affixes[2], slot_num)
 
     def adjustTypeRange(self, item_game_type: int) -> int:
-        if item_game_type == 0x1: return 5
-        if item_game_type == 0x6: return 2
-        if item_game_type == 0xa: return 5
-        if item_game_type == 0xf: return 5
-        if item_game_type == 0x14: return 2
-        if item_game_type == 0x16: return 3
+        if item_game_type == 0x1: 
+            return 5
+        if item_game_type == 0x6: 
+            return 2
+        if item_game_type == 0xa: 
+            return 5
+        if item_game_type == 0xf: 
+            return 5
+        if item_game_type == 0x14: 
+            return 2
+        if item_game_type == 0x16: 
+            return 3
         return 1
     
     def clear_uploaded_items(self):
@@ -184,16 +201,20 @@ class XenobladeXHttpServer(HTTPServer):
         return items
 
     def download_death(self) -> bool:
-        if self.upload_in_progress: return False
+        if self.upload_in_progress: 
+            return False
         pattern = r'^KY Id=6 .*\n'
         result:bool = re.match(pattern, self.locations) is not None
         re.sub(pattern, "", self.locations)
-        if result: self.upload_message("Deathlink", "Sent death")
+        if result: 
+            self.upload_message("Deathlink", "Sent death")
         return result
 
 
 class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
-    server:XenobladeXHttpServer
+    def __init__(self, request, client_address, server: BaseServer) -> None:
+        self.http_server:XenobladeXHttpServer = cast(XenobladeXHttpServer, server)
+        super().__init__(request, client_address, server)
 
     def respond_success(self):
         self.send_response(200)
@@ -202,48 +223,46 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def get_items(self):
         self.respond_success()
-        # remove duplicate lines
-        self.server.items = "\n".join(set(self.server.items.split("\n")))
-        self.wfile.write(self.server.items.encode())
-        self.server.items = ""
+        self.wfile.write(self.http_server.items.encode())
+        self.http_server.items = ""
 
     def post_locations(self):
         locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":","\n")
         self.respond_success()
         if "^" in locations[0]:
-            self.server.upload_in_progress = True
-            self.server.locations = ""
+            self.http_server.upload_in_progress = True
+            self.http_server.locations = ""
             locations = locations[1:]
         upload_ended = "$" in locations[-1]
         if upload_ended:
             locations = locations[0:-2]
-        self.server.locations += locations
+        self.http_server.locations += locations
         if upload_ended:
-            self.server.upload_in_progress = False
-        # if self.server.debug:
-        # logger.debug(f"Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) + " FileLines: " +  str(self.server.locations.count('\n')))
+            self.http_server.upload_in_progress = False
+        # if self.http_server.debug:
+        # logger.debug(f"Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) + " FileLines: " +  str(self.http_server.locations.count('\n')))
 
     # Silence connection request logging
     def log_request(self, code='-', size='-'): return
 
     def debug_get_locations(self):
         self.respond_success()
-        self.wfile.write(self.server.locations.encode())
+        self.wfile.write(self.http_server.locations.encode())
 
     def debug_post_items(self):
-        self.server.items += (self.rfile.read(int(self.headers['content-length']))).decode('cp437')
+        self.http_server.items += (self.rfile.read(int(self.headers['content-length']))).decode('cp437')
         self.respond_success()
 
     def do_GET(self):
         if self.path == "/items":
             self.get_items()
-        if self.path == "/locations" and self.server.debug:
+        if self.path == "/locations" and self.http_server.debug:
             self.debug_get_locations()
 
     def do_POST(self):
         if self.path == "/locations":
             self.post_locations()
-        if self.path == "/items" and self.server.debug:
+        if self.path == "/items" and self.http_server.debug:
             self.debug_post_items()
 
 
@@ -280,8 +299,10 @@ class XenobladeXContext(CommonContext):
             if slot_data:
                 cemu_options: list[XenobladeXOption] = [XenobladeXOption(**option) for option in slot_data["cemu_options"]]
                 options: dict[str, int] = slot_data["options"]
-                if options["death_link"]: self.tags.add("DeathLink")
-                else: self.tags.discard("DeathLink")
+                if options["death_link"]: 
+                    self.tags.add("DeathLink")
+                else: 
+                    self.tags.discard("DeathLink")
                 self.prepare_cemu(cemu_options)
                 self.connected = True
 
@@ -348,13 +369,18 @@ class XenobladeXContext(CommonContext):
         for item in server_items:
             uploaded_item = next((itm for itm in uploaded_items if item == self.game_item_to_archipelago_item(itm)), None)
             archipelago_level = self.get_level(item)
-            if uploaded_item is not None and archipelago_level <= uploaded_item.level: continue
+            if uploaded_item is not None and archipelago_level <= uploaded_item.level: 
+                continue
             game_item = self.archipelago_item_to_game_item(item)
             self.http_server.upload_item(game_item.type, game_item.id, self.seed_name, self.archipelago_item_to_name(item), archipelago_level)
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
         mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
-        cemu_appdata_path = os.path.join(os.getenv('APPDATA'), "Cemu")
+        appdata = os.getenv('APPDATA')
+        if not appdata:
+            self.print_error(CEMU_APPDATA_NOT_FOUND)
+            return
+        cemu_appdata_path = os.path.join(appdata, "Cemu")
         if not os.path.isdir(cemu_appdata_path):
             self.print_error(CEMU_SETTINGS_NOT_FOUND)
         else:
@@ -378,9 +404,11 @@ class XenobladeXContext(CommonContext):
 
     def copy_from_apworld(self, cemu_path:str, mod_path:str):
         try:
-            with XenobladeXWorld.zip_path as z:
-                with z.open('cemu_graphicpack') as zf:
-                    shutil.copytree(zf, os.path.join(cemu_path, mod_path, "AP"), dirs_exist_ok=True)
+            zip_path = XenobladeXWorld.zip_path
+            if not zip_path:
+                raise
+            with zipfile.ZipFile(zip_path) as z:
+                z.extract("cemu_graphicpack", os.path.join(cemu_path, mod_path, "AP"))
         except:
             self.print_error(CEMU_APWORLD_NOT_FOUND)
             raise
@@ -403,7 +431,8 @@ class XenobladeXContext(CommonContext):
                 filedata = re.sub(pack_regex, "", filedata, flags=re.DOTALL)
 
                 # Abort whenever a single setting of a pack is off
-                if any(setting.cemu_selection == "off" for setting in settings): continue
+                if any(setting.cemu_selection == "off" for setting in settings): 
+                    continue
 
                 # Addition
                 content = "".join([f'<Preset>\n{f"<category>{setting.cemu_option}</category>" if setting.cemu_option != "Active preset" else ""}<preset>{setting.cemu_selection}</preset>\n</Preset>\n' for setting in settings if setting.cemu_option != ""])

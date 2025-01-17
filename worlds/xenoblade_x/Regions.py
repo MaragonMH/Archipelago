@@ -49,16 +49,19 @@ def init_region(world: MultiWorld, player: int, region_name:str):
     if region_name not in [region.name for region in world.regions] and set(region_name.split("+")) <= set(xenobladeXRegions.keys()):
         logging.debug(f"Region Name: {region_name}")
         world.regions += [Region(region_name, player, world, region_name)]
-        if region_name == "Menu": return
+        if region_name == "Menu": 
+            return
 
         # Add connections to this region
         requirements:set[Requirement] = set()
         for subregion in region_name.split("+"):
             region_found = False
             for region, req in reversed(xenobladeXRegions.items()):
-                if region != subregion and not region_found: continue
+                if region != subregion and not region_found: 
+                    continue
                 region_found = True
-                if region == "Menu": break
+                if region == "Menu": 
+                    break
                 requirements = requirements.union(req)
         connect_regions(world, player, "Menu", region_name, partial(has_items, player=player, requirements=requirements))
 

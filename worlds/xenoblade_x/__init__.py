@@ -1,13 +1,13 @@
 from BaseClasses import Tutorial
 from ..AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
+from typing import cast
 from .Slot import generate_slot_data
 from .Regions import init_region
-from .Items import create_filler, xenobladeXItems, create_items, create_item
+from .Items import xenobladeXItems, create_items, create_item, XenobladeXItem
 from .Rules import set_rules
 from .Locations import create_locations, xenobladeXLocations
 from .Options import XenobladeXOptions
-from .Settings import XenobladeXSettings
 
 def launch_client():
     from .Client import launch
@@ -32,7 +32,7 @@ class XenobladeXWorld(World):
      Xenoblade Chronicles X another 100+ hour game. Sounds like fun?
     """
 
-    game: str = "XenobladeX"
+    game = "XenobladeX"
     topology_present = True
     web = XenobladeXWeb()
 
@@ -40,31 +40,28 @@ class XenobladeXWorld(World):
     base_id = 4100000
 
     options_dataclass = XenobladeXOptions
-    options: XenobladeXOptions
-
-    settings: XenobladeXSettings
 
     item_name_to_id = (lambda b_id=base_id: { item.get_item(): b_id + item.id for item in xenobladeXItems if item.id is not None})()
     location_name_to_id = (lambda b_id=base_id: { location.get_location(): b_id + location.id for location in xenobladeXLocations if location.id is not None})()
 
     def create_regions(self):
         init_region(self.multiworld, self.player, "Menu")
-        create_locations(self.multiworld, self.player, self.base_id, self.location_name_to_id)
+        create_locations(self.multiworld, self.player, self.base_id)
 
     def create_items(self):
         create_items(self.multiworld, self.player, self.base_id, self.options)
 
-    def create_item(self, name: str):
-        create_item(self.multiworld, name, self.player, self.item_name_to_id[name])
+    def create_item(self, name: str) -> XenobladeXItem:
+        return create_item(self.multiworld, name, self.player, self.item_name_to_id[name])
 
     def set_rules(self):
-        set_rules(self.multiworld, self.player, self.item_name_to_id, self.location_name_to_id)
+        set_rules(self.multiworld, self.player, self.item_name_to_id)
 
     def generate_early(self):
         pass
 
     def generate_basic(self):
-        create_filler(self.multiworld, self.player, self.item_name_to_id)
+        pass
 
     def fill_slot_data(self) -> dict[str, object]:
-        return generate_slot_data(self.options)
+        return generate_slot_data(cast(XenobladeXOptions, self.options))
