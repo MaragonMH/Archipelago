@@ -14,8 +14,7 @@ def launch_client():
     from .Client import launch
     launch_subprocess(launch, name="XenobladeXClient")
 
-components.append(Component("Xenoblade X Client", "XenobladeXClient", func=launch_client,
-                            component_type=Type.CLIENT))
+components.append(Component("Xenoblade X Client", func=launch_client, component_type=Type.CLIENT))
 
 class XenobladeXWeb(WebWorld):
     tutorials = [Tutorial(
