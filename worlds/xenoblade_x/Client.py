@@ -276,9 +276,6 @@ class XenobladeXContext(CommonContext):
     connected = False
     death_source = ""
 
-    # settings
-    cemu_exe = get_settings()["xenoblade_x_options"]["executable"]
-
     def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool = False) -> None:
         self.http_server = XenobladeXHttpServer(('::', 45872), debug=debug)
         super().__init__(server_address, password)
@@ -386,7 +383,7 @@ class XenobladeXContext(CommonContext):
             else:
                 self.copy_cemu_files(cemu_appdata_path, mod_path)
                 self.set_cemu_graphic_packs(cemu_appdata_path, mod_path, options)
-                self.open_cemu(self.cemu_exe)
+                self.open_cemu()
         except Exception as e:
             logger.exception(str(e))
             logger.error(str(e))
@@ -397,7 +394,7 @@ class XenobladeXContext(CommonContext):
         archipelago_graphic_pack_path = "worlds/xenoblade_x/cemu_graphicpack/"
         cemu_mod_path = os.path.join(cemu_path, mod_path)
         cemu_ap_path = os.path.join(cemu_mod_path, "AP")
-        if not os.path.isdir(cemu_ap_path):
+        if not os.path.isdir(cemu_mod_path):
             raise Exception(CEMU_MODS_NOT_FOUND)
         if not os.path.exists(cemu_ap_path):
             os.makedirs(cemu_ap_path)
@@ -414,9 +411,10 @@ class XenobladeXContext(CommonContext):
             zip_path = XenobladeXWorld.zip_path
             if not zip_path:
                 raise
-            with zipfile.ZipFile(zip_path) as z:
+            with zipfile.ZipFile(zip_path, "r") as z:
                 for file in z.namelist():
                     if file.startswith("xenoblade_x/cemu_graphicpack/"):
+                        z.getinfo(file).filename = os.path.basename(file)
                         z.extract(file, cemu_ap_path)
         except Exception:
             raise Exception(CEMU_APWORLD_NOT_FOUND)
@@ -452,8 +450,9 @@ class XenobladeXContext(CommonContext):
         except Exception:
             raise Exception(CEMU_SETTINGS_NOT_FOUND)
 
-    def open_cemu(self, cemu_exe):
-        try: 
+    def open_cemu(self):
+        try:
+            cemu_exe = get_settings()["xenoblade_x_options"]["executable"]
             subprocess.Popen(cemu_exe)
         except Exception:
             raise Exception(CEMU_NOT_FOUND)
