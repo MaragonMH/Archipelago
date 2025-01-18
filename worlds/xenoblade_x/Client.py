@@ -8,8 +8,8 @@ from socketserver import BaseServer
 import socket
 import random
 import re
-import copy
 import Utils
+from NetUtils import NetworkItem
 from typing import NamedTuple, Optional, cast
 from itertools import groupby
 import colorama
@@ -43,6 +43,8 @@ class XenobladeXHttpServer(HTTPServer):
     address_family = socket.AF_INET6
     locations = ""
     items = ""
+    messages = ""
+    death_link = ""
     upload_in_progress = False
 
     def __init__(self, server_address, bind_and_activate = True, debug:bool = False) -> None:
@@ -146,8 +148,11 @@ class XenobladeXHttpServer(HTTPServer):
         data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1 if not has_lvl else entry[1]) 
             for entry in match if min <= entry[1] <= max]
         
+    def upload_death(self):
+        self.death_link += f"K Id={6:08x} Fg={1:08x}\n"
+        
     def upload_message(self, heading:str, body:str):
-        self.items += f"M {self._sanitize_message(heading)}\r{self._sanitize_message(body)}\n"
+        self.messages += f"M {self._sanitize_message(heading)}\r{(self._sanitize_message(body))[:60]}\n"
 
     def _sanitize_message(self, message:str) -> str:
         return re.sub(r"[^\w ]", "", message)
@@ -224,8 +229,11 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def get_items(self):
         self.respond_success()
-        self.wfile.write(self.http_server.items.encode())
+        items_text = self.http_server.items + self.http_server.messages + self.http_server.death_link
+        self.wfile.write(items_text.encode())
         self.http_server.items = ""
+        self.http_server.messages = ""
+        self.http_server.death_link = ""
 
     def post_locations(self):
         locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":","\n")
@@ -274,7 +282,6 @@ class XenobladeXContext(CommonContext):
     want_slot_data = True
 
     connected = False
-    death_source = ""
 
     def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool = False) -> None:
         self.http_server = XenobladeXHttpServer(('::', 45872), debug=debug)
@@ -305,13 +312,31 @@ class XenobladeXContext(CommonContext):
 
     def on_deathlink(self, data: dict):
         if "DeathLink" in self.tags:
-            self.death_source = data["source"]
+            death_source = data["source"]
+            self.http_server.upload_death()
+            self.http_server.upload_message(f"From {death_source}", "Death")
         super().on_deathlink(data)
 
     def on_print_json(self, args: dict):
-        if not self.is_uninteresting_item_send(args):
-            text = self.rawjsontotextparser(copy.deepcopy(args["data"]))
-            self.http_server.upload_message("Archipelago", text)
+        print_type = args.get("type", "")
+        if print_type in ["ItemSend", "ItemCheat", "Hint"]:
+            item:NetworkItem = args["item"]
+            sender = item.player
+            receiver = args["receiving"]
+            if self.slot_concerns_self(receiver):
+                self.http_server.upload_message(f"From {self.player_names[sender]}", self.archipelago_item_to_name(item.item))
+            elif self.slot_concerns_self(sender):
+                self.http_server.upload_message(f"To {self.player_names[receiver]}", self.archipelago_item_to_name(item.item))
+        elif print_type == "Chat":
+            self.http_server.upload_message(f"From {self.player_names[args["slot"]]}", args["message"])
+        elif print_type == "ServerChat":
+            self.http_server.upload_message("From Server", args["message"])
+        elif print_type == "Join":
+            self.http_server.upload_message("Joined", self.player_names[args["slot"]])
+        elif print_type == "Part":
+            self.http_server.upload_message("Disconnected", self.player_names[args["slot"]])
+        elif print_type == "Goal":
+            self.http_server.upload_message("Reached Goal", self.player_names[args["slot"]])
         super(XenobladeXContext, self).on_print_json(args)
     
 
@@ -352,15 +377,8 @@ class XenobladeXContext(CommonContext):
             await self.send_msgs([{"cmd": 'LocationChecks', "locations": new_locations}])
             self.locations_checked = game_locations
 
-    def upload_death(self) -> None:
-        if self.death_source: 
-            self.http_server.upload_item(item_game_type=0, item_game_id=6, seed_name=self.seed_name, item_name=None)
-            self.http_server.upload_message("Archipelago", f"Received death from {self.death_source}")
-            self.death_source = ""
-
     def upload_game_items(self) -> None:
         self.http_server.clear_uploaded_items()
-        self.upload_death()
         uploaded_items = self.http_server.download_items()
         server_items = {network_item.item for network_item in self.items_received if self.slot_concerns_self(network_item.player)}
         for item in server_items:
