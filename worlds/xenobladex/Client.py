@@ -19,7 +19,7 @@ import colorama
 from CommonClient import CommonContext, server_loop, gui_enabled, logger, get_base_parser
 from settings import get_settings
 
-from worlds.xenoblade_x import XenobladeXWorld
+from worlds.xenobladex import XenobladeXWorld
 from .drops.item import dropItemData
 from .drops.lot import dropLotData
 from .drops.skill import dropSkillsData
@@ -415,7 +415,7 @@ class XenobladeXContext(CommonContext):
             self.exit_event.set()
 
     def copy_cemu_files(self, cemu_path:str, mod_path:str):
-        archipelago_graphic_pack_path = "worlds/xenoblade_x/cemu_graphicpack/"
+        archipelago_graphic_pack_path = "worlds/xenobladex/cemu_graphicpack/"
         cemu_mod_path = os.path.join(cemu_path, mod_path)
         cemu_ap_path = os.path.join(cemu_mod_path, "AP")
         if not os.path.isdir(cemu_mod_path):
@@ -437,7 +437,7 @@ class XenobladeXContext(CommonContext):
                 raise
             with zipfile.ZipFile(zip_path, "r") as z:
                 for file in z.namelist():
-                    if file.startswith("xenoblade_x/cemu_graphicpack/"):
+                    if file.startswith("xenobladex/cemu_graphicpack/"):
                         z.getinfo(file).filename = os.path.basename(file)
                         z.extract(file, cemu_ap_path)
         except Exception:
@@ -476,7 +476,7 @@ class XenobladeXContext(CommonContext):
 
     def open_cemu(self):
         try:
-            cemu_exe = get_settings()["xenoblade_x_options"]["executable"]
+            cemu_exe = get_settings()["xenobladex_options"]["executable"]
             if not self.cemu_process or self.cemu_process.poll() is not None:
                 self.cemu_process = subprocess.Popen(cemu_exe)
         except Exception:

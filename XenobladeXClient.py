@@ -1,4 +1,4 @@
-from worlds.xenoblade_x.Client import launch
+from worlds.xenobladex.Client import launch
 import ModuleUpdate
 ModuleUpdate.update()
 
