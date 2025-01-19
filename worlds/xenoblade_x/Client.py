@@ -1,5 +1,6 @@
 import asyncio
 import os
+import pathlib
 import shutil
 import zipfile
 import subprocess
@@ -393,7 +394,11 @@ class XenobladeXContext(CommonContext):
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try: 
             mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
-            appdata = os.getenv('APPDATA')
+            appdata = None
+            if Utils.is_windows:
+                appdata = os.getenv('APPDATA')
+            elif Utils.is_linux:
+                appdata = os.path.join(pathlib.Path.home(), ".local/share")
             if not appdata:
                 raise Exception(CEMU_APPDATA_NOT_FOUND)
             cemu_appdata_path = os.path.join(appdata, "Cemu")
