@@ -1,8 +1,10 @@
 import json
 import sys
 
-
-nodes = [1, #https://xenoblade.github.io/xbx/bdat/common_local_us/SEG_ProbeList.html
+# https://xenoblade.github.io/xbx/bdat/common_local_us/SEG_ProbeList.html
+# flake8: noqa: E122
+nodes = [
+1,
 3,
 2,
 4,
@@ -220,7 +222,9 @@ veins = [85, #https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinList.
 390,
 ]
 
-names = ["Barracks Interior", #https://xenoblade.github.io/xbx/bdat/common_local_us/FLD_Location.html
+# https://xenoblade.github.io/xbx/bdat/common_local_us/FLD_Location.html
+names = [
+"Barracks Interior",
 "Interior",
 "West Gate",
 "Central Industrial District",

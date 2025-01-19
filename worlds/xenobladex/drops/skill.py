@@ -4,8 +4,10 @@ class DropSkill(NamedTuple):
 	prob: int
 	name: str
 
+
 DS = DropSkill
 
+# flake8: noqa: E122
 dropSkillsData:list[list[DropSkill]] = [
 [],
 [],

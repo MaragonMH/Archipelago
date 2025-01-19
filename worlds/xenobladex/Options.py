@@ -1,16 +1,19 @@
 from dataclasses import asdict, dataclass
 from Options import Option, DeathLink, Toggle, DefaultOnToggle, Choice, PerGameCommonOptions
 
+
 class CemuSettings:
     cemu_pack: str
     cemu_option: str = ""
     cemu_selection_names: list[str] = ["off", "on"]
+
 
 @dataclass
 class XenobladeXOption():
     cemu_pack: str = ""
     cemu_option: str = ""
     cemu_selection: str = ""
+
 
 class EnemyAggro(Choice, CemuSettings):
     """Increase or decrease the enemy aggression"""
@@ -102,6 +105,7 @@ class DamageMultiplicator(Choice, CemuSettings):
         "Damage x25",
         "Damage x100",
     ]
+
 
 class QteAuto(Choice, CemuSettings):
     """Automatically completes Quicktime-Events with the specified rating"""
@@ -320,6 +324,7 @@ class FrontierNavMoneyFrequency(Choice, CemuSettings):
         "Every 10 minutes",
     ]
 
+
 class FrontierNavMoneyQuantity(Choice, CemuSettings):
     """Alters the quantity of the Frontier-Nav Money bonuses"""
     display_name = "Froniter-Nav Miranium Quantity"
@@ -343,6 +348,7 @@ class FrontierNavMoneyQuantity(Choice, CemuSettings):
         "x100",
         "x1000",
     ]
+
 
 class FrontierNavResourcesFrequency(Choice, CemuSettings):
     """Alters the frequency of the Frontier-Nav Resource bonuses"""
@@ -628,17 +634,21 @@ class RunForrestRun(Choice, CemuSettings):
         "CHEAT x20",
     ]
 
+
 class IncludeCollectopediaLocations(DefaultOnToggle):
     """Allows you to get items from collectopedia entries and adds those locations to the pool"""
     display_name = "Include Collectopedia Locations"
+
 
 class IncludeEnemyBookLocations(DefaultOnToggle):
     """Allows you to get items from completing enemy entries(white dot in the menu) and adds those locations to the pool"""
     display_name = "Include Enemy Book Locations"
 
+
 class IncludeLocationLocations(DefaultOnToggle):
     """Allows you to get items from locations and adds those locations to the pool"""
     display_name = "Include Location Locations"
+
 
 class IncludeGroundArmor(Choice, CemuSettings):
     """Allows you to receive ground armor as items and adds those items to the pool"""
@@ -653,6 +663,7 @@ class IncludeGroundArmor(Choice, CemuSettings):
         "on",
     ]
 
+
 class IncludeGroundWeapons(Choice, CemuSettings):
     """Allows you to receive ground weapons as items and adds those items to the pool"""
     display_name = "Include Ground Weapon Items"
@@ -665,6 +676,7 @@ class IncludeGroundWeapons(Choice, CemuSettings):
         "disable",
         "on",
     ]
+
 
 class IncludeGroundAugments(Choice, CemuSettings):
     """Allows you to receive ground augments as items and adds those items to the pool"""
@@ -679,6 +691,7 @@ class IncludeGroundAugments(Choice, CemuSettings):
         "on",
     ]
 
+
 class IncludeSkellArmor(Choice, CemuSettings):
     """Allows you to receive skell armor as items and adds those items to the pool"""
     display_name = "Include Skell Armor Items"
@@ -691,6 +704,7 @@ class IncludeSkellArmor(Choice, CemuSettings):
         "disable",
         "on",
     ]
+
 
 class IncludeSkellWeapons(Choice, CemuSettings):
     """Allows you to receive skell weapons as items and adds those items to the pool"""
@@ -705,6 +719,7 @@ class IncludeSkellWeapons(Choice, CemuSettings):
         "on",
     ]
 
+
 class IncludeSkellAugments(Choice, CemuSettings):
     """Allows you to receive skell augments as items and adds those items to the pool"""
     display_name = "Include Skell Augment Items"
@@ -718,6 +733,7 @@ class IncludeSkellAugments(Choice, CemuSettings):
         "on",
     ]
 
+
 # currently unused
 class SkellWeaponFamily(DefaultOnToggle, CemuSettings):
     """There is only one check for each Skell-Weapon. If enabled, you will receive ALL Weapon tiers (20, 30, 40, 50, 60)
@@ -725,11 +741,13 @@ class SkellWeaponFamily(DefaultOnToggle, CemuSettings):
      choosen at random."""
     display_name = "Receive Entire Skell-Weapon-Family"
 
+
 # currently unused
 class AugmentFamily(DefaultOnToggle, CemuSettings):
     """There is only one check for each Augment. If enabled, you will receive ALL Augment tiers (I, V, X, XV, XX),
      when you receive the item. If disabled, you will receive one Augment tier, choosen at random."""
     display_name = "Receive Entire Augment-Family"
+
 
 # currently unused
 class LogicCheating(Toggle, CemuSettings):
@@ -785,4 +803,4 @@ class XenobladeXOptions(PerGameCommonOptions):
 
 def generate_cemu_options(options: XenobladeXOptions) -> list[dict[str, str]]:
     return [asdict(XenobladeXOption(option.cemu_pack, option.cemu_option, option.cemu_selection_names[option.value]))
-		for option in asdict(options).values() if isinstance(option, CemuSettings) and isinstance(option, Option)]
+            for option in asdict(options).values() if isinstance(option, CemuSettings) and isinstance(option, Option)]

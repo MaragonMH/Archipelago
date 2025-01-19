@@ -1,6 +1,8 @@
 # from https://xenoblade.github.io/xbx/bdat/common_local_us/DRP_ItemTable.html
 # removed the 4 duplicate e-rifle entries to allow for a dict
 from typing import NamedTuple
+
+
 class DropItem(NamedTuple):
     affixLot: int
     affixLotGood: int
@@ -9,9 +11,11 @@ class DropItem(NamedTuple):
     affixNumLotGood: int
     slotNumLotGood: int
 
+
 DI = DropItem
 
-dropItemData:dict[str, DropItem] = {
+# flake8: noqa: E122
+dropItemData: dict[str, DropItem] = {
 "Worn Survival Headset": DI(585, 586, 1, 23, 2, 24),
 "Worn Survival Shirt": DI(589, 590, 1, 23, 2, 24),
 "Worn Survival Sleeve R": DI(593, 594, 1, 23, 2, 24),

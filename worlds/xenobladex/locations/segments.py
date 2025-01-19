@@ -1,7 +1,8 @@
 from ..Locations import Loc as Data
 
 # from helper
-segments_data:list[Data]= [
+# flake8: noqa: E122
+segments_data: list[Data] = [
 Data("Name: Celica[ST:n ]Affinity: 5[ST:n ]Appears: Night[ST:n ]Requirements: View 4th heart-to-heart"),
 Data("Name: Nagi[ST:n ]Affinity: 2[ST:n ]Appears: Morning[ST:n ]Requirements: Complete 1st heart-to-heart"),
 Data("Mission: The Gauntlet[ST:n ]Client: Zo Ozuchi"),

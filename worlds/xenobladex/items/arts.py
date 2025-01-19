@@ -1,7 +1,8 @@
 from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ArtsList.html
-arts_data:list[Data] = [ 
+# flake8: noqa: E122
+arts_data: list[Data] = [
 Data("ARTS_ASSAULT_AUTO_Na_1", valid=False),
 Data("Decoy Round"),
 Data("Furious Blast"),

@@ -1,8 +1,9 @@
 from ..Items import Itm as Data
 
-#https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_PcList.html
-friends_data:list[Data] = [
-Data("Nagi", count=5), 
+# https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_PcList.html
+# flake8: noqa: E122
+friends_data: list[Data] = [
+Data("Nagi", count=5),
 Data("L", count=5),
 Data("Lao", count=5),
 Data("H.B.", count=5, valid=False),

@@ -1,7 +1,8 @@
 from ..Items import Itm as Data
 
-#https://xenoblade.github.io/xbx/bdat/common_local_us/AMR_PcList.html
-ground_armor_data:list[Data] = [
+# https://xenoblade.github.io/xbx/bdat/common_local_us/AMR_PcList.html
+# flake8: noqa: E122
+ground_armor_data: list[Data] = [
 Data("UNUSED_1", valid=False), 
 Data("UNUSED_2", valid=False),
 Data("UNUSED_3", valid=False),

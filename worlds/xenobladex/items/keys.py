@@ -1,8 +1,9 @@
 from ..Items import Itm as Data
 
-other_data:list[Data] = [
+# flake8: noqa: E122
+other_data: list[Data] = [
 Data("Victory", count=0),
-Data("Filler", count=0),	
+Data("Filler", count=0),
 ]
 
 keys_data:list[Data] = [

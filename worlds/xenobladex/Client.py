@@ -31,14 +31,17 @@ from .Options import XenobladeXOption
 CEMU_MODS_NOT_FOUND = "Unable to find the Cemu Mods please make sure to download the community mods within Cemu settings first"
 CEMU_APPDATA_NOT_FOUND = "Unable to find the Cemu Appdata folder, please make sure to start Cemu once beforehand"
 CEMU_APWORLD_NOT_FOUND = "Unable to find the Xenoblade X *.apworld"
-CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu. Please check your installation directory and Cemu installation"
+CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu." \
+                            "Please check your installation directory and Cemu installation"
 CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. Please check your installation directory and Cemu installation"
 CEMU_NOT_FOUND = "Cemu was not found. Please check your installation directory and Cemu installation"
+
 
 class GameItem(NamedTuple):
     type: int
     id: int
     level: int = 1
+
 
 class XenobladeXHttpServer(HTTPServer):
     address_family = socket.AF_INET6
@@ -48,7 +51,7 @@ class XenobladeXHttpServer(HTTPServer):
     death_link = ""
     upload_in_progress = False
 
-    def __init__(self, server_address, bind_and_activate = True, debug:bool = False) -> None:
+    def __init__(self, server_address, bind_and_activate=True, debug: bool = False) -> None:
         self.debug = debug
         super().__init__(server_address, XenobladeXHTTPRequestHandler, bind_and_activate)
 
@@ -58,8 +61,8 @@ class XenobladeXHttpServer(HTTPServer):
         affix_3: int = 0
         slots: int = 0
 
-    def generate_gear(self, item_name:Optional[str], seed_name:Optional[str]) -> Optional[Gear]:
-        if not seed_name or not item_name or item_name not in dropItemData: 
+    def generate_gear(self, item_name: Optional[str], seed_name: Optional[str]) -> Optional[Gear]:
+        if not seed_name or not item_name or item_name not in dropItemData:
             return None
         random.seed(seed_name + item_name)
 
@@ -73,53 +76,54 @@ class XenobladeXHttpServer(HTTPServer):
             affix_lot = dropItemData[item_name].affixLotGood
             affix_num_lot = dropItemData[item_name].affixNumLotGood
             slot_lot = dropItemData[item_name].slotNumLotGood
-        
+
         affix_num = 0
-        if random.random() < dropLotData[affix_num_lot].lot1Prob / 100: 
+        if random.random() < dropLotData[affix_num_lot].lot1Prob / 100:
             affix_num += 1
-        if random.random() < dropLotData[affix_num_lot].lot2Prob / 100: 
+        if random.random() < dropLotData[affix_num_lot].lot2Prob / 100:
             affix_num += 1
-        if random.random() < dropLotData[affix_num_lot].lot3Prob / 100: 
+        if random.random() < dropLotData[affix_num_lot].lot3Prob / 100:
             affix_num += 1
 
-        affixes = [0,0,0]
+        affixes = [0, 0, 0]
         for affix in range(affix_num):
             for skill in dropSkillsData[affix_lot]:
                 if random.random() < skill.prob / 100 and affixes[affix] == 0:
                     affix_id = [x.name for x in ground_augments_data].index(skill.name)
-                    if affix_id not in affixes: 
+                    if affix_id not in affixes:
                         affixes[affix] = affix_id
 
         slot_num = 0
-        if random.random() < dropLotData[slot_lot].lot1Prob / 100: 
+        if random.random() < dropLotData[slot_lot].lot1Prob / 100:
             slot_num += 1
-        if random.random() < dropLotData[slot_lot].lot2Prob / 100: 
+        if random.random() < dropLotData[slot_lot].lot2Prob / 100:
             slot_num += 1
-        if random.random() < dropLotData[slot_lot].lot3Prob / 100: 
+        if random.random() < dropLotData[slot_lot].lot3Prob / 100:
             slot_num += 1
 
         return self.Gear(affixes[0], affixes[1], affixes[2], slot_num)
 
     def adjustTypeRange(self, item_game_type: int) -> int:
-        if item_game_type == 0x1: 
+        if item_game_type == 0x1:
             return 5
-        if item_game_type == 0x6: 
+        if item_game_type == 0x6:
             return 2
-        if item_game_type == 0xa: 
+        if item_game_type == 0xa:
             return 5
-        if item_game_type == 0xf: 
+        if item_game_type == 0xf:
             return 5
-        if item_game_type == 0x14: 
+        if item_game_type == 0x14:
             return 2
-        if item_game_type == 0x16: 
+        if item_game_type == 0x16:
             return 3
         return 1
-    
+
     def clear_uploaded_items(self):
         self.items = ""
 
     # Example: Invoke-WebRequest http://localhost:45872/items -Method POST -Body "I Tp=00000007 Id=00000039`n"
-    def upload_item(self, item_game_type:int, item_game_id:int, seed_name:Optional[str], item_name:Optional[str], item_game_level:int = 1):
+    def upload_item(self, item_game_type: int, item_game_id: int, seed_name: Optional[str],
+                    item_name: Optional[str], item_game_level: int = 1):
         if item_game_type == 0:
             self.items += f"K Id={item_game_id:08x} Fg={1:08x}\n"
         elif item_game_type < 0x20:
@@ -128,7 +132,8 @@ class XenobladeXHttpServer(HTTPServer):
             for item_game_type in range(item_game_type, item_game_type + self.adjustTypeRange(item_game_type)):
                 gear = self.generate_gear(item_name, seed_name)
                 if gear:
-                    self.items += f"G Tp={item_game_type:08x} Id={item_game_id:08x} A1={gear.affix_1:08x} A2={gear.affix_2:08x} A3={gear.affix_3:08x} Sc={gear.slots:08x}\n"
+                    self.items += f"G Tp={item_game_type:08x} Id={item_game_id:08x} A1={gear.affix_1:08x}" \
+                                  f"A2={gear.affix_2:08x} A3={gear.affix_3:08x} Sc={gear.slots:08x}\n"
                 else:
                     self.items += f"I Tp={item_game_type:08x} Id={item_game_id:08x}\n"
         elif item_game_type < 0x21:
@@ -136,26 +141,26 @@ class XenobladeXHttpServer(HTTPServer):
         elif item_game_type < 0x22:
             self.items += f"S Id={item_game_id:08x} Lv={1:08x}\n"
         elif item_game_type < 0x23:
-            self.items += f"F Id={item_game_id:08x} Lv={item_game_level*10:08x}\n"
+            self.items += f"F Id={item_game_id:08x} Lv={item_game_level * 10:08x}\n"
         elif item_game_type < 0x24:
             self.items += f"D Id={item_game_id:08x} Lv={item_game_level:08x}\n"
         elif item_game_type < 0x25:
             self.items += f"C Id={item_game_id:08x} Lv={10:08x}\n"
 
-    def _match_line(self, data:list[GameItem], game_type:Optional[int], regex:str, min:int = 1, 
-            max:int = 0xFFFF, has_lvl:bool = False):
+    def _match_line(self, data: list[GameItem], game_type: Optional[int], regex: str, min: int = 1,
+                    max: int = 0xFFFF, has_lvl: bool = False):
         match = re.findall(regex, self.locations, re.MULTILINE)
         match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
-        data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1 if not has_lvl else entry[1]) 
-            for entry in match if min <= entry[1] <= max]
-        
+        data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1 if not has_lvl else entry[1])
+                 for entry in match if min <= entry[1] <= max]
+
     def upload_death(self):
         self.death_link += f"K Id={6:08x} Fg={1:08x}\n"
-        
-    def upload_message(self, heading:str, body:str):
+
+    def upload_message(self, heading: str, body: str):
         self.messages += f"M {self._sanitize_message(heading)}\r{(self._sanitize_message(body))[:60]}\n"
 
-    def _sanitize_message(self, message:str) -> str:
+    def _sanitize_message(self, message: str) -> str:
         return re.sub(r"[^\w ]", "", message)
 
     def download_locations(self) -> list[GameItem]:
@@ -171,13 +176,13 @@ class XenobladeXHttpServer(HTTPServer):
 
         return locations
 
-    def _match_line_augment(self, data:list[GameItem], game_type:int, regex:str, lower:int = 1, upper:int = 0xFFFF,
-            has_type: bool = False):
+    def _match_line_augment(self, data: list[GameItem], game_type: int, regex: str, lower: int = 1, upper: int = 0xFFFF,
+                            has_type: bool = False):
         starting_index = 1 if has_type else 0
         match = re.findall(regex, self.locations, re.MULTILINE)
         match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
         data += [GameItem(game_type, entry[i]) for entry in match if not has_type or lower <= entry[0] <= upper
-            for i in range(starting_index + 3) if 0 < entry[i] < 0xFFFF]
+                 for i in range(starting_index + 3) if 0 < entry[i] < 0xFFFF]
 
     def download_items(self) -> list[GameItem]:
         items = []
@@ -208,19 +213,19 @@ class XenobladeXHttpServer(HTTPServer):
         return items
 
     def download_death(self) -> bool:
-        if self.upload_in_progress: 
+        if self.upload_in_progress:
             return False
         pattern = r'^KY Id=6 .*\n'
-        result:bool = re.match(pattern, self.locations) is not None
+        result: bool = re.match(pattern, self.locations) is not None
         re.sub(pattern, "", self.locations)
-        if result: 
+        if result:
             self.upload_message("Deathlink", "Sent death")
         return result
 
 
 class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
     def __init__(self, request, client_address, server: BaseServer) -> None:
-        self.http_server:XenobladeXHttpServer = cast(XenobladeXHttpServer, server)
+        self.http_server: XenobladeXHttpServer = cast(XenobladeXHttpServer, server)
         super().__init__(request, client_address, server)
 
     def respond_success(self):
@@ -237,7 +242,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.http_server.death_link = ""
 
     def post_locations(self):
-        locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":","\n")
+        locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":", "\n")
         self.respond_success()
         if "^" in locations[0]:
             self.http_server.upload_in_progress = True
@@ -249,11 +254,10 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.http_server.locations += locations
         if upload_ended:
             self.http_server.upload_in_progress = False
-        # if self.http_server.debug:
-        # logger.debug(f"Received LOCATION: " + locations[0:2] + " Lines: " + str(locations.count('\n')) + " FileLines: " +  str(self.http_server.locations.count('\n')))
 
     # Silence connection request logging
-    def log_request(self, code='-', size='-'): return
+    def log_request(self, code='-', size='-'):
+        return
 
     def debug_get_locations(self):
         self.respond_success()
@@ -276,14 +280,13 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
             self.debug_post_items()
 
 
-
 class XenobladeXContext(CommonContext):
     game = "XenobladeX"
     items_handling = 0b111  # get items from your own world
     want_slot_data = True
 
     connected = False
-    cemu_process:Optional[subprocess.Popen[bytes]] = None
+    cemu_process: Optional[subprocess.Popen[bytes]] = None
 
     def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool = False) -> None:
         self.http_server = XenobladeXHttpServer(('::', 45872), debug=debug)
@@ -305,9 +308,9 @@ class XenobladeXContext(CommonContext):
             if slot_data:
                 cemu_options: list[XenobladeXOption] = [XenobladeXOption(**option) for option in slot_data["cemu_options"]]
                 options: dict[str, int] = slot_data["options"]
-                if options["death_link"]: 
+                if options["death_link"]:
                     self.tags.add("DeathLink")
-                else: 
+                else:
                     self.tags.discard("DeathLink")
                 self.prepare_cemu(cemu_options)
                 self.connected = True
@@ -322,7 +325,7 @@ class XenobladeXContext(CommonContext):
     def on_print_json(self, args: dict):
         print_type = args.get("type", "")
         if print_type in ["ItemSend", "ItemCheat", "Hint"]:
-            item:NetworkItem = args["item"]
+            item: NetworkItem = args["item"]
             sender = item.player
             receiver = args["receiving"]
             if self.slot_concerns_self(receiver):
@@ -330,7 +333,8 @@ class XenobladeXContext(CommonContext):
             elif self.slot_concerns_self(sender):
                 self.http_server.upload_message(f"To {self.player_names[receiver]}", self.archipelago_item_to_name(item.item))
         elif print_type == "Chat":
-            self.http_server.upload_message(f"From {self.player_names[args["slot"]]}", args["message"])
+            chatting_player = self.player_names[args["slot"]]
+            self.http_server.upload_message(f"From {chatting_player}", args["message"])
         elif print_type == "ServerChat":
             self.http_server.upload_message("From Server", args["message"])
         elif print_type == "Join":
@@ -340,10 +344,10 @@ class XenobladeXContext(CommonContext):
         elif print_type == "Goal":
             self.http_server.upload_message("Reached Goal", self.player_names[args["slot"]])
         super(XenobladeXContext, self).on_print_json(args)
-    
 
     def run_gui(self):
         from kvui import GameManager
+
         class XenobladeXManager(GameManager):
             logging_pairs = [
                 ("Client", "Archipelago")
@@ -353,24 +357,22 @@ class XenobladeXContext(CommonContext):
         self.ui = XenobladeXManager(self)
         self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
 
-
     def get_level(self, archipelago_item_id: int) -> int:
         return len([item.item for item in self.items_received if item.item == archipelago_item_id])
-    
-    def archipelago_item_to_name(self, archipelago_item_id:int) -> str:
-        return re.sub(r"^[A-Z]*?: ", "",XenobladeXWorld.item_id_to_name[archipelago_item_id])
-    
+
+    def archipelago_item_to_name(self, archipelago_item_id: int) -> str:
+        return re.sub(r"^[A-Z]*?: ", "", XenobladeXWorld.item_id_to_name[archipelago_item_id])
+
     def archipelago_item_to_game_item(self, archipelago_item_id: int) -> GameItem:
         game_item_type_offset = max([id for id in game_type_item_to_offset.values() if id <= archipelago_item_id - XenobladeXWorld.base_id])
         game_item_type = min([key for key, offset in game_type_item_to_offset.items() if offset == game_item_type_offset])
         return GameItem(game_item_type, (archipelago_item_id - XenobladeXWorld.base_id) - game_item_type_offset)
 
-    def game_item_to_archipelago_item(self, game_item:GameItem) -> int:
+    def game_item_to_archipelago_item(self, game_item: GameItem) -> int:
         return XenobladeXWorld.base_id + game_type_item_to_offset[game_item.type] + game_item.id
 
-    def game_location_to_archipelago_location(self, game_location:GameItem) -> int:
+    def game_location_to_archipelago_location(self, game_location: GameItem) -> int:
         return XenobladeXWorld.base_id + game_type_location_to_offset[game_location.type] + game_location.id
-
 
     async def download_game_locations(self) -> None:
         game_locations = {self.game_location_to_archipelago_location(location) for location in self.http_server.download_locations()}
@@ -386,13 +388,14 @@ class XenobladeXContext(CommonContext):
         for item in server_items:
             uploaded_item = next((itm for itm in uploaded_items if item == self.game_item_to_archipelago_item(itm)), None)
             archipelago_level = self.get_level(item)
-            if uploaded_item is not None and archipelago_level <= uploaded_item.level: 
+            if uploaded_item is not None and archipelago_level <= uploaded_item.level:
                 continue
             game_item = self.archipelago_item_to_game_item(item)
-            self.http_server.upload_item(game_item.type, game_item.id, self.seed_name, self.archipelago_item_to_name(item), archipelago_level)
+            self.http_server.upload_item(game_item.type, game_item.id, self.seed_name,
+                                         self.archipelago_item_to_name(item), archipelago_level)
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
-        try: 
+        try:
             mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
             appdata = None
             if Utils.is_windows:
@@ -414,7 +417,7 @@ class XenobladeXContext(CommonContext):
             self.gui_error(str(e), e)
             self.exit_event.set()
 
-    def copy_cemu_files(self, cemu_path:str, mod_path:str):
+    def copy_cemu_files(self, cemu_path: str, mod_path: str):
         archipelago_graphic_pack_path = "worlds/xenobladex/cemu_graphicpack/"
         cemu_mod_path = os.path.join(cemu_path, mod_path)
         cemu_ap_path = os.path.join(cemu_mod_path, "AP")
@@ -422,7 +425,7 @@ class XenobladeXContext(CommonContext):
             raise Exception(CEMU_MODS_NOT_FOUND)
         if not os.path.exists(cemu_ap_path):
             os.makedirs(cemu_ap_path)
-        if not os.path.isdir(archipelago_graphic_pack_path): 
+        if not os.path.isdir(archipelago_graphic_pack_path):
             self.copy_from_apworld(cemu_ap_path)
             return
         try:
@@ -430,7 +433,7 @@ class XenobladeXContext(CommonContext):
         except Exception:
             raise Exception(CEMU_GRAPHIC_PACK_MISSING)
 
-    def copy_from_apworld(self, cemu_ap_path:str):
+    def copy_from_apworld(self, cemu_ap_path: str):
         try:
             zip_path = XenobladeXWorld.zip_path
             if not zip_path:
@@ -443,16 +446,16 @@ class XenobladeXContext(CommonContext):
         except Exception:
             raise Exception(CEMU_APWORLD_NOT_FOUND)
 
-    def set_cemu_graphic_packs(self, cemu_path:str, mod_path:str, options: list[XenobladeXOption]):
+    def set_cemu_graphic_packs(self, cemu_path: str, mod_path: str, options: list[XenobladeXOption]):
         settings_path = os.path.join(cemu_path, "settings.xml")
         try:
-            with open(settings_path, "r") as file :
+            with open(settings_path, "r") as file:
                 filedata = file.read()
 
             # Group by cemu pack
             sorted_options = sorted(options, key=lambda option: option.cemu_pack)
             grouped_options = [list(result) for key, result in groupby(sorted_options, key=lambda option: option.cemu_pack)]
-            
+
             for settings in grouped_options:
                 cemu_pack: str = settings[0].cemu_pack
 
@@ -461,11 +464,15 @@ class XenobladeXContext(CommonContext):
                 filedata = re.sub(pack_regex, "", filedata, flags=re.DOTALL)
 
                 # Abort whenever a single setting of a pack is off
-                if any(setting.cemu_selection == "off" for setting in settings): 
+                if any(setting.cemu_selection == "off" for setting in settings):
                     continue
 
                 # Addition
-                content = "".join([f'<Preset>\n{f"<category>{setting.cemu_option}</category>" if setting.cemu_option != "Active preset" else ""}<preset>{setting.cemu_selection}</preset>\n</Preset>\n' for setting in settings if setting.cemu_option != ""])
+                content = ""
+                for setting in settings:
+                    if setting.cemu_option != "":
+                        category = f"<category>{setting.cemu_option}</category>" if setting.cemu_option != "Active preset" else ""
+                        content += f"<Preset>\n{category}<preset>{setting.cemu_selection}</preset>\n</Preset>\n"
                 pack_content = (f'<Entry filename="{mod_path}{cemu_pack}/rules.txt">\n{content}</Entry>\n\n')
                 filedata = re.sub(r'</GraphicPack>', f"{pack_content}</GraphicPack>", filedata)
 

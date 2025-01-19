@@ -1,5 +1,6 @@
-from ..Regions import Requirement as Req, Rule 
+from ..Regions import Requirement as Req, Rule
 
+# flake8: noqa: E122
 chapter_regions = [
 Rule("Menu"),
 Rule("Chapter 1"),

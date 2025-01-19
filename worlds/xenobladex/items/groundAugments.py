@@ -1,7 +1,8 @@
 from ..Items import Itm as Data
 
-#https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ItemSkill_inner.html
-ground_augments_data:list[Data] = [
+# https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ItemSkill_inner.html
+# flake8: noqa: E122
+ground_augments_data: list[Data] = [
 Data("Max HP Up I"),
 Data("Max HP Up II"),
 Data("Max HP Up III"),

@@ -1,7 +1,8 @@
 from ..Locations import Loc as Data
 
 # from helper folder
-fn_nodes_data:list[Data] = [
+# flake8: noqa: E122
+fn_nodes_data: list[Data] = [
 Data("FN Site 101"),
 Data("FN Site 102"),
 Data("FN Site 103"),

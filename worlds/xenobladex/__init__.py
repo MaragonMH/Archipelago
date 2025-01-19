@@ -10,11 +10,14 @@ from .Locations import create_locations, xenobladeXLocations
 from .Options import XenobladeXOptions
 from .Settings import XenobladeXSettings
 
+
 def launch_client():
     from .Client import launch
     launch_subprocess(launch, name="XenobladeXClient")
 
+
 components.append(Component("Xenoblade X Client", func=launch_client, component_type=Type.CLIENT))
+
 
 class XenobladeXWeb(WebWorld):
     tutorials = [Tutorial(
@@ -40,10 +43,12 @@ class XenobladeXWorld(World):
     base_id = 4100000
 
     options_dataclass = XenobladeXOptions
-    settings: ClassVar[XenobladeXSettings]
 
-    item_name_to_id = (lambda b_id=base_id: { item.get_item(): b_id + item.id for item in xenobladeXItems if item.id is not None})()
-    location_name_to_id = (lambda b_id=base_id: { location.get_location(): b_id + location.id for location in xenobladeXLocations if location.id is not None})()
+    settings: ClassVar[XenobladeXSettings]  # type: ignore
+
+    item_name_to_id = (lambda b_id=base_id: {item.get_item(): b_id + item.id for item in xenobladeXItems if item.id is not None})()
+    location_name_to_id = (lambda b_id=base_id: {location.get_location(): b_id + location.id
+                                                 for location in xenobladeXLocations if location.id is not None})()
 
     def create_regions(self):
         init_region(self.multiworld, self.player, "Menu")

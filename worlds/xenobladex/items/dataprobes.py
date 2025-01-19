@@ -1,8 +1,9 @@
 from ..Items import Itm as Data
 
-#https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_BeaconList.html
+# https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_BeaconList.html
+# flake8: noqa: E122
 dataprobes_data = [
-Data("Basic Probe", valid=False), 
+Data("Basic Probe", valid=False),
 Data("Mining Probe G1", count=20),
 Data("Mining Probe G2", count=24),
 Data("Mining Probe G3", count=7),

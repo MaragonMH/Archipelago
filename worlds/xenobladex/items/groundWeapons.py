@@ -1,7 +1,8 @@
 from ..Items import Itm as Data
 
-#https://xenoblade.github.io/xbx/bdat/common_local_us/WPN_PcList.html
-ground_weapons_data:list[Data] = [
+# https://xenoblade.github.io/xbx/bdat/common_local_us/WPN_PcList.html
+# flake8: noqa: E122
+ground_weapons_data: list[Data] = [
 Data("Combat Assault Rifle"), 
 Data("Combat Sniper Rifle"),
 Data("Combat Dual Guns"),

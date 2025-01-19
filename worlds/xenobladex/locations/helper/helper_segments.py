@@ -1,8 +1,9 @@
 import json
 import sys
 
-
-replacement = ["Name: Celica[ST:n ]Affinity: 5[ST:n ]Appears: Night[ST:n ]Requirements: View 4th heart-to-heart",
+# flake8: noqa: E122
+replacement = [
+"Name: Celica[ST:n ]Affinity: 5[ST:n ]Appears: Night[ST:n ]Requirements: View 4th heart-to-heart",
 "Name: Nagi[ST:n ]Affinity: 2[ST:n ]Appears: Morning[ST:n ]Requirements: Complete 1st heart-to-heart",
 "Mission: The Gauntlet[ST:n ]Client: Zo Ozuchi",
 "Mission: Two Warriors[ST:n ]Client: Go Belg",
@@ -592,7 +593,8 @@ replacement = ["Name: Celica[ST:n ]Affinity: 5[ST:n ]Appears: Night[ST:n ]Requir
 "Completed Lao's affinity mission[ST:n ]\"A Friend in Need.\"",
 ]
 
-source = [589,
+source = [
+589,
 590,
 591,
 592,
@@ -1181,6 +1183,7 @@ source = [589,
 1175,
 1176,
 ]
+
 with open('helper_segments.txt', 'w') as f:
 	sys.stdout = f
 	for idx in source:
