@@ -282,6 +282,7 @@ class XenobladeXContext(CommonContext):
     want_slot_data = True
 
     connected = False
+    cemu_process:Optional[subprocess.Popen[bytes]] = None
 
     def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool = False) -> None:
         self.http_server = XenobladeXHttpServer(('::', 45872), debug=debug)
@@ -471,7 +472,8 @@ class XenobladeXContext(CommonContext):
     def open_cemu(self):
         try:
             cemu_exe = get_settings()["xenoblade_x_options"]["executable"]
-            subprocess.Popen(cemu_exe)
+            if not self.cemu_process or self.cemu_process.poll() is not None:
+                self.cemu_process = subprocess.Popen(cemu_exe)
         except Exception:
             raise Exception(CEMU_NOT_FOUND)
 
