@@ -105,8 +105,8 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     packages = [match.groupdict() for match in re.compile(r, re.MULTILINE | re.DOTALL).finditer(data)]
 
     # Add cemu package information
-    modules = f'{", ".join(package["ids"] for package in packages)} # {", ".join(package["versions"]
-                                                                                 for package in packages)}'
+    modules = f'{", ".join(package["ids"] for package in packages)} #' \
+              f' {", ".join(package["versions"] for package in packages)}'
     content = f"[{modname}_{filename}]\nmoduleMatches = {modules}\n.origin = codecave\n\n{content}\n\n"
 
     # Add version specific addresses for symbols
