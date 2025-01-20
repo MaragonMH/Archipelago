@@ -28,12 +28,14 @@ from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
 from .Options import XenobladeXOption
 
-CEMU_MODS_NOT_FOUND = "Unable to find the Cemu Mods please make sure to download the community mods within Cemu settings first"
+CEMU_MODS_NOT_FOUND = "Unable to find the Cemu Mods please make sure to download the community mods" \
+                      "within Cemu settings first"
 CEMU_APPDATA_NOT_FOUND = "Unable to find the Cemu Appdata folder, please make sure to start Cemu once beforehand"
 CEMU_APWORLD_NOT_FOUND = "Unable to find the Xenoblade X *.apworld"
 CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu." \
                             "Please check your installation directory and Cemu installation"
-CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. Please check your installation directory and Cemu installation"
+CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found." \
+                          "Please check your installation directory and Cemu installation"
 CEMU_NOT_FOUND = "Cemu was not found. Please check your installation directory and Cemu installation"
 
 
@@ -201,9 +203,11 @@ class XenobladeXHttpServer(HTTPServer):
         self._match_line(items, 0xa, doll_regex, min=0xb)
         augment_regex = r'^IT .*Tp=([0-9a-fA-F]{2}).*A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4})'
         self._match_line_augment(items, 0x14, augment_regex, lower=1, upper=7)
-        self._match_line_augment(items, 0x14, r'^EQ .*A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4})')
+        self._match_line_augment(items, 0x14,
+                                 r'^EQ .*A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4})')
         self._match_line_augment(items, 0x16, augment_regex, lower=0xa, upper=0x13)
-        self._match_line_augment(items, 0x16, r'^DL .*A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4})')
+        self._match_line_augment(items, 0x16,
+                                 r'^DL .*A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4})')
         self._match_line(items, 0x20, r'^AT Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n')
         self._match_line(items, 0x21, r'^SK Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n')
         self._match_line(items, 0x22, r'^FS Id=([0-9a-fA-F]{1}) Lv=([0-9a-fA-F]{1})\n', has_lvl=True)
@@ -306,7 +310,8 @@ class XenobladeXContext(CommonContext):
         if cmd == "Connected":
             slot_data = args.get('slot_data', None)
             if slot_data:
-                cemu_options: list[XenobladeXOption] = [XenobladeXOption(**option) for option in slot_data["cemu_options"]]
+                cemu_options: list[XenobladeXOption] = [XenobladeXOption(**option)
+                                                        for option in slot_data["cemu_options"]]
                 options: dict[str, int] = slot_data["options"]
                 if options["death_link"]:
                     self.tags.add("DeathLink")
@@ -329,9 +334,11 @@ class XenobladeXContext(CommonContext):
             sender = item.player
             receiver = args["receiving"]
             if self.slot_concerns_self(receiver):
-                self.http_server.upload_message(f"From {self.player_names[sender]}", self.archipelago_item_to_name(item.item))
+                self.http_server.upload_message(f"From {self.player_names[sender]}",
+                                                self.archipelago_item_to_name(item.item))
             elif self.slot_concerns_self(sender):
-                self.http_server.upload_message(f"To {self.player_names[receiver]}", self.archipelago_item_to_name(item.item))
+                self.http_server.upload_message(f"To {self.player_names[receiver]}",
+                                                self.archipelago_item_to_name(item.item))
         elif print_type == "Chat":
             chatting_player = self.player_names[args["slot"]]
             self.http_server.upload_message(f"From {chatting_player}", args["message"])
@@ -364,8 +371,10 @@ class XenobladeXContext(CommonContext):
         return re.sub(r"^[A-Z]*?: ", "", XenobladeXWorld.item_id_to_name[archipelago_item_id])
 
     def archipelago_item_to_game_item(self, archipelago_item_id: int) -> GameItem:
-        game_item_type_offset = max([id for id in game_type_item_to_offset.values() if id <= archipelago_item_id - XenobladeXWorld.base_id])
-        game_item_type = min([key for key, offset in game_type_item_to_offset.items() if offset == game_item_type_offset])
+        game_item_type_offset = max([id for id in game_type_item_to_offset.values()
+                                     if id <= archipelago_item_id - XenobladeXWorld.base_id])
+        game_item_type = min([key for key, offset in game_type_item_to_offset.items()
+                              if offset == game_item_type_offset])
         return GameItem(game_item_type, (archipelago_item_id - XenobladeXWorld.base_id) - game_item_type_offset)
 
     def game_item_to_archipelago_item(self, game_item: GameItem) -> int:
@@ -375,7 +384,8 @@ class XenobladeXContext(CommonContext):
         return XenobladeXWorld.base_id + game_type_location_to_offset[game_location.type] + game_location.id
 
     async def download_game_locations(self) -> None:
-        game_locations = {self.game_location_to_archipelago_location(location) for location in self.http_server.download_locations()}
+        game_locations = {self.game_location_to_archipelago_location(location)
+                          for location in self.http_server.download_locations()}
         new_locations = game_locations.difference(self.locations_checked)
         if new_locations:
             await self.send_msgs([{"cmd": 'LocationChecks', "locations": new_locations}])
@@ -384,9 +394,11 @@ class XenobladeXContext(CommonContext):
     def upload_game_items(self) -> None:
         self.http_server.clear_uploaded_items()
         uploaded_items = self.http_server.download_items()
-        server_items = {network_item.item for network_item in self.items_received if self.slot_concerns_self(network_item.player)}
+        server_items = {network_item.item for network_item in self.items_received
+                        if self.slot_concerns_self(network_item.player)}
         for item in server_items:
-            uploaded_item = next((itm for itm in uploaded_items if item == self.game_item_to_archipelago_item(itm)), None)
+            uploaded_item = next((itm for itm in uploaded_items
+                                  if item == self.game_item_to_archipelago_item(itm)), None)
             archipelago_level = self.get_level(item)
             if uploaded_item is not None and archipelago_level <= uploaded_item.level:
                 continue
@@ -454,7 +466,8 @@ class XenobladeXContext(CommonContext):
 
             # Group by cemu pack
             sorted_options = sorted(options, key=lambda option: option.cemu_pack)
-            grouped_options = [list(result) for key, result in groupby(sorted_options, key=lambda option: option.cemu_pack)]
+            grouped_options = [list(result) for key, result
+                               in groupby(sorted_options, key=lambda option: option.cemu_pack)]
 
             for settings in grouped_options:
                 cemu_pack: str = settings[0].cemu_pack
@@ -471,7 +484,8 @@ class XenobladeXContext(CommonContext):
                 content = ""
                 for setting in settings:
                     if setting.cemu_option != "":
-                        category = f"<category>{setting.cemu_option}</category>" if setting.cemu_option != "Active preset" else ""
+                        category = f"<category>{setting.cemu_option}</category>" \
+                                   if setting.cemu_option != "Active preset" else ""
                         content += f"<Preset>\n{category}<preset>{setting.cemu_selection}</preset>\n</Preset>\n"
                 pack_content = (f'<Entry filename="{mod_path}{cemu_pack}/rules.txt">\n{content}</Entry>\n\n')
                 filedata = re.sub(r'</GraphicPack>', f"{pack_content}</GraphicPack>", filedata)

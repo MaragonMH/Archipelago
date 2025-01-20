@@ -1,7 +1,7 @@
 from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_SkillClass.html
-# flake8: noqa: E122
+# flake8: noqa
 skills_data: list[Data] = [
 Data("Steel Flesh"),
 Data("Unwavering Courage"),

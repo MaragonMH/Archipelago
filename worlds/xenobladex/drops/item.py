@@ -14,7 +14,7 @@ class DropItem(NamedTuple):
 
 DI = DropItem
 
-# flake8: noqa: E122
+# flake8: noqa
 dropItemData: dict[str, DropItem] = {
 "Worn Survival Headset": DI(585, 586, 1, 23, 2, 24),
 "Worn Survival Shirt": DI(589, 590, 1, 23, 2, 24),

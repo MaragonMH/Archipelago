@@ -1,7 +1,7 @@
 from ..Locations import Loc as Data
 
 #https://xenoblade.github.io/xbx/bdat/common_local_us/FLD_Location.html
-# flake8: noqa: E122
+# flake8: noqa
 locations_data: list[Data] = [
 Data("Barracks Interior"),
 Data("Interior"),

@@ -1,6 +1,6 @@
 from ..Items import Itm as Data
 
-# flake8: noqa: E122
+# flake8: noqa
 other_data: list[Data] = [
 Data("Victory", count=0),
 Data("Filler", count=0),

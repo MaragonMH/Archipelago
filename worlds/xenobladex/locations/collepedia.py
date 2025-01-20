@@ -1,7 +1,7 @@
 from ..Locations import Loc as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_ms/ITM_CollectList_ms.html
-# flake8: noqa: E122
+# flake8: noqa
 collepedia_data: list[Data] = [
 Data("Ajira Melon"),
 Data("Lacey Potato"),

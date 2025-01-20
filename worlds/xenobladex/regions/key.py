@@ -1,6 +1,6 @@
 from ..Regions import Requirement as Req, Rule
 
-# flake8: noqa: E122
+# flake8: noqa
 doll_regions = [
 Rule("Menu"),
 Rule("Skell License", {Req("KEY: Skell License")}),

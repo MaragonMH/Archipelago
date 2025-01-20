@@ -46,7 +46,8 @@ class XenobladeXWorld(World):
 
     settings: ClassVar[XenobladeXSettings]  # type: ignore
 
-    item_name_to_id = (lambda b_id=base_id: {item.get_item(): b_id + item.id for item in xenobladeXItems if item.id is not None})()
+    item_name_to_id = (lambda b_id=base_id: {item.get_item(): b_id + item.id
+                                             for item in xenobladeXItems if item.id is not None})()
     location_name_to_id = (lambda b_id=base_id: {location.get_location(): b_id + location.id
                                                  for location in xenobladeXLocations if location.id is not None})()
 
@@ -55,10 +56,10 @@ class XenobladeXWorld(World):
         create_locations(self.multiworld, self.player, self.base_id)
 
     def create_items(self):
-        create_items(self.multiworld, self.player, self.base_id, self.options)
+        create_items(self.multiworld, self.player, self.base_id, self.options, self.item_name_to_id)
 
     def create_item(self, name: str) -> XenobladeXItem:
-        return create_item(self.multiworld, name, self.player, self.item_name_to_id[name])
+        return create_item(name, self.player, self.item_name_to_id[name])
 
     def set_rules(self):
         set_rules(self.multiworld, self.player, self.item_name_to_id)

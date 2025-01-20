@@ -1,7 +1,7 @@
 import json
 import sys
 
-# flake8: noqa: E122
+# flake8: noqa
 replacement = [
 "Name: Celica[ST:n ]Affinity: 5[ST:n ]Appears: Night[ST:n ]Requirements: View 4th heart-to-heart",
 "Name: Nagi[ST:n ]Affinity: 2[ST:n ]Appears: Morning[ST:n ]Requirements: Complete 1st heart-to-heart",

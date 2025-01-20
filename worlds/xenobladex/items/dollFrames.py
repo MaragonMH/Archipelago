@@ -1,7 +1,7 @@
 from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_DlList.html
-# flake8: noqa: E122
+# flake8: noqa
 doll_frames_data: list[Data] = [
 Data("DL019600_Name_1", valid=False),
 Data("DL019600_Name_2", valid=False),

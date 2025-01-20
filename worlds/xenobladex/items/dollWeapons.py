@@ -1,7 +1,7 @@
 from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/WPN_DlList.html
-# flake8: noqa: E122
+# flake8: noqa
 doll_weapons_data: list[Data] = [
 Data("SHM-R910SA L-Cannon"), 
 Data("SHM-M210SA Sword_1"),

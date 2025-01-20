@@ -16,13 +16,14 @@ class Rule:
     region: str
     requirements: set[Requirement] = field(default_factory=lambda: set())
 
-# flake8: noqa: E402
-from .regions.key import doll_regions, fnet_regions
-from .regions.chapters import chapter_regions
-from .regions.friends import friends_nagi_regions, friends_l_regions, friends_lao_regions, friends_gwin_regions, friends_frye_regions, \
-    friends_doug_regions, friends_phog_regions, friends_elma_regions, friends_lin_regions, friends_celica_regions, \
-    friends_irina_regions, friends_murderess_regions, friends_hope_regions, friends_mia_regions
-from .regions.fieldSkills import mechanical_regions, biological_regions, archeological_regions
+
+from .regions.key import doll_regions, fnet_regions  # noqa: E402
+from .regions.chapters import chapter_regions  # noqa: E402
+from .regions.friends import friends_nagi_regions, friends_l_regions, friends_lao_regions, friends_gwin_regions, \
+    friends_frye_regions, friends_doug_regions, friends_phog_regions, friends_elma_regions, friends_lin_regions, \
+    friends_celica_regions, friends_irina_regions, friends_murderess_regions, \
+    friends_hope_regions, friends_mia_regions  # noqa: E402
+from .regions.fieldSkills import mechanical_regions, biological_regions, archeological_regions  # noqa: E402
 
 xenobladeXRegions = OrderedDict({rule.region: rule.requirements for rule in [
     *chapter_regions,
@@ -49,8 +50,10 @@ xenobladeXRegions = OrderedDict({rule.region: rule.requirements for rule in [
 
 
 def init_region(world: MultiWorld, player: int, region_name: str):
-    """Initialize the new region if it was not done before and establish the connection rules, based on its predecessors, if applicable"""
-    if region_name not in [region.name for region in world.regions] and set(region_name.split("+")) <= set(xenobladeXRegions.keys()):
+    """Initialize the new region if it was not done before and establish the connection rules,
+        based on its predecessors, if applicable"""
+    region_names = [region.name for region in world.get_regions(player)]
+    if region_name not in region_names and set(region_name.split("+")) <= set(xenobladeXRegions.keys()):
         logging.debug(f"Region Name: {region_name}")
         world.regions += [Region(region_name, player, world, region_name)]
         if region_name == "Menu":
@@ -67,7 +70,8 @@ def init_region(world: MultiWorld, player: int, region_name: str):
                 if region == "Menu":
                     break
                 requirements = requirements.union(req)
-        connect_regions(world, player, "Menu", region_name, partial(has_items, player=player, requirements=requirements))
+        connect_regions(world, player, "Menu", region_name,
+                        partial(has_items, player=player, requirements=requirements))
 
 
 def add_region_location(world: MultiWorld, player: int, region_name: str, location: Location) -> Location:

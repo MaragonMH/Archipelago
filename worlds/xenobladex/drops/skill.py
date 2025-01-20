@@ -7,7 +7,7 @@ class DropSkill(NamedTuple):
 
 DS = DropSkill
 
-# flake8: noqa: E122
+# flake8: noqa
 dropSkillsData:list[list[DropSkill]] = [
 [],
 [],

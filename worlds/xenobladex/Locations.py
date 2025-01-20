@@ -9,7 +9,6 @@ from .Regions import add_region_location, init_region
 class Loc:
     name: str
     valid: bool = True
-    count: int = 1
     regions: list[str] = field(default_factory=lambda: ['Menu'])
     type: Optional[int] = None
     id: Optional[int] = None
@@ -21,12 +20,12 @@ class Loc:
     def get_region(self):
         return "+".join(sorted(self.regions))
 
-# flake8: noqa: E402
-from .locations.collepedia import collepedia_data
-from .locations.enemies import enemies_data
-from .locations.fnNodes import fn_nodes_data
-from .locations.locations import locations_data
-from .locations.segments import segments_data
+
+from .locations.collepedia import collepedia_data  # noqa: E402
+from .locations.enemies import enemies_data  # noqa: E402
+from .locations.fnNodes import fn_nodes_data  # noqa: E402
+from .locations.locations import locations_data  # noqa: E402
+from .locations.segments import segments_data  # noqa: E402
 
 
 class XenobladeXLocation(Location):
@@ -45,7 +44,8 @@ class _Locs:
         _Locs.table_size += _Locs.last_table_size
         game_type_location_to_offset[type] = _Locs.table_size
         _Locs.last_table_size = len(data)
-        return (replace(e, type=type, id=_Locs.table_size + i + 1, prefix=prefix) for i, e in enumerate(data) if e.valid)
+        return (replace(e, type=type, id=_Locs.table_size + i + 1, prefix=prefix)
+                for i, e in enumerate(data) if e.valid)
 
 
 xenobladeXLocations = [

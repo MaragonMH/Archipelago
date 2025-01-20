@@ -8,7 +8,7 @@ class DropLot(NamedTuple):
 
 DL = DropLot
 
-# flake8: noqa: E122
+# flake8: noqa
 dropLotData: list[DropLot] = [
 DL(100, 30, 5),
 DL(100, 70, 30),

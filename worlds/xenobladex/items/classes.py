@@ -1,7 +1,7 @@
 from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html
-# flake8: noqa: E122
+# flake8: noqa
 classes_data: list[Data] = [
 Data("Drifter"),
 Data("Striker"),

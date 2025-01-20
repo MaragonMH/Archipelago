@@ -1,7 +1,7 @@
 from ..Locations import Loc as Data
 
 # from helper
-# flake8: noqa: E122
+# flake8: noqa
 segments_data: list[Data] = [
 Data("Name: Celica[ST:n ]Affinity: 5[ST:n ]Appears: Night[ST:n ]Requirements: View 4th heart-to-heart"),
 Data("Name: Nagi[ST:n ]Affinity: 2[ST:n ]Appears: Morning[ST:n ]Requirements: Complete 1st heart-to-heart"),

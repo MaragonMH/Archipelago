@@ -2,7 +2,7 @@ import json
 import sys
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/SEG_ProbeList.html
-# flake8: noqa: E122
+# flake8: noqa
 nodes = [
 1,
 3,

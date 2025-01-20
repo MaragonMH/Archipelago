@@ -1,7 +1,7 @@
 from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/AMR_DlList.html
-# flake8: noqa: E122
+# flake8: noqa
 doll_armor_data: list[Data] = [
 Data("AMR_DA010101_Name_1", valid=False),
 Data("AMR_DA010102_Name_1", valid=False),

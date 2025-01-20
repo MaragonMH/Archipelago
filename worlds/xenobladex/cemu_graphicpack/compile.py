@@ -41,7 +41,8 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
 
     # Print errors and warnings
     if res["stderr"]:
-        print("\n".join(re.sub(r"(?<=^\033\[01m\033\[K<)source(?=>)", f"{filename}.cpp", line["text"]) for line in res["stderr"]))
+        print("\n".join(re.sub(r"(?<=^\033\[01m\033\[K<)source(?=>)", f"{filename}.cpp", line["text"])
+                        for line in res["stderr"]))
     if res["code"] != 0:
         continue
 
@@ -87,7 +88,8 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     # Change register to condition registers for cmpw/cmpwi/cmplw/cmplwi and beq/bne/blt/ble/bgt/bge
     content = re.sub(r"(cmpw|cmpwi|cmplw|cmplwi|beq|bne|blt|ble|bgt|bge) (r[0-7])", "\\1 c\\2", content)
     # Change unsupported offset for symbols specifically for lis->addi and lis->lwz
-    content = re.sub(r"(lis (r\d+),.*?)\+(\d+)(@.*\n)(\t(?:addi|lwz) r\d+,r\d+,.*?)\+\d+(@.*)", "\\1\\4\taddi \\2,\\2,\\3\n\\5\\6", content)
+    r = r"(lis (r\d+),.*?)\+(\d+)(@.*\n)(\t(?:addi|lwz) r\d+,r\d+,.*?)\+\d+(@.*)"
+    content = re.sub(r, "\\1\\4\taddi \\2,\\2,\\3\n\\5\\6", content)
     # Remove rlwinm, this could lead to errors, but i found no usage for this
     content = re.sub(r".*rlwinm .*[\n]", "", content)
     # Add support for import with changed namespaces
@@ -98,11 +100,13 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
         content = re.sub(rf"({parameter}:\n\t\.int\s+)0", f"\\1${parameter}", content)
 
     # Prepare packages
-    r = r"^#ifdef (?P<name>.*?)\nmoduleMatches *= *(?P<ids>.*?) *,? *[#;] *(?P<versions>.*?)\n(?P<content>.*?)^#endif *\n"
+    r = r"^#ifdef (?P<name>.*?)\nmoduleMatches *= *(?P<ids>.*?)" \
+        r" *,? *[#;] *(?P<versions>.*?)\n(?P<content>.*?)^#endif *\n"
     packages = [match.groupdict() for match in re.compile(r, re.MULTILINE | re.DOTALL).finditer(data)]
 
     # Add cemu package information
-    modules = f'{", ".join(package["ids"] for package in packages)} # {", ".join(package["versions"] for package in packages)}'
+    modules = f'{", ".join(package["ids"] for package in packages)} # {", ".join(package["versions"]
+                                                                                 for package in packages)}'
     content = f"[{modname}_{filename}]\nmoduleMatches = {modules}\n.origin = codecave\n\n{content}\n\n"
 
     # Add version specific addresses for symbols

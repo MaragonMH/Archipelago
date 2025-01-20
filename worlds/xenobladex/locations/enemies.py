@@ -1,7 +1,7 @@
 from ..Locations import Loc as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_EnBook.html
-# flake8: noqa: E122
+# flake8: noqa
 enemies_data = [
 Data("Origin Blatta"),
 Data("Callow Grex"),
@@ -31,7 +31,7 @@ Data("Pursuit Satellis Alpha"),
 Data("Pursuit Satellis Beta"),
 Data("Pursuit Satellis Gamma"),
 Data("Soldier Chimera"),
-Data("Lao", count=0, regions=["Epilogue"]),
+Data("Lao", regions=["Epilogue"]),
 Data("Queen Chimera"),
 Data("Minor Chimera"),
 Data("Mezzo Chimera"),
