@@ -41,7 +41,7 @@ from .items.skills import skills_data  # noqa: E402
 
 class XenobladeXItem(Item):
     """A generated item"""
-    game: str = "XenobladeX"
+    game: str = "Xenoblade X"
 
 
 game_type_item_to_offset: OrderedDict[int, int] = OrderedDict()

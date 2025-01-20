@@ -35,7 +35,7 @@ class XenobladeXWorld(World):
      Xenoblade Chronicles X another 100+ hour game. Sounds like fun?
     """
 
-    game = "XenobladeX"
+    game = "Xenoblade X"
     topology_present = True
     web = XenobladeXWeb()
 

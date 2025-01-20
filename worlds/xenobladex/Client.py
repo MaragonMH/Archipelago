@@ -285,7 +285,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 class XenobladeXContext(CommonContext):
-    game = "XenobladeX"
+    game = "Xenoblade X"
     items_handling = 0b111  # get items from your own world
     want_slot_data = True
 

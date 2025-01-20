@@ -29,7 +29,7 @@ from .locations.segments import segments_data  # noqa: E402
 
 
 class XenobladeXLocation(Location):
-    game: str = "XenobladeX"
+    game: str = "Xenoblade X"
 
 
 game_type_location_to_offset: OrderedDict[int, int] = OrderedDict()
