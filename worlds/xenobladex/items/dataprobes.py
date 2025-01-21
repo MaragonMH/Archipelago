@@ -1,8 +1,9 @@
+from typing import List
 from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_BeaconList.html
 # flake8: noqa
-dataprobes_data = [
+dataprobes_data: List[Data] = [
 Data("Basic Probe", valid=False),
 Data("Mining Probe G1", count=20),
 Data("Mining Probe G2", count=24),

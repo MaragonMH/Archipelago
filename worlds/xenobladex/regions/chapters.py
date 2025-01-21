@@ -1,7 +1,8 @@
+from typing import List
 from ..Regions import Requirement as Req, Rule
 
 # flake8: noqa
-chapter_regions = [
+chapter_regions: List[Rule] = [
 Rule("Menu"),
 Rule("Chapter 1"),
 Rule("Chapter 2"),

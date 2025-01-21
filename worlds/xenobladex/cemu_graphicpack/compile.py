@@ -1,3 +1,4 @@
+from typing import Dict
 import requests
 import os
 import sys
@@ -37,16 +38,16 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
         res.raise_for_status()
     except Exception:
         raise Exception(f"Assembly for {filename}.cpp failed with {res.status_code}")
-    res = res.json()
+    jres: Dict = res.json()
 
     # Print errors and warnings
-    if res["stderr"]:
+    if jres["stderr"]:
         print("\n".join(re.sub(r"(?<=^\033\[01m\033\[K<)source(?=>)", f"{filename}.cpp", line["text"])
-                        for line in res["stderr"]))
-    if res["code"] != 0:
+                        for line in jres["stderr"]))
+    if jres["code"] != 0:
         continue
 
-    content = "\n".join(line["text"] for line in res["asm"]) + "\n"
+    content = "\n".join(line["text"] for line in jres["asm"]) + "\n"
 
     # Fix assembly formatting
     # Replace spaces with tabs
@@ -93,7 +94,7 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     # Remove rlwinm, this could lead to errors, but i found no usage for this
     content = re.sub(r".*rlwinm .*[\n]", "", content)
     # Add support for import with changed namespaces
-    content = re.sub(r"(bl.*)", lambda _: re.sub(r"::", ".", _.group(1)), content)
+    content = re.sub(r"(bl.*)", lambda _: re.sub(r"::", ".", str(_.group(1))), content)
 
     # Add Parameters from rules.txt file
     for parameter in parameters:
@@ -117,6 +118,6 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     # Create file
     try:
         with open(f"patch_{filename}.asm", "w") as f:
-            f = f.write(content)
+            f.write(content)
     except Exception:
         raise Exception(f"Unable to write to patch_{filename}.asm")

@@ -1,8 +1,8 @@
 from dataclasses import asdict, dataclass
-from Options import Option, DeathLink, Toggle, DefaultOnToggle, Choice, PerGameCommonOptions
+from Options import DeathLink, DefaultOnToggle, Choice, PerGameCommonOptions
 
 
-class CemuSettings:
+class CemuChoice(Choice):
     cemu_pack: str
     cemu_option: str = ""
     cemu_selection_names: list[str] = ["off", "on"]
@@ -15,7 +15,7 @@ class XenobladeXOption():
     cemu_selection: str = ""
 
 
-class EnemyAggro(Choice, CemuSettings):
+class EnemyAggro(CemuChoice):
     """Increase or decrease the enemy aggression"""
     display_name = "Enemy Aggro"
     option_none = 0
@@ -34,7 +34,7 @@ class EnemyAggro(Choice, CemuSettings):
     ]
 
 
-class EnemyStats(Choice, CemuSettings):
+class EnemyStats(CemuChoice):
     """Adjust the stats of the enemies"""
     display_name = "Damage Divisor"
     option_none = 0
@@ -61,7 +61,7 @@ class EnemyStats(Choice, CemuSettings):
     ]
 
 
-class DamageDivisor(Choice, CemuSettings):
+class DamageDivisor(CemuChoice):
     """Divide your teams damage output. Note: Displayed damage values stay the same regardless"""
     display_name = "Damage Divisor"
     option_none = 0
@@ -84,7 +84,7 @@ class DamageDivisor(Choice, CemuSettings):
     ]
 
 
-class DamageMultiplicator(Choice, CemuSettings):
+class DamageMultiplicator(CemuChoice):
     """Multiply your teams damage output. Note: Displayed damage values stay the same regardless"""
     display_name = "Damage Multiplier"
     option_none = 0
@@ -107,7 +107,7 @@ class DamageMultiplicator(Choice, CemuSettings):
     ]
 
 
-class QteAuto(Choice, CemuSettings):
+class QteAuto(CemuChoice):
     """Automatically completes Quicktime-Events with the specified rating"""
     display_name = "Quicktime-Event Auto"
     option_none = 0
@@ -124,7 +124,7 @@ class QteAuto(Choice, CemuSettings):
     ]
 
 
-class QteSpeed(Choice, CemuSettings):
+class QteSpeed(CemuChoice):
     """Sets the speed for every Quicktime-Event manually"""
     display_name = "Quicktime-Event Speed"
     option_none = 0
@@ -143,13 +143,20 @@ class QteSpeed(Choice, CemuSettings):
     ]
 
 
-class QteSkell(Toggle, CemuSettings):
+class QteSkell(CemuChoice):
     """Restores skells automatically if the insurance is still valid"""
     display_name = "Skell Recovery"
+    option_off = 0
+    option_on = 1
     cemu_pack = "BattleQteDollLost"
+    cemu_option = ""
+    cemu_selection_names = [
+        "off",
+        "on"
+    ]
 
 
-class CollectionRange(Choice, CemuSettings):
+class CollectionRange(CemuChoice):
     """Increases the collection range of items in the field"""
     display_name = "Collection Range"
     option_none = 0
@@ -164,13 +171,20 @@ class CollectionRange(Choice, CemuSettings):
     ]
 
 
-class ArmorSlotUpgrades(Toggle, CemuSettings):
+class ArmorSlotUpgrades(CemuChoice):
     """Allows you to further upgrade armor slots."""
     display_name = "Armor Slot Upgrades"
+    option_off = 0
+    option_on = 1
     cemu_pack = "EquipmentArmorsCanHave3AugmentSlots"
+    cemu_option = ""
+    cemu_selection_names = [
+        "off",
+        "on"
+    ]
 
 
-class ArmorTraitsUpgrades(Choice, CemuSettings):
+class ArmorTraitsUpgrades(CemuChoice):
     """Allows you to further upgrade equipment traits. Optional without ressources"""
     display_name = "Equip Trait Upgrades"
     option_none = 0
@@ -185,7 +199,7 @@ class ArmorTraitsUpgrades(Choice, CemuSettings):
     ]
 
 
-class LvPointsModifier(Choice, CemuSettings):
+class LvPointsModifier(CemuChoice):
     """Modifies the level experience gain and disables 9999 exp cap"""
     display_name = "Lv-Points Modifier"
     option_none = 0
@@ -212,7 +226,7 @@ class LvPointsModifier(Choice, CemuSettings):
     ]
 
 
-class BattlePointsModifier(Choice, CemuSettings):
+class BattlePointsModifier(CemuChoice):
     """Modifies the battle experience gain"""
     display_name = "Battle-Points Modifier"
     option_none = 0
@@ -237,7 +251,7 @@ class BattlePointsModifier(Choice, CemuSettings):
     ]
 
 
-class BladePointsModifier(Choice, CemuSettings):
+class BladePointsModifier(CemuChoice):
     """Modifies the BLADE experience gain"""
     display_name = "BLADE-Points Modifier"
     option_none = 0
@@ -258,7 +272,7 @@ class BladePointsModifier(Choice, CemuSettings):
     ]
 
 
-class FrontierNavMiraniumFrequency(Choice, CemuSettings):
+class FrontierNavMiraniumFrequency(CemuChoice):
     """Alters the frequency of the Frontier-Nav Miranium bonuses"""
     display_name = "Froniter-Nav Miranium Frequency"
     option_none = 0
@@ -281,7 +295,7 @@ class FrontierNavMiraniumFrequency(Choice, CemuSettings):
     ]
 
 
-class FrontierNavMiraniumQuantity(Choice, CemuSettings):
+class FrontierNavMiraniumQuantity(CemuChoice):
     """Alters the quantity of the Frontier-Nav Miranium bonuses"""
     display_name = "Froniter-Nav Miranium Quantity"
     option_none = 0
@@ -304,7 +318,7 @@ class FrontierNavMiraniumQuantity(Choice, CemuSettings):
     ]
 
 
-class FrontierNavMoneyFrequency(Choice, CemuSettings):
+class FrontierNavMoneyFrequency(CemuChoice):
     """Alters the frequency of the Frontier-Nav Money bonuses"""
     display_name = "Froniter-Nav Miranium Frequency"
     option_none = 0
@@ -325,7 +339,7 @@ class FrontierNavMoneyFrequency(Choice, CemuSettings):
     ]
 
 
-class FrontierNavMoneyQuantity(Choice, CemuSettings):
+class FrontierNavMoneyQuantity(CemuChoice):
     """Alters the quantity of the Frontier-Nav Money bonuses"""
     display_name = "Froniter-Nav Miranium Quantity"
     option_none = 0
@@ -350,7 +364,7 @@ class FrontierNavMoneyQuantity(Choice, CemuSettings):
     ]
 
 
-class FrontierNavResourcesFrequency(Choice, CemuSettings):
+class FrontierNavResourcesFrequency(CemuChoice):
     """Alters the frequency of the Frontier-Nav Resource bonuses"""
     display_name = "Froniter-Nav Miranium Frequency"
     option_none = 0
@@ -367,7 +381,7 @@ class FrontierNavResourcesFrequency(Choice, CemuSettings):
     ]
 
 
-class FrontierNavResourcesQuantity(Choice, CemuSettings):
+class FrontierNavResourcesQuantity(CemuChoice):
     """Alters the quantity of the Frontier-Nav Resource bonuses"""
     display_name = "Froniter-Nav Miranium Quantity"
     option_none = 0
@@ -390,7 +404,7 @@ class FrontierNavResourcesQuantity(Choice, CemuSettings):
     ]
 
 
-class FrontierNavNoMiraniumCap(Choice, CemuSettings):
+class FrontierNavNoMiraniumCap(CemuChoice):
     """Removes the Miranium cap caused by missing storage probes"""
     display_name = "Frontier-Nav no Miranium Cap"
     option_off = 0
@@ -403,21 +417,22 @@ class FrontierNavNoMiraniumCap(Choice, CemuSettings):
     ]
 
 
-class EManualChangeTime(Toggle, CemuSettings):
-    """The E-Manual allows you to change the time from your menu"""
-    display_name = "E-Manual Change Time"
-    cemu_pack = "HudChangeTimeFromEmanual"
-
-
-class EquipAlternateRatio(Toggle, CemuSettings):
+class EquipAlternateRatio(CemuChoice):
     """In vanilla, equipment traits have a percent chance to be selected, some of them have 90 or 100%
     , while others have 10%. This mod changes that: everything above 80% is capped at 80%
     , and everything else is set to 20%"""
     display_name = "Treasure Alternate Ratio"
+    option_off = 0
+    option_on = 1
     cemu_pack = "LootEquipmentsAlternateRandomAffix"
+    cemu_option = ""
+    cemu_selection_names = [
+        "off",
+        "on"
+    ]
 
 
-class EquipChestCount(Choice, CemuSettings):
+class EquipChestCount(CemuChoice):
     """Alters the guranteed item count in treasure chests"""
     display_name = "Treasure Chest Count"
     option_none = 0
@@ -434,7 +449,7 @@ class EquipChestCount(Choice, CemuSettings):
     ]
 
 
-class EquipQuality(Choice, CemuSettings):
+class EquipQuality(CemuChoice):
     """Alters the guranteed equipment trait count"""
     display_name = "Treasure Traits"
     option_none = 0
@@ -453,7 +468,7 @@ class EquipQuality(Choice, CemuSettings):
     ]
 
 
-class EquipSlots(Choice, CemuSettings):
+class EquipSlots(CemuChoice):
     """Alters the guranteed equipment augments slots count"""
     display_name = "Augment Slots"
     option_none = 0
@@ -472,7 +487,7 @@ class EquipSlots(Choice, CemuSettings):
     ]
 
 
-class BrokenEquip(Choice, CemuSettings):
+class BrokenEquip(CemuChoice):
     """Alters chance to get broken equipment"""
     display_name = "Broken Treasure"
     option_none = 0
@@ -487,7 +502,7 @@ class BrokenEquip(Choice, CemuSettings):
     ]
 
 
-class MaterialsDropRatio(Choice, CemuSettings):
+class MaterialsDropRatio(CemuChoice):
     """Alters the materials drop ratio"""
     display_name = "Treasure Drop Ratio"
     option_none = 0
@@ -508,7 +523,7 @@ class MaterialsDropRatio(Choice, CemuSettings):
     ]
 
 
-class TreasureQuality(Choice, CemuSettings):
+class TreasureQuality(CemuChoice):
     """Forces a specific quality"""
     display_name = "Treasure Quality"
     option_none = 0
@@ -527,7 +542,7 @@ class TreasureQuality(Choice, CemuSettings):
     ]
 
 
-class MoonJumpWidth(Choice, CemuSettings):
+class MoonJumpWidth(CemuChoice):
     """Alters the jump width"""
     display_name = "Moon Jump Width"
     option_none = 0
@@ -558,7 +573,7 @@ class MoonJumpWidth(Choice, CemuSettings):
     ]
 
 
-class MoonJumpHeight(Choice, CemuSettings):
+class MoonJumpHeight(CemuChoice):
     """Alters the jump height"""
     display_name = "Moon Jump Height"
     option_none = 0
@@ -591,7 +606,7 @@ class MoonJumpHeight(Choice, CemuSettings):
     ]
 
 
-class MoonJumpType(Choice, CemuSettings):
+class MoonJumpType(CemuChoice):
     """Alters the landing type after the jump"""
     display_name = "Moon Jump Type"
     option_short_land = 0
@@ -614,7 +629,7 @@ class MoonJumpType(Choice, CemuSettings):
     ]
 
 
-class RunForrestRun(Choice, CemuSettings):
+class RunForrestRun(CemuChoice):
     """Alters the running speed"""
     display_name = "Run Forrest, Run"
     option_none = 0
@@ -641,7 +656,8 @@ class IncludeCollectopediaLocations(DefaultOnToggle):
 
 
 class IncludeEnemyBookLocations(DefaultOnToggle):
-    """Allows you to get items from completing enemy entries(white dot in the menu) and adds those locations to the pool"""
+    """Allows you to get items from completing enemy entries(white dot in the menu)
+    and adds those locations to the pool"""
     display_name = "Include Enemy Book Locations"
 
 
@@ -650,7 +666,7 @@ class IncludeLocationLocations(DefaultOnToggle):
     display_name = "Include Location Locations"
 
 
-class IncludeGroundArmor(Choice, CemuSettings):
+class IncludeGroundArmor(CemuChoice):
     """Allows you to receive ground armor as items and adds those items to the pool"""
     display_name = "Include Ground Armor Items"
     default = 1
@@ -664,7 +680,7 @@ class IncludeGroundArmor(Choice, CemuSettings):
     ]
 
 
-class IncludeGroundWeapons(Choice, CemuSettings):
+class IncludeGroundWeapons(CemuChoice):
     """Allows you to receive ground weapons as items and adds those items to the pool"""
     display_name = "Include Ground Weapon Items"
     default = 1
@@ -678,7 +694,7 @@ class IncludeGroundWeapons(Choice, CemuSettings):
     ]
 
 
-class IncludeGroundAugments(Choice, CemuSettings):
+class IncludeGroundAugments(CemuChoice):
     """Allows you to receive ground augments as items and adds those items to the pool"""
     display_name = "Include Ground Augment Items"
     default = 1
@@ -692,7 +708,7 @@ class IncludeGroundAugments(Choice, CemuSettings):
     ]
 
 
-class IncludeSkellArmor(Choice, CemuSettings):
+class IncludeSkellArmor(CemuChoice):
     """Allows you to receive skell armor as items and adds those items to the pool"""
     display_name = "Include Skell Armor Items"
     default = 1
@@ -706,7 +722,7 @@ class IncludeSkellArmor(Choice, CemuSettings):
     ]
 
 
-class IncludeSkellWeapons(Choice, CemuSettings):
+class IncludeSkellWeapons(CemuChoice):
     """Allows you to receive skell weapons as items and adds those items to the pool"""
     display_name = "Include Skell Weapons Items"
     default = 1
@@ -720,7 +736,7 @@ class IncludeSkellWeapons(Choice, CemuSettings):
     ]
 
 
-class IncludeSkellAugments(Choice, CemuSettings):
+class IncludeSkellAugments(CemuChoice):
     """Allows you to receive skell augments as items and adds those items to the pool"""
     display_name = "Include Skell Augment Items"
     default = 1
@@ -732,27 +748,6 @@ class IncludeSkellAugments(Choice, CemuSettings):
         "disable",
         "on",
     ]
-
-
-# currently unused
-class SkellWeaponFamily(DefaultOnToggle, CemuSettings):
-    """There is only one check for each Skell-Weapon. If enabled, you will receive ALL Weapon tiers (20, 30, 40, 50, 60)
-     and rarity (_, X, XX), when you receive the item. If disabled, you will receive one Weapon tier and rarity,
-     choosen at random."""
-    display_name = "Receive Entire Skell-Weapon-Family"
-
-
-# currently unused
-class AugmentFamily(DefaultOnToggle, CemuSettings):
-    """There is only one check for each Augment. If enabled, you will receive ALL Augment tiers (I, V, X, XV, XX),
-     when you receive the item. If disabled, you will receive one Augment tier, choosen at random."""
-    display_name = "Receive Entire Augment-Family"
-
-
-# currently unused
-class LogicCheating(Toggle, CemuSettings):
-    """Allows you to get the randomized items the regular way."""
-    display_name = "Logic Cheating"
 
 
 @dataclass
@@ -781,7 +776,6 @@ class XenobladeXOptions(PerGameCommonOptions):
     frontier_nav_resources_frequency: FrontierNavResourcesFrequency
     frontier_nav_resources_quantity: FrontierNavResourcesQuantity
     frontier_nav_no_miranium_cap: FrontierNavNoMiraniumCap
-    e_manual_change_time: EManualChangeTime
     equip_alternate_ratio: EquipAlternateRatio
     equip_chest_count: EquipChestCount
     equip_quality: EquipQuality
@@ -803,4 +797,4 @@ class XenobladeXOptions(PerGameCommonOptions):
 
 def generate_cemu_options(options: XenobladeXOptions) -> list[dict[str, str]]:
     return [asdict(XenobladeXOption(option.cemu_pack, option.cemu_option, option.cemu_selection_names[option.value]))
-            for option in asdict(options).values() if isinstance(option, CemuSettings) and isinstance(option, Option)]
+            for option in asdict(options).values() if isinstance(option, CemuChoice)]

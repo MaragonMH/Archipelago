@@ -40,16 +40,16 @@ class XenobladeXWorld(World):
     web = XenobladeXWeb()
 
     data_version = 0
-    base_id = 4100000
+    base_id: int = 4100000
 
     options_dataclass = XenobladeXOptions
 
     settings: ClassVar[XenobladeXSettings]  # type: ignore
 
-    item_name_to_id = (lambda b_id=base_id: {item.get_item(): b_id + item.id
-                                             for item in xenobladeXItems if item.id is not None})()
-    location_name_to_id = (lambda b_id=base_id: {location.get_location(): b_id + location.id
-                                                 for location in xenobladeXLocations if location.id is not None})()
+    item_name_to_id = (lambda b_id: {item.get_item(): b_id + item.id
+                                     for item in xenobladeXItems if item.id is not None})(base_id)
+    location_name_to_id = (lambda b_id: {location.get_location(): b_id + location.id
+                                         for location in xenobladeXLocations if location.id is not None})(base_id)
 
     def create_regions(self):
         init_region(self.multiworld, self.player, "Menu")

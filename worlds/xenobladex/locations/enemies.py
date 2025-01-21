@@ -2,7 +2,7 @@ from ..Locations import Loc as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_EnBook.html
 # flake8: noqa
-enemies_data = [
+enemies_data: list[Data] = [
 Data("Origin Blatta"),
 Data("Callow Grex"),
 Data("Elder Grex"),

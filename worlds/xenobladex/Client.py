@@ -11,7 +11,7 @@ import random
 import re
 import Utils
 from NetUtils import NetworkItem
-from typing import NamedTuple, Optional, cast
+from typing import NamedTuple, Optional, Set, cast
 from itertools import groupby
 import colorama
 
@@ -166,7 +166,7 @@ class XenobladeXHttpServer(HTTPServer):
         return re.sub(r"[^\w ]", "", message)
 
     def download_locations(self) -> list[GameItem]:
-        locations = []
+        locations: list[GameItem] = []
         if self.upload_in_progress:
             return locations
 
@@ -187,7 +187,7 @@ class XenobladeXHttpServer(HTTPServer):
                  for i in range(starting_index + 3) if 0 < entry[i] < 0xFFFF]
 
     def download_items(self) -> list[GameItem]:
-        items = []
+        items: list[GameItem] = []
         if self.upload_in_progress:
             return items
 
@@ -291,6 +291,7 @@ class XenobladeXContext(CommonContext):
 
     connected = False
     cemu_process: Optional[subprocess.Popen[bytes]] = None
+    locations_checked: Set[int]
 
     def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool = False) -> None:
         self.http_server = XenobladeXHttpServer(('::', 45872), debug=debug)
