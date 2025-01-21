@@ -453,8 +453,9 @@ class XenobladeXContext(CommonContext):
                 raise
             with zipfile.ZipFile(zip_path, "r") as z:
                 for file in z.namelist():
-                    if file.startswith("xenobladex/cemu_graphicpack/"):
-                        z.getinfo(file).filename = os.path.basename(file)
+                    filename = os.path.basename(file)
+                    if file.startswith("xenobladex/cemu_graphicpack/") and filename:
+                        z.getinfo(file).filename = filename
                         z.extract(file, cemu_ap_path)
         except Exception:
             raise Exception(CEMU_APWORLD_NOT_FOUND)
