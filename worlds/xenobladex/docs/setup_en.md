@@ -12,10 +12,11 @@
 1. [Install Cemu](https://cemu.cfw.guide/) to whereever you like
 2. Open Cemu 
 3. In Cemu install the base game and all available DLC and updates
-4. Start Xenobalde X once to make sure it works
-5. Install Archipelago
-6. Open the Archipelago Launcher
-7. Select `Install APWorld` and add the `xenobladex.apworld`
+4. Download the community graphic packs
+5. Start Xenobalde X once to make sure it works
+6. Install Archipelago
+7. Open the Archipelago Launcher
+8. Select `Install APWorld` and add the `xenobladex.apworld`
 
 ## Joining a MultiWorld Game
 
@@ -64,3 +65,7 @@ you dont have to restart the game when its still running.
 Some of these are included in the settings to allow for more flexibility.
 Apart from those you should be fine to use whatever graphical graphic pack you like.
 Other packs might interfere, but that is very unlikely. Feel free to use them.
+
+### How do i manage my saves?
+Usually you should start each MultiWorld with a fresh savefile. The best way to do that is to create a new account.
+Otherwise you can start a new game from the title screen.
