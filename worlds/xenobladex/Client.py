@@ -23,6 +23,7 @@ from worlds.xenobladex import XenobladeXWorld
 from .drops.item import dropItemData
 from .drops.lot import dropLotData
 from .drops.skill import dropSkillsData
+from .items.dollFrames import doll_frame_ids
 from .items.groundAugments import ground_augments_data
 from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
@@ -137,6 +138,8 @@ class XenobladeXHttpServer(HTTPServer):
                     self.items += f"G Tp={item_game_type:08x} Id={item_game_id:08x} A1={gear.affix_1:08x}" \
                                   f"A2={gear.affix_2:08x} A3={gear.affix_3:08x} Sc={gear.slots:08x}\n"
                 else:
+                    if item_game_type == 0x9 and item_name in doll_frame_ids:
+                        item_game_id = doll_frame_ids[item_name]
                     self.items += f"I Tp={item_game_type:08x} Id={item_game_id:08x}\n"
         elif item_game_type < 0x21:
             self.items += f"A Id={item_game_id:08x} Lv={1:08x}\n"
