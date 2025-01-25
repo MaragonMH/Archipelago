@@ -38,6 +38,7 @@ need to configure and export a config file.
     - Field Skills, Arts, Overdrive, FrontierNav, BladeLicense, Skell License, Flight Module
       are no longer obtainable through the story and missions
     - Class and Friendship experience can no longer be obtained
+    - Skells are now delivered without any armor or weapons
     - Shop Terminal is disabled
     - Arms Manufacturer Terminal is disabled except for `Upgrade Battle Traits`
     - L's Shop has been relocated to the Blade Scout Terminal

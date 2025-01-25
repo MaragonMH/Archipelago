@@ -171,7 +171,12 @@ void _addKey(int id, int flag){
 	else if(id == 2) setLocal(1, 0x7610, flag);
 	else if(id == 3) setLocal(1, 0x6bc3, flag);
 	else if(id == 4) changeScenarioFlag(fnetBasePtr, flag*3001);
-	else if(id == 5) setLocal(2, 0x1288, 3);
+	else if(id == 5){
+		// collepedia
+		setLocal(2, 0x1286, 3);
+		// bladeLvl
+		setLocal(2, 0x1288, 3);
+	}
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html

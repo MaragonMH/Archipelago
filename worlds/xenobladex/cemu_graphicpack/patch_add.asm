@@ -369,6 +369,10 @@ _add_L33:
 	cmpwi cr0,r9,5
 	bne cr0,_add_L34
 	li r5,3
+	li r4,4742
+	li r3,2
+	bl setLocal
+	li r5,3
 	li r4,4744
 	li r3,2
 	bl setLocal

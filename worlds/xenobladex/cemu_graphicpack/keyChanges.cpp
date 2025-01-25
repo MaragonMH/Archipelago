@@ -16,6 +16,10 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x020c48c4 = blr # disable Class exp
 0x020c63d8 = blr # disable friend exp
 
+# remove all equipment for new skells
+0x027e2110 = blr # armor
+0x027e2108 = blr # weapon
+
 # filter quest rewards
 0x0229572c = bl _addRewardItemEquipment
 0x022957c4 = bl _addRewardItemEquipment
@@ -202,8 +206,9 @@ void _preItemLoopAdjustmentWrapper(){
 // Overwrite the unlock BladeLvl flag from add.cpp
 void _setLocal(const int width, const int position){
 	register int value asm("r5");
-	if(width == 2 && position == 0x1288 && value == 1){ 
-		value = 0;
+	if(width == 2 && value == 1){
+		if(position == 0x1288 || position == 0x1286)
+			value = 0;
 	}
 
 	// original instruction from 0x0228f018

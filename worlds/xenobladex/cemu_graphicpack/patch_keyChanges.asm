@@ -547,12 +547,16 @@ _setLocal:
 	lwz r9,8(r31)
 	cmpwi cr0,r9,2
 	bne cr0,_keyChanges_L49
-	lwz r9,12(r31)
-	cmpwi cr0,r9,4744
-	bne cr0,_keyChanges_L49
 	mr r9,r5
 	cmpwi cr0,r9,1
 	bne cr0,_keyChanges_L49
+	lwz r9,12(r31)
+	cmpwi cr0,r9,4744
+	beq cr0,_keyChanges_L50
+	lwz r9,12(r31)
+	cmpwi cr0,r9,4742
+	bne cr0,_keyChanges_L49
+_keyChanges_L50:
 	li r5,0
 _keyChanges_L49:
 	lis r9, 0x103a
@@ -576,6 +580,10 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 0x022e2c24 = nop # dont set all the arts/skills/classes if you change your Class
 0x020c48c4 = blr # disable Class exp
 0x020c63d8 = blr # disable friend exp
+
+# remove all equipment for new skells
+0x027e2110 = blr # armor
+0x027e2108 = blr # weapon
 
 # filter quest rewards
 0x0229572c = bl _addRewardItemEquipment
