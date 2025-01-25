@@ -1,5 +1,5 @@
 [Archipelago_classList]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 .origin = codecave
 
 _formatClassText:
@@ -70,7 +70,7 @@ _classList_L2:
 
 
 [Archipelago_classList_V101E]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 getClassLv = 0x02c9560c # ::Menu::MenuDataUtil
 

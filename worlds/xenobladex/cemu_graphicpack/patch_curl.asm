@@ -1,5 +1,5 @@
 [Archipelago_curl]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 .origin = codecave
 
 _uploadHandle:
@@ -295,7 +295,7 @@ _cleanupCurl:
 
 
 [Archipelago_curl_V101E]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 __realloc = 0x03b1af20
 

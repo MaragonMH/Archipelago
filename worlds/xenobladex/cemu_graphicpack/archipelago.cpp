@@ -33,7 +33,7 @@ char* _postDollList(char* stringStartPtr, char* stringCurrentPtr, char* stringEn
 char* _postVeinList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 
 #ifdef V101E
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 
 changeTime = 0x022b36f4 #::GameManager
 writeSystemLog = 0x02c74290 #::MenuTask

@@ -1,5 +1,5 @@
 [Archipelago_fieldSkills]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 .origin = codecave
 
 _formatFieldSkillText:
@@ -83,7 +83,7 @@ _fieldSkills_L2:
 
 
 [Archipelago_fieldSkills_V101E]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 fieldSkillBasePtr = 0x1039c288 # from updateStatus::menu::MenuTotalSimpleStatus line 398
 

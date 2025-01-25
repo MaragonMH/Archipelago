@@ -1,5 +1,5 @@
 [Archipelago_veinList]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 .origin = codecave
 
 _formatVeinsText:
@@ -75,7 +75,7 @@ _veinList_L2:
 
 
 [Archipelago_veinList_V101E]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 getBeacon = 0x027d00f8 # ::fnet::FnetData
 

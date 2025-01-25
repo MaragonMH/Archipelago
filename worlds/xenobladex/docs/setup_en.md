@@ -38,19 +38,20 @@ You can edit the file to suit your preferences and create your own options.
 
 ## Generation and Hosting
 For detailed instructions regarding Generation and Hosting read
-[this](tutorial/Archipelago/setup/en) 
+[this](tutorial/Archipelago/setup/en).
 
 ## Installation Troubleshooting
 
 This is a very early versions so expect issues.
 
 ### Supported Versions
-Currently only the latest PAL version of Xenoblade X is supported
+Currently only the PAL and latest US version of Xenoblade X is supported.
 
 - Cemu
   - Latest at least 2.4+
 - Xenoblade X
-  - 1.0.1E (PAL)
+  - 1.0.1E/1.0.0E (PAL)
+  - 1.0.2U
 
 ### Xenoblade X crashed what should i do?
 If your client is still active just press `Disconnect` and then `Connect` and your game should reopen.

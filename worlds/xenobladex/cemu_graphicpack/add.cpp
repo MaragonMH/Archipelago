@@ -6,7 +6,7 @@ extern int _fieldSkillOffset;
 unsigned int** getItemTypeInfo(int*, int);
 
 #ifdef V101E
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 
 reqMenuAddItemFromId = 0x0234f1a8 # ::CmdReq
 reqMenuAddItemFromInfo = 0x0234f5ec # ::CmdReq
@@ -144,9 +144,15 @@ void _addKey(int id, int flag){
 	// to accomplish this you need to set the scenerio flag to at least 3001=0xbb9
 	// https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinConfig.html value at idx 8
 	// the game is unable to unload during runtime so you need to save and restart to unset
+	// the game unlocks the fnet in two stages at the start of chapter 2 it unlocks the grid view only
+	// after you completed chapter 2 you get access to fast travel and the game manually unlocks each fn-node
 
 	// 5: BLADE
-	// but here you need at least 3002
+	// there is not really a check in the game for the blade license
+	// it only really checks if you are at least in chapter 3 via scenario flag 3002
+	// the overriden check for the terminals can be found in keyChanges
+	// but the blade rank exp is unlocked seperately at the start of chapter 3
+	// get setLocal from id from there by trial and error
 
 	if(id == 0) setLocal(0x10, 1, flag);
 	else if(id == 6){
@@ -154,13 +160,18 @@ void _addKey(int id, int flag){
 		getCharaHandle(charaHandle, 0);
 		SetDead(0, charaHandle);
 	}
+	// Only for testing
 	else if(id == 7) _reqForceDamagePlayerTargetGoner(0);
+	else if(id == 8) changeScenarioFlag(fnetBasePtr, flag);
+	else if(id == 9) setLocal(1, flag, 1);
+
 	else _addItem(0x1d, 24 + id - 1);
 	
 	if(id == 1) setLocal(1, 0x5e5b, flag);
 	else if(id == 2) setLocal(1, 0x7610, flag);
 	else if(id == 3) setLocal(1, 0x6bc3, flag);
 	else if(id == 4) changeScenarioFlag(fnetBasePtr, flag*3001);
+	else if(id == 5) setLocal(2, 0x1288, 3);
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html

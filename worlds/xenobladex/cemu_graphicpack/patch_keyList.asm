@@ -1,5 +1,5 @@
 [Archipelago_keyList]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 .origin = codecave
 
 _charaHasDied:
@@ -140,7 +140,7 @@ _keyList_L12:
 
 
 [Archipelago_keyList_V101E]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 # IsDollLicense = 0x02a6b81c # menu::MenuArmsCompany
 # IsPermit = 0x021b70a8 # ::Gear::Gear # Overdrive

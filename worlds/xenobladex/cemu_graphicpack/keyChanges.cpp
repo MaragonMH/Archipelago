@@ -3,7 +3,7 @@
 int _hasPreciousItem(int id);
 
 #ifdef V101E
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x021b70bc = bl _IsPermit # replace getLocal inside IsPermit with new check
 0x02b051a4 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
 0x02b051c4 = nop # remove original error message
@@ -54,6 +54,9 @@ beginScript = 0x028cb70c # ::Gimmick::GimmickMapObj
 0x02a326f8 = nop # ground armor
 0x02a32720 = nop # skell weapon
 0x02a32748 = nop # skell armor
+
+# overwrite setLocal for blade flag
+0x0228f018 = bl _setLocal
 
 menuBasePtr = 0x1038ae50 # from error::menu::BladeHomeMenu
 openHudTelop = 0x02c91f3c # ::MenuTask
@@ -167,7 +170,13 @@ int _prepareRentalCharTerminal(int** scriptPtr){
 	int* fldConsoleParamPtr = scriptPtr[0x29];
 	if(__strcmp((char*)fldConsoleParamPtr,"fld_console.sb")) return beginScript(scriptPtr);
 	int fldConsoleScriptId = fldConsoleParamPtr[9];
-	if(fldConsoleScriptId == 2) return beginScript(scriptPtr + 0x98);
+	if(fldConsoleScriptId == 2){
+		if(_hasPreciousItem(24 + 5 - 1)) return beginScript(scriptPtr + 0x98);
+		else {
+			openHudTelop(menuBasePtr, 52);
+			return 0; // does not matter
+		}
+	} 
 	if(fldConsoleScriptId == 0xb) return beginScript(scriptPtr - 0x98);
 	return beginScript(scriptPtr);
 }
@@ -188,4 +197,16 @@ void _preItemLoopAdjustmentWrapper(){
 	idx++;
 	if(value == 0) goto *&_itemLoopEnd;
 	goto *&_itemLoopStart;
+}
+
+// Overwrite the unlock BladeLvl flag from add.cpp
+void _setLocal(const int width, const int position){
+	register int value asm("r5");
+	if(width == 2 && position == 0x1288 && value == 1){ 
+		value = 0;
+	}
+
+	// original instruction from 0x0228f018
+	asm("lis r9, 0x103a");
+	return;
 }

@@ -40,19 +40,27 @@ need to configure and export a config file.
     - Class and Friendship experience can no longer be obtained
     - Shop Terminal is disabled
     - Arms Manufacturer Terminal is disabled except for `Upgrade Battle Traits`
-    - Home Terminal is always unlocked
-    - L's Shop is always available and has been relocated to the Blade Scout Terminal
+    - L's Shop has been relocated to the Blade Scout Terminal
     - For equipment these changes are not effective if disabled in the options
 4. Whenever you get equipment via Archipelago the traits will be seeded according to the possible
    traits from within the game. This means that you can only get the traits, that specific piece would 
    have if it were dropped from the usual place inside the game. However every item drop has a 
    unique chance at a higher rarity depending on the enemy it dropped from. Therefore it's fixed at the maximum chance of 5%.
 
-Archipelago only updates when overworld time is progressing
+Archipelago only updates when overworld time is progressing.
 
 ## What is the goal of Xenoblade X when randomized?
-Finish the story and defeat the final boss
+Finish the story and defeat the final boss.
 
 ## What do items look like in Xenoblade X?
 You can't see the items you get yet, but you will be notified through ingame text messages whenever
-you found or received a item
+you found or received a item.
+
+## Whats next?
+I wanna randomize the shops in the future, because currently the optional missions and the AM leveling is mostly useless.
+
+## Known Issues
+- There is currently a chance that you will crash when you trigger a event/cutscene.
+- The first time you talk with the new L'shop you will still get denied by the `Only available online` prompt.
+- The website option generation does not work because there are too many items (worked on older versions: 0.5.1).
+- There is currently no logic. Either cheat the items, when you know where they are from hints or include them in the `start_inventory`.

@@ -1,5 +1,5 @@
 [Archipelago_keyChanges]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 .origin = codecave
 
 disableGroundArmor:
@@ -446,23 +446,38 @@ _keyChanges_L41:
 	lwz r9,12(r31)
 	cmpwi cr0,r9,2
 	bne cr0,_keyChanges_L43
+	li r3,28
+	bl _hasPreciousItem
+	mr r9,r3
+	addic r10,r9,-1
+	subfe r9,r10,r9
+	cmpwi cr0,r9,0
+	beq cr0,_keyChanges_L44
 	lwz r9,24(r31)
 	addi r9,r9,608
 	mr r3,r9
 	bl beginScript
 	mr r9,r3
 	b _keyChanges_L42
+_keyChanges_L44:
+	lis r9,menuBasePtr@ha
+	lwz r9,menuBasePtr@l(r9)
+	li r4,52
+	mr r3,r9
+	bl openHudTelop
+	li r9,0
+	b _keyChanges_L42
 _keyChanges_L43:
 	lwz r9,12(r31)
 	cmpwi cr0,r9,11
-	bne cr0,_keyChanges_L44
+	bne cr0,_keyChanges_L45
 	lwz r9,24(r31)
 	addi r9,r9,-608
 	mr r3,r9
 	bl beginScript
 	mr r9,r3
 	b _keyChanges_L42
-_keyChanges_L44:
+_keyChanges_L45:
 	lwz r3,24(r31)
 	bl beginScript
 	mr r9,r3
@@ -513,20 +528,43 @@ _preItemLoopAdjustment:
 	mr r18,r9
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_keyChanges_L46
+	bne cr0,_keyChanges_L47
 	lis r9,_itemLoopEnd@ha
 	addi r9,r9,_itemLoopEnd@l
 	mtctr r9
 	bctr
-_keyChanges_L46:
+_keyChanges_L47:
 	lis r9,_itemLoopStart@ha
 	addi r9,r9,_itemLoopStart@l
 	mtctr r9
 	bctr
+_setLocal:
+	stwu r1,-32(r1)
+	stw r31,28(r1)
+	mr r31,r1
+	stw r3,8(r31)
+	stw r4,12(r31)
+	lwz r9,8(r31)
+	cmpwi cr0,r9,2
+	bne cr0,_keyChanges_L49
+	lwz r9,12(r31)
+	cmpwi cr0,r9,4744
+	bne cr0,_keyChanges_L49
+	mr r9,r5
+	cmpwi cr0,r9,1
+	bne cr0,_keyChanges_L49
+	li r5,0
+_keyChanges_L49:
+	lis r9, 0x103a
+	nop
+	addi r11,r31,32
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
 
 
 [Archipelago_keyChanges_V101E]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 0x021b70bc = bl _IsPermit # replace getLocal inside IsPermit with new check
 0x02b051a4 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
 0x02b051c4 = nop # remove original error message
@@ -577,6 +615,9 @@ beginScript = 0x028cb70c # ::Gimmick::GimmickMapObj
 0x02a326f8 = nop # ground armor
 0x02a32720 = nop # skell weapon
 0x02a32748 = nop # skell armor
+
+# overwrite setLocal for blade flag
+0x0228f018 = bl _setLocal
 
 menuBasePtr = 0x1038ae50 # from error::menu::BladeHomeMenu
 openHudTelop = 0x02c91f3c # ::MenuTask

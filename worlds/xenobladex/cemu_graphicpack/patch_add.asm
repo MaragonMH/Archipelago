@@ -1,5 +1,5 @@
 [Archipelago_add]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 .origin = codecave
 
 _addItem:
@@ -302,6 +302,25 @@ _add_L25:
 	b _add_L24
 _add_L26:
 	lwz r9,24(r31)
+	cmpwi cr0,r9,8
+	bne cr0,_add_L27
+	lis r9,fnetBasePtr@ha
+	lwz r9,fnetBasePtr@l(r9)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl changeScenarioFlag
+	b _add_L24
+_add_L27:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,9
+	bne cr0,_add_L28
+	li r5,1
+	lwz r4,28(r31)
+	li r3,1
+	bl setLocal
+	b _add_L24
+_add_L28:
+	lwz r9,24(r31)
 	addi r9,r9,23
 	mr r4,r9
 	li r3,29
@@ -309,34 +328,34 @@ _add_L26:
 _add_L24:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,1
-	bne cr0,_add_L27
+	bne cr0,_add_L29
 	lwz r5,28(r31)
 	li r4,24155
 	li r3,1
 	bl setLocal
-	b _add_L31
-_add_L27:
+	b _add_L34
+_add_L29:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,2
-	bne cr0,_add_L29
+	bne cr0,_add_L31
 	lwz r5,28(r31)
 	li r4,30224
 	li r3,1
 	bl setLocal
-	b _add_L31
-_add_L29:
+	b _add_L34
+_add_L31:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,3
-	bne cr0,_add_L30
+	bne cr0,_add_L32
 	lwz r5,28(r31)
 	li r4,27587
 	li r3,1
 	bl setLocal
-	b _add_L31
-_add_L30:
+	b _add_L34
+_add_L32:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,4
-	bne cr0,_add_L31
+	bne cr0,_add_L33
 	lis r9,fnetBasePtr@ha
 	lwz r10,fnetBasePtr@l(r9)
 	lwz r9,28(r31)
@@ -344,7 +363,16 @@ _add_L30:
 	mr r4,r9
 	mr r3,r10
 	bl changeScenarioFlag
-_add_L31:
+	b _add_L34
+_add_L33:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,5
+	bne cr0,_add_L34
+	li r5,3
+	li r4,4744
+	li r3,2
+	bl setLocal
+_add_L34:
 	nop
 	addi r11,r31,48
 	lwz r0,4(r11)
@@ -378,7 +406,7 @@ _addClass:
 
 
 [Archipelago_add_V101E]
-moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 reqMenuAddItemFromId = 0x0234f1a8 # ::CmdReq
 reqMenuAddItemFromInfo = 0x0234f5ec # ::CmdReq
