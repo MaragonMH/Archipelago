@@ -14,6 +14,5 @@ Data("FNet"),
 Data("Blade"),
 Data("Death", count=0),
 Data("Kill Enemy", count=0),
-Data("L Shop"),
 *other_data,
 ]

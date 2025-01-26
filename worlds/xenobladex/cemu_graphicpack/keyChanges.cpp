@@ -16,6 +16,15 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x020c48c4 = blr # disable Class exp
 0x020c63d8 = blr # disable friend exp
 
+# remove all equipment for new playable characters
+0x027e2100 = blr # armor
+# todo weapon, but that crashes the game
+
+# remove arts/skills for new playable characters
+0x026a52e8 = blr # disable OpenArts::CharacterData
+0x026a5308 = blr # disable OpenSkills::CharacterData
+0x027e41f8 = b 0x027e4334 # disable automatic skill asignment
+
 # remove all equipment for new skells
 0x027e2110 = blr # armor
 0x027e2108 = blr # weapon
