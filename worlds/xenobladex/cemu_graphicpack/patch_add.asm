@@ -177,6 +177,8 @@ _addArt:
 	stw r4,28(r31)
 	li r9,0
 	stw r9,8(r31)
+	b _add_L19
+_add_L20:
 	lwz r3,8(r31)
 	bl GetCharaDataPtr
 	mr r9,r3
@@ -185,6 +187,14 @@ _addArt:
 	lwz r4,24(r31)
 	mr r3,r9
 	bl reqMenuSetArtsLevel
+	lwz r9,8(r31)
+	addi r9,r9,1
+	stw r9,8(r31)
+_add_L19:
+	lwz r9,8(r31)
+	cmpwi cr0,r9,18
+	ble cr0,_add_L20
+	nop
 	nop
 	addi r11,r31,48
 	lwz r0,4(r11)
@@ -202,6 +212,8 @@ _addSkill:
 	stw r4,28(r31)
 	li r9,0
 	stw r9,8(r31)
+	b _add_L22
+_add_L23:
 	lwz r3,8(r31)
 	bl GetCharaDataPtr
 	mr r9,r3
@@ -210,6 +222,14 @@ _addSkill:
 	lwz r4,24(r31)
 	mr r3,r9
 	bl reqMenuSetSkillLevel
+	lwz r9,8(r31)
+	addi r9,r9,1
+	stw r9,8(r31)
+_add_L22:
+	lwz r9,8(r31)
+	cmpwi cr0,r9,18
+	ble cr0,_add_L23
+	nop
 	nop
 	addi r11,r31,48
 	lwz r0,4(r11)
@@ -274,16 +294,16 @@ _addKey:
 	stw r4,28(r31)
 	lwz r9,24(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_add_L23
+	bne cr0,_add_L27
 	lwz r5,28(r31)
 	li r4,1
 	li r3,16
 	bl setLocal
-	b _add_L24
-_add_L23:
+	b _add_L28
+_add_L27:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,6
-	bne cr0,_add_L25
+	bne cr0,_add_L29
 	li r4,0
 	addi r9,r31,8
 	mr r3,r9
@@ -292,70 +312,70 @@ _add_L23:
 	mr r4,r9
 	li r3,0
 	bl SetDead
-	b _add_L24
-_add_L25:
+	b _add_L28
+_add_L29:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,7
-	bne cr0,_add_L26
+	bne cr0,_add_L30
 	li r3,0
 	bl _reqForceDamagePlayerTargetGoner
-	b _add_L24
-_add_L26:
+	b _add_L28
+_add_L30:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,8
-	bne cr0,_add_L27
+	bne cr0,_add_L31
 	lis r9,fnetBasePtr@ha
 	lwz r9,fnetBasePtr@l(r9)
 	lwz r4,28(r31)
 	mr r3,r9
 	bl changeScenarioFlag
-	b _add_L24
-_add_L27:
+	b _add_L28
+_add_L31:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,9
-	bne cr0,_add_L28
+	bne cr0,_add_L32
 	li r5,1
 	lwz r4,28(r31)
 	li r3,1
 	bl setLocal
-	b _add_L24
-_add_L28:
+	b _add_L28
+_add_L32:
 	lwz r9,24(r31)
 	addi r9,r9,23
 	mr r4,r9
 	li r3,29
 	bl _addItem
-_add_L24:
+_add_L28:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,1
-	bne cr0,_add_L29
+	bne cr0,_add_L33
 	lwz r5,28(r31)
 	li r4,24155
 	li r3,1
 	bl setLocal
-	b _add_L34
-_add_L29:
+	b _add_L38
+_add_L33:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,2
-	bne cr0,_add_L31
+	bne cr0,_add_L35
 	lwz r5,28(r31)
 	li r4,30224
 	li r3,1
 	bl setLocal
-	b _add_L34
-_add_L31:
+	b _add_L38
+_add_L35:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,3
-	bne cr0,_add_L32
+	bne cr0,_add_L36
 	lwz r5,28(r31)
 	li r4,27587
 	li r3,1
 	bl setLocal
-	b _add_L34
-_add_L32:
+	b _add_L38
+_add_L36:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,4
-	bne cr0,_add_L33
+	bne cr0,_add_L37
 	lis r9,fnetBasePtr@ha
 	lwz r10,fnetBasePtr@l(r9)
 	lwz r9,28(r31)
@@ -363,11 +383,11 @@ _add_L32:
 	mr r4,r9
 	mr r3,r10
 	bl changeScenarioFlag
-	b _add_L34
-_add_L33:
+	b _add_L38
+_add_L37:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,5
-	bne cr0,_add_L34
+	bne cr0,_add_L38
 	li r5,3
 	li r4,4742
 	li r3,2
@@ -376,7 +396,7 @@ _add_L33:
 	li r4,4744
 	li r3,2
 	bl setLocal
-_add_L34:
+_add_L38:
 	nop
 	addi r11,r31,48
 	lwz r0,4(r11)

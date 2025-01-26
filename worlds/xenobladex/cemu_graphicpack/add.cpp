@@ -109,14 +109,14 @@ int _hasPreciousItem(int id){
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ArtsList.html
 void _addArt(int id, int lv){
-	int mainCharacterId = 0;
-	reqMenuSetArtsLevel((char*)GetCharaDataPtr(mainCharacterId), id, lv, 0);
+	for (int charId = 0; charId < 0x13; charId++)
+		reqMenuSetArtsLevel((char*)GetCharaDataPtr(charId), id, lv, 0);
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_SkillClass.html
 void _addSkill(int id, int lv){
-	int mainCharacterId = 0;
-	reqMenuSetSkillLevel((char*)GetCharaDataPtr(mainCharacterId), id, lv, 0);
+	for (int charId = 0; charId < 0x13; charId++)
+		reqMenuSetSkillLevel((char*)GetCharaDataPtr(charId), id, lv, 0);
 }
 
 // https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_PcList.html
