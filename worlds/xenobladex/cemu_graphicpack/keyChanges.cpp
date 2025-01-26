@@ -18,7 +18,8 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 
 # remove all equipment for new playable characters
 0x027e2100 = blr # armor
-# todo weapon, but that crashes the game
+0x027e44e8 = bl _getDefaultWeapon
+0x027e4558 = bl _getDefaultWeapon
 
 # remove arts/skills for new playable characters
 0x026a52e8 = blr # disable OpenArts::CharacterData
@@ -88,6 +89,10 @@ extern void* _itemLoopStart;
 extern void* _itemLoopEnd;
 
 int __strcmp (const char* str1, const char* str2);
+int __sprintf_s(char *buffer, size_t sizeOfBuffer, const char *format, ...);
+
+int* getFP(const char* bdat);
+int getValCheck(int* bdatPtr, const char* columnName, int id, int offset);
 
 void openHudTelop(int* menuBasePtr, int errorIdx);
 int chkLv(int p1, int p2);
@@ -117,6 +122,20 @@ int _assignDollCheck(int p1, int p2){
 		return 0;
 	}
 	return 1;
+}
+
+// overwrite starting weapon with default weapon
+// from https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_PcList.html for Weapon calls
+// take class instead and match https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_ClassInfo.html#30
+// to get default weapon
+int _getDefaultWeapon(int* DEF_PcList_bdat, char weaponColumn[], int charId, int offset){
+	int* bdatPtr = getFP("CHR_ClassInfo");
+	int classId = getValCheck(DEF_PcList_bdat, "ClassType", charId, 1) >> 0x18;
+	// convert DefWpnFar -> FarWeapon
+	char newWeaponColumn[0x20];
+	char* weaponType = weaponColumn + 6; 
+	__sprintf_s(newWeaponColumn, 0x20, "%sWeapon", weaponType);
+	return getValCheck(bdatPtr, newWeaponColumn, classId, 1) >> 0x8;
 }
 
 // keep in mind that you need to reload your skell to trigger this
