@@ -2,6 +2,7 @@ import asyncio
 import os
 import pathlib
 import shutil
+import sys
 import zipfile
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -555,12 +556,12 @@ async def main(args) -> None:
     await ctx.shutdown()
 
 
-def launch() -> None:
+def launch(*args) -> None:
     parser = get_base_parser()
     parser.add_argument("-d", "--debug", action="store_true", help="Enable full server exposure for debugging purposes")
     parser.add_argument('--name', default=None, help="Slot Name to connect as.")
     parser.add_argument("url", nargs="?", help="Archipelago connection url")
-    args = parser.parse_args()
+    args = parser.parse_args(args)
 
     colorama.init()
     asyncio.run(main(args))
@@ -568,4 +569,4 @@ def launch() -> None:
 
 
 if __name__ == '__main__':
-    launch()
+    launch(*sys.argv[1:])

@@ -1,6 +1,7 @@
 from BaseClasses import Tutorial
 from ..AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
+from functools import partial
 from typing import cast, ClassVar
 from .Slot import generate_slot_data
 from .Regions import init_region
@@ -13,7 +14,7 @@ from .Settings import XenobladeXSettings
 
 def launch_client(*args):
     from .Client import launch
-    launch_subprocess(launch, name="XenobladeXClient")
+    launch_subprocess(partial(launch, *args), name="XenobladeXClient")
 
 
 components.append(Component("Xenoblade X Client", func=launch_client, component_type=Type.CLIENT,

@@ -222,8 +222,6 @@ components: List[Component] = [
     Component('ChecksFinder Client', 'ChecksFinderClient'),
     # Starcraft 2
     Component('Starcraft 2 Client', 'Starcraft2Client'),
-    # Xenoblade X
-    Component('Xenoblade X Client', 'XenobladeXClient'),
     # Wargroove
     Component('Wargroove Client', 'WargrooveClient'),
     # Zillion
