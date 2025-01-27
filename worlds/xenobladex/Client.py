@@ -9,6 +9,7 @@ from socketserver import BaseServer
 import socket
 import random
 import re
+import urllib.parse
 import Utils
 from NetUtils import NetworkItem
 from typing import NamedTuple, Optional, Set, cast
@@ -519,14 +520,23 @@ async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
         await asyncio.sleep(0.5)
 
 
-async def main() -> None:
-    parser = get_base_parser()
-    parser.add_argument("-d", "--debug", action="store_true", help="Enable full server exposure for debugging purposes")
-    args = parser.parse_args()
-
+async def main(args) -> None:
     Utils.init_logging("XenobladeXClient", exception_logger="Client")
 
+    # handle if launched using the "archipelago://name:pass@host:port" url from webhost
+    if args.url:
+        url = urllib.parse.urlparse(args.url)
+        if url.scheme == "archipelago":
+            args.connect = url.netloc
+            if url.username:
+                args.name = urllib.parse.unquote(url.username)
+            if url.password:
+                args.password = urllib.parse.unquote(url.password)
+        else:
+            logger.error(f"bad url, found {args.url}, expected url in form of archipelago://archipelago.gg:38281")
+
     ctx = XenobladeXContext(args.connect, args.password, args.debug)
+    ctx.auth = args.name
     if ctx.server_task is None:
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
@@ -546,6 +556,16 @@ async def main() -> None:
 
 
 def launch() -> None:
+    parser = get_base_parser()
+    parser.add_argument("-d", "--debug", action="store_true", help="Enable full server exposure for debugging purposes")
+    parser.add_argument('--name', default=None, help="Slot Name to connect as.")
+    parser.add_argument("url", nargs="?", help="Archipelago connection url")
+    args = parser.parse_args()
+
     colorama.init()
-    asyncio.run(main())
+    asyncio.run(main(args))
     colorama.deinit()
+
+
+if __name__ == '__main__':
+    launch()

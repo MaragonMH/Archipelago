@@ -11,12 +11,13 @@ from .Options import XenobladeXOptions
 from .Settings import XenobladeXSettings
 
 
-def launch_client():
+def launch_client(*args):
     from .Client import launch
     launch_subprocess(launch, name="XenobladeXClient")
 
 
-components.append(Component("Xenoblade X Client", func=launch_client, component_type=Type.CLIENT))
+components.append(Component("Xenoblade X Client", func=launch_client, component_type=Type.CLIENT,
+                            game_name="Xenoblade X", supports_uri=True))
 
 
 class XenobladeXWeb(WebWorld):
