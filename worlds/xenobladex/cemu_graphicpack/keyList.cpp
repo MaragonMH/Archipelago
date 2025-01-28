@@ -47,7 +47,8 @@ char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEnd
 		// 1: flag = IsDollLicense();
 		// 2: flag = getLocal(1, 0x7610); // from int getFlightUnitFlag(); // ::SquadUtil
 		// 3: flag = IsPermit();
-		else _hasPreciousItem(24 + keyId - 1);
+		else 
+			flag = _hasPreciousItem(24 + keyId - 1);
 
 		stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, "KY Id=%01x Fg=%01x:", keyId, flag);
 

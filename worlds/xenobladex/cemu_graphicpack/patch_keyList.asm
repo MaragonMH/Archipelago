@@ -48,6 +48,8 @@ _keyList_L5:
 	addi r9,r9,23
 	mr r3,r9
 	bl _hasPreciousItem
+	mr r9,r3
+	stw r9,12(r31)
 _keyList_L4:
 	lwz r10,36(r31)
 	lwz r7,12(r31)
