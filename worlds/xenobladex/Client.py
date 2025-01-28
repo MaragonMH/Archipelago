@@ -400,8 +400,7 @@ class XenobladeXContext(CommonContext):
     def upload_game_items(self) -> None:
         self.http_server.clear_uploaded_items()
         uploaded_items = self.http_server.download_items()
-        server_items = {network_item.item for network_item in self.items_received
-                        if self.slot_concerns_self(network_item.player)}
+        server_items = {network_item.item for network_item in self.items_received}
         for item in server_items:
             uploaded_item = next((itm for itm in uploaded_items
                                   if item == self.game_item_to_archipelago_item(itm)), None)
