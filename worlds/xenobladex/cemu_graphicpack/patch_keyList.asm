@@ -141,12 +141,9 @@ _keyList_L12:
 	blr
 
 
-[Archipelago_keyList_V101E]
+[Archipelago_keyList_ALL]
 moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
-# IsDollLicense = 0x02a6b81c # menu::MenuArmsCompany
-# IsPermit = 0x021b70a8 # ::Gear::Gear # Overdrive
-# isGameCond = 0x0226747c # ::GameCond
 fnetBasePtr = 0x1039c258 # from getFnetData::fnet::FnetDataAccessor
 
 request = 0x023e0458 # CompoControl::CtrlRequesti

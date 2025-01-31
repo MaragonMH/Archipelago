@@ -110,7 +110,7 @@ _fnNodeList_L2:
 	blr
 
 
-[Archipelago_fnNodeList_V101E]
+[Archipelago_fnNodeList_ALL]
 moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 checkDP = 0x027d346c # ::fnet::FnetDataAccesor

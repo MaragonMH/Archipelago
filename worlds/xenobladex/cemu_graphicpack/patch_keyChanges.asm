@@ -1,5 +1,5 @@
 [Archipelago_keyChanges]
-moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07, 0xF882D5CF, 0x218F6E07, 0x30B6E091 # 1.0.1E, 1.0.2U, 1.0.0E, 1.0.1E, 1.0.0E, 1.0.2U
 .origin = codecave
 
 disableGroundArmor:
@@ -613,11 +613,15 @@ _setLocal:
 	mr r9,r5
 	cmpwi cr0,r9,1
 	bne cr0,_keyChanges_L51
-	lwz r9,12(r31)
-	cmpwi cr0,r9,4744
+	lis r9,_collepediaFlag@ha
+	lwz r9,_collepediaFlag@l(r9)
+	lwz r10,12(r31)
+	cmpw cr0,r10,r9
 	beq cr0,_keyChanges_L52
-	lwz r9,12(r31)
-	cmpwi cr0,r9,4742
+	lis r9,_bladeFlag@ha
+	lwz r9,_bladeFlag@l(r9)
+	lwz r10,12(r31)
+	cmpw cr0,r10,r9
 	bne cr0,_keyChanges_L51
 _keyChanges_L52:
 	li r5,0
@@ -630,11 +634,9 @@ _keyChanges_L51:
 	blr
 
 
-[Archipelago_keyChanges_V101E]
+[Archipelago_keyChanges_ALL]
 moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 0x021b70bc = bl _IsPermit # replace getLocal inside IsPermit with new check
-0x02b051a4 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
-0x02b051c4 = nop # remove original error message
 0x022e9920 = nop # restructure online skell flight module check to always use this one
 0x022e9934 = bl _loadSkyUnit # replace online skell flight module call with own
 0x027d6da0 = bl _loadFNet # replace getScenarioFlag for initial load
@@ -665,11 +667,6 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 0x022958f4 = bl _addRewardItemEquipment
 # filter treasure box rewards
 0x022d8d50 = bl _addRewardItemEquipment
-# filter enemy rewards
-0x02b07540 = bl _getItemNumAdjusted
-0x02b076d4 = b _preItemLoopAdjustment
-_itemLoopStart = 0x02b07584
-_itemLoopEnd = 0x02b076e8
 
 # disable field skills
 0x0238e138 = nop
@@ -683,9 +680,31 @@ shopTerminalScenarioFlagPtr = 0x20343634
 0x02814cf4 = b _prepareBladeTerminal # in loadEnd::ScriptManager
 
 # reconfigure rentalCharTerminal to LShop
-__strcmp = 0x03b16c50
 0x028eacc8 = bl _prepareRentalCharTerminal
 beginScript = 0x028cb70c # ::Gimmick::GimmickMapObj
+
+# overwrite setLocal for blade flag
+0x0228f018 = bl _setLocal
+
+menuBasePtr = 0x1038ae50 # from error::menu::BladeHomeMenu
+addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
+getItem = 0x021ab180 # ::ItemDrop::ItemDropManager
+getItemNum = 0x021ab164 # ::ItemDrop::ItemDropManager
+
+
+[Archipelago_keyChanges_V101E]
+moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+
+0x02b051a4 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
+0x02b051c4 = nop # remove original error message
+
+# filter enemy rewards
+0x02b07540 = bl _getItemNumAdjusted
+0x02b076d4 = b _preItemLoopAdjustment
+_itemLoopStart = 0x02b07584
+_itemLoopEnd = 0x02b076e8
+
+__strcmp = 0x03b16c50
 
 # mandatory disable shops
 0x02a32770 = nop # skell frame
@@ -697,14 +716,38 @@ beginScript = 0x028cb70c # ::Gimmick::GimmickMapObj
 0x02a32720 = nop # skell weapon
 0x02a32748 = nop # skell armor
 
-# overwrite setLocal for blade flag
-0x0228f018 = bl _setLocal
-
-menuBasePtr = 0x1038ae50 # from error::menu::BladeHomeMenu
 openHudTelop = 0x02c91f3c # ::MenuTask
 chkLv = 0x02af8e7c # ::menu::MenuDollGarage
-addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
-getItem = 0x021ab180 # ::ItemDrop::ItemDropManager
-getItemNum = 0x021ab164 # ::ItemDrop::ItemDropManager
+
+
+[Archipelago_keyChanges_V102U]
+moduleMatches = 0x30B6E091 # 1.0.2U
+
+0x02b05194 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
+0x02b051b4 = nop # remove original error message
+
+# filter enemy rewards
+0x02b07530 = bl _getItemNumAdjusted
+0x02b076c4 = b _preItemLoopAdjustment
+_itemLoopStart = 0x02b07574
+_itemLoopEnd = 0x02b076d8
+
+# disable affinity quest arts reward
+0x029c7db0 = li r3,0
+
+__strcmp = 0x03b16bd0
+
+# mandatory disable shops
+0x02a32760 = nop # skell frame
+0x02a69944 = nop # augment menu
+0x02a69958 = nop # develop menu
+# optional shops # need paramaterization
+0x02a326c0 = nop # ground weapon
+0x02a326e8 = nop # ground armor
+0x02a32710 = nop # skell weapon
+0x02a32738 = nop # skell armor
+
+openHudTelop = 0x02c91edc # ::MenuTask
+chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 
 

@@ -1,5 +1,5 @@
 [Archipelago_archipelago]
-moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07, 0xF882D5CF, 0x218F6E07, 0x30B6E091 # 1.0.1E, 1.0.2U, 1.0.0E, 1.0.1E, 1.0.0E, 1.0.2U
 .origin = codecave
 
 _postArchipelago:
@@ -803,6 +803,13 @@ _archipelago_L26:
 moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 changeTime = 0x022b36f4 #::GameManager
+
+0x022b3bbc = bl _mainArchipelago # replace bl changeTime
+
+
+[Archipelago_archipelago_V101E]
+moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
+
 writeSystemLog = 0x02c74290 #::MenuTask
 
 __sprintf_s = 0x03133354
@@ -810,6 +817,15 @@ __malloc = 0x03b1aeb0
 __free = 0x03b1afe8
 __strtol = 0x03b1b27c
 
-0x022b3bbc = bl _mainArchipelago # replace bl changeTime
+
+[Archipelago_archipelago_V102U]
+moduleMatches = 0x30B6E091 # 1.0.2U
+
+writeSystemLog = 0x02c74230 #::MenuTask
+
+__sprintf_s = 0x031332d4
+__malloc = 0x03b1ae30
+__free = 0x03b1af68
+__strtol = 0x03b1b1fc
 
 

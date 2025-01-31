@@ -8,12 +8,9 @@ int _hasPreciousItem(int id);
 void _postCurl(char[]);
 void _writeDebug(const char* output);
 
-#ifdef V101E
+#ifdef ALL
 moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 
-# IsDollLicense = 0x02a6b81c # menu::MenuArmsCompany
-# IsPermit = 0x021b70a8 # ::Gear::Gear # Overdrive
-# isGameCond = 0x0226747c # ::GameCond
 fnetBasePtr = 0x1039c258 # from getFnetData::fnet::FnetDataAccessor
 
 request = 0x023e0458 # CompoControl::CtrlRequesti
@@ -23,9 +20,6 @@ request = 0x023e0458 # CompoControl::CtrlRequesti
 extern int** fnetBasePtr;
 
 int _charaHasDied;
-
-// bool IsDollLicense();
-// bool IsPermit();
 
 int request(int* requestCtrlPtr, int code, int placeholder);
 
@@ -44,9 +38,6 @@ char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEnd
 			if (_charaHasDied) _charaHasDied = 0;
 			else continue;
 		}
-		// 1: flag = IsDollLicense();
-		// 2: flag = getLocal(1, 0x7610); // from int getFlightUnitFlag(); // ::SquadUtil
-		// 3: flag = IsPermit();
 		else 
 			flag = _hasPreciousItem(24 + keyId - 1);
 

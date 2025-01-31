@@ -5,7 +5,7 @@ extern int _fieldSkillOffset;
 
 unsigned int** getItemTypeInfo(int*, int);
 
-#ifdef V101E
+#ifdef ALL
 moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 
 reqMenuAddItemFromId = 0x0234f1a8 # ::CmdReq
@@ -16,7 +16,6 @@ SetFriendRank = 0x027faee0 # ::Util
 GetClassDataPtr = 0x027fa7a0 # ::Util
 
 _reqForceDamagePlayerTargetGoner = 0x021a88e4
-SetDead = 0x0298f2f0
 getCharaHandle = 0x02373b9c
 
 GetCharaDataPtr = 0x027f70ac # ::Util
@@ -24,6 +23,21 @@ setLocal = 0x0228f008 # ::GameFlag
 changeScenarioFlag = 0x027d5638 # ::FNet
 addGarage = 0x0234c620 # ::CmdCommon::SceneCmdPrm
 #endif
+
+#ifdef V101E
+moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
+
+SetDead = 0x0298f2f0
+#endif
+
+#ifdef V102U
+moduleMatches = 0x30B6E091 ; 1.0.2U
+
+SetDead = 0x0298f2e0
+#endif
+
+int _collepediaFlag = 0x1286; // from funcCollepedia
+int _bladeFlag = 0x1288; // from updataStatus::MenuTotalSimpleStatus
 
 void reqMenuAddItemFromId(int type, int id, int count);
 void reqMenuAddItemFromInfo(short* item, int count);
@@ -127,7 +141,7 @@ void _addFriend(int id, int lv){
 // 1 = Mechanical, 2 = Biological, 3 = Archeological
 void _addFieldSkill(int id, int lv){
 	char* fieldSkillOffset = fieldSkillBasePtr;
-	fieldSkillOffset += _fieldSkillOffset;
+	fieldSkillOffset += _fieldSkillOffset - 1;
 	fieldSkillOffset += id - 1;
 	*fieldSkillOffset = (char)lv;
 }
@@ -167,15 +181,17 @@ void _addKey(int id, int flag){
 
 	else _addItem(0x1d, 24 + id - 1);
 	
-	if(id == 1) setLocal(1, 0x5e5b, flag);
-	else if(id == 2) setLocal(1, 0x7610, flag);
-	else if(id == 3) setLocal(1, 0x6bc3, flag);
+	int skellLicenseFlag = 0x5e5b; // IsDollLicense
+	int flightModuleFlag = 0x7610; // getFlightUnitFlag
+	int overdriveFlag = 0x6bc3; // IsPermit
+
+	if(id == 1) setLocal(1, skellLicenseFlag, flag);
+	else if(id == 2) setLocal(1, flightModuleFlag, flag);
+	else if(id == 3) setLocal(1, overdriveFlag, flag);
 	else if(id == 4) changeScenarioFlag(fnetBasePtr, flag*3001);
 	else if(id == 5){
-		// collepedia
-		setLocal(2, 0x1286, 3);
-		// bladeLvl
-		setLocal(2, 0x1288, 3);
+		setLocal(2, _collepediaFlag, 3);
+		setLocal(2, _bladeFlag, 3);
 	}
 }
 

@@ -11,6 +11,13 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 
 getInnerEquipmentData = 0x02cc273c # ::menu::MenuEquipUtil::PCData
 #endif
+
+#ifdef V102U
+moduleMatches = 0x30B6E091 ; 1.0.2U
+
+getInnerEquipmentData = 0x02cc26dc # ::menu::MenuEquipUtil::PCData
+#endif
+
 char _formatEquipText[]="EQ CId=%03x Id=%03x Ix=%01x S1Id=%03x U1=%01x S2Id=%03x U2=%01x S3Id=%03x U3=%01x A1Id=%04x A2Id=%04x A3Id=%04x:";
 
 int * getInnerEquipmentData(char* characterPtr, int equipPosition);
