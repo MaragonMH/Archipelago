@@ -15,5 +15,5 @@ Rule("Chapter 8", {Req("FRD: Lao")}),
 Rule("Chapter 9"),
 Rule("Chapter 10"),
 Rule("Chapter 11", {Req("FRD: Gwin")}),
-Rule("Chapter 12", {Req("KEY: Skell License"), Req("KEY: Flight Module")}),
+Rule("Chapter 12", {Req("KEY: Skell License"), Req("SKF"), Req("KEY: Flight Module")}),
 ]

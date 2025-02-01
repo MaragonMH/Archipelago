@@ -53,6 +53,11 @@ class XenobladeXWorld(World):
     location_name_to_id = (lambda b_id: {location.get_location(): b_id + location.id
                                          for location in xenobladeXLocations if location.id is not None})(base_id)
 
+    item_name_groups = {
+        prefix: {itm.get_item() for itm in xenobladeXItems if itm.prefix == prefix}
+        for prefix in {itm.prefix for itm in xenobladeXItems} if prefix
+    }
+
     def create_regions(self):
         init_region(self.multiworld, self.player, "Menu")
         create_locations(self.multiworld, self.player, self.base_id)

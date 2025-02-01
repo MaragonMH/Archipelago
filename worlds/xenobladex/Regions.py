@@ -96,5 +96,8 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
     """Returns true if the state satifies the item requirements"""
     result = True
     for requirement in requirements:
-        result = result and state.has(requirement.name, player, requirement.count)
+        if ":" in requirement.name:
+            result = result and state.has(requirement.name, player, requirement.count)
+        else:
+            result = result and state.has_group(requirement.name, player)
     return result
