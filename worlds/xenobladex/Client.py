@@ -150,16 +150,16 @@ class XenobladeXHttpServer(HTTPServer):
         elif item_game_type < 0x23:
             self.items += f"F Id={item_game_id:08x} Lv={item_game_level * 10:08x}\n"
         elif item_game_type < 0x24:
-            self.items += f"D Id={item_game_id:08x} Lv={item_game_level:08x}\n"
+            self.items += f"D Id={item_game_id:08x} Lv={item_game_level + 1:08x}\n"
         elif item_game_type < 0x25:
             self.items += f"C Id={item_game_id:08x} Lv={10:08x}\n"
 
     def _match_line(self, data: list[GameItem], game_type: Optional[int], regex: str, min: int = 1,
-                    max: int = 0xFFFF, has_lvl: bool = False):
+                    max: int = 0xFFFF, has_lvl: bool = False, lvl_change=lambda lvl: lvl):
         match = re.findall(regex, self.locations, re.MULTILINE)
         match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
-        data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1 if not has_lvl else entry[1])
-                 for entry in match if min <= entry[1] <= max]
+        data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1 if not has_lvl
+                          else lvl_change(entry[1])) for entry in match if min <= entry[1] <= max]
 
     def upload_death(self):
         self.death_link += f"K Id={6:08x} Fg={1:08x}\n"
@@ -215,8 +215,10 @@ class XenobladeXHttpServer(HTTPServer):
                                  r'^DL .*A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4})')
         self._match_line(items, 0x20, r'^AT Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n')
         self._match_line(items, 0x21, r'^SK Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n')
-        self._match_line(items, 0x22, r'^FS Id=([0-9a-fA-F]{1}) Lv=([0-9a-fA-F]{1})\n', has_lvl=True)
-        self._match_line(items, 0x23, r'^FD Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{2}) Ch=.*\n', has_lvl=True)
+        self._match_line(items, 0x22, r'^FD Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{2}) Ch=.*\n',
+                         has_lvl=True, lvl_change=lambda lvl: lvl / 10 if lvl else 0)
+        self._match_line(items, 0x23, r'^FS Id=([0-9a-fA-F]{1}) Lv=([0-9a-fA-F]{1})\n',
+                         has_lvl=True, lvl_change=lambda lvl: lvl - 1)
         self._match_line(items, 0x24, r'^CL Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n')
 
         return items
@@ -378,7 +380,7 @@ class XenobladeXContext(CommonContext):
 
     def archipelago_item_to_game_item(self, archipelago_item_id: int) -> GameItem:
         game_item_type_offset = max([id for id in game_type_item_to_offset.values()
-                                     if id <= archipelago_item_id - XenobladeXWorld.base_id])
+                                     if id < archipelago_item_id - XenobladeXWorld.base_id])
         game_item_type = min([key for key, offset in game_type_item_to_offset.items()
                               if offset == game_item_type_offset])
         return GameItem(game_item_type, (archipelago_item_id - XenobladeXWorld.base_id) - game_item_type_offset)
