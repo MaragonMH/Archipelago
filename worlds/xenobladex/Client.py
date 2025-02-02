@@ -13,7 +13,7 @@ import re
 import urllib.parse
 import Utils
 from NetUtils import NetworkItem
-from typing import NamedTuple, Optional, Set, cast
+from typing import Counter, NamedTuple, Optional, Set, cast
 from itertools import groupby
 import colorama
 
@@ -401,17 +401,16 @@ class XenobladeXContext(CommonContext):
 
     def upload_game_items(self) -> None:
         self.http_server.clear_uploaded_items()
-        uploaded_items = self.http_server.download_items()
-        server_items = {network_item.item for network_item in self.items_received}
-        for item in server_items:
-            uploaded_item = next((itm for itm in uploaded_items
-                                  if item == self.game_item_to_archipelago_item(itm)), None)
-            archipelago_level = self.get_level(item)
-            if uploaded_item is not None and archipelago_level <= uploaded_item.level:
+        uploaded_server_items = self.http_server.download_items()
+        uploaded_items = {self.game_item_to_archipelago_item(itm): itm.level for itm in uploaded_server_items}
+        server_items = Counter(network_item.item for network_item in self.items_received)
+        for item, level in server_items.items():
+            uploaded_level = uploaded_items.get(item, 0)
+            if level <= uploaded_level:
                 continue
             game_item = self.archipelago_item_to_game_item(item)
             self.http_server.upload_item(game_item.type, game_item.id, self.seed_name,
-                                         self.archipelago_item_to_name(item), archipelago_level)
+                                         self.archipelago_item_to_name(item), level)
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try:
