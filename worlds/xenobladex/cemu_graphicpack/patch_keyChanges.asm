@@ -674,9 +674,6 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 # disable affinity quest arts reward
 0x029c7dc0 = li r3,0
 
-# reconfigure BladeTerminal Locks
-bladeTerminalScenarioFlagPtr = 0x20343604
-shopTerminalScenarioFlagPtr = 0x20343634
 0x02814cf4 = b _prepareBladeTerminal # in loadEnd::ScriptManager
 
 # reconfigure rentalCharTerminal to LShop
@@ -705,6 +702,10 @@ _itemLoopStart = 0x02b07584
 _itemLoopEnd = 0x02b076e8
 
 __strcmp = 0x03b16c50
+
+# reconfigure BladeTerminal Locks
+bladeTerminalScenarioFlagPtr = 0x20343604
+shopTerminalScenarioFlagPtr = 0x20343634
 
 # mandatory disable shops
 0x02a32770 = nop # skell frame
@@ -736,6 +737,11 @@ _itemLoopEnd = 0x02b076d8
 0x029c7db0 = li r3,0
 
 __strcmp = 0x03b16bd0
+
+# reconfigure BladeTerminal Locks
+# need further testing
+bladeTerminalScenarioFlagPtr = 0x20343604-0xB821D
+shopTerminalScenarioFlagPtr = 0x20343634-0xB821D
 
 # mandatory disable shops
 0x02a32760 = nop # skell frame
