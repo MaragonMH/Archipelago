@@ -11,7 +11,7 @@
 
 1. [Install Cemu](https://cemu.cfw.guide/) to whereever you like
 2. Open Cemu 
-3. In Cemu install the base game and all available DLC and updates
+3. In Cemu install the base game and all update. DLC is not required
 4. Download the community graphic packs
 5. Start Xenobalde X once to make sure it works
 6. Install Archipelago
