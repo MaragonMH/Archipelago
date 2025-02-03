@@ -13,7 +13,7 @@ import re
 import urllib.parse
 import Utils
 from NetUtils import NetworkItem
-from typing import Counter, NamedTuple, Optional, Set, cast
+from typing import Counter, List, NamedTuple, Optional, Set, cast
 from itertools import groupby
 import colorama
 
@@ -52,9 +52,11 @@ class XenobladeXHttpServer(HTTPServer):
     address_family = socket.AF_INET6
     locations = ""
     items = ""
-    messages = ""
     death_link = ""
+    messages: List[str] = []
     upload_in_progress = False
+    upload_count = 0
+    upload_limit = 25
 
     def __init__(self, server_address, bind_and_activate=True, debug: bool = False) -> None:
         self.debug = debug
@@ -125,10 +127,17 @@ class XenobladeXHttpServer(HTTPServer):
 
     def clear_uploaded_items(self):
         self.items = ""
+        self.upload_count = 0
 
     # Example: Invoke-WebRequest http://localhost:45872/items -Method POST -Body "I Tp=00000007 Id=00000039`n"
     def upload_item(self, item_game_type: int, item_game_id: int, seed_name: Optional[str],
-                    item_name: Optional[str], item_game_level: int = 1):
+                    item_name: str, player_name: str, item_game_level: int = 1):
+        if self.upload_count > self.upload_limit:
+            return
+        self.upload_count += 1
+
+        self.items += self._generate_message(f"From {player_name}", item_name)
+
         if item_game_type == 0:
             self.items += f"K Id={item_game_id:08x} Fg={1:08x}\n"
         elif item_game_type < 0x20:
@@ -158,17 +167,20 @@ class XenobladeXHttpServer(HTTPServer):
                     max: int = 0xFFFF, has_lvl: bool = False, lvl_change=lambda lvl: lvl):
         match = re.findall(regex, self.locations, re.MULTILINE)
         match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
-        data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1 if not has_lvl
+        data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1000 if not has_lvl
                           else lvl_change(entry[1])) for entry in match if min <= entry[1] <= max]
 
     def upload_death(self):
         self.death_link += f"K Id={6:08x} Fg={1:08x}\n"
 
     def upload_message(self, heading: str, body: str):
-        self.messages += f"M {self._sanitize_message(heading)}\r{(self._sanitize_message(body))[:60]}\n"
+        self.messages += [self._generate_message(heading, body)]
 
     def _sanitize_message(self, message: str) -> str:
         return re.sub(r"[^\w ]", "", message)
+
+    def _generate_message(self, heading: str, body: str):
+        return f"M {self._sanitize_message(heading)}\r{(self._sanitize_message(body))[:60]}\n"
 
     def download_locations(self) -> list[GameItem]:
         locations: list[GameItem] = []
@@ -246,10 +258,11 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def get_items(self):
         self.respond_success()
-        items_text = self.http_server.items + self.http_server.messages + self.http_server.death_link
+        messages = "".join(self.http_server.messages[-4:])
+        self.http_server.messages = self.http_server.messages[:-4]
+        items_text = self.http_server.items + self.http_server.death_link + messages
         self.wfile.write(items_text.encode())
         self.http_server.items = ""
-        self.http_server.messages = ""
         self.http_server.death_link = ""
 
     def post_locations(self):
@@ -341,10 +354,7 @@ class XenobladeXContext(CommonContext):
             item: NetworkItem = args["item"]
             sender = item.player
             receiver = args["receiving"]
-            if self.slot_concerns_self(receiver):
-                self.http_server.upload_message(f"From {self.player_names[sender]}",
-                                                self.archipelago_item_to_name(item.item))
-            elif self.slot_concerns_self(sender):
+            if (not self.slot_concerns_self(receiver)) and self.slot_concerns_self(sender):
                 self.http_server.upload_message(f"To {self.player_names[receiver]}",
                                                 self.archipelago_item_to_name(item.item))
         elif print_type == "Chat":
@@ -403,14 +413,16 @@ class XenobladeXContext(CommonContext):
         self.http_server.clear_uploaded_items()
         uploaded_server_items = self.http_server.download_items()
         uploaded_items = {self.game_item_to_archipelago_item(itm): itm.level for itm in uploaded_server_items}
+        player_item_names = {net_item.item: self.player_names[net_item.player] for net_item in self.items_received}
         server_items = Counter(network_item.item for network_item in self.items_received)
         for item, level in server_items.items():
             uploaded_level = uploaded_items.get(item, 0)
             if level <= uploaded_level:
                 continue
             game_item = self.archipelago_item_to_game_item(item)
+            item_name = self.archipelago_item_to_name(item)
             self.http_server.upload_item(game_item.type, game_item.id, self.seed_name,
-                                         self.archipelago_item_to_name(item), level)
+                                         item_name, player_item_names[item], level)
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try:

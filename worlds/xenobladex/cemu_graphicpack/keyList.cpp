@@ -29,7 +29,7 @@ int request(int* requestCtrlPtr, int code, int placeholder);
 // Discovery(Dc): 0, 1, 2. 0 = Not discovered yet (will appear as ??? in menu), 
 // 1 = encountered in combat, 2 = fully researched (white dot in menu)
 char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
-    for(int keyId = 0; keyId < 6; keyId++){
+    for(int keyId = 0; keyId < 9; keyId++){
 		int flag = 0;
 
 		// just for debugging purposes

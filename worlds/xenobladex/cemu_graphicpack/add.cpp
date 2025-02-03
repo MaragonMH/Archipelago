@@ -168,16 +168,17 @@ void _addKey(int id, int flag){
 	// but the blade rank exp is unlocked seperately at the start of chapter 3
 	// get setLocal from id from there by trial and error
 
-	if(id == 0) setLocal(0x10, 1, flag);
-	else if(id == 6){
+	if(id == 6){
 		char charaHandle[8];
 		getCharaHandle(charaHandle, 0);
 		SetDead(0, charaHandle);
 	}
+	
 	// Only for testing
-	else if(id == 7) _reqForceDamagePlayerTargetGoner(0);
-	else if(id == 8) changeScenarioFlag(fnetBasePtr, flag);
-	else if(id == 9) setLocal(1, flag, 1);
+	else if(id == 0x20) setLocal(0x10, 1, flag);
+	else if(id == 0x21) _reqForceDamagePlayerTargetGoner(0);
+	else if(id == 0x22) changeScenarioFlag(fnetBasePtr, flag);
+	else if(id == 0x23) setLocal(1, flag, 1);
 
 	else _addItem(0x1d, 24 + id - 1);
 	

@@ -89,7 +89,7 @@ _keyList_L7:
 	stw r9,8(r31)
 _keyList_L2:
 	lwz r9,8(r31)
-	cmpwi cr0,r9,5
+	cmpwi cr0,r9,8
 	ble cr0,_keyList_L8
 	lwz r9,28(r31)
 	mr r3,r9

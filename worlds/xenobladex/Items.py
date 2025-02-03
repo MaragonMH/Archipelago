@@ -94,10 +94,11 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
     itempool: List[Item] = []
     # Add all important Items, these are always added to the item pool
     for item in xenobladeXImportantItems:
-        itempool += [XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
-                     for _ in range(item.count)]
+        for idx in range(item.count):
+            xeno_item = XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
+            if idx < item.count - world.precollected_items[player].count(xeno_item):
+                itempool += [xeno_item]
 
-    # Add all optional Items to the item pool
     # Add all optional Items to the item pool, these are selected at random,
     # depending on how many slots are left in the location pool
     selected_optional_items: list[Itm] = [item for item in xenobladeXOptionalItems
@@ -110,8 +111,9 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
     for item in xenobladeXOptionalItems:
         if item not in random_items:
             continue
-        itempool += [XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
-                     for _ in range(item.count)]
+        xeno_item = XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
+        if xeno_item not in world.precollected_items[player]:
+            itempool += [xeno_item]
     world.itempool += itempool
 
     world.itempool += [create_filler(player, item_name_to_id) for _ in range(total_locations - len(itempool))]
