@@ -1,6 +1,7 @@
-from collections import OrderedDict
+from collections import Counter, OrderedDict
+import itertools
 import logging
-from random import sample, seed
+from random import sample, seed, choices
 from BaseClasses import Item, ItemClassification as ItCl, MultiWorld
 from dataclasses import dataclass, replace
 from typing import Dict, Generator, List, Optional
@@ -74,18 +75,26 @@ xenobladeXImportantItems = [
     *_Itms.gen("CL", type=0x24, data=classes_data, prog=ItCl.useful),
 ]
 
-xenobladeXOptionalItems = [
-    *_Itms.gen("AMR", type=1, type_count=5, data=ground_armor_data),
-    *_Itms.gen("WPN", type=6, type_count=2, data=ground_weapons_data),
-    *_Itms.gen("SKAMR", type=0xa, type_count=5, data=doll_armor_data),
-    *_Itms.gen("SKWPN", type=0xf, type_count=5, data=doll_weapons_data),
+xenobladeXArmor = [*_Itms.gen("AMR", type=1, type_count=5, data=ground_armor_data)]
+xenobladeXWeapons = [*_Itms.gen("WPN", type=6, type_count=2, data=ground_weapons_data)]
+xenobladeXSkellArmor = [*_Itms.gen("SKAMR", type=0xa, type_count=5, data=doll_armor_data)]
+xenobladeXSkellWeapons = [*_Itms.gen("SKWPN", type=0xf, type_count=5, data=doll_weapons_data)]
+xenobladeXAugments = [
     *_Itms.gen("AUG", type=0x14, type_count=2, data=ground_augments_data),
     *_Itms.gen("SKAUG", type=0x16, type_count=3, data=doll_augment_data),
 ]
 
-xenobladeXItems = [
+xenobladeXOptionalItems: Dict[str | None, List[Itm]] = {
+    xenobladeXArmor[0].prefix: xenobladeXArmor,
+    xenobladeXWeapons[0].prefix: xenobladeXWeapons,
+    xenobladeXSkellArmor[0].prefix: xenobladeXSkellArmor,
+    xenobladeXSkellWeapons[0].prefix: xenobladeXSkellWeapons,
+    xenobladeXAugments[0].prefix: xenobladeXAugments,
+}
+
+xenobladeXItems: List[Itm] = [
     *xenobladeXImportantItems,
-    *xenobladeXOptionalItems,
+    *(itertools.chain(*xenobladeXOptionalItems.values())),
 ]
 
 
@@ -101,16 +110,45 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
 
     # Add all optional Items to the item pool, these are selected at random,
     # depending on how many slots are left in the location pool
-    selected_optional_items: list[Itm] = [item for item in xenobladeXOptionalItems
-                                          if item.prefix is not None and getattr(options, item.prefix.lower()).value]
+    optional_items: List[Itm] = []
+
     # Keep enough space for the victory item_event
     total_locations = len(world.get_unfilled_locations(player)) - 1
-    missing_item_count: int = min(total_locations - len(itempool), len(selected_optional_items))
+    optionals_data = {prefix: len(category) for prefix, category in xenobladeXOptionalItems.items()
+                      if prefix and getattr(options, prefix.lower()).value}
+    optionals_length: int = sum(optionals_data.values())
+    missing_item_count: int = min(total_locations - len(itempool), optionals_length)
+
     seed(world.seed)
-    random_items: list[Itm] = sample(selected_optional_items, missing_item_count)
-    for item in xenobladeXOptionalItems:
-        if item not in random_items:
-            continue
+    max_category_size = 999
+    maxed_categories: list[str] = []
+    optionals_counter: Counter = Counter()
+    while True:
+        optionals_data_temp = optionals_data.copy()
+        # Remove maxed categories from further rolls
+        for prefix in maxed_categories:
+            optionals_data_temp.pop(prefix, None)
+
+        optional_roll = choices([*optionals_data_temp.keys()], [*optionals_data_temp.values()], k=missing_item_count)
+        optionals_counter += Counter(optional_roll)
+
+        # Some categories are too big
+        if max(optionals_counter.values()) > max_category_size:
+            # Reroll the optional items that overflow a category onto the other categories
+            missing_item_count = 0
+            for prefix, count in optionals_counter.items():
+                if count > max_category_size:
+                    missing_item_count += count - max_category_size
+                    optionals_counter.update({prefix: max_category_size})
+                    maxed_categories += [prefix]
+
+        # No oversized categories detected
+        else:
+            for prefix, count in optionals_counter.items():
+                optional_items += sample(xenobladeXOptionalItems[prefix], count)
+            break
+
+    for item in optional_items:
         xeno_item = XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
         if xeno_item not in world.precollected_items[player]:
             itempool += [xeno_item]
