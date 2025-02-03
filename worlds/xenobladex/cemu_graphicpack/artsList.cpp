@@ -20,7 +20,7 @@ char* _postArtsList(char* stringStartPtr, char* stringCurrentPtr, char* stringEn
     for(int characterId = 0; characterId < 0x1; characterId++){
 		char* characterBasePtr = (char*)GetCharaDataPtr(characterId);
 
-		for(int artId = 1; artId < 157; artId++){
+		for(int artId = 1; artId < 158; artId++){
 
 			int level = *(characterBasePtr + artId + artsOffset); 
 			// option to log character name with characterBasePtr and %s in format string

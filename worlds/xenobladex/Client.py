@@ -26,7 +26,8 @@ from .drops.item import dropItemData
 from .drops.lot import dropLotData
 from .drops.skill import dropSkillsData
 from .items.dollFrames import doll_frame_ids
-from .items.groundAugments import ground_augments_data
+from .items.groundAugments import ground_augments_data, ground_augments_type_data
+from .items.dollAugments import doll_augments_type_data
 from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
 from .Options import XenobladeXOption
@@ -119,10 +120,6 @@ class XenobladeXHttpServer(HTTPServer):
             return 5
         if item_game_type == 0xf:
             return 5
-        if item_game_type == 0x14:
-            return 2
-        if item_game_type == 0x16:
-            return 3
         return 1
 
     def clear_uploaded_items(self):
@@ -151,6 +148,12 @@ class XenobladeXHttpServer(HTTPServer):
                 else:
                     if item_game_type == 0x9 and item_name in doll_frame_ids:
                         item_game_id = doll_frame_ids[item_name]
+                    elif 0x14 <= item_game_type <= 0x15:
+                        augment_idx = max([id for id in ground_augments_type_data.keys() if id <= item_game_id])
+                        item_game_type += ground_augments_type_data[augment_idx]
+                    elif 0x16 <= item_game_type <= 0x18:
+                        augment_idx = max([id for id in doll_augments_type_data.keys() if id <= item_game_id])
+                        item_game_type += doll_augments_type_data[augment_idx]
                     self.items += f"I Tp={item_game_type:08x} Id={item_game_id:08x}\n"
         elif item_game_type < 0x21:
             self.items += f"A Id={item_game_id:08x} Lv={1:08x}\n"
