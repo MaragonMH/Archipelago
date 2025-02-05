@@ -3,7 +3,7 @@ from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_ItemSkill_doll.html
 # flake8: noqa
-doll_augment_data: list[Data] = [
+doll_augments_data: list[Data] = [
 Data("SpecUp.HP-MAX I"), 
 Data("SpecUp.HP-MAX II"),
 Data("SpecUp.HP-MAX III"),

@@ -36,48 +36,67 @@ _add_L4:
 	mr r1,r11
 	blr
 _addGear:
-	stwu r1,-80(r1)
+	stwu r1,-64(r1)
 	mflr r0
-	stw r0,84(r1)
-	stw r31,76(r1)
+	stw r0,68(r1)
+	stw r31,60(r1)
 	mr r31,r1
-	stw r3,40(r31)
-	stw r4,44(r31)
-	stw r5,48(r31)
-	stw r6,52(r31)
-	stw r7,56(r31)
-	stw r8,60(r31)
-	lwz r9,44(r31)
+	stw r3,24(r31)
+	stw r4,28(r31)
+	stw r5,32(r31)
+	stw r6,36(r31)
+	stw r7,40(r31)
+	stw r8,44(r31)
+	li r3,16
+	lis r12,_after_add_1__malloc@ha
+	addi r12,r12,_after_add_1__malloc@l
+	mtlr r12
+	lis r12,__malloc@ha
+	addi r12,r12,__malloc@l
+	mtctr r12
+	bctr
+_after_add_1__malloc:
+	mr r9,r3
+	stw r9,12(r31)
+	lwz r9,28(r31)
 	slwi r10,r9,19
-	lwz r9,40(r31)
+	lwz r9,24(r31)
 	slwi r9,r9,13
-	add r10,r10,r9
-	addi r9,r31,12
-	addi r10,r10,8
+	add r9,r10,r9
+	addi r10,r9,8
+	lwz r9,12(r31)
 	stw r10,0(r9)
-	lwz r9,48(r31)
-	slwi r9,r9,4
-	sth r9,24(r31)
-	lwz r9,52(r31)
-	slwi r9,r9,4
-	sth r9,26(r31)
-	lwz r9,56(r31)
-	slwi r9,r9,4
-	sth r9,28(r31)
+	lwz r9,32(r31)
+	mr r10,r9
+	lwz r9,12(r31)
+	addi r9,r9,12
+	slwi r10,r10,4
+	sth r10,0(r9)
+	lwz r9,36(r31)
+	mr r10,r9
+	lwz r9,12(r31)
+	addi r9,r9,14
+	slwi r10,r10,4
+	sth r10,0(r9)
+	lwz r9,40(r31)
+	mr r10,r9
+	lwz r9,12(r31)
+	addi r9,r9,16
+	slwi r10,r10,4
+	sth r10,0(r9)
 	li r9,0
 	stw r9,8(r31)
 	b _add_L6
 _add_L9:
 	lwz r10,8(r31)
-	lwz r9,60(r31)
+	lwz r9,44(r31)
 	cmpw cr0,r10,r9
 	bge cr0,_add_L7
 	lwz r9,8(r31)
 	addi r9,r9,9
 	slwi r9,r9,1
-	addi r10,r31,8
+	lwz r10,12(r31)
 	add r9,r10,r9
-	addi r9,r9,4
 	li r10,0
 	sth r10,0(r9)
 	b _add_L8
@@ -85,9 +104,8 @@ _add_L7:
 	lwz r9,8(r31)
 	addi r9,r9,9
 	slwi r9,r9,1
-	addi r10,r31,8
+	lwz r10,12(r31)
 	add r9,r10,r9
-	addi r9,r9,4
 	li r10,-1
 	sth r10,0(r9)
 _add_L8:
@@ -98,12 +116,20 @@ _add_L6:
 	lwz r9,8(r31)
 	cmpwi cr0,r9,2
 	ble cr0,_add_L9
-	addi r9,r31,12
 	li r4,1
-	mr r3,r9
+	lwz r3,12(r31)
 	bl reqMenuAddItemFromInfo
+	lwz r3,12(r31)
+	lis r12,_after_add_2__free@ha
+	addi r12,r12,_after_add_2__free@l
+	mtlr r12
+	lis r12,__free@ha
+	addi r12,r12,__free@l
+	mtctr r12
+	bctr
+_after_add_2__free:
 	nop
-	addi r11,r31,80
+	addi r11,r31,64
 	lwz r0,4(r11)
 	mtlr r0
 	lwz r31,-4(r11)

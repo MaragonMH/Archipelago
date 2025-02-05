@@ -1,3 +1,5 @@
+#include <cstddef>
+
 extern int itemListBase;
 extern int* fnetBasePtr;
 extern char* fieldSkillBasePtr;
@@ -40,7 +42,7 @@ int _collepediaFlag = 0x1286; // from funcCollepedia
 int _bladeFlag = 0x1288; // from updataStatus::MenuTotalSimpleStatus
 
 void reqMenuAddItemFromId(int type, int id, int count);
-void reqMenuAddItemFromInfo(short* item, int count);
+void reqMenuAddItemFromInfo(unsigned short* item, int count);
 void reqMenuSetArtsLevel(char* characterBasePtr, int id, int lvl, int filler);
 void reqMenuSetSkillLevel(char* characterBasePtr, int id, int lvl, int filler);
 void SetFriendRank(int id, int lvl);
@@ -54,6 +56,9 @@ int * GetCharaDataPtr(int charaId);
 void setLocal(int width, int position, int value);
 void changeScenarioFlag(int* basePtr, int flag);
 void addGarage(int* idPtr);
+
+void* __malloc (size_t size);
+void __free (void* ptr);
 
 
 // 1 = Ground Armor Head			https://xenoblade.github.io/xbx/bdat/common_local_us/AMR_PcList.html
@@ -95,17 +100,20 @@ void _addItem(int type, int id){
 	}
 }
 
+short _gearItem[8] = { 0 };
 void _addGear(int type, int id, int affixId1, int affixId2, int affixId3, int slotCount){
-	short item[8];
-	*(int*)item = (id << 19) + (type << 13) + (1 << 3);
-	item[6] = affixId1 << 4;
-	item[7] = affixId2 << 4;
-	item[8] = affixId3 << 4;
+
+	unsigned short* _gearItem = (unsigned short*)__malloc(8 * sizeof(unsigned short));
+	*(int*)_gearItem = (id << 19) + (type << 13) + (1 << 3);
+	_gearItem[6] = affixId1 << 4;
+	_gearItem[7] = affixId2 << 4;
+	_gearItem[8] = affixId3 << 4;
 	for(int i = 0; i < 3; i++){
-		if (i < slotCount) item[9+i] = 0x0;
-		else item[9+i] = 0xFFFF;
+		if (i < slotCount) _gearItem[9+i] = 0x0;
+		else _gearItem[9+i] = 0xFFFF;
 	}
-	reqMenuAddItemFromInfo(item, 1);
+	reqMenuAddItemFromInfo(_gearItem, 1);
+	__free(_gearItem);
 }
 
 int _hasPreciousItem(int id){

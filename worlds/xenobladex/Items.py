@@ -28,7 +28,7 @@ from .items.arts import arts_data  # noqa: E402
 from .items.classes import classes_data  # noqa: E402
 from .items.dataprobes import dataprobes_data  # noqa: E402
 from .items.dollArmor import doll_armor_data  # noqa: E402
-from .items.dollAugments import doll_augment_data  # noqa: E402
+from .items.dollAugments import doll_augments_data  # noqa: E402
 from .items.dollFrames import doll_frames_data  # noqa: E402
 from .items.dollWeapons import doll_weapons_data  # noqa: E402
 from .items.fieldSkills import field_skills_data  # noqa: E402
@@ -81,7 +81,7 @@ xenobladeXSkellArmor = [*_Itms.gen("SKAMR", type=0xa, type_count=5, data=doll_ar
 xenobladeXSkellWeapons = [*_Itms.gen("SKWPN", type=0xf, type_count=5, data=doll_weapons_data)]
 xenobladeXAugments = [
     *_Itms.gen("AUG", type=0x14, type_count=2, data=ground_augments_data),
-    *_Itms.gen("SKAUG", type=0x16, type_count=3, data=doll_augment_data),
+    *_Itms.gen("SKAUG", type=0x16, type_count=3, data=doll_augments_data),
 ]
 
 xenobladeXOptionalItems: Dict[str | None, List[Itm]] = {

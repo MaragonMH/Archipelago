@@ -97,9 +97,11 @@ class XenobladeXHttpServer(HTTPServer):
         for affix in range(affix_num):
             for skill in dropSkillsData[affix_lot]:
                 if random.random() < skill.prob / 100 and affixes[affix] == 0:
+                    # matching name only from ground augments but works for skell as well because they are name matched
                     affix_id = [x.name for x in ground_augments_data].index(skill.name)
                     if affix_id not in affixes:
                         affixes[affix] = affix_id
+        affixes.sort(reverse=True)
 
         slot_num = 0
         if random.random() < dropLotData[slot_lot].lot1Prob / 100:
@@ -140,14 +142,15 @@ class XenobladeXHttpServer(HTTPServer):
         elif item_game_type < 0x20:
             # Currently the exact type for multitype tables is not saved, so we need to distribute all possible types
             # This requires the game to reject every invalid type + item combination
+            gear = self.generate_gear(item_name, seed_name)
             for item_game_type in range(item_game_type, item_game_type + self.adjustTypeRange(item_game_type)):
-                gear = self.generate_gear(item_name, seed_name)
                 if gear:
-                    self.items += f"G Tp={item_game_type:08x} Id={item_game_id:08x} A1={gear.affix_1:08x}" \
+                    self.items += f"G Tp={item_game_type:08x} Id={item_game_id:08x} A1={gear.affix_1:08x} " \
                                   f"A2={gear.affix_2:08x} A3={gear.affix_3:08x} Sc={gear.slots:08x}\n"
                 else:
                     if item_game_type == 0x9 and item_name in doll_frame_ids:
                         item_game_id = doll_frame_ids[item_name]
+                    # Approach does not work for Augments so do them manually
                     elif 0x14 <= item_game_type <= 0x15:
                         augment_idx = max([id for id in ground_augments_type_data.keys() if id <= item_game_id])
                         item_game_type += ground_augments_type_data[augment_idx]
@@ -180,10 +183,13 @@ class XenobladeXHttpServer(HTTPServer):
         self.messages += [self._generate_message(heading, body)]
 
     def _sanitize_message(self, message: str) -> str:
-        return re.sub(r"[^\w ]", "", message)
+        return re.sub(r"[^\w \-_]", "", message)
 
     def _generate_message(self, heading: str, body: str):
         return f"M {self._sanitize_message(heading)}\r{(self._sanitize_message(body))[:60]}\n"
+
+    def clear_locations(self):
+        self.locations = ""
 
     def download_locations(self) -> list[GameItem]:
         locations: list[GameItem] = []
@@ -263,7 +269,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.respond_success()
         messages = "".join(self.http_server.messages[-4:])
         self.http_server.messages = self.http_server.messages[:-4]
-        items_text = self.http_server.items + self.http_server.death_link + messages
+        items_text = messages + self.http_server.items + self.http_server.death_link
         self.wfile.write(items_text.encode())
         self.http_server.items = ""
         self.http_server.death_link = ""
@@ -341,8 +347,11 @@ class XenobladeXContext(CommonContext):
                     self.tags.add("DeathLink")
                 else:
                     self.tags.discard("DeathLink")
+                self.http_server.clear_locations()
                 self.prepare_cemu(cemu_options)
                 self.connected = True
+        if cmd in {"RoomInfo"}:
+            self.seed_name = args["seed_name"]
 
     def on_deathlink(self, data: dict):
         if "DeathLink" in self.tags:
