@@ -18,7 +18,8 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x020c63d8 = blr # disable friend exp
 
 # remove all equipment for new playable characters
-0x027e2100 = blr # armor
+0x027e43d0 = nop # replace setupPcArmor
+0x027e4474 = nop 
 0x027e44e8 = bl _getDefaultWeapon
 0x027e4558 = bl _getDefaultWeapon
 
@@ -28,8 +29,18 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x027e41f8 = b 0x027e4334 # disable automatic skill asignment
 
 # remove all equipment for new skells
-0x027e2110 = blr # armor
-0x027e2108 = blr # weapon
+# replace setupDollArmor
+0x027ea5f0 = nop
+0x027ea664 = nop
+0x027ea6d8 = nop
+0x027ea74c = nop
+0x027ea7c0 = nop
+# replace setupDollWeapon
+0x027ea85c = nop
+0x027ea8d4 = nop
+0x027ea94c = nop
+0x027ea9c4 = nop
+0x027eaa3c = nop
 
 # filter quest rewards
 0x0229572c = bl _addRewardItemEquipment
