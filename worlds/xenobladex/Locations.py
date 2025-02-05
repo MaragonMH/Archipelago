@@ -1,7 +1,11 @@
 from collections import OrderedDict
 from BaseClasses import Location, MultiWorld
+from Options import Option
 from dataclasses import dataclass, field, replace
 from typing import Generator, Optional
+
+
+from .Options import XenobladeXOptions
 from .Regions import add_region_location, init_region
 
 
@@ -13,6 +17,7 @@ class Loc:
     type: Optional[int] = None
     id: Optional[int] = None
     prefix: Optional[str] = None
+    required: bool = False
 
     def get_location(self):
         return f"{self.prefix}: {self.name}"
@@ -63,10 +68,10 @@ def create_location(world: MultiWorld, region_name: str, location_name: str, pla
                                XenobladeXLocation(player, location_name, abs_id, world.get_region(region_name, player)))
 
 
-def create_locations(world: MultiWorld, player: int, base_id: int):
+def create_locations(world: MultiWorld, options: XenobladeXOptions, player: int, base_id: int):
     for location in xenobladeXLocations:
         if location.prefix is None or location.id is None:
             continue
-        if hasattr(world, location.prefix) and not getattr(world, location.prefix)[player].value:
-            continue
-        create_location(world, location.get_region(), location.get_location(), player, base_id + location.id)
+        location_option: Optional[Option] = getattr(options, location.prefix.lower(), None)
+        if location.required or location_option is None or location_option.value:
+            create_location(world, location.get_region(), location.get_location(), player, base_id + location.id)

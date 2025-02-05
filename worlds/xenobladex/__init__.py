@@ -60,7 +60,7 @@ class XenobladeXWorld(World):
 
     def create_regions(self):
         init_region(self.multiworld, self.player, "Menu")
-        create_locations(self.multiworld, self.player, self.base_id)
+        create_locations(self.multiworld, cast(XenobladeXOptions, self.options), self.player, self.base_id)
 
     def create_items(self):
         create_items(self.multiworld, self.player, self.base_id, self.options, self.item_name_to_id)
