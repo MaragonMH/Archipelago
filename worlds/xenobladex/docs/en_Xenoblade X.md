@@ -61,7 +61,6 @@ you found or received a item.
 I wanna randomize the shops in the future, because currently the optional missions and the AM leveling is mostly useless.
 
 ## Known Issues
-- There is currently a chance that you will crash when you trigger a event/cutscene.
 - The first time you talk with the new L'shop you will still get denied by the `Only available online` prompt.
 - The website option generation does not work because there are too many items (worked on older versions: 0.5.1).
 - There is currently no logic. Either cheat the items, when you know where they are from hints or include them in the `start_inventory`.

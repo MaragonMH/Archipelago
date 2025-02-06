@@ -21,9 +21,12 @@ int getLocal(int count, int position);
 // Use  https://xenoblade.github.io/xbx/bdat/common_local_us/SEG_NormalList.html to match the ids
 char* _postSegmentList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
     int* areaOffset = segmentBasePtr;
-    areaOffset += 0x4;
     for(int areaId = 0; areaId < 0x15; areaId++){
-        for(int* segmentOffset = areaOffset + 0x506; *segmentOffset != 0; segmentOffset += 0x7){
+        // from existNewSegmentInfo: 0x1f18
+        int nodeCount = *(areaOffset + 0x7c6) >> 3;
+        // from existNewSegmentInfo: 0x1428
+        int* segmentOffset = areaOffset + 0x50a;
+        for(int nodeIdx = 0; nodeIdx < nodeCount; nodeIdx++){
             int flag = getLocal(2 /* maybe 1*/, segmentOffset[2] >> 0x10);
             int segmentId = segmentOffset[3];
             stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, _formatSegmentText, segmentId, flag, areaId);
@@ -33,8 +36,11 @@ char* _postSegmentList(char* stringStartPtr, char* stringCurrentPtr, char* strin
                 _postCurl(stringStartPtr);
                 stringCurrentPtr = stringStartPtr;
             }
+
+            // from existNewSegmentInfo: 0x1c
+            segmentOffset += 0x7;
         }
-        areaOffset += 0x7f7;
+        areaOffset += 0x7f7; // from existNewSegmentInfo: 0x1fdc
     }
     return stringCurrentPtr;
 }

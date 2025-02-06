@@ -65,7 +65,6 @@ beginScript = 0x028cb70c # ::Gimmick::GimmickMapObj
 # overwrite setLocal for blade flag
 0x0228f018 = bl _setLocal
 
-menuBasePtr = 0x1038ae50 # from error::menu::BladeHomeMenu
 addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
 getItem = 0x021ab180 # ::ItemDrop::ItemDropManager
 getItemNum = 0x021ab164 # ::ItemDrop::ItemDropManager
