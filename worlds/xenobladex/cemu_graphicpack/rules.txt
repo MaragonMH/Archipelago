@@ -12,6 +12,7 @@ $disableSkellArmor = 0
 $disableSkellWeapons = 0
 $disableGroundAugments = 0
 $disableSkellAugments = 0
+$curlPort = 45872
 
 [Preset]
 name = "on"

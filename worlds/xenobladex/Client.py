@@ -41,6 +41,7 @@ CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu." 
 CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found." \
                           "Please check your installation directory and Cemu installation"
 CEMU_NOT_FOUND = "Cemu was not found. Please check your installation directory and Cemu installation"
+XENO_DEFAULT_PORT = 45872
 
 
 class GameItem(NamedTuple):
@@ -322,8 +323,10 @@ class XenobladeXContext(CommonContext):
     cemu_process: Optional[subprocess.Popen[bytes]] = None
     locations_checked: Set[int]
 
-    def __init__(self, server_address: Optional[str], password: Optional[str], debug: bool = False) -> None:
-        self.http_server = XenobladeXHttpServer(('::', 45872), debug=debug)
+    def __init__(self, server_address: Optional[str], password: Optional[str], xeno_port: int,
+                 debug: bool = False) -> None:
+        self.http_server = XenobladeXHttpServer(('::', xeno_port), debug=debug)
+        self.xeno_port = xeno_port
         super().__init__(server_address, password)
 
     async def server_auth(self, password_requested: bool = False):
@@ -450,8 +453,10 @@ class XenobladeXContext(CommonContext):
             if not os.path.isdir(cemu_appdata_path):
                 raise Exception(CEMU_SETTINGS_NOT_FOUND)
             else:
-                self.copy_cemu_files(cemu_appdata_path, mod_path)
+                cemu_mod_path = os.path.join(cemu_appdata_path, mod_path)
+                self.copy_cemu_files(cemu_mod_path)
                 self.set_cemu_graphic_packs(cemu_appdata_path, mod_path, options)
+                self.copy_port(cemu_mod_path)
                 self.open_cemu()
         except Exception as e:
             logger.exception(str(e))
@@ -459,9 +464,8 @@ class XenobladeXContext(CommonContext):
             self.gui_error(str(e), e)
             self.exit_event.set()
 
-    def copy_cemu_files(self, cemu_path: str, mod_path: str):
+    def copy_cemu_files(self, cemu_mod_path: str):
         archipelago_graphic_pack_path = "worlds/xenobladex/cemu_graphicpack/"
-        cemu_mod_path = os.path.join(cemu_path, mod_path)
         cemu_ap_path = os.path.join(cemu_mod_path, "AP")
         if not os.path.isdir(cemu_mod_path):
             raise Exception(CEMU_MODS_NOT_FOUND)
@@ -526,6 +530,16 @@ class XenobladeXContext(CommonContext):
         except Exception:
             raise Exception(CEMU_SETTINGS_NOT_FOUND)
 
+    def copy_port(self, cemu_mod_path: str):
+        cemu_ap_rules = os.path.join(cemu_mod_path, "AP/rules.txt")
+        with open(cemu_ap_rules, "r") as rules:
+            ruledata = rules.read()
+
+        ruledata = re.sub(rf"\$curlPort = {XENO_DEFAULT_PORT}", f"$curlPort = {self.xeno_port}", ruledata)
+
+        with open(cemu_ap_rules, "w") as rules:
+            rules.write(ruledata)
+
     def open_cemu(self):
         try:
             cemu_exe = get_settings()["xenobladex_options"]["executable"]
@@ -560,7 +574,7 @@ async def main(args) -> None:
         else:
             logger.error(f"bad url, found {args.url}, expected url in form of archipelago://archipelago.gg:38281")
 
-    ctx = XenobladeXContext(args.connect, args.password, args.debug)
+    ctx = XenobladeXContext(args.connect, args.password, args.xeno_port, args.debug)
     ctx.auth = args.name
     if ctx.server_task is None:
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
@@ -583,6 +597,8 @@ async def main(args) -> None:
 def launch(*args) -> None:
     parser = get_base_parser()
     parser.add_argument("-d", "--debug", action="store_true", help="Enable full server exposure for debugging purposes")
+    parser.add_argument("--xeno_port", nargs="?", type=int, default=XENO_DEFAULT_PORT,
+                        help="Port of the Xenoblade X server")
     parser.add_argument('--name', default=None, help="Slot Name to connect as.")
     parser.add_argument("url", nargs="?", help="Archipelago connection url")
     args = parser.parse_args(args)
