@@ -1,0 +1,37 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "flake8 + mypy",
+            "type": "shell",
+            "command": "cls; flake8 --max-line-length 120 ./worlds/xenobladex/; mypy ./worlds/xenobladex/ --follow-imports=skip",
+            "problemMatcher": []
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "cls; python setup.py build",
+            "problemMatcher": []
+        },
+        {
+            "label": "generate",
+            "type": "shell",
+            "command": "cls; python Generate.py",
+            "problemMatcher": []
+        },
+        {
+            "label": "compile Cemu",
+            "type": "shell",
+            "command": "cls; python worlds/xenobladex/cemu_graphicpack/compile.py",
+            "problemMatcher": []
+        },
+        {
+            "label": "create APWorld",
+            "type": "shell",
+            "command": "cls; Get-ChildItem worlds/xenobladex -Directory -Recurse -Include __pycache__ | Remove-Item -Force; Compress-Archive worlds/xenobladex build/xenobladex.zip; Move-Item -Force build/xenobladex.zip build/xenobladex.apworld",
+            "problemMatcher": []
+        }
+    ]
+}
