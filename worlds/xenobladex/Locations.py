@@ -14,6 +14,7 @@ class Loc:
     name: str
     valid: bool = True
     regions: list[str] = field(default_factory=lambda: ['Menu'])
+    depends: list[str] = field(default_factory=lambda: [])
     type: Optional[int] = None
     id: Optional[int] = None
     prefix: Optional[str] = None
