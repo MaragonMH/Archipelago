@@ -452,12 +452,15 @@ class XenobladeXContext(CommonContext):
             cemu_appdata_path = os.path.join(appdata, "Cemu")
             if not os.path.isdir(cemu_appdata_path):
                 raise Exception(CEMU_SETTINGS_NOT_FOUND)
+            if Utils.is_linux:
+                config = os.path.join(pathlib.Path.home(), ".config")
+                cemu_mod_path = os.path.join(config, mod_path)
             else:
                 cemu_mod_path = os.path.join(cemu_appdata_path, mod_path)
-                self.copy_cemu_files(cemu_mod_path)
-                self.set_cemu_graphic_packs(cemu_appdata_path, mod_path, options)
-                self.copy_port(cemu_mod_path)
-                self.open_cemu()
+            self.copy_cemu_files(cemu_mod_path)
+            self.set_cemu_graphic_packs(cemu_appdata_path, mod_path, options)
+            self.copy_port(cemu_mod_path)
+            self.open_cemu()
         except Exception as e:
             logger.exception(str(e))
             logger.error(str(e))
