@@ -32,13 +32,13 @@ from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
 from .Options import XenobladeXOption
 
-CEMU_MODS_NOT_FOUND = "Unable to find the Cemu Mods please make sure to download the community mods" \
+CEMU_MODS_NOT_FOUND = "Unable to find the Cemu Mods please make sure to download the community mods " \
                       "within Cemu settings first"
 CEMU_APPDATA_NOT_FOUND = "Unable to find the Cemu Appdata folder, please make sure to start Cemu once beforehand"
 CEMU_APWORLD_NOT_FOUND = "Unable to find the Xenoblade X *.apworld"
-CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu." \
+CEMU_GRAPHIC_PACK_MISSING = "Unable to add the necessary graphic pack to Cemu. " \
                             "Please check your installation directory and Cemu installation"
-CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found." \
+CEMU_SETTINGS_NOT_FOUND = "Cemu settings.xml file was not found. " \
                           "Please check your installation directory and Cemu installation"
 CEMU_NOT_FOUND = "Cemu was not found. Please check your installation directory and Cemu installation"
 XENO_DEFAULT_PORT = 45872
