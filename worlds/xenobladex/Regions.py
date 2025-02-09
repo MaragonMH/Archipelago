@@ -1,7 +1,7 @@
 import logging
 from functools import partial
 from collections import OrderedDict
-from BaseClasses import CollectionState, MultiWorld, Region, Entrance, Location
+from BaseClasses import CollectionState, MultiWorld, Region, Entrance, EntranceType, Location
 from dataclasses import dataclass, field
 
 
@@ -19,10 +19,10 @@ class Rule:
 
 from .regions.key import doll_regions, fnet_regions  # noqa: E402
 from .regions.chapters import chapter_regions  # noqa: E402
-from .regions.friends import friends_nagi_regions, friends_l_regions, friends_lao_regions, friends_gwin_regions, \
-    friends_frye_regions, friends_doug_regions, friends_phog_regions, friends_elma_regions, friends_lin_regions, \
-    friends_celica_regions, friends_irina_regions, friends_murderess_regions, \
-    friends_hope_regions, friends_mia_regions  # noqa: E402
+from .regions.friends import friends_nagi_regions, friends_l_regions, friends_lao_regions, friends_hb_regions, \
+    friends_gwin_regions, friends_frye_regions, friends_doug_regions, friends_yelv_regions, friends_boze_regions, \
+    friends_phog_regions, friends_elma_regions, friends_lin_regions, friends_celica_regions, friends_irina_regions, \
+    friends_murderess_regions, friends_alexa_regions, friends_hope_regions, friends_mia_regions  # noqa: E402
 from .regions.fieldSkills import mechanical_regions, biological_regions, archeological_regions  # noqa: E402
 
 xenobladeXRegions = OrderedDict({rule.region: rule.requirements for rule in [
@@ -30,15 +30,19 @@ xenobladeXRegions = OrderedDict({rule.region: rule.requirements for rule in [
     *friends_nagi_regions,
     *friends_l_regions,
     *friends_lao_regions,
+    *friends_hb_regions,
     *friends_gwin_regions,
     *friends_frye_regions,
     *friends_doug_regions,
+    *friends_yelv_regions,
+    *friends_boze_regions,
     *friends_phog_regions,
     *friends_elma_regions,
     *friends_lin_regions,
     *friends_celica_regions,
     *friends_irina_regions,
     *friends_murderess_regions,
+    *friends_alexa_regions,
     *friends_hope_regions,
     *friends_mia_regions,
     *doll_regions,
@@ -85,7 +89,7 @@ def connect_regions(world: MultiWorld, player: int, source: str, target: str, ru
     source_region = world.get_region(source, player)
     target_region = world.get_region(target, player)
 
-    connection = Entrance(player, '', source_region)
+    connection = Entrance(player, target, source_region, randomization_type=EntranceType.TWO_WAY)
     connection.access_rule = rule
 
     source_region.exits.append(connection)

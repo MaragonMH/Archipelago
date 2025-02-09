@@ -15,7 +15,7 @@ Data("Celica - Indu Dist: Production Plant", depends=["New in New LA"]),
 Data("Yardleys Scheme - Indu Dist: Test Hangar - Chp 3", regions=["Chapter 3"]),
 Data("Off the Record Biological - Indu Dist: Test Hangar - Chp 3", regions=["Chapter 3", "Blade License", "Biological 4"]),
 Data("Boot Camp - Indu Dist: Test Hangar - Gwin 1 - Chp 10", regions=["Chapter 10", "Gwin 1"], depends=["Nine Lives"]),  # Problem purchase from shop
-Data("Alien Wreckage - Indu Dist: Test Hangar - Archaeological 2", regions=["Archaeological 2"]),
+Data("Alien Wreckage - Indu Dist: Test Hangar - Archeological 2", regions=["Archeological 2"]),
 Data("A Girls Wings - Indu Dist: Test Hangar - Chp 9", regions=["Chapter 9", "Skell License"]),
 Data("Mission: Muimui's Meltdown[ST:n ]Client: Moimoi"),
 Data("Mission: Turf War[ST:n ]Client: Enrai"),
