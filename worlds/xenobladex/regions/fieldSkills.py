@@ -9,3 +9,11 @@ def generate_field_skill_region(field_skill: str) -> List[Rule]:
 mechanical_regions: List[Rule] = generate_field_skill_region("Mechanical")
 biological_regions: List[Rule] = generate_field_skill_region("Biological")
 archeological_regions: List[Rule] = generate_field_skill_region("Archeological")
+
+fnet_precious_ressources_regions: List[Rule] = [
+    Rule("Menu"),
+    # all others
+    Rule("FNet Resource"),
+    # Boiled-Egg Ore, Ouroboros Crystal, Parhelion Platinum, Marine Rutile
+    Rule("FNet Resource 2", {Req("FLDSK: Mechanical", 1)})
+]
