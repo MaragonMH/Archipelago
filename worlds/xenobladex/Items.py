@@ -17,6 +17,7 @@ class Itm:
     prefix: Optional[str] = None
     progression: ItCl = ItCl.filler
     type_count: int = 1
+    required: bool = False
 
     def get_item(self):
         if self.prefix is None:
@@ -101,8 +102,9 @@ xenobladeXItems: List[Itm] = [
 def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: Dict[str, int]):
     """Create all items"""
     itempool: List[Item] = []
+    requiredOptionalItems = [itm for itm in xenobladeXItems if itm.required]
     # Add all important Items, these are always added to the item pool
-    for item in xenobladeXImportantItems:
+    for item in xenobladeXImportantItems + requiredOptionalItems:
         for idx in range(item.count):
             xeno_item = XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
             if idx < item.count - world.precollected_items[player].count(xeno_item):
@@ -120,7 +122,7 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
     missing_item_count: int = min(total_locations - len(itempool), optionals_length)
 
     seed(world.seed)
-    max_category_size = 999
+    max_category_size = 989  # -10 for shop item buffer
     maxed_categories: list[str] = []
     optionals_counter: Counter = Counter()
     while True:

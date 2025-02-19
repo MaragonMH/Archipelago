@@ -7,8 +7,8 @@ from ..Locations import Loc as Data
 # flake8: noqa
 segments_data: list[Data] = [
 Data("Celica 5 H2H - Indu Dist: Test Hangar - Night", regions=["Celica 5"], depends=["Celica 4 H2H"]), 
-Data("Nagi 2 H2H - Indu Dist: Test Hangar - Morning", regions=["Nagi 2"], depends=["Nagi 2 H2H"]), 
-Data("The Gauntlet - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12"], depends=["A Present for Hope", "A Dish Served Cold", "An Ancient Legend", "Haywire!", "The Lurker", "Definian Love", "Fortun and Glory"]),
+Data("Nagi 2 H2H - Indu Dist: Test Hangar - Morning", regions=["Nagi 2"], depends=["Nagi 1 H2H"]), 
+Data("The Gauntlet - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12"], depends=["A Present for Hope", "Haywire!", "An Ancient Legend"]),
 Data("Two Warriors - Indu Dist: Test Hangar - Night - Chp 11", regions=["Chapter 11"], depends=["A Challenger Approaches"]),
 Data("Data Probe Challenge - Indu Dist: Test Hangar - Chp 8", regions=["Chapter 8"], depends=["The Probe-fessional"]),  # FNet 10k miranium
 Data("Good Fortun - Indu Dist: Central - Chp 10", regions=["Chapter 10"], depends=["Attack on Biahno Hills", "Rites of Ruin", "Alexs Last Stand"]),
@@ -21,7 +21,7 @@ Data("Boot Camp - Indu Dist: Test Hangar - Gwin 1 - Chp 10", regions=["Chapter 1
 Data("Alien Wreckage - Indu Dist: Test Hangar - Archeological 2", regions=["Archeological 2"]),
 Data("A Girls Wings - Indu Dist: Test Hangar - Chp 9", regions=["Chapter 9", "Skell License"]),
 Data("Muimuis Meltdown - Indu Dist: Central - Chp 9", regions=["Chapter 9"], depends=["Setting Forth"]),
-Data("Turf War - Indu Dist: Central - Chp 10", regions=["Chapter 10"], depends=["Waste Not Want Not"]),
+Data("Turf War - Indu Dist: Central - Chp 10", regions=["Chapter 10"], depends=["Waste Not, Want Not"]),
 Data("Doug 2 H2H - Indu Dist: Central - Morning", regions=["Doug 2"], depends=["Doug 1 H2H"]), 
 Data("A Proper Chopper - Indu Dist: Central - Chp 4", regions=["Chapter 4"]),
 Data("Murderess 3 H2H - Indu Dist: Production Plant", regions=["Murderess 3"], depends=["Murderess 2 H2H"]), 
@@ -37,7 +37,7 @@ Data("Lone Survivors - Indu Dist: Central - Chp 8", regions=["Chapter 8"], depen
 Data("Entrepreneurial Spirit - Indu Dist: Central - Chp 8", regions=["Chapter 8"], depends=["The Root of All Evil", "Vainamo, the Bellower"]),  # FNet 130k money
 Data("Child of Mira - Indu Dist: Central - Chp 11", regions=["Chapter 11"], depends=["Pollution Solution", "Cavernous Abyss"]),
 Data("Container - Indu Dist: Production Plant - Mechanical 3", regions=["Mechanical 3"]),
-Data("Orphen Pluck - Indu Dist: Production Plant - Chp 10", regions=["Chapter 10"], depends=["No-show Nenceleg", "Planetary Pioneer IV"]),  # FNet 4.2k miranium
+Data("Orphean Pluck - Indu Dist: Production Plant - Chp 10", regions=["Chapter 10"], depends=["No-show Nenceleg", "Planetary Pioneer IV"]),  # FNet 4.2k miranium
 Data("Data Probe Progress - Indu Dist: Production Plant - Chp 10", regions=["Chapter 10"], depends=["Data Probe Challenge"]),  # FNet 15k miranium
 Data("Data Probe Evolution - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12"], depends=["Data Probe Breakthrough"]),  # FNet 30k miranium
 Data("The Pip-Squeak - Indu Dist: Test Hangar - Chp 5", regions=["Chapter 5"]),
@@ -48,7 +48,7 @@ Data("Hope 3 H2H - Indu Dist: Central - Morning ", regions=["Hope 3"], depends=[
 Data("Pack It In - Indu Dist: Central - Chp 9", regions=["Chapter 9"], depends=["Dead Men Tell No Tales"]),  # FNet resource
 Data("Irina 1 H2H - Indu Dist: Central", regions=["Irina 1"], depends=["Irina"]), 
 Data("Frye 5 H2H - Indu Dist: Production Plant", regions=["Frye 5"], depends=["Frye 4 H2H"]), 
-Data("Alexa - Indu Dist: Test Hangar", depends=["Weaponized"]),
+Data("Alexa - Indu Dist: Test Hangar", regions=["Chapter 4"]),  # depends: Weaponized
 Data("Celica 1 H2H - Indu Dist: Test Hangar", regions=["Celica 1"], depends=["Celica"]), 
 Data("Mystery Man - Indu Dist: Central - Chp 5", regions=["Chapter 5"]),
 Data("The Voltant Visionary - Indu Dist: Central - Chp 7", regions=["Chapter 7"], depends=["Dead Men Tell No Tales", "A Dubious Operation"]),
@@ -65,7 +65,7 @@ Data("Gwin 5 H2H - Comm Dist: West Melville Street - Evening", regions=["Gwin 5"
 Data("Alien Nation - Comm Dist: West Melville Street - Chp 7", regions=["Chapter 7"]),
 Data("Lin 2 H2H - Comm Dist: West Melville Street - Afternoon", regions=["Lin 2"], depends=["Lin 1 H2H"]), 
 Data("Mia 4 H2H - Comm Dist: West Melville Street", regions=["Mia 4"], depends=["Mia 3 H2H"]), 
-Data("Boze - Comm Dist: West Melville Street", depends=["The Mad Monk"]),
+Data("Boze - Comm Dist: West Melville Street", regions=["Chapter 5"]),  # depends: The Mad Monk
 Data("Celica 3 H2H - Comm Dist: West Melville Street - Morning", regions=["Celica 3"], depends=["Celica 2 H2H"]), 
 Data("Container - Comm Dist: West Melville Street - Mechanical 2", regions=["Mechanical 2"]),
 Data("Stop, Thief! - Comm Dist: West Melville Street - Chp 9", regions=["Chapter 9"], depends=["A Dubious Operation"]),
@@ -78,9 +78,9 @@ Data("Better Latte Than Never - Comm Dist: West Melville Street - Day - Chp 2", 
 Data("Doug 4 H2H - Comm Dist: West Melville Street", regions=["Doug 4"], depends=["Doug 3 H2H"]), 
 Data("Quiquat - Aff Shift - Comm Dist: West Melville Street", depends=["Starboard"]),  # just a guess
 Data("Lin 4 H2H - Comm Dist: Barista Court - Evening", regions=["Lin 4"], depends=["Lin 3 H2H"]), 
-Data("Emotion Commotion - Comm Dist: Barista Court - Chp 7", regions=["Chapter 7"], depends=["Oc-serv", "Rowdy Potamus"]),
+Data("Emotion Commotion - Comm Dist: Barista Court - Chp 7", regions=["Chapter 7"]),
 Data("The Matchmaker - Aff Mission - Comm Dist: Central Melville Street - Chp 6", regions=["Chapter 6", "Lao 1"]),  #FNet resource
-Data("Definian Downfall - Comm Dist: Central Melville Street - Chp 11", regions=["Chapter 11"], depends=["Professor Bs Return", "Good Fortun", "Xe-dom"]),
+Data("Definian Downfall - Comm Dist: Central Melville Street - Chp 11", regions=["Chapter 11"], depends=["Professor Bs Return", "Good Fortun", "Strontium Xe-dom"]),
 Data("Irina 5 H2H - Comm Dist: North Founder Street", regions=["Irina 5"], depends=["Irina 4 H2H"]), 
 Data("Veverta - Aff Shift - Comm Dist: North Founder Street", depends=["Starboard"]),  # just a guess
 Data("Nine Lives - Aff Mission - Comm Dist: Barista Court - Chp 5", regions=["Chapter 5"]),
@@ -91,8 +91,8 @@ Data("Nagi 3 H2H - Comm Dist: North Founder Street - Morning", regions=["Nagi 3"
 Data("Sparking a Smile - Comm Dist: Barista Court - Chp 8", regions=["Chapter 8"], depends=["BFFs"]),  # Mira 40%
 Data("Unsatisfied Customer - Comm Dist: Barista Court - Chp 11", regions=["Chapter 11"], depends=["BFFs", "Floating Reef"]),
 Data("The Fashionista - Comm Dist: Central Melville Street - Chp 6", regions=["Chapter 6"]),
-Data("Planetary Pioneer III - Comm Dist: Central Melville Street - Chp 8", regions=["Chapter 8"], depends=["FN Node 408", "Nectar Scirpos"]),  # FNet resource
-Data("Yelv - Comm Dist: North Founder Street", depends=["Meeting Yelv"]),
+Data("Planetary Pioneer III - Comm Dist: Central Melville Street - Chp 8", regions=["Chapter 8"], depends=["FN Node 408", "Nectar Scirpo"]),  # FNet resource
+Data("Yelv - Comm Dist: North Founder Street", regions=["Chapter 3"]),
 Data("The Sword of Legendaryness - Comm Dist: Central Melville Street - Chp 11", regions=["Chapter 11"], depends=["Bread and a Circus"]),
 Data("Murderess 2 H2H - Comm Dist: North Founder Street - Nighttime", regions=["Murderess 2"], depends=["Murderess 1 H2H"]), 
 Data("Serial Thriller - Aff Mission - Comm Dist: North Founder Street - Chp 12", regions=["Chapter 12", "Murderess 4"], depends=["A False Hope"]),
@@ -110,17 +110,17 @@ Data("Hope 2 H2H - Comm Dist: East Melville Street - Evening", regions=["Hope 2"
 Data("A Dish Served Cold - Comm Dist: East Melville Street - Chp 11", regions=["Chapter 11"], depends=["A Challenger Approaches"]),
 Data("Elma 3 H2H - Comm Dist: East Melville Street - Morning", regions=["Elma 3"], depends=["Elma 2 H2H"]), 
 Data("Forbidden Love - Ma-non Ship: Port Side - Chp 8", regions=["Chapter 8"], depends=["Prone Sweet Prone"]),
-Data("No-Show Nenceleg - Ma-non Ship: Port Side - Chp 10", regions=["Chapter 10"], depends=["House Call"]),
+Data("No-show Nenceleg - Ma-non Ship: Port Side - Chp 10", regions=["Chapter 10"], depends=["House Call"]),
 Data("Gorkwa Games - Ma-non Ship: Port Side - Chp 7", regions=["Chapter 7"], depends=["Dead Men Tell No Tales"]),
 Data("House Call - Ma-non Ship: Port Side - Chp 10", regions= ["Chapter 10"], depends=["Circle of Life"]),
-Data("A New Life - Ma-non Ship: Port Side - Chp 11", regions=["Chapter 11"], depends=["Here Come the Brides", "Kintrees", "Dune Adseculas", "Garuda Jacul"]),  # Oblivia 70%
+Data("A New Life - Ma-non Ship: Port Side - Chp 11", regions=["Chapter 11"], depends=["Here Come the Brides", "Kintrees"]),  # Oblivia 70%
 Data("Here Come the Brides - Ma-non Ship: Port Side - Chp 9", regions=["Chapter 9"], depends=["Prone Sweet Prone"]),
 Data("The Unbreakable Sword - Ma-non Ship: Port Side - Chp 12", regions=["Chapter 12"], depends=["A Challenger Approaches"]),  # FNet resource
 Data("A Grim Undertaking - Ma-non Ship: Port Side - Chp 6", regions=["Chapter 6"], depends=["Prone Sweet Prone"]),
 Data("L 2 H2H - Ma-non Ship: Deck - Nighttime", regions=["L 2"], depends=["L 1 H2H"]), 
 Data("The Lurker - Ma-non Ship: Deck - Chp 12", regions=["Chapter 12"], depends=["The Duel IV"]),
 Data("Snipe Hunt - Ma-non Ship: Deck - Chp 12", regions=["Chapter 12"]),
-Data("Mia - Ma-non Ship: Deck", depends=["Mia is Missing!"]),
+Data("Mia - Ma-non Ship: Deck", depends=["Mia Is Missing!"]),
 Data("Sunceleg Rises - Ma-non Ship: Deck", regions=["Chapter 6"], depends=["Rescue at the Ensconced Citadel"]),
 Data("Zurranik - Aff Shift - Ma-non Ship: Deck", depends=["Deck"]),  # Just a guess
 Data("The Membership - Ma-non Ship: Starboard - Chp 6", regions=["Chapter 6"], depends=["Planetary Pioneer III"]),  # FNet resource
@@ -440,7 +440,7 @@ Data("Indigen Dung - Obli: Victory Rock - Biological 3", regions=["Biological 3"
 Data("Feliciano, the All-Seeing - Obli: Central Ibra Ravine - Tyrant - Daytime"),
 Data("Vehicle Wreckage - Obli: Balance Rock - Mechanical 3", regions=["Mechanical 3"]),
 Data("Skell Wreckage - Obli: South Coast - Mechanical 3", regions=["Mechanical 3"]),
-Data("Skell Wreckage - Obli: Washington Isle - Mechanical 4", regions=["Mechanical 4"], depends=["Washington Isle"]),
+Data("Skell Wreckage - Obli: Washington Isle - Mechanical 4", regions=["Mechanical 4"], depends=["Great Washington Isle"]),
 Data("Vilem, the Gold-Scaled - Obli: Lake Basel - Tyrant"),
 Data("White Whale Debris - Obli: Sea Whisper Valley - Mechanical 3", regions=["Mechanical 3"]),
 Data("Bertrand, the Gorge Scourge - Obli: East Ibra Ravine - Tyrant"),
@@ -534,7 +534,7 @@ Data("Strange Petrified Tree - Sylv: Banshee Cove - Biological 5", regions=["Bio
 Data("Candelario, the Bronze - Sylv: Anvil Sandplain - Tyrant"),
 Data("Alien Container - Sylv: Badr Strongbridge - Archeological 4", regions=["Archeological 4"]),
 Data("Soldier of the Harriers - Sylv: South Cinderdunes", depends=["Soldier of the Harriers"]),
-Data("Hair Apparent - Sylv: Lake Ciel", depends=["Hair Apparent"]),
+Data("Hair Apparent - Sylv: Lake Ciel - Chp 8", regions=["Chapter 8"]),
 Data("Patrol Chopper Wreckage - Sylv: South Ciel Sandsea - Mechanical 3", regions=["Mechanical 3"]),
 Data("Alien Container - Sylv: Hilal Stronghold - Archeological 4", regions=["Archeological 4"]),
 Data("Luxaars Xern - Sylv: Arc Rock - Tyrant", depends=["Arc Rock"]),
@@ -570,7 +570,7 @@ Data("Strange Petrified Tree - Sylv: East Ciel Sandsea - Biological 4", regions=
 Data("Leaving the Nest - Sylv: Cauldros Threshold", regions=["Chapter 11"], depends=["Until the End"]),
 Data("Clara, the Pure White - Sylv: North Silent Sandsea - Tyrant - Daytime"),
 Data("Alien Container - Sylv: Lower Delusian Mountains - Archeological 4", regions=["Archeological 4"]),
-Data("Orphe Pluck - Sylv: Delusians South Summit", depends=["Orphe Pluck"]),
+Data("Orphean Pluck - Sylv: Delusians South Summit", depends=["Orphean Pluck"]),
 Data("Strange Petrified Tree - Sylv: Southern Searoad - Biological 2", regions=["Biological 2"]),
 Data("Strange Petrified Tree - Sylv: Cleansing Spring - Biological 3", regions=["Biological 3"]),
 Data("Strange Petrified Tree - Sylv: Northern Searoad - Biological 4", regions=["Biological 4"]),

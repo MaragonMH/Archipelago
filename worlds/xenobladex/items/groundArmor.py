@@ -1,3 +1,4 @@
+from BaseClasses import ItemClassification as ItCl
 from ..Items import Itm as Data
 
 # https://xenoblade.github.io/xbx/bdat/common_local_us/AMR_PcList.html
@@ -248,7 +249,7 @@ Data("Survival Glove R_3"),
 Data("Survival Glove L_3"),
 Data("Survival Footwear_3"),
 Data("Combat Goggles_1"),
-Data("Combat Bodywear_1"),
+Data("Combat Bodywear_1", required=True, progression=ItCl.progression),
 Data("Combat Glove R_1"),
 Data("Combat Glove L_1"),
 Data("Combat Footwear_1"),

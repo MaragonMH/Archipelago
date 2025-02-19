@@ -63,6 +63,35 @@ xenobladeXLocations = [
 ]
 
 
+def _resolve_dependencies() -> None:
+    dependency_lookup: dict[str, int] = {}
+    for i, loc in enumerate(xenobladeXLocations):
+        dependency = loc.name.split(" - ")[0]
+        if dependency not in loc.depends:
+            dependency_lookup[dependency] = i
+
+    for loc_i in range(len(xenobladeXLocations)):
+        loc = xenobladeXLocations[loc_i]
+        dependencies = loc.depends.copy()
+        regions: list[str] = []
+        while True:
+            if len(dependencies) < 1:
+                break
+            dependency = dependencies.pop()
+            dep_loc = xenobladeXLocations[dependency_lookup[dependency]]
+            dependencies += dep_loc.depends
+            dep_regions = dep_loc.regions.copy()
+            if "Menu" in dep_regions:
+                dep_regions.remove("Menu")
+            regions += dep_regions
+        if len(regions) < 1:
+            regions = ["Menu"]
+        xenobladeXLocations[loc_i] = replace(loc, regions=list(set(regions)), depends=[])
+
+
+_resolve_dependencies()
+
+
 def create_location(world: MultiWorld, region_name: str, location_name: str, player: int, abs_id: Optional[int]):
     init_region(world, player, region_name)
     return add_region_location(world, player, region_name,
