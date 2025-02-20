@@ -7,6 +7,7 @@ zones_mira_regions: List[Rule] = [
     Rule("Menu"),
     Rule("Mira 10", {Req("MIRA", 70)}),
     Rule("Mira 18", {Req("MIRA", 125)}),
+    Rule("Mira 20", {Req("MIRA", 139)}),
     Rule("Mira 40", {Req("MIRA", 278)}),
     Rule("Mira 50", {Req("MIRA", 347)}),
     Rule("Mira 60", {Req("MIRA", 416)}),
@@ -35,6 +36,7 @@ zones_noct_regions: List[Rule] = [
 zones_obli_regions: List[Rule] = [
     Rule("Menu"),
     Rule("Obli 25", {Req("OBLI", 24)}),
+    Rule("Obli 30", {Req("OBLI", 29)}),
     Rule("Obli 40", {Req("OBLI", 38)}),
     Rule("Obli 50", {Req("OBLI", 48)}),
     Rule("Obli 70", {Req("OBLI", 67)}),
