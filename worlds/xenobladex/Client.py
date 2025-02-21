@@ -368,10 +368,10 @@ class XenobladeXContext(CommonContext):
         if print_type in ["ItemSend", "ItemCheat", "Hint"]:
             item: NetworkItem = args["item"]
             sender = item.player
-            receiver = args["receiving"]
+            receiver: int = args["receiving"]
             if (not self.slot_concerns_self(receiver)) and self.slot_concerns_self(sender):
-                self.http_server.upload_message(f"To {self.player_names[receiver]}",
-                                                self.archipelago_item_to_name(item.item))
+                item_name = self.item_names.lookup_in_slot(item.item, receiver)
+                self.http_server.upload_message(f"To {self.player_names[receiver]}", item_name)
         elif print_type == "Chat":
             chatting_player = self.player_names[args["slot"]]
             self.http_server.upload_message(f"From {chatting_player}", args["message"])
