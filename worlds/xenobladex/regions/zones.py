@@ -52,6 +52,7 @@ zones_sylv_regions: List[Rule] = [
 zones_caul_regions: List[Rule] = [
     Rule("Menu"),
     Rule("Caul 10", {Req("CAUL", 8)}),
+    Rule("Caul 50", {Req("CAUL", 38)}),
     Rule("Caul 65", {Req("CAUL", 49)}),
 ]
 

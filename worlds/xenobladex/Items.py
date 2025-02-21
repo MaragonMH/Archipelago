@@ -54,14 +54,14 @@ class _Itms:
     last_table_size = 0
 
     @staticmethod
-    def gen(prefix: str, type: int, data: list[Itm], prog: ItCl = ItCl.filler,
+    def gen(prefix: str, type: int, data: list[Itm], prog: ItCl | None = None,
             type_count: int = 1) -> Generator[Itm, None, None]:
         _Itms.table_size += _Itms.last_table_size
         for typ in range(type, type + type_count):
             game_type_item_to_offset[typ] = _Itms.table_size
         _Itms.last_table_size = len(data)
         return (replace(e, type=type, id=_Itms.table_size + i + 1, prefix=prefix,
-                        progression=prog, type_count=type_count)
+                        progression=prog if prog else e.progression, type_count=type_count)
                 for i, e in enumerate(data) if e.valid)
 
 
@@ -122,7 +122,7 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
     missing_item_count: int = min(total_locations - len(itempool), optionals_length)
 
     seed(world.seed)
-    max_category_size = 989  # -10 for shop item buffer
+    max_category_size = 950  # -49 for shop item buffer
     maxed_categories: list[str] = []
     optionals_counter: Counter = Counter()
     while True:

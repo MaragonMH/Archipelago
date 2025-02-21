@@ -46,6 +46,7 @@ from .regions.friends import friends_regions  # noqa: E402
 from .regions.key import key_regions  # noqa: E402
 from .regions.shop import shop_regions  # noqa: E402
 from .regions.zones import zones_regions  # noqa: E402
+from .regions.quests import quest_regions  # noqa: E402
 from .fnet.miranium import fnet_miranium_data  # noqa: E402
 from .fnet.credits import fnet_credits_data  # noqa: E402
 
@@ -56,7 +57,8 @@ xenobladeXRegions = [
     *friends_regions,
     *key_regions,
     *shop_regions,
-    *zones_regions
+    *zones_regions,
+    *quest_regions,
 ]
 
 
@@ -65,8 +67,9 @@ def init_region(world: MultiWorld, player: int, region_name: str):
         based on its predecessors, if applicable"""
     region_names = [region.name for region in world.get_regions(player)]
     regions = set([rule.region for rule in xenobladeXRegions])
-    if region_name not in region_names and set(region_name.split("+")) <= regions:
+    if region_name not in region_names:
         logging.debug(f"Region Name: {region_name}")
+        assert set(region_name.split("+")) <= regions, f"{region_name} not in available regions"
         world.regions += [Region(region_name, player, world, region_name)]
         if region_name == "Menu":
             return
@@ -86,6 +89,21 @@ def init_region(world: MultiWorld, player: int, region_name: str):
                         partial(has_items, player=player, requirements=requirements))
 
 
+def trim_regions(regions: set[str]) -> list[str]:
+    subrules: set[str] = set()
+    duplicate_regions: set[str] = set()
+    if "Menu" in regions and len(regions) > 1:
+        regions.remove("Menu")
+    for rule in xenobladeXRegions:
+        if rule.region == "Menu":
+            subrules = set()
+        else:
+            if rule.region in regions:
+                duplicate_regions.update(subrules)
+            subrules.add(rule.region)
+    return list(regions.difference(duplicate_regions))
+
+
 def add_region_location(world: MultiWorld, player: int, region_name: str, location: Location) -> Location:
     region = world.get_region(region_name, player)
     region.locations += [location]
@@ -97,7 +115,7 @@ def connect_regions(world: MultiWorld, player: int, source: str, target: str, ru
     source_region = world.get_region(source, player)
     target_region = world.get_region(target, player)
 
-    connection = Entrance(player, target, source_region, randomization_type=EntranceType.TWO_WAY)
+    connection = Entrance(player, target, source_region)
     connection.access_rule = rule
 
     source_region.exits.append(connection)
