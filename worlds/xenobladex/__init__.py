@@ -59,6 +59,7 @@ class XenobladeXWorld(World):
     }
 
     def create_regions(self):
+        self.explicit_indirect_conditions = False
         init_region(self.multiworld, self.player, "Menu")
         create_locations(self.multiworld, cast(XenobladeXOptions, self.options), self.player, self.base_id)
 
