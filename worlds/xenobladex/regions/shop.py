@@ -32,10 +32,17 @@ Rule("Menu"),
 Rule("Shop Boot Camp", {Req("WPN: Soldier Assault Rifle_1")}),
 ]
 
+# Ovah and Out
+shop_ovah_and_out_regions: List[Rule] = [
+Rule("Menu"),
+Rule("Shop Ovah and Out", {Req("WPN: Savage Ziyse")}),
+]
+
 shop_regions: List[Rule] = [
     *shop_mia_regions,
     *shop_bodyguard_regions,
     *shop_cooking_regions,
     *shop_lend_ear_regions,
-    *shop_boot_camp_regions
+    *shop_boot_camp_regions,
+    *shop_ovah_and_out_regions,
 ]
