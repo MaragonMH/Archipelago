@@ -23,7 +23,7 @@ char* _postSegmentList(char* stringStartPtr, char* stringCurrentPtr, char* strin
     int* areaOffset = segmentBasePtr;
     for(int areaId = 0; areaId < 0x15; areaId++){
         // from existNewSegmentInfo: 0x1f18
-        int nodeCount = *(areaOffset + 0x7c6) >> 3;
+        int nodeCount = *(areaOffset + 0x7c6);
         // from existNewSegmentInfo: 0x1428
         int* segmentOffset = areaOffset + 0x50a;
         for(int nodeIdx = 0; nodeIdx < nodeCount; nodeIdx++){

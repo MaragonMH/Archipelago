@@ -22,9 +22,7 @@ _postSegmentList:
 	b _segmentList_L2
 _segmentList_L6:
 	lwz r9,8(r31)
-	addi r9,r9,7960
-	lwz r9,0(r9)
-	srawi r9,r9,3
+	lwz r9,7960(r9)
 	stw r9,24(r31)
 	lwz r9,8(r31)
 	addi r9,r9,5160
