@@ -13,7 +13,7 @@ import re
 import urllib.parse
 import Utils
 from NetUtils import NetworkItem
-from typing import Counter, List, NamedTuple, Optional, Set, cast
+from typing import Any, Coroutine, Counter, List, NamedTuple, Optional, Set, Callable, cast
 from itertools import groupby
 import colorama
 
@@ -60,8 +60,10 @@ class XenobladeXHttpServer(HTTPServer):
     upload_count = 0
     upload_limit = 25
 
-    def __init__(self, server_address, bind_and_activate=True, debug: bool = False) -> None:
+    def __init__(self, server_address, process_game: Callable[[], Coroutine[Any, Any, None]],
+                 bind_and_activate=True, debug: bool = False) -> None:
         self.debug = debug
+        self.process_game = process_game
         super().__init__(server_address, XenobladeXHTTPRequestHandler, bind_and_activate)
 
     class Gear(NamedTuple):
@@ -194,8 +196,6 @@ class XenobladeXHttpServer(HTTPServer):
 
     def download_locations(self) -> list[GameItem]:
         locations: list[GameItem] = []
-        if self.upload_in_progress:
-            return locations
 
         self._match_line(locations, 0, r'^CP Id=([0-9a-fA-F]{3}) Fg=([0-9a-fA-F]{1})\n')
         self._match_line(locations, 1, r'^EN Id=([0-9a-fA-F]{3}) Dc=([0-9a-fA-F]{1})\n', min=2)
@@ -215,8 +215,6 @@ class XenobladeXHttpServer(HTTPServer):
 
     def download_items(self) -> list[GameItem]:
         items: list[GameItem] = []
-        if self.upload_in_progress:
-            return items
 
         self._match_line(items, 0, r'^KY Id=([1-9a-fA-F]{1}) Fg=([0-9a-fA-F]{1})\n')
         self._match_line(items, None, r'^IT Id=([0-9a-fA-F]{3}) Tp=([0-9a-fA-F]{2})(?:\n| S1Id)')
@@ -246,8 +244,6 @@ class XenobladeXHttpServer(HTTPServer):
         return items
 
     def download_death(self) -> bool:
-        if self.upload_in_progress:
-            return False
         pattern = r'^KY Id=6 .*\n'
         result: bool = re.match(pattern, self.locations) is not None
         re.sub(pattern, "", self.locations)
@@ -288,6 +284,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.http_server.locations += locations
         if upload_ended:
             self.http_server.upload_in_progress = False
+            asyncio.run(self.http_server.process_game())
 
     # Silence connection request logging
     def log_request(self, code='-', size='-'):
@@ -325,7 +322,7 @@ class XenobladeXContext(CommonContext):
 
     def __init__(self, server_address: Optional[str], password: Optional[str], xeno_port: int,
                  debug: bool = False) -> None:
-        self.http_server = XenobladeXHttpServer(('::', xeno_port), debug=debug)
+        self.http_server = XenobladeXHttpServer(('::', xeno_port), debug=debug, process_game=self.process_game)
         self.xeno_port = xeno_port
         super().__init__(server_address, password)
 
@@ -438,6 +435,13 @@ class XenobladeXContext(CommonContext):
             item_name = self.archipelago_item_to_name(item)
             self.http_server.upload_item(game_item.type, game_item.id, self.seed_name,
                                          item_name, player_item_names[item], level)
+
+    async def process_game(self) -> None:
+        if self.connected:
+            if "DeathLink" in self.tags and self.http_server.download_death():
+                await self.send_death()
+            await self.download_game_locations()
+            self.upload_game_items()
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try:
@@ -552,16 +556,6 @@ class XenobladeXContext(CommonContext):
             raise Exception(CEMU_NOT_FOUND)
 
 
-async def xenoblade_x_sync_task(ctx: XenobladeXContext) -> None:
-    while not ctx.exit_event.is_set():
-        if ctx.connected:
-            if "DeathLink" in ctx.tags and ctx.http_server.download_death():
-                await ctx.send_death()
-            await ctx.download_game_locations()
-            ctx.upload_game_items()
-        await asyncio.sleep(0.5)
-
-
 async def main(args) -> None:
     Utils.init_logging("XenobladeXClient", exception_logger="Client")
 
@@ -587,13 +581,11 @@ async def main(args) -> None:
     ctx.run_cli()
 
     asyncio.get_event_loop().run_in_executor(None, ctx.http_server.serve_forever)
-    sync_task = asyncio.create_task(xenoblade_x_sync_task(ctx))
 
     await ctx.exit_event.wait()
 
     ctx.server_address = None
     await asyncio.get_event_loop().run_in_executor(None, ctx.http_server.shutdown)
-    await sync_task
     await ctx.shutdown()
 
 
