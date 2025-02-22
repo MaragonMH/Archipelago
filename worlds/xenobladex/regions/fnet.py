@@ -5,7 +5,7 @@ from ..Regions import Requirement as Req, Rule
 fnet_precious_ressources_regions: List[Rule] = [
     Rule("Menu"),
     # all others
-    Rule("FNet Resource"),
+    Rule("FNet Resource", {Req("KEY: FNet")}),
     # Boiled-Egg Ore, Ouroboros Crystal, Parhelion Platinum, Marine Rutile
     Rule("FNet Resource 2", {Req("FLDSK: Mechanical", 1)})
 ]
