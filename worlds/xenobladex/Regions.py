@@ -2,6 +2,7 @@ import logging
 from functools import partial
 from BaseClasses import CollectionState, MultiWorld, Region, Entrance, Location
 from dataclasses import astuple, dataclass, field
+import line_profiler
 
 
 @dataclass(frozen=True, eq=True)
@@ -122,6 +123,49 @@ def connect_regions(world: MultiWorld, player: int, source: str, target: str, ru
     connection.connect(target_region)
 
 
+# Used by rules to improve performance of zone completion checks
+segment_completion_lookup: dict[str, dict[str, int]] = {}
+
+
+# Only after items are inside itempool and before fill
+def prepare_regions(world: MultiWorld, player: int) -> None:
+    zones = ["MIRA", "PRIM", "NOCT", "OBLI", "SYLV", "CAUL"]
+    regions = world.get_regions(player)
+    for zone in zones:
+        # Create segment_completion_lookup for region rules
+        zone_dict: dict[str, int] = {}
+        # Add indirect conditions to regions
+        indirect_regions: set[Region] = set()
+        for region in regions:
+            count: int = 0
+            for loc in region.get_locations():
+                if loc.name.startswith(("SEG", "FNO")):
+                    if zone == "MIRA":
+                        count += 1
+                        indirect_regions.add(region)
+                    elif f"- {zone.capitalize()}" in loc.name:
+                        count += 1
+                        indirect_regions.add(region)
+            zone_dict[region.name] = count
+        segment_completion_lookup[zone] = zone_dict
+        # Find all affected entrances
+        for entrance in world.get_entrances(player):
+            if not (zone.capitalize() in entrance.name):
+                # Do chapter regions manually
+                if (zone == "PRIM" and "Chapter 4" in entrance.name) or \
+                   (zone == "NOCT" and "Chapter 5" in entrance.name) or \
+                   (zone == "OBLI" and "Chapter 6" in entrance.name) or \
+                   (zone == "MIRA" and "Chapter 8" in entrance.name) or \
+                   (zone == "SYLV" and "Chapter 10" in entrance.name) or \
+                   (zone == "CAUL" and "Chapter 11" in entrance.name):
+                    pass
+                else:
+                    continue
+            for region in indirect_regions:
+                world.register_indirect_condition(region, entrance)
+
+
+@line_profiler.profile
 def has_items(state: CollectionState, player, requirements: set[Requirement]) -> bool:
     """Returns true if the state satifies the item requirements"""
     result = True
@@ -134,12 +178,9 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
             result = result and state.has_group(requirement.name, player)
         elif requirement.name in ["MIRA", "PRIM", "NOCT", "OBLI", "SYLV", "CAUL"]:
             zone_segment_count = 0
-            for loc in state.multiworld.get_reachable_locations(state, player):
-                if loc.name.startswith(("SEG", "FNO")):
-                    if requirement.name == "MIRA":
-                        zone_segment_count += 1
-                    elif f"- {requirement.name.capitalize()}" in loc.name:
-                        zone_segment_count += 1
+            for region, count in segment_completion_lookup[requirement.name].items():
+                if state.can_reach_region(region, player):
+                    zone_segment_count += count
             result = result and zone_segment_count >= requirement.count
         else:
             result = result and state.has(requirement.name, player, requirement.count)

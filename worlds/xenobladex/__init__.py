@@ -4,7 +4,7 @@ from worlds.LauncherComponents import Component, components, launch_subprocess, 
 from functools import partial
 from typing import cast, ClassVar
 from .Slot import generate_slot_data
-from .Regions import init_region
+from .Regions import init_region, prepare_regions
 from .Items import xenobladeXItems, create_items, create_item, XenobladeXItem
 from .Rules import set_rules
 from .Locations import create_locations, xenobladeXLocations
@@ -59,7 +59,6 @@ class XenobladeXWorld(World):
     }
 
     def create_regions(self):
-        self.explicit_indirect_conditions = False
         init_region(self.multiworld, self.player, "Menu")
         create_locations(self.multiworld, cast(XenobladeXOptions, self.options), self.player, self.base_id)
 
@@ -71,6 +70,7 @@ class XenobladeXWorld(World):
 
     def set_rules(self):
         set_rules(self.multiworld, self.player, self.item_name_to_id)
+        prepare_regions(self.multiworld, self.player)
 
     def generate_early(self):
         pass
