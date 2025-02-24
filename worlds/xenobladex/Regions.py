@@ -181,6 +181,8 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
             for region, count in segment_completion_lookup[requirement.name].items():
                 if state.can_reach_region(region, player):
                     zone_segment_count += count
+                if zone_segment_count >= requirement.count:
+                    break
             result = result and zone_segment_count >= requirement.count
         else:
             result = result and state.has(requirement.name, player, requirement.count)
