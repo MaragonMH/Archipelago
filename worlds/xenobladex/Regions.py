@@ -2,7 +2,6 @@ import logging
 from functools import partial
 from BaseClasses import CollectionState, MultiWorld, Region, Entrance, Location
 from dataclasses import astuple, dataclass, field
-import line_profiler
 
 
 @dataclass(frozen=True, eq=True)
@@ -165,7 +164,6 @@ def prepare_regions(world: MultiWorld, player: int) -> None:
                 world.register_indirect_condition(region, entrance)
 
 
-@line_profiler.profile
 def has_items(state: CollectionState, player, requirements: set[Requirement]) -> bool:
     """Returns true if the state satifies the item requirements"""
     result = True
