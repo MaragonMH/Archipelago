@@ -92,6 +92,7 @@ void __free (void* ptr);
 // 1d = Important Items				https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_PreciousList.html
 // 1e = Appendage Fragments			https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_PieceList.html
 // 1f = Consumeable Items			https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_BattleItem.html
+// 41 = Blueprints                  https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_Blueprint.html
 void _addItem(int type, int id){
 	if(type != 9){
 		reqMenuAddItemFromId(type, id, 1);

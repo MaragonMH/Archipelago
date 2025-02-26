@@ -12,6 +12,8 @@ $disableSkellArmor = 0
 $disableSkellWeapons = 0
 $disableGroundAugments = 0
 $disableSkellAugments = 0
+$disableImportantItems = 1
+$disableBlueprints = 1
 $curlPort = 45872
 
 [Preset]
@@ -67,3 +69,21 @@ category = "SkellAugments"
 name = "disable"
 category = "SkellAugments"
 $disableSkellAugments = 1
+
+[Preset]
+name = "disable"
+category = "ImportantItems"
+
+[Preset]
+name = "on"
+category = "ImportantItems"
+$disableImportantItems = 0
+
+[Preset]
+name = "disable"
+category = "Blueprints"
+
+[Preset]
+name = "on"
+category = "Blueprints"
+$disableBlueprints = 0

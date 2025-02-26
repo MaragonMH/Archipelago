@@ -751,6 +751,34 @@ class IncludeSkellAugments(CemuChoice):
     ]
 
 
+class IncludeImportantItems(CemuChoice):
+    """Allows you to receive important items and adds those items to the pool. Has no logic currently"""
+    display_name = "Include Important Items"
+    default = 0
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "IMPIT"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
+class IncludeBlueprints(CemuChoice):
+    """Allows you to receive blueprints/schematics as items and adds those items to the pool. Has no logic currently"""
+    display_name = "Include Blueprints"
+    default = 0
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "BLP"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
 class HiddenLocalItems(LocalItems):
     __doc__ = LocalItems.__doc__
     visibility = Visibility.template | Visibility.spoiler
@@ -795,6 +823,8 @@ class XenobladeXOptions(PerGameCommonOptions):
     clp: IncludeCollectopediaLocations
     ebk: IncludeEnemyBookLocations
     loc: IncludeLocationLocations
+    # shp: IncludeShopLocations
+    # qst: IncludeQuestLocations
 
     # Items
     amr: IncludeGroundArmor
@@ -803,6 +833,8 @@ class XenobladeXOptions(PerGameCommonOptions):
     skwpn: IncludeSkellWeapons
     skamr: IncludeSkellArmor
     skaug: IncludeSkellAugments
+    impit: IncludeImportantItems
+    # blp: IncludeBlueprints
 
     # Graphic packs
     enemy_aggro: EnemyAggro
@@ -865,6 +897,8 @@ option_groups: list[OptionGroup] = [
         IncludeSkellWeapons,
         IncludeSkellArmor,
         IncludeSkellAugments,
+        IncludeImportantItems,
+        # IncludeBlueprints,
     ]),
     OptionGroup("Graphic packs", [
         EnemyAggro,

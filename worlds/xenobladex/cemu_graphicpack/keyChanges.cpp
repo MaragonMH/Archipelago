@@ -139,7 +139,7 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 #endif
 
 // Parameters from rules.txt
-int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments;
+int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints;
 
 extern int* menuBasePtr;
 extern int bladeTerminalScenarioFlagPtr, shopTerminalScenarioFlagPtr;
@@ -214,6 +214,8 @@ int _checkType(int type){
 	if(type >= 0xf && type <= 0x13) return disableSkellWeapons;
 	if(type >= 0x14 && type <= 0x15) return disableGroundAugments;
 	if(type >= 0x16 && type <= 0x18) return disableSkellAugments;
+	if(type == 0x1d) return disableImportantItems;
+	if(type == 0x41) return disableBlueprints;
 	if(type >= 0x18 && type != 0x1c) return 1;
 	return 0;
 }
