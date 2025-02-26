@@ -8,7 +8,7 @@ from .Regions import init_region, prepare_regions
 from .Items import xenobladeXItems, create_items, create_item, XenobladeXItem
 from .Rules import set_rules
 from .Locations import create_locations, xenobladeXLocations
-from .Options import XenobladeXOptions
+from .Options import XenobladeXOptions, option_groups
 from .Settings import XenobladeXSettings
 
 
@@ -30,6 +30,8 @@ class XenobladeXWeb(WebWorld):
         "setup/en",
         ["Maragon"]
     )]
+
+    option_groups = option_groups
 
 
 class XenobladeXWorld(World):

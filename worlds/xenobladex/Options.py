@@ -1,5 +1,6 @@
 from dataclasses import asdict, dataclass
-from Options import DeathLink, DefaultOnToggle, Choice, PerGameCommonOptions
+from Options import DeathLink, DefaultOnToggle, Choice, ExcludeLocations, LocalItems, NonLocalItems, OptionGroup, \
+    PerGameCommonOptions, PriorityLocations, StartHints, StartInventory, StartLocationHints, Visibility
 
 
 class CemuChoice(Choice):
@@ -750,12 +751,60 @@ class IncludeSkellAugments(CemuChoice):
     ]
 
 
+class HiddenLocalItems(LocalItems):
+    __doc__ = LocalItems.__doc__
+    visibility = Visibility.template | Visibility.spoiler
+
+
+class HiddenNonLocalItems(NonLocalItems):
+    __doc__ = NonLocalItems.__doc__
+    visibility = Visibility.template | Visibility.spoiler
+
+
+class HiddenStartInventory(StartInventory):
+    __doc__ = StartInventory.__doc__
+    visibility = Visibility.template | Visibility.spoiler
+
+
+class HiddenStartHints(StartHints):
+    __doc__ = StartHints.__doc__
+    visibility = Visibility.template | Visibility.spoiler
+
+
+class HiddenStartLocationHints(StartLocationHints):
+    __doc__ = StartLocationHints.__doc__
+    visibility = Visibility.template | Visibility.spoiler
+
+
+class HiddenExcludeLocations(ExcludeLocations):
+    __doc__ = ExcludeLocations.__doc__
+    visibility = Visibility.template | Visibility.spoiler
+
+
+class HiddenPriorityLocations(PriorityLocations):
+    __doc__ = PriorityLocations.__doc__
+    visibility = Visibility.template | Visibility.spoiler
+
+
 @dataclass
 class XenobladeXOptions(PerGameCommonOptions):
+    # Game
+    death_link: DeathLink
+
+    # Locations
     clp: IncludeCollectopediaLocations
     ebk: IncludeEnemyBookLocations
     loc: IncludeLocationLocations
-    death_link: DeathLink
+
+    # Items
+    amr: IncludeGroundArmor
+    wpn: IncludeGroundWeapons
+    aug: IncludeGroundAugments
+    skwpn: IncludeSkellWeapons
+    skamr: IncludeSkellArmor
+    skaug: IncludeSkellAugments
+
+    # Graphic packs
     enemy_aggro: EnemyAggro
     enemy_stats: EnemyStats
     damage_divisor: DamageDivisor
@@ -787,14 +836,67 @@ class XenobladeXOptions(PerGameCommonOptions):
     moon_jump_height: MoonJumpHeight
     moon_jump_type: MoonJumpType
     run_forrest_run: RunForrestRun
-    amr: IncludeGroundArmor
-    wpn: IncludeGroundWeapons
-    aug: IncludeGroundAugments
-    skwpn: IncludeSkellWeapons
-    skamr: IncludeSkellArmor
-    skaug: IncludeSkellAugments
+
+    # Removed
+    local_items: HiddenLocalItems  # type: ignore[override]
+    non_local_items: HiddenNonLocalItems  # type: ignore[override]
+    start_inventory: HiddenStartInventory  # type: ignore[override]
+    start_hints: HiddenStartHints  # type: ignore[override]
+    start_location_hints: HiddenStartLocationHints  # type: ignore[override]
+    exclude_locations: HiddenExcludeLocations  # type: ignore[override]
+    priority_locations: HiddenPriorityLocations  # type: ignore[override]
 
 
 def generate_cemu_options(options: XenobladeXOptions) -> list[dict[str, str]]:
     return [asdict(XenobladeXOption(option.cemu_pack, option.cemu_option, option.cemu_selection_names[option.value]))
             for option in asdict(options).values() if isinstance(option, CemuChoice)]
+
+
+option_groups: list[OptionGroup] = [
+    OptionGroup("Locations", [
+        IncludeCollectopediaLocations,
+        IncludeEnemyBookLocations,
+        IncludeLocationLocations,
+    ]),
+    OptionGroup("Items", [
+        IncludeGroundArmor,
+        IncludeGroundWeapons,
+        IncludeGroundAugments,
+        IncludeSkellWeapons,
+        IncludeSkellArmor,
+        IncludeSkellAugments,
+    ]),
+    OptionGroup("Graphic packs", [
+        EnemyAggro,
+        EnemyStats,
+        DamageDivisor,
+        DamageMultiplicator,
+        QteAuto,
+        QteSpeed,
+        QteSkell,
+        CollectionRange,
+        ArmorSlotUpgrades,
+        ArmorTraitsUpgrades,
+        LvPointsModifier,
+        BattlePointsModifier,
+        BladePointsModifier,
+        FrontierNavMiraniumFrequency,
+        FrontierNavMiraniumQuantity,
+        FrontierNavMoneyFrequency,
+        FrontierNavMoneyQuantity,
+        FrontierNavResourcesFrequency,
+        FrontierNavResourcesQuantity,
+        FrontierNavNoMiraniumCap,
+        EquipAlternateRatio,
+        EquipChestCount,
+        EquipQuality,
+        EquipSlots,
+        BrokenEquip,
+        MaterialsDropRatio,
+        TreasureQuality,
+        MoonJumpWidth,
+        MoonJumpHeight,
+        MoonJumpType,
+        RunForrestRun,
+    ])
+]
