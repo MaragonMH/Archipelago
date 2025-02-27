@@ -28,7 +28,7 @@ class XenobladeXWeb(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["Maragon"]
+        ["Maragon", "Nina"]
     )]
 
     option_groups = option_groups
@@ -43,7 +43,7 @@ class XenobladeXWorld(World):
     topology_present = True
     web = XenobladeXWeb()
 
-    data_version = 0
+    data_version = 1
     base_id: int = 4100000
 
     options_dataclass = XenobladeXOptions

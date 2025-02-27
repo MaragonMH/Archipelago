@@ -58,10 +58,11 @@ You can't see the items you get yet, but you will be notified through ingame tex
 you found or received a item.
 
 ## Whats next?
-I wanna randomize the shops in the future, because currently the optional missions and the AM leveling is mostly useless.
+- Add Shop items to the available locations.
+- Add Schematics/Blueprints to the item pool.
+- Add Basic Quests to the available locations.
 
 ## Known Issues
 - The first time you talk with the new L'shop you will still get denied by the `Only available online` prompt.
-- The website option generation does not work because there are too many items (worked on older versions: 0.5.1).
-- There is currently no logic. Either cheat the items, when you know where they are from hints or include them in the `start_inventory`.
-- The `AS0115 Formula XT` can somehow not be configured in the garage, until later
+- `Important Items` have no logic yet.
+- The `AS0115 Formula XT` can somehow not be configured in the garage.

@@ -53,6 +53,15 @@ Currently only the PAL and latest US version of Xenoblade X is supported.
   - 1.0.1E/1.0.0E (PAL)
   - 1.0.2U
 
+### My Client is unable to find the Cemu Settings.xml
+
+If you migrated from an older version of Cemu you might need to freshly reinstall Cemu.
+
+### Xenoblade X is not receiving/sending any items
+
+Make sure that you are one one of the supported versions of Cemu and Xenoblade X.
+Make sure you reached the first day cutscene overlooking Primordia and time is progressing.
+
 ### Xenoblade X crashed what should i do?
 If your client is still active just press `Disconnect` and then `Connect` and your game should reopen.
 
