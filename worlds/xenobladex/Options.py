@@ -667,6 +667,25 @@ class IncludeLocationLocations(DefaultOnToggle):
     display_name = "Include Location Locations"
 
 
+class IncludeQuestLocations(DefaultOnToggle):
+    """Allows you to receive items from quests and adds those locations to the pool"""
+    display_name = "Include Quest Locations"
+
+
+class IncludeShopLocations(CemuChoice):
+    """Allows you to receive items from the shop and adds those locations to the pool"""
+    display_name = "Include Shop Locations"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "SHP"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
 class IncludeGroundArmor(CemuChoice):
     """Allows you to receive ground armor as items and adds those items to the pool"""
     display_name = "Include Ground Armor Items"
@@ -889,6 +908,8 @@ option_groups: list[OptionGroup] = [
         IncludeCollectopediaLocations,
         IncludeEnemyBookLocations,
         IncludeLocationLocations,
+        # IncludeQuestLocations,
+        # IncludeShopLocations,
     ]),
     OptionGroup("Items", [
         IncludeGroundArmor,

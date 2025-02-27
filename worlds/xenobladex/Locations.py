@@ -32,6 +32,8 @@ from .locations.enemies import enemies_data  # noqa: E402
 from .locations.fnNodes import fn_nodes_data  # noqa: E402
 from .locations.locations import locations_data  # noqa: E402
 from .locations.segments import segments_data  # noqa: E402
+# from .locations.quests import quests_data  # noqa: E402
+# from .locations.shops import shops_data  # noqa: E402
 
 
 class XenobladeXLocation(Location):
@@ -60,6 +62,8 @@ xenobladeXLocations = [
     *_Locs.gen("FNO", 2, fn_nodes_data),
     *_Locs.gen("SEG", 3, segments_data),
     *_Locs.gen("LOC", 4, locations_data),
+    # *_Locs.gen("QST", 5, quests_data),
+    # *_Locs.gen("SHP", 6, shops_data),
 ]
 
 
