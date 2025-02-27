@@ -113,6 +113,5 @@ Data("FN Node 514 - Caul", regions=["FNet", "Mechanical 3"]),
 Data("FN Node 515 - Caul", regions=["FNet", "Mechanical 3"]),
 Data("FN Node 516 - Caul", regions=["FNet", "Mechanical 1"]),
 ]
-# get vein_ids https://xenoblade.github.io/xbx/bdat/common_local_us/SEG_ProbeList.html from game as NodeId
-# https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinList.html to match name in
+# https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinList.html match name in
 # https://xenoblade.github.io/xbx/bdat/common_local_us/FLD_Location.html

@@ -59,7 +59,7 @@ _fnNodeList_L3:
 	stw r9,8(r31)
 _fnNodeList_L2:
 	lwz r9,8(r31)
-	cmpwi cr0,r9,105
+	cmpwi cr0,r9,109
 	ble cr0,_fnNodeList_L4
 	lwz r9,28(r31)
 	mr r3,r9

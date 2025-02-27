@@ -17,9 +17,9 @@ char _formatFnNodeText[] = "FN Id=%03x Fg=%01x:";
 int checkDP(short id);
 
 
-// Use https://xenoblade.github.io/xbx/bdat/common_local_us/SEG_ProbeList.html to match the ids
+// Use https://xenoblade.github.io/xbx/bdat/common_local_us/FnetVeinList.html
 char* _postFnNodeList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
-    for(int nodeId = 1; nodeId < 106; nodeId++){
+    for(int nodeId = 1; nodeId < 110; nodeId++){
         int flag = checkDP(nodeId);
 
         stringCurrentPtr += __sprintf_s(stringCurrentPtr, maxEntrySize, _formatFnNodeText, nodeId, flag);
