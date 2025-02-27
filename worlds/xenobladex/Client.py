@@ -12,7 +12,7 @@ import random
 import re
 import urllib.parse
 import Utils
-from NetUtils import NetworkItem
+from NetUtils import ClientStatus, NetworkItem
 from typing import Any, Coroutine, Counter, List, NamedTuple, Optional, Set, Callable, cast
 from itertools import groupby
 import colorama
@@ -422,7 +422,7 @@ class XenobladeXContext(CommonContext):
             await self.send_msgs([{"cmd": 'LocationChecks', "locations": new_locations}])
             self.locations_checked = game_locations
 
-    def upload_game_items(self) -> None:
+    async def upload_game_items(self) -> None:
         self.http_server.clear_uploaded_items()
         uploaded_server_items = self.http_server.download_items()
         uploaded_items = {self.game_item_to_archipelago_item(itm): itm.level for itm in uploaded_server_items}
@@ -436,13 +436,15 @@ class XenobladeXContext(CommonContext):
             item_name = self.archipelago_item_to_name(item)
             self.http_server.upload_item(game_item.type, game_item.id, self.seed_name,
                                          item_name, player_item_names[item], level)
+            if item_name == "Victory":
+                await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
 
     async def process_game(self) -> None:
         if self.connected:
             if "DeathLink" in self.tags and self.http_server.download_death():
                 await self.send_death()
             await self.download_game_locations()
-            self.upload_game_items()
+            await self.upload_game_items()
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try:
