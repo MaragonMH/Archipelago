@@ -24,12 +24,10 @@ int _charaHasDied;
 int request(int* requestCtrlPtr, int code, int placeholder);
 
 
-// Use  https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_EnBook.html to match the ids
-// Defeat: Number of enemies you defeated
-// Discovery(Dc): 0, 1, 2. 0 = Not discovered yet (will appear as ??? in menu), 
-// 1 = encountered in combat, 2 = fully researched (white dot in menu)
+// Use https://xenoblade.github.io/xbx/bdat/common_local_us/ITM_PreciousList.html from [24:31] and [36:38]
 char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
-    for(int keyId = 0; keyId < 9; keyId++){
+    for(int keyId = 0; keyId < 16; keyId++){
+		if(keyId == 0x9) keyId += 4;
 		int flag = 0;
 
 		// just for debugging purposes

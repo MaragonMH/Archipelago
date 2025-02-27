@@ -176,7 +176,7 @@ class XenobladeXHttpServer(HTTPServer):
                     max: int = 0xFFFF, has_lvl: bool = False, lvl_change=lambda lvl: lvl):
         match = re.findall(regex, self.locations, re.MULTILINE)
         match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
-        data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 1000 if not has_lvl
+        data += [GameItem(game_type if game_type is not None else entry[1], entry[0], 10000 if not has_lvl
                           else lvl_change(entry[1])) for entry in match if min <= entry[1] <= max]
 
     def upload_death(self):

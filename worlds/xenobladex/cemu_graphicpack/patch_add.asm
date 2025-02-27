@@ -336,23 +336,23 @@ _addKey:
 	b _add_L28
 _add_L27:
 	lwz r9,40(r31)
-	cmpwi cr0,r9,32
+	cmpwi cr0,r9,13
 	bne cr0,_add_L29
+	li r3,0
+	bl _reqForceDamagePlayerTargetGoner
+	b _add_L28
+_add_L29:
+	lwz r9,40(r31)
+	cmpwi cr0,r9,32
+	bne cr0,_add_L30
 	lwz r5,44(r31)
 	li r4,1
 	li r3,16
 	bl setLocal
 	b _add_L28
-_add_L29:
-	lwz r9,40(r31)
-	cmpwi cr0,r9,33
-	bne cr0,_add_L30
-	li r3,0
-	bl _reqForceDamagePlayerTargetGoner
-	b _add_L28
 _add_L30:
 	lwz r9,40(r31)
-	cmpwi cr0,r9,34
+	cmpwi cr0,r9,33
 	bne cr0,_add_L31
 	lis r9,fnetBasePtr@ha
 	lwz r9,fnetBasePtr@l(r9)
@@ -362,7 +362,7 @@ _add_L30:
 	b _add_L28
 _add_L31:
 	lwz r9,40(r31)
-	cmpwi cr0,r9,35
+	cmpwi cr0,r9,34
 	bne cr0,_add_L32
 	li r5,1
 	lwz r4,44(r31)
