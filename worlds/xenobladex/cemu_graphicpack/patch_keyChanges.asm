@@ -621,6 +621,8 @@ _keyChanges_L51:
 	bctr
 _setLocal:
 	stwu r1,-32(r1)
+	mflr r0
+	stw r0,36(r1)
 	stw r31,28(r1)
 	mr r31,r1
 	stw r3,8(r31)
@@ -640,13 +642,27 @@ _setLocal:
 	lwz r9,_bladeFlag@l(r9)
 	lwz r10,12(r31)
 	cmpw cr0,r10,r9
-	bne cr0,_keyChanges_L53
+	bne cr0,_keyChanges_L55
 _keyChanges_L54:
+	li r3,28
+	bl _hasPreciousItem
+	mr r9,r3
+	cmpwi cr0,r9,0
+	bne cr0,_keyChanges_L55
+	li r9,1
+	b _keyChanges_L56
+_keyChanges_L55:
+	li r9,0
+_keyChanges_L56:
+	cmpwi cr0,r9,0
+	beq cr0,_keyChanges_L53
 	li r5,0
 _keyChanges_L53:
 	lis r9, 0x103a
 	nop
 	addi r11,r31,32
+	lwz r0,4(r11)
+	mtlr r0
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr

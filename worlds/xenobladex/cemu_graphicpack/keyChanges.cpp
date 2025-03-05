@@ -295,7 +295,7 @@ void _preItemLoopAdjustmentWrapper(){
 void _setLocal(const int width, const int position){
 	register int value asm("r5");
 	if(width == 2 && value == 1){
-		if(position == _collepediaFlag || position == _bladeFlag)
+		if((position == _collepediaFlag || position == _bladeFlag) && !_hasPreciousItem(24 + 5 - 1))
 			value = 0;
 	}
 
