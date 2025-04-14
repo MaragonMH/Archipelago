@@ -449,6 +449,7 @@ class XenobladeXContext(CommonContext):
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try:
             mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
+            settings_path = "settings.xml"
             appdata = None
             if Utils.is_windows:
                 appdata = os.getenv('APPDATA')
@@ -460,12 +461,15 @@ class XenobladeXContext(CommonContext):
             if not os.path.isdir(cemu_appdata_path):
                 raise Exception(CEMU_SETTINGS_NOT_FOUND)
             cemu_mod_path = os.path.join(cemu_appdata_path, mod_path)
+            cemu_settings_path = os.path.join(cemu_appdata_path, settings_path)
             if Utils.is_linux:
                 config = os.path.join(pathlib.Path.home(), ".config/Cemu")
                 if not os.path.isdir(cemu_mod_path):
                     cemu_mod_path = os.path.join(config, mod_path)
+                if not os.path.isdir(cemu_settings_path):
+                    cemu_settings_path = os.path.join(config, settings_path)
             self.copy_cemu_files(cemu_mod_path)
-            self.set_cemu_graphic_packs(cemu_appdata_path, mod_path, options)
+            self.set_cemu_graphic_packs(cemu_settings_path, mod_path, options)
             self.copy_port(cemu_mod_path)
             self.open_cemu()
         except Exception as e:
@@ -503,8 +507,7 @@ class XenobladeXContext(CommonContext):
         except Exception:
             raise Exception(CEMU_APWORLD_NOT_FOUND)
 
-    def set_cemu_graphic_packs(self, cemu_path: str, mod_path: str, options: list[XenobladeXOption]):
-        settings_path = os.path.join(cemu_path, "settings.xml")
+    def set_cemu_graphic_packs(self, settings_path: str, mod_path: str, options: list[XenobladeXOption]):
         try:
             with open(settings_path, "r") as file:
                 filedata = file.read()
