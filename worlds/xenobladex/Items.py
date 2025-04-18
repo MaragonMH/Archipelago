@@ -164,6 +164,8 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
             # No oversized categories detected
             else:
                 for prefix, count in optionals_counter.items():
+                    # Cap count to list size, should have no effect in almost all cases except for SKWPN on reroll
+                    count = min(count, len(xenobladeXOptionalItems[prefix]))
                     optional_items += sample(xenobladeXOptionalItems[prefix], count)
                 break
 
