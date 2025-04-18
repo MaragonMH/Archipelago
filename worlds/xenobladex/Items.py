@@ -158,7 +158,7 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
                 for prefix, count in optionals_counter.items():
                     if count > max_category_size:
                         missing_item_count += count - max_category_size
-                        optionals_counter.update({prefix: max_category_size})
+                        optionals_counter[prefix] = max_category_size
                         maxed_categories += [prefix]
 
             # No oversized categories detected
