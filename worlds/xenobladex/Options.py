@@ -662,6 +662,25 @@ class IncludeEnemyBookLocations(DefaultOnToggle):
     display_name = "Include Enemy Book Locations"
 
 
+class EnemyBookThreshold(CemuChoice):
+    """Sets the required kills to unlock a enemy location. White dot in enemy book appears at 3 for normal enemies.
+    Uniques are fixed at 1"""
+    display_name = "Enemy Book Threshold"
+    default = 3
+    option_discovery = 0
+    option_1 = 1
+    option_2 = 2
+    option_3 = 3
+    cemu_pack = "AP"
+    cemu_option = "EnemyBookThreshold"
+    cemu_selection_names = [
+        "discovery",
+        "1",
+        "2",
+        "3",
+    ]
+
+
 class IncludeLocationLocations(DefaultOnToggle):
     """Allows you to get items from locations and adds those locations to the pool"""
     display_name = "Include Location Locations"
@@ -840,10 +859,11 @@ class XenobladeXOptions(PerGameCommonOptions):
 
     # Locations
     clp: IncludeCollectopediaLocations
-    ebk: IncludeEnemyBookLocations
     loc: IncludeLocationLocations
     # shp: IncludeShopLocations
     # qst: IncludeQuestLocations
+    ebk: IncludeEnemyBookLocations
+    enemy_book_threshold: EnemyBookThreshold
 
     # Items
     amr: IncludeGroundArmor
@@ -906,10 +926,11 @@ def generate_cemu_options(options: XenobladeXOptions) -> list[dict[str, str]]:
 option_groups: list[OptionGroup] = [
     OptionGroup("Locations", [
         IncludeCollectopediaLocations,
-        IncludeEnemyBookLocations,
         IncludeLocationLocations,
         # IncludeQuestLocations,
         # IncludeShopLocations,
+        IncludeEnemyBookLocations,
+        EnemyBookThreshold,
     ]),
     OptionGroup("Items", [
         IncludeGroundArmor,
