@@ -1,7 +1,6 @@
 from collections import Counter, OrderedDict
 import itertools
 import logging
-from random import sample, seed, choices
 from BaseClasses import Item, ItemClassification as ItCl, MultiWorld
 from dataclasses import dataclass, replace
 from typing import Dict, Generator, List, Optional
@@ -137,7 +136,7 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
         "Please select more locations or less items"
 
     if len(optionals_data) > 0:
-        seed(world.seed)
+        world.random.seed(world.seed)
         max_category_size = 950  # -49 for shop item buffer
         maxed_categories: list[str] = []
         optionals_counter: Counter = Counter()
@@ -147,8 +146,8 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
             for prefix in maxed_categories:
                 optionals_data_temp.pop(prefix, None)
 
-            optional_roll = choices([*optionals_data_temp.keys()], [*optionals_data_temp.values()],
-                                    k=missing_item_count)
+            optional_roll = world.random.choices([*optionals_data_temp.keys()], [*optionals_data_temp.values()],
+                                                 k=missing_item_count)
             optionals_counter += Counter(optional_roll)
 
             # Some categories are too big
@@ -166,7 +165,7 @@ def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: D
                 for prefix, count in optionals_counter.items():
                     # Cap count to list size, should have no effect in almost all cases except for SKWPN on reroll
                     count = min(count, len(xenobladeXOptionalItems[prefix]))
-                    optional_items += sample(xenobladeXOptionalItems[prefix], count)
+                    optional_items += world.random.sample(xenobladeXOptionalItems[prefix], count)
                 break
 
     for item in optional_items:
