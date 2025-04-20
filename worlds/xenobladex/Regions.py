@@ -122,8 +122,13 @@ def connect_regions(world: MultiWorld, player: int, source: str, target: str, ru
     connection.connect(target_region)
 
 
+# Used by rules to improve performance of zone completion checks. player - zone - region - seg count
+segment_completion_lookup: dict[int, dict[str, dict[str, int]]] = {}
+
+
 # Only after items are inside itempool and before fill
 def prepare_regions(world: MultiWorld, player: int) -> None:
+    segment_completion_lookup[player] = {}
     zones = ["MIRA", "PRIM", "NOCT", "OBLI", "SYLV", "CAUL"]
     regions = world.get_regions(player)
     for zone in zones:
@@ -142,7 +147,7 @@ def prepare_regions(world: MultiWorld, player: int) -> None:
                         count += 1
                         indirect_regions.add(region)
             zone_dict[region.name] = count
-        world.worlds[player].segment_completion_lookup[zone] = zone_dict
+        segment_completion_lookup[player][zone] = zone_dict
         # Find all affected entrances
         for entrance in world.get_entrances(player):
             if not (zone.capitalize() in entrance.name):
@@ -172,7 +177,7 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
             result = result and state.has_group(requirement.name, player)
         elif requirement.name in ["MIRA", "PRIM", "NOCT", "OBLI", "SYLV", "CAUL"]:
             zone_segment_count = 0
-            for region, count in state.multiworld.worlds[player].segment_completion_lookup[requirement.name].items():
+            for region, count in segment_completion_lookup[player][requirement.name].items():
                 if state.can_reach_region(region, player):
                     zone_segment_count += count
                 if zone_segment_count >= requirement.count:

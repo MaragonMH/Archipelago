@@ -60,9 +60,6 @@ class XenobladeXWorld(World):
         for prefix in {itm.prefix for itm in xenobladeXItems} if prefix
     }
 
-    # Used by rules to improve performance of zone completion checks
-    segment_completion_lookup: dict[str, dict[str, int]] = {}
-
     def create_regions(self):
         init_region(self.multiworld, self.player, "Menu")
         create_locations(self.multiworld, cast(XenobladeXOptions, self.options), self.player, self.base_id)
