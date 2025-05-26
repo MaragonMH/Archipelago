@@ -156,7 +156,7 @@ Data("Foggy Dilemma - Aff Mission - Resi Dist: Water Puri Plant - Chp 4", region
 Data("Murderess 1 H2H - Resi Dist: Cathedral", regions=["Murderess 1"], depends=["Murderess"]), 
 Data("Murderess 4 H2H - Resi Dist: Cathedral", regions=["Murderess 4"], depends=["Murderess 3 H2H"]), 
 Data("Alien Wreckage - Resi Dist: Ishmael Hills - Archeological 3", regions=["Archeological 3"]),
-Data("Doug 1 H2H - Resi Dist: Ishmael Hills", regions=["Doug 1"], depends=["Doug"]), 
+Data("Doug 1 H2H - Resi Dist: Ishmael Hills", regions=["Doug 1"], depends=["Doug", "Nine Lives"]), 
 Data("Bread and a Circus - Resi Dist: Ishmael Hills - Chp 10", regions=["Chapter 10"], depends=["Muimuis Meltdown"]),
 Data("Elma 2 H2H - Resi Dist: Water Puri Plant - Night", regions=["Elma 2"], depends=["Elma 1 H2H"]), 
 Data("New Frontier - Resi Dist: Cathedral - Chp 12", regions=["Chapter 12", "FNet Resource", "Miranium 20"], depends=["Planetary Pioneer V", "Entrepreneurial Spirit", "Wrothian Innovation"]),
