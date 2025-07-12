@@ -111,8 +111,8 @@ Data("Gi Zang - The Lurker", depends=["The Lurker"]), #lv36 Primordia version
 Data("EN090503_NAME_F00_5", valid=False),
 Data("LV757: Lyvia - Fortun and Glory", depends=["Fortun and Glory"], valid=False), # Requires Definian Downfall B route to access quest
 Data("Gwin_2 - Boot Camp", depends=["Boot Camp"]), # This entry applys to the second (lv46) fight in the mission
-Data("ST816: Stalio - Boze's Ignorance", regions=["Chapter 9", "Blade License", "Boze 4"], depends=["Prone Sweet Prone"]),  # depends Bozes Ignorance
-Data("Blood-king Gelvo Banth - The King of Fear", regions=["Chapter 7", "Blade License", "HB 2", "Noct 25"], depends=["Prone Sweet Prone", "BFFs"]), # depends The King of Fear
+Data("ST816: Stalio - Boze's Ignorance", regions=["Chapter 9", "Blade License", "Boze 4"], depends=["Prone Sweet Prone", "Nine Lives"]),  # depends Bozes Ignorance
+Data("Blood-king Gelvo Banth - The King of Fear", regions=["Chapter 7", "Blade License", "HB 2", "Noct 25"], depends=["Prone Sweet Prone", "BFFs", "Nine Lives"]), # depends The King of Fear
 Data("Running Shark - My Dream", depends=["My Dream"]),
 Data("Interfearence - Serial Thriller", depends=["Serial Thriller"]),
 Data("Alexa Special - Weaponized", regions=["Chapter 4", "Blade License"]),  # depends Weaponized
