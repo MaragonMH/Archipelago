@@ -154,15 +154,12 @@ _hasPreciousItem:
 	li r9,0
 	stw r9,12(r31)
 	b _add_L11
-_add_L16:
+_add_L14:
 	lwz r9,8(r31)
 	lwz r9,0(r9)
 	slwi r9,r9,13
 	srwi r9,r9,26
 	stw r9,20(r31)
-	lwz r9,20(r31)
-	cmpwi cr0,r9,29
-	bne cr0,_add_L17
 	lwz r9,8(r31)
 	lwz r9,0(r9)
 	srwi r9,r9,19
@@ -170,10 +167,10 @@ _add_L16:
 	lwz r9,40(r31)
 	lwz r10,24(r31)
 	cmpw cr0,r10,r9
-	bne cr0,_add_L14
+	bne cr0,_add_L12
 	li r9,1
-	b _add_L15
-_add_L14:
+	b _add_L13
+_add_L12:
 	lwz r9,8(r31)
 	addi r9,r9,12
 	stw r9,8(r31)
@@ -183,13 +180,9 @@ _add_L14:
 _add_L11:
 	lwz r9,12(r31)
 	cmpwi cr0,r9,299
-	ble cr0,_add_L16
-	b _add_L13
-_add_L17:
-	nop
-_add_L13:
+	ble cr0,_add_L14
 	li r9,0
-_add_L15:
+_add_L13:
 	mr r3,r9
 	addi r11,r31,64
 	lwz r0,4(r11)
@@ -207,8 +200,8 @@ _addArt:
 	stw r4,28(r31)
 	li r9,0
 	stw r9,8(r31)
-	b _add_L19
-_add_L20:
+	b _add_L16
+_add_L17:
 	lwz r3,8(r31)
 	bl GetCharaDataPtr
 	mr r9,r3
@@ -220,10 +213,10 @@ _add_L20:
 	lwz r9,8(r31)
 	addi r9,r9,1
 	stw r9,8(r31)
-_add_L19:
+_add_L16:
 	lwz r9,8(r31)
 	cmpwi cr0,r9,18
-	ble cr0,_add_L20
+	ble cr0,_add_L17
 	nop
 	nop
 	addi r11,r31,48
@@ -242,8 +235,8 @@ _addSkill:
 	stw r4,28(r31)
 	li r9,0
 	stw r9,8(r31)
-	b _add_L22
-_add_L23:
+	b _add_L19
+_add_L20:
 	lwz r3,8(r31)
 	bl GetCharaDataPtr
 	mr r9,r3
@@ -255,10 +248,10 @@ _add_L23:
 	lwz r9,8(r31)
 	addi r9,r9,1
 	stw r9,8(r31)
-_add_L22:
+_add_L19:
 	lwz r9,8(r31)
 	cmpwi cr0,r9,18
-	ble cr0,_add_L23
+	ble cr0,_add_L20
 	nop
 	nop
 	addi r11,r31,48
@@ -324,7 +317,7 @@ _addKey:
 	stw r4,44(r31)
 	lwz r9,40(r31)
 	cmpwi cr0,r9,6
-	bne cr0,_add_L27
+	bne cr0,_add_L24
 	addi r9,r31,20
 	li r4,0
 	mr r3,r9
@@ -333,49 +326,49 @@ _addKey:
 	mr r4,r9
 	li r3,0
 	bl SetDead
-	b _add_L28
-_add_L27:
+	b _add_L25
+_add_L24:
 	lwz r9,40(r31)
 	cmpwi cr0,r9,13
-	bne cr0,_add_L29
+	bne cr0,_add_L26
 	li r3,0
 	bl _reqForceDamagePlayerTargetGoner
-	b _add_L28
-_add_L29:
+	b _add_L25
+_add_L26:
 	lwz r9,40(r31)
 	cmpwi cr0,r9,32
-	bne cr0,_add_L30
+	bne cr0,_add_L27
 	lwz r5,44(r31)
 	li r4,1
 	li r3,16
 	bl setLocal
-	b _add_L28
-_add_L30:
+	b _add_L25
+_add_L27:
 	lwz r9,40(r31)
 	cmpwi cr0,r9,33
-	bne cr0,_add_L31
+	bne cr0,_add_L28
 	lis r9,fnetBasePtr@ha
 	lwz r9,fnetBasePtr@l(r9)
 	lwz r4,44(r31)
 	mr r3,r9
 	bl changeScenarioFlag
-	b _add_L28
-_add_L31:
+	b _add_L25
+_add_L28:
 	lwz r9,40(r31)
 	cmpwi cr0,r9,34
-	bne cr0,_add_L32
+	bne cr0,_add_L29
 	li r5,1
 	lwz r4,44(r31)
 	li r3,1
 	bl setLocal
-	b _add_L28
-_add_L32:
+	b _add_L25
+_add_L29:
 	lwz r9,40(r31)
 	addi r9,r9,23
 	mr r4,r9
 	li r3,29
 	bl _addItem
-_add_L28:
+_add_L25:
 	li r9,24155
 	stw r9,8(r31)
 	li r9,30224
@@ -384,34 +377,34 @@ _add_L28:
 	stw r9,16(r31)
 	lwz r9,40(r31)
 	cmpwi cr0,r9,1
-	bne cr0,_add_L33
+	bne cr0,_add_L30
 	lwz r5,44(r31)
 	lwz r4,8(r31)
 	li r3,1
 	bl setLocal
-	b _add_L38
-_add_L33:
+	b _add_L35
+_add_L30:
 	lwz r9,40(r31)
 	cmpwi cr0,r9,2
-	bne cr0,_add_L35
+	bne cr0,_add_L32
 	lwz r5,44(r31)
 	lwz r4,12(r31)
 	li r3,1
 	bl setLocal
-	b _add_L38
-_add_L35:
+	b _add_L35
+_add_L32:
 	lwz r9,40(r31)
 	cmpwi cr0,r9,3
-	bne cr0,_add_L36
+	bne cr0,_add_L33
 	lwz r5,44(r31)
 	lwz r4,16(r31)
 	li r3,1
 	bl setLocal
-	b _add_L38
-_add_L36:
+	b _add_L35
+_add_L33:
 	lwz r9,40(r31)
 	cmpwi cr0,r9,4
-	bne cr0,_add_L37
+	bne cr0,_add_L34
 	lis r9,fnetBasePtr@ha
 	lwz r10,fnetBasePtr@l(r9)
 	lwz r9,44(r31)
@@ -419,11 +412,11 @@ _add_L36:
 	mr r4,r9
 	mr r3,r10
 	bl changeScenarioFlag
-	b _add_L38
-_add_L37:
+	b _add_L35
+_add_L34:
 	lwz r9,40(r31)
 	cmpwi cr0,r9,5
-	bne cr0,_add_L38
+	bne cr0,_add_L35
 	lis r9,_collepediaFlag@ha
 	lwz r9,_collepediaFlag@l(r9)
 	li r5,3
@@ -436,7 +429,7 @@ _add_L37:
 	mr r4,r9
 	li r3,2
 	bl setLocal
-_add_L38:
+_add_L35:
 	nop
 	addi r11,r31,64
 	lwz r0,4(r11)

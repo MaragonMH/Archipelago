@@ -122,7 +122,6 @@ int _hasPreciousItem(int id){
 	unsigned int* itemListPtr = *getItemTypeInfo(basePtr, 0x1d);
 	for(int idx = 0; idx < 300; idx++){
 		unsigned int itemType = itemListPtr[0] << 13 >> 26;
-		if(itemType != 0x1d) break;
 		unsigned int itemId = itemListPtr[0] >> 19;
 		if(id == itemId) return 1;
 		itemListPtr += 3;
