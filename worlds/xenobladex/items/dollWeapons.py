@@ -3,7 +3,7 @@ from ..Items import Itm as Data
 # https://xenoblade.github.io/xbx/bdat/common_local_us/WPN_DlList.html
 # flake8: noqa
 doll_weapons_data: list[Data] = [
-Data("SHM-R910SA L-Cannon"), 
+Data("SHM-R910SA L-Cannon_1"),
 Data("SHM-M210SA Sword_1"),
 Data("SHM-M210SA Sword_2"),
 Data("WPN_WD023001_01_name", valid=False),
@@ -13,7 +13,7 @@ Data("WPN_WD022801_01_name", valid=False),
 Data("WPN_WD023101_01_name", valid=False),
 Data("WPN_WD022401_01_name", valid=False),
 Data("WPN_WD022701_01_name", valid=False),
-Data("SHM-R910SA L-Cannon"),
+Data("SHM-R910SA L-Cannon_2"),
 Data("WPN_WD013101_01_name", valid=False),
 Data("WPN_WD013201_01_name", valid=False),
 Data("WPN_WD012101_01_name", valid=False),
