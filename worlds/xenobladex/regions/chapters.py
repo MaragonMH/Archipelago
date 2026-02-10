@@ -14,6 +14,6 @@ Rule("Chapter 7", {Req("OBLI", 24)}),
 Rule("Chapter 8", {Req("FRD: Lao"), Req("MIRA", 70)}),
 Rule("Chapter 9"),
 Rule("Chapter 10", {Req("SYLV", 14)}),
-Rule("Chapter 11", {Req("FRD: Gwin"), Req("CAUL", 8)}),
+Rule("Chapter 11", {Req("FRD: Gwin"), Req("CAUL", 8), Req("WPN: Soldier Assault Rifle_1")}),
 Rule("Chapter 12", {Req("KEY: Skell License"), Req("SKF"), Req("KEY: Flight Module")}),
 ]
