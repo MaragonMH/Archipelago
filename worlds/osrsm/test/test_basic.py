@@ -130,19 +130,19 @@ class FullTests(OSRSMTestBase):
         rule6 = And(rule_c,rule_d)
         rule7 = And(rule_e, rule_b)
         rule0 = Or(rule_a,rule_b)
-        self.assertTrue(world.resolve_rule(rule_a)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule_b)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule_c)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule_d)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule_e)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule0)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule2)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule3)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule4)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule5)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule6)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule7)(all_state)) #passes
-        self.assertTrue(world.resolve_rule(rule1)(all_state))  #fails
+        self.assertTrue(rule_a.resolve(world)(all_state)) #passes
+        self.assertTrue(rule_b.resolve(world)(all_state)) #passes
+        self.assertTrue(rule_c.resolve(world)(all_state)) #passes
+        self.assertTrue(rule_d.resolve(world)(all_state)) #passes
+        self.assertTrue(rule_e.resolve(world)(all_state)) #passes
+        self.assertTrue( rule0.resolve(world)(all_state)) #passes
+        self.assertTrue( rule2.resolve(world)(all_state)) #passes
+        self.assertTrue( rule3.resolve(world)(all_state)) #passes
+        self.assertTrue( rule4.resolve(world)(all_state)) #passes
+        self.assertTrue( rule5.resolve(world)(all_state)) #passes
+        self.assertTrue( rule6.resolve(world)(all_state)) #passes
+        self.assertTrue( rule7.resolve(world)(all_state)) #passes
+        self.assertTrue( rule1.resolve(world)(all_state))  #fails
             
     
     def test_lumbridge_diary_not_in_logic(self)-> None:
