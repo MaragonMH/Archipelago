@@ -518,13 +518,13 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         
         #culling time
 
-        temp_state = CollectionState(self.multiworld)
+        base_state = CollectionState(self.multiworld)
         for item in itempool:
-            temp_state.add_item(item.name,self.player)
+            base_state.add_item(item.name,self.player)
+        temp_state = base_state.copy()
+
+
         temp_state.sweep_for_advancements()
-
-
-
         if not self.multiworld.completion_condition[self.player](temp_state):
             max_trained_levels:dict[str, int] = {}
             for item in temp_state.prog_items[self.player].keys():
@@ -538,29 +538,35 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             raise OptionError("Game isn't beatable with current settings")
 
         if not self.options.disable_chunk_culling:
-            all_state = CollectionState(self.multiworld)
-            for item in itempool:
-                all_state.collect(item,True)
-            all_state.sweep_for_advancements()
+
+            event_list = [loc for _,loc in self.multiworld.regions.location_cache[self.player].items() if not loc.address]
+                
+
+            all_state = base_state.copy()
+            all_state.sweep_for_advancements(locations=event_list)
             max_chance = len([loc for region in all_state.reachable_regions[self.player] for loc in region.locations if loc.address]) - len(itempool)
             base_itempool = itempool.copy()
             self.random.shuffle(base_itempool)
             exit_counter = 0
-            for item in base_itempool:
-                temp_state = CollectionState(self.multiworld)
-                for i in itempool:
-                    if i.name != item.name:
-                        temp_state.collect(i,True)
-                temp_state.sweep_for_advancements()
+            for i in range(20):
+                short_pool = base_itempool[i::20]
+                temp_state = base_state.copy()
+                for item in short_pool:
+                    temp_state.remove(item)
+                temp_state.sweep_for_advancements(locations=event_list)
                 if self.multiworld.completion_condition[self.player](temp_state):
                     curr_chance = len([loc for region in temp_state.reachable_regions[self.player] for loc in region.locations if loc.address]) - len(itempool)
-                    rand_value = 0 if curr_chance < 0 else self.random.randint(0,max_chance)
-                    if rand_value<curr_chance:
-                        itempool.remove(item)
-                    if rand_value == 0:
-                        exit_counter += 1
-                        if exit_counter > 5:
-                            break
+                    for item in short_pool:
+                        rand_value = 0 if curr_chance < 0 else self.random.randint(0,max_chance)
+                        if rand_value<curr_chance:
+                            itempool.remove(item)
+                            base_state.remove(item)
+                        if rand_value == 0:
+                            exit_counter += 1
+                            if exit_counter > 5:
+                                break
+                    if exit_counter > 5:
+                        break
 
         self.multiworld.itempool+=itempool
         self.items_already_created = len(itempool)
