@@ -214,11 +214,11 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         elif rule_element.type.startswith("task_macro"):
             if rule_element.value not in task_macros:
                 raise Exception("Task macro but it doesn't exist..."+rule_element.value)
-            if rule_element.value.startswith("task_macrox"):
+            if rule_element.type.startswith("task_macrox"):
                 _,count = rule_element.type.split("x",2)
                 if count.isdigit():
                     count = int(count)
-                    return HasCount(task_macros[rule_element.value],count)
+                    return HasFromList(*task_macros[rule_element.value],count=count)
             else:
                 return HasAny(*task_macros[rule_element.value])
         else:
@@ -800,48 +800,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 state.remove_item(item="Kudo",player=self.player,count=(qp_count-1))
             super().remove(state,self.create_event("Kudo"))
         return super().remove(state, item)
-    
-    
-@dataclasses.dataclass()
-class HasCount(Rule[OSRSMWorld],game="OSRSMWorld"):
-    task_list: list[str]
-    needed_count: int
-    def _instantiate(self, world: OSRSMWorld) -> Rule.Resolved:
-        return self.Resolved(self.task_list,self.needed_count,player=world.player,cacheable=True)
-    
-    class Resolved(Rule.Resolved):
-        task_list: list[str]
-        needed_count: int
 
-        @override
-        def _evaluate(self, state: CollectionState) -> bool:
-            return state.has_from_list(self.task_list,self.player,self.needed_count)
-        
-        @override
-        def item_dependencies(self) -> dict[str, set[int]]:
-            return {i:{id(self)} for i in self.task_list}
-        
-        def explain_str(self, state: CollectionState | None = None) -> str:
-            if state is None:
-                return str(self)
-            result = self._evaluate(state)
-            return f'{"Has at least" if result else "Need at least"} {self.needed_count} items from ({", ".join([f"{state.count(x,self.player)}x {x}" for x in self.task_list])}'
-        
-        @override
-        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
-            if state is None:
-                return [{"type":"text","text":str(self)}]
-            result = self._evaluate(state)
-            messages: list[JSONMessagePart] = [{"type": "text", "text": f'{"Has at least" if result else "Need at least"} {self.needed_count} items from ('}]
-            for i, x in enumerate(self.task_list):
-                if i > 0:
-                    messages.append({"type": "text", "text": " & "})
-                messages.append({"type":"text", "text":f"{state.count(x,self.player)}x {x}"})
-            messages.append({"type": "text", "text": ")"})
-            return messages
-        
-        def __str__(self) -> str:
-            return f"Need at least {self.needed_count} from ({', '.join(self.task_list)})"
 
 @dataclasses.dataclass()
 class SafeCanReachRegion(CanReachRegion["OSRSMWorld"],game="OSRSMWorld"):
