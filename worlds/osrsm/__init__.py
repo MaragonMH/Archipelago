@@ -1,6 +1,6 @@
 import typing
 
-from BaseClasses import Item, Tutorial, ItemClassification, Region, MultiWorld, CollectionState,Entrance
+from BaseClasses import Item, Tutorial, ItemClassification, Region, MultiWorld, CollectionState,Entrance,Location
 from rule_builder.rules import *
 from rule_builder.cached_world import CachedRuleBuilderWorld
 from Fill import fill_restrictive, FillError
@@ -559,8 +559,12 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                     for item in short_pool:
                         rand_value = 0 if curr_chance < 0 else self.random.randint(0,max_chance)
                         if rand_value<curr_chance:
-                            itempool.remove(item)
-                            base_state.remove(item)
+                            rand_value = 0 if curr_chance < 0 else self.random.randint(0,max_chance) #Roll the dice again, if we pass this time just demote to useful
+                            if rand_value<curr_chance:
+                                itempool.remove(item)
+                            else: #This way an item that had a low chance to get removed that got unlucky will probally stay, but dice be dice :)
+                                item.classification = ItemClassification.useful
+                            base_state.remove(item) #Either way it's not a prog item, remove from base_state
                         if rand_value == 0:
                             exit_counter += 1
                             if exit_counter > 5:
@@ -636,8 +640,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                     locations_created -= 1
                     #logger.info(f"Location {loc.name} deleted, {rolled_value}/{goal_number}/{maximum_locations}, {locations_created - items_created} left")
                     if not self.multiworld.completion_condition[self.player](all_state):
-                        logger.error("HOW DID YOU BREAK THIS???")
-                        break
+                        logger.error(f"HOW DID {loc.name} BREAK THIS???")
+                        raise Exception("Somehow location culling removed a load bearing location, this should never have happened")
                     if locations_created <= items_created:
                         break #Exit early if we've already removed enough
             logger.error(f"Deleted {maximum_locations-locations_created} filler from {self.player_name}, {locations_created - items_created} remains")
