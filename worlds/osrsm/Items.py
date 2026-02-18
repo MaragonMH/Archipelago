@@ -13,6 +13,51 @@ class ItemRow(typing.NamedTuple):
 
 class OSRSMItem(Item):
     game: str = "Old School Runescape"
+    item_type: typing.ClassVar[str] = "generic"
+
+
+class OSRSMTrainingItem(OSRSMItem):
+    item_type = "training"
+    skill_name: str
+    skill_level: int
+    pseudo_item_name: str
+
+    def __init__(self, skill_name: str, skill_level: int, player: int):
+        name = f"Training_{skill_name}_{skill_level}"
+        super().__init__(name, ItemClassification.progression, None, player)
+        self.skill_name = skill_name
+        self.skill_level = skill_level
+        self.pseudo_item_name = "_Max_Training_" + skill_name
+
+
+class OSRSMQuestPointItem(OSRSMItem):
+    item_type = "quest_point"
+    quest_point_reward: int
+
+    def __init__(self, quest_point_reward: int, location_name: str, player: int):
+        name = f"QP {quest_point_reward} ({location_name})"
+        super().__init__(name, ItemClassification.progression, None, player)
+        self.quest_point_reward = quest_point_reward
+
+
+class OSRSMKudosItem(OSRSMItem):
+    item_type = "kudos"
+    kudos_reward: int
+
+    def __init__(self, kudos_reward: int, location_name: str, player: int):
+        name = f"Kudos {kudos_reward} ({location_name})"
+        super().__init__(name, ItemClassification.progression, None, player)
+        self.kudos_reward = kudos_reward
+
+
+class OSRSMCombatPointsItem(OSRSMItem):
+    item_type = "combat_points"
+    combat_point_reward: int
+
+    def __init__(self, combat_point_reward: int, location_name: str, player: int):
+        name = f"CombatPoints {combat_point_reward} ({location_name})"
+        super().__init__(name, ItemClassification.progression, None, player)
+        self.combat_point_reward = combat_point_reward
 
 
 QP_Items: typing.List[str] = [

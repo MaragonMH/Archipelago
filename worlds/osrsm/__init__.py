@@ -7,7 +7,7 @@ from Fill import fill_restrictive, FillError
 from worlds.AutoWorld import WebWorld, World
 from Options import OptionError
 from .Items import OSRSMItem, starting_area_dict, chunksanity_starting_chunks, QP_Items, ItemRow, \
-    chunksanity_special_region_names
+    chunksanity_special_region_names, OSRSMTrainingItem, OSRSMQuestPointItem, OSRSMKudosItem, OSRSMCombatPointsItem
 from .Locations import OSRSMLocation
 from .Rules import *
 from .Options import OSRSMOptions, StartingArea
@@ -48,6 +48,30 @@ class OSRSMWeb(WebWorld):
 base_id = 0x070000
 
 
+def _make_rule_builder_item_mapping() -> dict[str, str]:
+    """Rule Builder's item_mapping allows collected/removed items to tell Rule Builder's caching that they update a
+    particular cached item or pseudo-item that rules may check for."""
+    item_mapping: dict[str, str] = {}
+
+    # Training
+    for skill_name in skill_names:
+        map_from = [f"Training_{skill_name}_{level}" for level in range(1, 100)]
+        map_to = f"Training_{skill_name}"
+        item_mapping.update(dict.fromkeys(map_from, map_to))
+
+    # Quest Points, Kudos and Combat Points
+    for location_rows_list in [location_rows, sub_quests]:
+        for location_row in location_rows_list:
+            if location_row.quest_point_reward > 0:
+                item_mapping[f"QP {location_row.quest_point_reward} ({location_row.name})"] = "Quest Point"
+            if location_row.kudos_reward > 0:
+                item_mapping[f"Kudos {location_row.kudos_reward} ({location_row.name})"] = "Kudo"
+            if location_row.combat_point_reward > 0:
+                item_mapping[f"CombatPoints {location_row.combat_point_reward} ({location_row.name})"] = "Combat Point"
+
+    return item_mapping
+
+
 class OSRSMWorld(CachedRuleBuilderWorld):
     """
     The best retro fantasy MMORPG on the planet. Old School is RuneScape but… older! This is the open world you know and love, but as it was in 2007.
@@ -72,7 +96,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
 
     item_name_to_id = {item_rows[i].name: base_id + i for i in range(len(item_rows))}
     location_name_to_id = {location_rows[i].name: base_id + i for i in range(len(location_rows))}
-    item_mapping = {f"Training_{skill_name}_{level}":f"Training_{skill_name}" for level in range(1,100) for skill_name in skill_names}
+    item_mapping = _make_rule_builder_item_mapping()
     item_name_groups = { macro_name: set(item_list) for macro_name, item_list in rollable_chunks.items()}
     location_name_groups = { category : set([location_row.name for location_row in location_rs]) for category, location_rs in location_rows_by_category.items()}
 
@@ -275,8 +299,10 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             self.create_location(location)
         for sub_location in sub_quests:
             self.create_location(sub_location)
+        created_training_methods = []
         for training_method in training_methods:
-            self.create_training(training_method)
+            if self.create_training(training_method):
+                created_training_methods.append(training_method)
 
         # place "Victory" at the option from the yaml
 
@@ -497,9 +523,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                         self.set_rule(qp_loc,rule)
                 if location_row.kudos_reward > 0:
                     raise Exception("This shouldn't happen but i want to know if it does "+location_row.name)
-        for training_method in training_methods:
-            if training_method.parent_region in self.options.banned_chunks:
-                continue
+        for training_method in created_training_methods:
             if training_method.rule:
                 method = self.get_location(f"Training {training_method.skill_name}: {training_method.task_name}")
                 rule = self.generate_lambda(training_method.rule)
@@ -520,7 +544,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
 
         base_state = CollectionState(self.multiworld)
         for item in itempool:
-            base_state.add_item(item.name,self.player)
+            base_state.collect(item, True)
         temp_state = base_state.copy()
 
 
@@ -538,13 +562,18 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             raise OptionError("Game isn't beatable with current settings")
 
         if not self.options.disable_chunk_culling:
+            region_loc_count_lookup = {
+                region: len([loc for loc in region.locations if loc.address]) for region in self.get_regions()
+            }
 
-            event_list = [loc for _,loc in self.multiworld.regions.location_cache[self.player].items() if not loc.address]
+            pre_placed_advancements = [loc for loc in self.get_locations() if loc.advancement]
                 
 
             all_state = base_state.copy()
-            all_state.sweep_for_advancements(locations=event_list)
-            max_chance = len([loc for region in all_state.reachable_regions[self.player] for loc in region.locations if loc.address]) - len(itempool)
+            all_state.sweep_for_advancements(locations=pre_placed_advancements)
+            if all_state.stale[self.player]:
+                all_state.update_reachable_regions(self.player)
+            max_chance = sum([region_loc_count_lookup[region] for region in all_state.reachable_regions[self.player]]) - len(itempool)
             base_itempool = itempool.copy()
             self.random.shuffle(base_itempool)
             exit_counter = 0
@@ -553,18 +582,20 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 temp_state = base_state.copy()
                 for item in short_pool:
                     temp_state.remove(item)
-                temp_state.sweep_for_advancements(locations=event_list)
+                temp_state.sweep_for_advancements(locations=pre_placed_advancements)
                 if self.multiworld.completion_condition[self.player](temp_state):
-                    curr_chance = len([loc for region in temp_state.reachable_regions[self.player] for loc in region.locations if loc.address]) - len(itempool)
+                    if temp_state.stale[self.player]:
+                        temp_state.update_reachable_regions(self.player)
+                    curr_chance = sum([region_loc_count_lookup[region] for region in temp_state.reachable_regions[self.player]]) - len(itempool)
                     for item in short_pool:
                         rand_value = 0 if curr_chance < 0 else self.random.randint(0,max_chance)
                         if rand_value<curr_chance:
                             rand_value = 0 if curr_chance < 0 else self.random.randint(0,max_chance) #Roll the dice again, if we pass this time just demote to useful
+                            base_state.remove(item) #Either it's being removed from the item pool or converted to Useful
                             if rand_value<curr_chance:
                                 itempool.remove(item)
                             else: #This way an item that had a low chance to get removed that got unlucky will probally stay, but dice be dice :)
                                 item.classification = ItemClassification.useful
-                            base_state.remove(item) #Either way it's not a prog item, remove from base_state
                         if rand_value == 0:
                             exit_counter += 1
                             if exit_counter > 5:
@@ -666,11 +697,11 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             #Don't do most of this, just add the events to precollected :)
             self.push_precollected(self.create_event(location_row.name))
             if location_row.quest_point_reward>0:
-                self.push_precollected(self.create_event(f"QP {location_row.quest_point_reward} ({location_row.name})"))
+                self.push_precollected(self.create_quest_point_event(location_row))
             if location_row.kudos_reward>0:
-                self.push_precollected(self.create_event(f"Kudos {location_row.kudos_reward} ({location_row.name})"))
+                self.push_precollected(self.create_kudos_event(location_row))
             if location_row.combat_point_reward > 0:
-                self.push_precollected(self.create_event(f"CombatPoints {location_row.combat_point_reward} ({location_row.name})"))
+                self.push_precollected(self.create_combat_points_event(location_row))
             return
         if location_row.parent_region in self.options.banned_chunks:
             return
@@ -709,7 +740,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             qp_loc.show_in_spoiler = False
             self.location_name_to_data[qp_name] = qp_loc
             qp_loc.parent_region = region
-            qp_loc.place_locked_item(self.create_event(f"QP {location_row.quest_point_reward} ({location_row.name})"))
+            qp_loc.place_locked_item(self.create_quest_point_event(location_row))
             region.locations.append(qp_loc)
         if location_row.kudos_reward > 0:
             qp_name = "Kudos: " + location_row.name
@@ -717,7 +748,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             qp_loc.show_in_spoiler = False
             self.location_name_to_data[qp_name] = qp_loc
             qp_loc.parent_region = region
-            qp_loc.place_locked_item(self.create_event(f"Kudos {location_row.kudos_reward} ({location_row.name})"))
+            qp_loc.place_locked_item(self.create_kudos_event(location_row))
             region.locations.append(qp_loc)
         if location_row.combat_point_reward > 0:
             qp_name = "CombatPoints: " + location_row.name
@@ -725,22 +756,29 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             qp_loc.show_in_spoiler = False
             self.location_name_to_data[qp_name] = qp_loc
             qp_loc.parent_region = region
-            qp_loc.place_locked_item(self.create_event(f"CombatPoints {location_row.combat_point_reward} ({location_row.name})"))
+            qp_loc.place_locked_item(self.create_combat_points_event(location_row))
             region.locations.append(qp_loc)
     
-    def create_training(self, training_row:TrainingRow):
+    def create_training(self, training_row:TrainingRow) -> bool:
         if training_row.parent_region in self.options.banned_chunks:
-            return
+            return False
         parent_region = self.get_region(training_row.parent_region)
-        method = OSRSMLocation(self.player,f"Training {training_row.skill_name}: {training_row.task_name}",None,parent_region)
-        if training_row.task_name == "Unlock ~|Herblore|~ after Druidic Ritual": #We don't want to be herblore 10 etc after druidic ritual
-            method.place_locked_item(self.create_event(f"Training_{training_row.skill_name}_{training_row.required_level+3}"))
+
+        if training_row.task_name == "Unlock ~|Herblore|~ after Druidic Ritual":  # We don't want to be herblore 10 etc after druidic ritual
+            training_level = training_row.required_level + 3
         else:
-            method.place_locked_item(self.create_event(f"Training_{training_row.skill_name}_{training_row.required_level+self.options.base_training_levels.value}"))
+            training_level = training_row.required_level + self.options.base_training_levels.value
+        if training_level > 99:
+            # self.options.base_training_levels can push the required level over 99, making the training irrelevant.
+            return False
+
+        method = OSRSMLocation(self.player,f"Training {training_row.skill_name}: {training_row.task_name}",None,parent_region)
+        method.place_locked_item(self.create_training_event(training_row.skill_name, training_level))
         method.show_in_spoiler = False
         parent_region.locations.append(method)
         self.training_to_data[method.name] = method
         self.training_to_row[method.name] = training_row
+        return True
 
     def create_region(self, name: str) -> "Region":
         region = Region(name, self.player, self.multiworld)
@@ -760,45 +798,88 @@ class OSRSMWorld(CachedRuleBuilderWorld):
     def create_event(self, event: str):
         # while we are at it, we can also add a helper to create events
         return OSRSMItem(event, ItemClassification.progression, None, self.player)
-    
+
+    def create_training_event(self, skill_name: str, skill_level: int):
+        return OSRSMTrainingItem(skill_name, skill_level, self.player)
+
+    def create_quest_point_event(self, location_row: LocationRow):
+        return OSRSMQuestPointItem(location_row.quest_point_reward, location_row.name, self.player)
+
+    def create_kudos_event(self, location_row: LocationRow):
+        return OSRSMKudosItem(location_row.kudos_reward, location_row.name, self.player)
+
+    def create_combat_points_event(self, location_row: LocationRow):
+        return OSRSMCombatPointsItem(location_row.combat_point_reward, location_row.name, self.player)
+
     def collect(self, state: CollectionState, item: Item) -> bool:
-        if item.code:
+        if item.code is not None:
             return super().collect(state,item)
-        if item.name.startswith("QP "):
-            qp_count = int(item.name.split(" ",3)[1])
-            if qp_count > 1:
-                state.add_item(item="Quest Point",player=self.player,count=(qp_count-1))
-            super().collect(state,self.create_event("Quest Point"))
-        if item.name.startswith("CombatPoints "):
-            qp_count = int(item.name.split(" ",3)[1])
-            if qp_count > 1:
-                state.add_item(item="Combat Point",player=self.player,count=(qp_count-1))
-            super().collect(state,self.create_event("Combat Point"))
-        if item.name.startswith("Kudos "):
-            qp_count = int(item.name.split(" ",3)[1])
-            if qp_count > 1:
-                state.add_item(item="Kudo",player=self.player,count=(qp_count-1))
-            super().collect(state,self.create_event("Kudo"))
+        # Asserts help type checking, but keep performance on frozen AP (`-O` command line argument), because
+        # isinstance is slow, and asserts cease to exist with `-O`.
+        assert isinstance(item, OSRSMItem)
+        item_type = item.item_type
+        if item_type == "quest_point":
+            assert isinstance(item, OSRSMQuestPointItem)
+            qp_count = item.quest_point_reward
+            state.add_item(item="Quest Point",player=self.player,count=qp_count)
+        elif item_type == "combat_points":
+            assert isinstance(item, OSRSMCombatPointsItem)
+            combat_point_reward = item.combat_point_reward
+            state.add_item(item="Combat Point", player=self.player, count=combat_point_reward)
+        elif item_type == "kudos":
+            assert isinstance(item, OSRSMKudosItem)
+            kudos = item.kudos_reward
+            state.add_item(item="Kudo",player=self.player,count=kudos)
+        elif item_type == "training":
+            # Assert to help type checking, but keep performance on frozen AP or `-O` command line argument.
+            assert isinstance(item, OSRSMTrainingItem)
+            skill_level = item.skill_level
+            # Check the current Max Training level for this skill, and increase it if `skill_level` is higher.
+            psuedo_item_name = item.pseudo_item_name
+            current_max_level = state.prog_items[self.player][psuedo_item_name]
+            if skill_level > current_max_level:
+                state.prog_items[self.player][psuedo_item_name] = skill_level
         return super().collect(state, item)
     
     def remove(self, state: CollectionState, item: Item) -> bool:
-        if item.code:
+        if item.code is not None:
             return super().remove(state,item)
-        if item.name.startswith("QP "):
-            qp_count = int(item.name.split(" ",3)[1])
-            if qp_count > 1:
-                state.remove_item(item="Quest Point",player=self.player,count=(qp_count-1))
-            super().remove(state,self.create_event("Quest Point"))
-        if item.name.startswith("CombatPoints "):
-            qp_count = int(item.name.split(" ",3)[1])
-            if qp_count > 1:
-                state.remove_item(item="Combat Point",player=self.player,count=(qp_count-1))
-            super().remove(state,self.create_event("Combat Point"))
-        if item.name.startswith("Kudos "):
-            qp_count = int(item.name.split(" ",3)[1])
-            if qp_count > 1:
-                state.remove_item(item="Kudo",player=self.player,count=(qp_count-1))
-            super().remove(state,self.create_event("Kudo"))
+        # Asserts help type checking, but keep performance on frozen AP (`-O` command line argument), because
+        # isinstance is slow, and asserts cease to exist with `-O`.
+        assert isinstance(item, OSRSMItem)
+        item_type = item.item_type
+        if item_type == "quest_point":
+            assert isinstance(item, OSRSMQuestPointItem)
+            qp_count = item.quest_point_reward
+            state.remove_item(item="Quest Point",player=self.player,count=qp_count)
+        elif item_type == "combat_points":
+            assert isinstance(item, OSRSMCombatPointsItem)
+            combat_point_reward = item.combat_point_reward
+            state.remove_item(item="Combat Point",player=self.player,count=combat_point_reward)
+        elif item_type == "kudos":
+            assert isinstance(item, OSRSMKudosItem)
+            kudos = item.kudos_reward
+            state.remove_item(item="Kudo",player=self.player,count=kudos)
+        elif item_type == "training":
+            if state.count(item.name, self.player) == 1:
+                # The last Training event for this level is being removed, so the Max Training psuedo-item may need to
+                # be updated.
+                # Assert to help type checking, but keep performance on frozen AP or `-O` command line argument.
+                assert isinstance(item, OSRSMTrainingItem)
+                skill_level = item.skill_level
+                skill_name = item.skill_name
+                # Check the current Max Training level for this skill, and decrease it if it is equal to `skill_level`.
+                psuedo_item_name = item.pseudo_item_name
+                current_max_level = state.prog_items[self.player][psuedo_item_name]
+                if current_max_level == skill_level:
+                    # Find the next highest training level for this skill in the state.
+                    next_highest_level = 0
+                    for i in reversed(range(1, skill_level)):
+                        event_item_name = f"Training_{skill_name}_{i}"
+                        if state.has(event_item_name, self.player):
+                            next_highest_level = i
+                            break
+                    state.prog_items[self.player][psuedo_item_name] = next_highest_level
         return super().remove(state, item)
 
 
@@ -820,20 +901,26 @@ class HasTraining(Rule["OSRSMWorld"],game="OSRSMWorld"):
     def _instantiate(self, world: "OSRSMWorld") -> Rule.Resolved:
         if self.skill_name in world.options.starting_skill_levels and self.skill_level <= world.options.starting_skill_levels[self.skill_name]:
             return True_.Resolved(player=world.player)
-        return self.Resolved(self.skill_name,self.skill_level,self.qp_run,self.qp_rise,tuple([f"Training_{self.skill_name}_{level}" for level in range(self.skill_level,100)]),player=world.player)
+        pseudo_item_name = f"_Max_Training_{self.skill_name}"
+        return self.Resolved(self.skill_name,self.skill_level,self.qp_run,self.qp_rise,pseudo_item_name,player=world.player)
 
     class Resolved(Rule.Resolved):
         skill_name: str
         skill_level: int
         qp_run: int
         qp_rise: int
-        _relevent_items: tuple[str,...]
+        _max_training_psuedo_item_name: str
         skip_cache=True
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            return state.has_any(self._relevent_items,self.player) or \
-                state.has_any([f"Training_{self.skill_name}_{level}" for level in range(max(0,self.skill_level-self.qp_rise*(state.count("Quest Point",self.player)//self.qp_run)),self.skill_level)],self.player)
+            # Check for training of self.skill_level and higher.
+            max_training_level = state.count(self._max_training_psuedo_item_name, self.player)
+            if max_training_level >= self.skill_level:
+                return True
+            # Check for training from lower levels than self.skill_level, accounting for qp_rise.
+            allowed_lower_training_level = max(1,self.skill_level-self.qp_rise*(state.count("Quest Point",self.player)//self.qp_run))
+            return max_training_level >= allowed_lower_training_level
 
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
