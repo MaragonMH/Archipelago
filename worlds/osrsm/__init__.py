@@ -199,7 +199,24 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                         continue
                     return_list.extend([{"type":"text","text":f"{method.required_level} -> {method.required_level + delta_level} via "},{"type": "color", "color": "salmon", "text": loc.name},{"type":"text","text":"\n"}])
                 return return_list
-
+        elif dest_name.startswith("where"):
+            _,location = dest_name.split(" ",2)
+            if not location.startswith("chunk_"):
+                return None
+            _,id = location.split("_",2)
+            if location not in self.region_code_to_name:
+                location = f"{location}-1"
+                if location not in self.region_code_to_name:
+                    return None
+            if not id.isnumeric():
+                id,_ = id.split("-",2)
+                if not id.isnumeric():
+                    return None
+            import webbrowser
+            x = (int(id) // 256 ) * 64 + 32
+            y = (int(id)  % 256 ) * 64 + 32
+            webbrowser.open(f"https://explv.github.io/?centreX={str(x)}&centreY={str(y)}&centreZ=0&zoom=9",2)
+            return [{"type":"text","text":f"Chunk {id} otherwise known as {self.region_code_to_name[location]}"}]
         else:
             return None
 
