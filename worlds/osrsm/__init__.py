@@ -199,7 +199,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                         continue
                     return_list.extend([{"type":"text","text":f"{method.required_level} -> {method.required_level + delta_level} via "},{"type": "color", "color": "salmon", "text": loc.name},{"type":"text","text":"\n"}])
                 return return_list
-        elif dest_name.startswith("where"):
+        elif dest_name.startswith("where "):
             _,location = dest_name.split(" ",2)
             if not location.startswith("chunk_"):
                 return None
