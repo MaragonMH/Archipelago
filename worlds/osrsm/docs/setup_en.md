@@ -1,4 +1,6 @@
-# Setup Guide for Old School Runescape
+# Setup Guide for Old School Runescape Members
+
+None of this is right, i'll fix it later <3
 
 ## Required Software
 

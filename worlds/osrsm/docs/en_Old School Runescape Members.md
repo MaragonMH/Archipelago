@@ -1,4 +1,6 @@
-# Old School Runescape
+# Old School Runescape Members
+
+None of this is right, i'll fix it later <3
 
 ## What is the Goal of this Randomizer?
 The goal is to complete the quest "Dragon Slayer I" with limited access to gear and map chunks while following normal

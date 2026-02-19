@@ -12,7 +12,7 @@ class ItemRow(typing.NamedTuple):
 
 
 class OSRSMItem(Item):
-    game: str = "Old School Runescape"
+    game: str = "Old School Runescape Members"
     item_type: typing.ClassVar[str] = "generic"
 
 

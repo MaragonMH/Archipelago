@@ -20,4 +20,4 @@ class LocationRow(typing.NamedTuple):
 
 
 class OSRSMLocation(Location):
-    game: str = "Old School Runescape"
+    game: str = "Old School Runescape Members"
