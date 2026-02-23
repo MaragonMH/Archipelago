@@ -70,7 +70,7 @@ f2p_skill_names:list[str]=[
     "Firemaking","Woodcutting","Combat"
 ]
 skill_names:list[str]=f2p_skill_names+[
-    "Agility","Herblore","Thieving","Fletching","Slayer","Farming","Construction","Hunter"
+    "Agility","Herblore","Thieving","Fletching","Slayer","Farming","Construction","Hunter","Sailing"
 ]
 non_skill_task_types:list[str]=[
     "Combat","Nonskill","Extra","Diary","Quest"
@@ -94,16 +94,17 @@ banned_groups:list[str]=[
 ]
 
 banned_tasks:list[str]=[
-    "Cook a ~|cooked wild kebbit|~",
-
+    "Cook a ~|cooked wild kebbit|~","Trade in an ent seed to an ent",
+    "(Ocean Encounters) Obtain a ~|tiny pearl|~","(Ocean Encounters) Obtain a ~|small pearl|~","(Ocean Encounters) Obtain a ~|shiny pearl|~",
+    "(Ocean Encounters) Obtain a ~|bright pearl|~","(Ocean Encounters) Obtain a ~|big pearl|~","(Ocean Encounters) Obtain a ~|huge pearl|~",
+    "(Ocean Encounters) Obtain an ~|enormous pearl|~","(Ocean Encounters) Obtain a ~|shimmering pearl|~","(Ocean Encounters) Obtain a ~|glistening pearl|~",
+    "(Ocean Encounters) Obtain a ~|brilliant pearl|~","(Ocean Encounters) Obtain a ~|radiant pearl|~",
 
     "Clue nest loot","Use a ~|3rd age pickaxe|~","Make a ~|3rd age felling axe|~","Make a ~|3rd age felling axe|~ (alt)",
     "Chop with a ~|3rd age axe|~","Chop with a ~|3rd age felling axe|~","(Master Treasure Trails) Obtain a ~|ring of 3rd age|~",
-    "Slay a ~|mutated terrorbird|~","Slay a ~|mutated tortoise|~","(Skilling Pets) Obtain a ~|heron|~","(All Pets) Obtain a ~|heron|~",
-    "(All Pets) Obtain a ~|rock golem|~","(Skilling Pets) Obtain a ~|rock golem|~","(All Pets) Obtain a ~|beaver|~",
-    "(Skilling Pets) Obtain a ~|beaver|~","(All Pets) Obtain a ~|giant squirrel|~","(Skilling Pets) Obtain a ~|giant squirrel|~",
-    "(All Pets) Obtain a ~|rocky|~","(Skilling Pets) Obtain a ~|rocky|~","(Random Events) Obtain a ~|camo top|~",
-    "(All Pets) Obtain a ~|rift guardian|~","(Skilling Pets) Obtain a ~|rift guardian|~","(Random Events) Obtain ~|camo bottoms|~",
+    "Slay a ~|mutated terrorbird|~","Slay a ~|mutated tortoise|~",
+    "(Random Events) Obtain a ~|camo top|~",
+    "(Random Events) Obtain ~|camo bottoms|~",
     "(Random Events) Obtain a ~|camo helmet|~","(Random Events) Obtain a ~|lederhosen top|~","(Random Events) Obtain ~|lederhosen shorts|~",
     "(Random Events) Obtain a ~|lederhosen hat|~","(Random Events) Obtain a ~|zombie shirt|~","(Random Events) Obtain ~|zombie trousers|~",
     "(Random Events) Obtain a ~|zombie mask|~","(Random Events) Obtain ~|zombie gloves|~","(Random Events) Obtain ~|zombie boots|~",
@@ -113,9 +114,8 @@ banned_tasks:list[str]=[
     "(Random Events) Obtain ~|beekeeper's legs|~","(Random Events) Obtain ~|beekeeper's gloves|~","(Random Events) Obtain ~|beekeeper's boots|~",
     "Infuse ranger boots into ~|Pegasian boots|~","Wear ~|ranger boots|~","Wear ~|pegasian boots|~","Obtain a ~|black pickaxe|~","Use a ~|black pickaxe|~",
     "Wear a ~|rangers' tunic|~","Wear a ~|robin hood hat|~","Wear ~|ranger gloves|~","Wield a ~|magic comp bow|~","Wield a ~|willow comp bow|~",
-    "Wield a ~|magic comp bow|~","Wield a ~|willow comp bow|~","Wield a ~|yew comp bow|~","(All Pets) Obtain a ~|bloodhound|~",
-    "(All Pets) Obtain a ~|tangleroot|~","(Skilling Pets) Obtain a ~|tangleroot|~","(Slayer) Obtain an ~|eternal gem|~","(Slayer) Obtain an ~|imbued heart|~",
-    "(All Pets) Obtain a ~|moxi|~","(Amoxliatl) Obtain a ~|moxi|~","Create a saturated heart*","Wear ~|blessed dragonhide chaps|~","Wear ~|enchanted robes|~",
+    "Wield a ~|magic comp bow|~","Wield a ~|willow comp bow|~","Wield a ~|yew comp bow|~","(Slayer) Obtain an ~|eternal gem|~","(Slayer) Obtain an ~|imbued heart|~",
+    "Create a saturated heart*","Wear ~|blessed dragonhide chaps|~","Wear ~|enchanted robes|~",
     "Wear ~|robes of darkness|~","Wear ~|samurai armour|~","Craft a ~|slayer ring (eternal)|~","Bless an ~|unholy symbol|~","Bless a ~|holy symbol|~",
     "Build a ~|Trailblazer globe (Construction)|~","Build a ~|Trailblazer rug|~","~|STASH#Hard|~: North-east corner of the Kharazi Jungle",
     "~|STASH#Hard|~: In the middle of Jiggig","~|STASH#Hard|~: Volcano in the north-eastern Wilderness","~|STASH#Hard|~: Agility Pyramid",
@@ -130,7 +130,7 @@ banned_tasks:list[str]=[
     "Buy the 8th upgrade to ~|bank space|~ for 200m","Buy the 9th upgrade to ~|bank space|~ for 500m","Trade-in for platinum token*","Build a ~|tip jar|~",
     "Create ~|avernic treads (pe)|~","Create ~|avernic treads (pe)(et)|~","Create ~|avernic treads (pr)(pe)|~","Create ~|avernic treads (max)|~",
     "Unlock the oak variant of the ~|greenman mask|~","Unlock the willow variant of the ~|greenman mask|~","Unlock the maple variant of the ~|greenman mask|~",
-    "Unlock the yew variant of the ~|greenman mask|~","Unlock the magic variant of the ~|greenman mask|~","(Doom of Mokhaiotl) Obtain ~|dom|~","(All Pets) Obtain ~|dom|~"
+    "Unlock the yew variant of the ~|greenman mask|~","Unlock the magic variant of the ~|greenman mask|~"
 
 
 
@@ -146,14 +146,14 @@ banned_chunks: list[str] = [
     "chunk_6985","chunk_6994","chunk_7484","chunk_7490","chunk_7494","chunk_7499","chunk_7500","chunk_7501","chunk_7502","chunk_7504","chunk_7564",
     "chunk_7565","chunk_7820","chunk_7821","chunk_8076","chunk_8077","chunk_8332","chunk_8333","chunk_7748","chunk_7752","chunk_7755","chunk_7758",
     "chunk_7763","chunk_7754","chunk_8010","chunk_8011","chunk_8014","chunk_8270","chunk_8526","chunk_8782","chunk_9038","chunk_9294","chunk_9550",
-    "chunk_9806","chunk_8015","chunk_8261","chunk_8269","chunk_8276","chunk_8278","chunk_8493","chunk_8493-1","chunk_8493-3","chunk_8749","chunk_9005-1",
+    "chunk_9806","chunk_8015","chunk_8261","chunk_8269","chunk_8276","chunk_8278","chunk_5139","chunk_5140","chunk_5395",
     "chunk_7496","chunk_8008","chunk_8519","chunk_8520","chunk_8521","chunk_8524","chunk_8525","chunk_8534","chunk_9357","chunk_9358","chunk_9359",
     "chunk_9360","chunk_9613","chunk_9614","chunk_9615","chunk_9616","chunk_9869","chunk_9870","chunk_9871","chunk_9872","chunk_10125","chunk_10126",
     "chunk_10127","chunk_10128","chunk_10381","chunk_10382","chunk_10383","chunk_10384","chunk_10637","chunk_10638","chunk_10639","chunk_10640",
     "chunk_9799","chunk_9805","chunk_9812","chunk_10055","chunk_10311","chunk_10567","chunk_11335","chunk_11591","chunk_12105","chunk_12182",
     "chunk_12619","chunk_13130","chunk_13133","chunk_13134","chunk_13135","chunk_13136","chunk_13137","chunk_13138","chunk_13139","chunk_13140",
     "chunk_13141","chunk_13145","chunk_13379","chunk_13386","chunk_13390","chunk_13391","chunk_13393","chunk_13394","chunk_13395","chunk_13396",
-    "chunk_13397","chunk_13401","chunk_13643","chunk_13644","chunk_13645","chunk_13646","chunk_13647","chunk_13878","chunk_13899",
+    "chunk_13397","chunk_13401","chunk_13643","chunk_13644","chunk_13645","chunk_13646","chunk_13647","chunk_13899","chunk_6993",
     "chunk_13900","chunk_14156","chunk_14398","chunk_14476","chunk_14477","chunk_14478","chunk_14732","chunk_14733","chunk_14734","chunk_14995",
     "chunk_15007","chunk_15248","chunk_16013","chunk_16014","chunk_16269","chunk_16270","chunk_16782","chunk_17038","chunk_8794","chunk_8795",
     "chunk_8796","chunk_8797","chunk_8798","chunk_9050","chunk_9051","chunk_9052","chunk_9053","chunk_9054","chunk_9306","chunk_9307","chunk_9308",
@@ -165,13 +165,13 @@ banned_chunks: list[str] = [
     "chunk_10064","chunk_12132","chunk_11424","chunk_10658","chunk_12995","chunk_13250","chunk_12126","chunk_9558","chunk_9620","chunk_9621",
     "chunk_9622","chunk_9623","chunk_9878","chunk_9879","chunk_9624","chunk_9625","chunk_9880","chunk_9881","chunk_9626","chunk_10310","chunk_10566",
     "chunk_9634","chunk_9635","chunk_9890","chunk_9891","chunk_9802","chunk_9823","chunk_9824","chunk_9874","chunk_10056","chunk_10058","chunk_10070",
-    "chunk_10071","chunk_10135","chunk_10136","chunk_10138","chunk_10139","chunk_10301","chunk_10314","chunk_10335","chunk_10336","chunk_10591",
+    "chunk_10071","chunk_10135","chunk_10136","chunk_10138","chunk_10139","chunk_10314","chunk_10335","chunk_10336","chunk_10591","chunk_6995",
     "chunk_10592","chunk_10643","chunk_10644","chunk_10645","chunk_10899","chunk_10900","chunk_10901","chunk_10652","chunk_10653","chunk_10819",
     "chunk_10828","chunk_10831","chunk_10575","chunk_10846","chunk_10847","chunk_10848","chunk_11102","chunk_11103","chunk_11104","chunk_11358",
     "chunk_11359","chunk_11360","chunk_11616","chunk_10894","chunk_11150","chunk_11151","chunk_10895","chunk_10649","chunk_10650","chunk_10905",
     "chunk_10907","chunk_10908","chunk_11163","chunk_11164","chunk_11059-2","chunk_11081","chunk_11154","chunk_11161","chunk_11417","chunk_11673",
     "chunk_11416","chunk_11672","chunk_11671","chunk_11165","chunk_11343","chunk_11345","chunk_11346","chunk_11347","chunk_11601","chunk_11602",
-    "chunk_11603","chunk_11408","chunk_11409","chunk_11582","chunk_11593","chunk_11666","chunk_11850","chunk_11851","chunk_11852","chunk_12106",
+    "chunk_11603","chunk_11408","chunk_11409","chunk_11593","chunk_11666","chunk_11850","chunk_11851","chunk_11852","chunk_12106","chunk_7323",
     "chunk_12107","chunk_12108","chunk_12362","chunk_12363","chunk_12364","chunk_11853","chunk_11854","chunk_11855","chunk_12109","chunk_12110",
     "chunk_12111","chunk_11857","chunk_11413","chunk_11414","chunk_11669","chunk_11925","chunk_12181","chunk_11930","chunk_12113","chunk_12117",
     "chunk_12369","chunk_12441","chunk_12442","chunk_12443","chunk_12698","chunk_12954","chunk_13210","chunk_12441","chunk_12442","chunk_12443",
@@ -185,7 +185,37 @@ banned_chunks: list[str] = [
     "chunk_13721","chunk_14653","chunk_14654","chunk_14909","chunk_14910","chunk_14999","chunk_15000","chunk_15001","chunk_15255","chunk_15256",
     "chunk_15257","chunk_15511","chunk_15512","chunk_15513","chunk_15262","chunk_15263","chunk_15515","chunk_11605","chunk_13197","chunk_11595",
     "chunk_7257","chunk_4759","chunk_5022","chunk_5023","chunk_5278","chunk_5535","chunk_5536","chunk_12633","chunk_11085","chunk_11341","chunk_11597",
-    "chunk_10821","chunk_10822","chunk_10823","chunk_11077","chunk_11078","chunk_11079","chunk_5267"
+    "chunk_10821","chunk_10822","chunk_10823","chunk_11077","chunk_11078","chunk_11079","chunk_5267","chunk_7326","chunk_7492","chunk_8013","chunk_8017",
+    "chunk_8528","chunk_8530","chunk_9297","chunk_9366","chunk_9369","chunk_9619","chunk_9886","chunk_10137","chunk_10142","chunk_10309","chunk_10317",
+    "chunk_10400","chunk_10835","chunk_10906","chunk_11153","chunk_11421","chunk_11422","chunk_11423","chunk_11588","chunk_11589","chunk_11665",
+    "chunk_11678","chunk_11679","chunk_11844","chunk_12184","chunk_12185","chunk_12439","chunk_12616","chunk_12944","chunk_12945","chunk_12948",
+    "chunk_12949","chunk_13200","chunk_13465","chunk_13718","chunk_14235","chunk_15251","chunk_15264","chunk_11339",
+    "chunk_5522","chunk_6220","chunk_12692","chunk_13156","chunk_10647","chunk_10646","chunk_10322","chunk_14231","chunk_12186","chunk_7491",
+    "chunk_7757","chunk_11338","chunk_10059","chunk_8527","chunk_11157","chunk_109001","chunk_109002","chunk_109003","chunk_109004","chunk_109005",
+    "chunk_109006","chunk_109007","chunk_10910","chunk_8349","chunk_8781","chunk_5780","chunk_10391","chunk_4883","chunk_12889","chunk_10392",
+    "chunk_9035","chunk_10633","chunk_5789","chunk_5790","chunk_12704","chunk_10390","chunk_13194","chunk_11842","chunk_8523","chunk_8267",
+    "chunk_6799","chunk_14744","chunk_8779","chunk_12193","chunk_8723","chunk_13203","chunk_13717","chunk_13464","chunk_10061","chunk_10834",
+    "chunk_10833","chunk_13206","chunk_9814","chunk_5268","chunk_12438","chunk_11929","chunk_12183","chunk_7756","chunk_10571","chunk_7760","chunk_12433",
+    "chunk_12102","chunk_13979","chunk_6992","chunk_12700","chunk_10315","chunk_10569","chunk_7322","chunk_6549","chunk_7316","chunk_6804","chunk_13457",
+    "chunk_5785","chunk_13491","chunk_11662","chunk_10393","chunk_12115","chunk_9882","chunk_11683","chunk_6727","chunk_12426",
+    "chunk_12937","chunk_12694","chunk_10321","chunk_7828","chunk_11674","chunk_5021","chunk_6291","chunk_11419","chunk_11418","chunk_11675",
+    "chunk_9632","chunk_5523","chunk_9043","chunk_7310","chunk_9631","chunk_9875","chunk_13972","chunk_13973","chunk_5280",
+    "chunk_5279","chunk_11166","chunk_7753","chunk_10577","chunk_9033","chunk_9116","chunk_4751","chunk_10340","chunk_12192","chunk_9803","chunk_10904",
+    "chunk_10140","chunk_5275","chunk_5277","chunk_12950","chunk_12693","chunk_9377","chunk_10057","chunk_9544","chunk_11670","chunk_11083",
+    "chunk_10144","chunk_6475","chunk_11924","chunk_5521","chunk_14745","chunk_14994","chunk_14936","chunk_8007","chunk_9046","chunk_10079",
+    "chunk_13974","chunk_14486","chunk_13720","chunk_9547","chunk_5781","chunk_9362","chunk_10387","chunk_12187","chunk_12119","chunk_12178",
+    "chunk_12952","chunk_9311","chunk_10911","chunk_14747","chunk_11926","chunk_11412","chunk_10307","chunk_7749","chunk_7507","chunk_13252",
+    "chunk_10642","chunk_11668","chunk_10129","chunk_10130","chunk_11866","chunk_6806","chunk_11425","chunk_12961","chunk_7777","chunk_13975",
+    "chunk_6043","chunk_6041","chunk_12682","chunk_11410","chunk_10131","chunk_13723","chunk_9363","chunk_11088","chunk_12695",
+    "chunk_5527","chunk_7505","chunk_8840","chunk_12615","chunk_14496","chunk_10648","chunk_12435","chunk_8036","chunk_8037","chunk_7070",
+    "chunk_6550","chunk_13209","chunk_13198","chunk_12100","chunk_10133","chunk_11676","chunk_11167","chunk_12625","chunk_6805",
+    "chunk_9365","chunk_6805","chunk_15008","chunk_9123","chunk_6989","chunk_6477","chunk_11599","chunk_12697","chunk_9545","chunk_13461",
+    "chunk_10827","chunk_7236","chunk_10394","chunk_14234","chunk_11928","chunk_11937","chunk_12190","chunk_11931","chunk_11932","chunk_10903",
+    "chunk_9295","chunk_12437","chunk_6036","chunk_6298","chunk_9291","chunk_14495","chunk_10389","chunk_103891","chunk_103892","chunk_103893",
+    "chunk_103894","chunk_103895","chunk_103896","chunk_103897","chunk_8858","chunk_10388","chunk_11089","chunk_13215","chunk_13216","chunk_13473",
+    "chunk_13474","chunk_13727","chunk_13728","chunk_13472","chunk_13211","chunk_11168","chunk_11680","chunk_6483","chunk_7508"
+
+
 ]
 
 banned_drop_items:list[str]=[
@@ -193,7 +223,7 @@ banned_drop_items:list[str]=[
     "Dagannoth mother","Damis","Demon of Balance","Demon of Darkness","Demon of Light","Derwen","Durial321","Evil Chicken (Recipe for Disaster)",
     "Forgotten Soul (Soul Wars)","Gang boss","Gangster","Giant Sea Snake","Glod","Golem","Justiciar Zachariah","Kebbit","Nazastarool",
     "Nylocas Vasilias","Pestilent Bloat","Pheasant","Porazdir","Shaeded Beast","Slash Bash","Sotetseg","The Maiden of Sugadinti","The Mimic",
-    "Undead Zealot","Verzik Vitur","Wolf (Soul Wars)","Xarpus","Zombie (Zogre Flesh Eaters)","Tanglefoot"
+    "Undead Zealot","Verzik Vitur","Wolf (Soul Wars)","Xarpus","Zombie (Zogre Flesh Eaters)","Tanglefoot","Ent seed loot"
 ]
 
 banned_thieving_objects:list[str]=[
@@ -204,6 +234,14 @@ banned_thieving_objects:list[str]=[
 
 reverse_connect_chunks:list[str]=[
     "chunk_Death's Office"
+]
+
+dead_chunks:list[str]=[
+    "chunk_9522"
+]
+
+double_named_chunks:list[str]=[
+    "chunk_9783","chunk_11321","chunk_11578","chunk_12845","chunk_13102","chunk_10037","chunk_13618","chunk_6453","chunk_11566"
 ]
 
 quest_list:list[LocationRow] = []
@@ -234,6 +272,7 @@ task_unlock_monster: dict[str,dict[str,list[RuleElement]]] = {}
 task_unlock_npc: dict[str,dict[str,list[RuleElement]]] = {}
 task_unlock_object: dict[str,dict[str,list[RuleElement]]] = {}
 task_unlock_shop: dict[str,dict[str,list[RuleElement]]] = {}
+task_unlock_shop_item: dict[str,dict[str,list[RuleElement]]] = {}
 task_unlock_spawn: dict[str,dict[str,list[RuleElement]]] = {}
 
 
@@ -343,13 +382,45 @@ def iterate_drop_table(drop_table,drop_source):
             missing_resources.remove(drop_item)
     return drop_list
 
-def chunk_init(chunk_name,chunk_id,chunk):
-    if chunk_id in banned_chunks:
+def format_chunk_name(chunk_name, chunk_id):
+    if chunk_name == "Ocean Chunk":
+        _,s_id = chunk_id.split("_",2)
+        s_id = s_id.split("-",2)[0]
+        id = int(s_id)
+        x = (id // 256) - 38 #38 is the x coord of the observatory
+        y = (id % 256) - 49 #49 is the y coord of the observatory
+        north = x >= 0
+        east = y >= 0
+        x = abs(x) * 2
+        y = abs(y) * 2
+
+        return f"Ocean Chunk ({x}{'N' if north else 'S'} {y}{'E' if east else 'W'})"
+    else:
+        return chunk_name
+
+def chunk_init(old_chunk_name:str,chunk_id:str,chunk):
+    if chunk_id in banned_chunks or chunk_id.split("-",2)[0] in banned_chunks:
         return
+    if old_chunk_name == "" and chunk_id not in dead_chunks: #Explictly allow some overworld chunks to be unlocked with no items
+        if chunk_id[6:].isnumeric() and (int(chunk_id[6:].split("-",2)[0]) % 256) <= 65:
+            print(chunk_id)
+            breakpoint()
+    chunk_name = format_chunk_name(old_chunk_name, chunk_id)
     chunk["Chunk_Name"] = chunk_name
     chunk["Contents"] = []
     if chunk_name not in regions:
         regions[chunk_name] = chunk_id
+    else:
+        if chunk_id[6:] in regions:
+            root_base_chunk = regions[chunk_id[6:]].split("-",2)[0]
+            if root_base_chunk not in double_named_chunks:
+                print(chunk_id[6:])
+                print(root_base_chunk)
+                breakpoint()
+        if chunk_name != "" and chunk_id.split("-",2)[0] != regions[chunk_name].split("-",2)[0]:
+            print(old_chunk_name)
+            print(chunk_id)
+            breakpoint()
     if "Connect" in chunk:
         for connected_chunk in chunk["Connect"].keys():
             connected_chunk = convert_chunk_id(connected_chunk)
@@ -464,7 +535,21 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                     if not rule_list:
                         continue
                     relevent_dict = None
-                    if category == "Monsters":
+                    
+                    if "^" in value:
+                        if category == "Shops":
+                            if len(value_blob) > 1:
+                                breakpoint()
+                            shop,item = value.split("^",2)
+                            if shop not in task_unlock_shop_item:
+                                task_unlock_shop_item[shop] = {}
+                            task_unlock_shop_item[shop][item] = rule_list
+                            continue
+                        else:
+                            print(value)
+                            print(value_blob)
+                            breakpoint()
+                    elif category == "Monsters":
                         relevent_dict = task_unlock_monster
                     elif category == "NPCs":
                         relevent_dict = task_unlock_npc
@@ -520,6 +605,12 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                 resources.append(shop_item)
                 resource_list.append(ResourceRow(shop_item))
             ee_entrances.append(EntranceRow(shop,shop_item,[]))
+        if shop in task_unlock_shop_item:
+            for item, rules in task_unlock_shop_item[shop].items():
+                if item not in resources:
+                    resources.append(item)
+                    resource_list.append(ResourceRow(item))
+                ee_entrances.append(EntranceRow(shop,item,rules))
     for macro_name, macro_list in exportedJSON["codeItems"]["itemsPlus"].items():
         if macro_name in banned_groups:
             continue
@@ -573,7 +664,7 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
             resource_list.append(ResourceRow(macro_name))
         for sub_item in macro_list:
             ee_entrances.append(EntranceRow(sub_item,macro_name,[]))
-            if sub_item not in resources:
+            if sub_item not in resources and sub_item not in missing_resources:
                 missing_resources.append(sub_item)
     for macro_name, macro_list in exportedJSON["codeItems"]["objectsPlus"].items():
         if macro_name not in resources:
@@ -581,7 +672,7 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
             resource_list.append(ResourceRow(macro_name))
         for sub_item in macro_list:
             ee_entrances.append(EntranceRow(sub_item,macro_name,[]))
-            if sub_item not in resources:
+            if sub_item not in resources and sub_item not in missing_resources:
                 missing_resources.append(sub_item)
     for macro_name, macro_list in exportedJSON["codeItems"]["dropTables"].items():
         if macro_name in banned_drop_items:
@@ -711,8 +802,11 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                         if chunk not in chunks:
                             chunk = chunk+"-1"
                             if chunk not in chunks:
-                                print(chunk[:-2])
-                                breakpoint()
+                                chunk = chunk[:-2]+"-W1"
+                                if chunk not in chunks:
+                                    print(quest_name)
+                                    print(chunk[:-3])
+                                    breakpoint()
                         if parent_region is None:
                             parent_region = chunk
                         rule_list.append(RuleElement("chunk",chunk))
@@ -790,8 +884,9 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
             for task_name, task_data in task_list.items():
                 if task_name in banned_tasks:
                     continue
-                if "Category" in task_data and "Quest Skill Reqs" in task_data["Category"]:
-                    continue #these aren't real, and aren't needed
+                if "Category" in task_data:
+                    if "Quest Skill Reqs" in task_data["Category"] or "Pets" in task_data["Category"]:
+                        continue #these aren't real, and aren't needed
                 parent_region = None
                 description = ""
                 parent_region_type = None
@@ -799,11 +894,18 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                 if "Chunks" in task_data:
                     for chunk in task_data["Chunks"]:
                         chunk = convert_chunk_id(chunk)
+                        if chunk in banned_chunks:
+                            print(task_name)
+                            print(chunk)
+                            breakpoint()
                         if chunk not in chunks:
                             chunk = chunk+"-1"
                             if chunk not in chunks:
-                                print(chunk[:-2])
-                                breakpoint()
+                                chunk = chunk[:-2]+"-W1"
+                                if chunk not in chunks:
+                                    print(task_name)
+                                    print(chunk[:-3])
+                                    breakpoint()
                         if parent_region is None:
                             parent_region = chunk
                             parent_region_type = "r"
@@ -839,10 +941,17 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                         if req in banned_tasks:
                             continue
                         if "[+]" in req:
-                            if req not in task_macros:
-                                print(req)
-                                breakpoint()
-                            rule_list.append(RuleElement("task_macro",req))
+                            if not req.endswith("[+]"):
+                                req,count = req.rsplit("x",1)
+                                if req not in task_macros:
+                                    print(req)
+                                    breakpoint()
+                                rule_list.append(RuleElement("task_macrox"+count,req))
+                            else:
+                                if req not in task_macros:
+                                    print(req)
+                                    breakpoint()
+                                rule_list.append(RuleElement("task_macro",req))
                         else:
                             rule_list.append(RuleElement("task",req))
                 if "Mix" in task_data:
@@ -872,6 +981,8 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                     parent_region = "Menu"
                     parent_region_type = "r"
                 if "Primary" in task_data and task_data["Primary"]:
+                    if "NotOtherskillPrimary" in task_data and not task_data["NotOtherskillPrimary"]:
+                        pass #Do nothing for now, might handle it in the future
                     #primary training method
                     output = "None"
                     level = 0
@@ -937,7 +1048,8 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                             "Priority","Not F2P","NoPet","Items","NoBoost","Category",
                             "Tasks","NPCs","Not Equip","AlwaysValid","Output Object",
                             "NoXp","Monsters","BackupParent","ManualInvalid",
-                            "ManualNonProcessing","Source","Mix","InfoLink"
+                            "ManualNonProcessing","Source","Mix","InfoLink","Description",
+                            "NotOtherskillPrimary","Not Processing","ForcedSecondary"
                         ]:
                         print(field)
                         print(task_name)
@@ -950,11 +1062,12 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                     if task_name not in non_quest_dupes:
                         non_quest_dupes.append(task_name)
                     continue #for now just ignore duplicates and hope they go away
-                if "Category" in task_data and "Collection Log Clues" in task_data["Category"]:
-                    continue
-                if "Category" in task_data and "Starting Items" in task_data["Category"] and "Output" in task_data:
-                    re_entrances.append(EntranceRow("Starting Items",task_data["Output"],[]))
-                    continue
+                if "Category" in task_data:
+                    if "Collection Log Clues" in task_data["Category"] or "Pets" in task_data["Category"]:
+                        continue
+                    if "Starting Items" in task_data["Category"] and "Output" in task_data:
+                        re_entrances.append(EntranceRow("Starting Items",task_data["Output"],[]))
+                        continue
                 parent_region = None
                 parent_region_type = None
                 description = ""
@@ -971,8 +1084,11 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                         if chunk not in chunks:
                             chunk = chunk+"-1"
                             if chunk not in chunks:
-                                print(chunk[:-2])
-                                breakpoint()
+                                chunk = chunk[:-2]+"-W1"
+                                if chunk not in chunks:
+                                    print(task_name)
+                                    print(chunk[:-3])
+                                    breakpoint()
                         if parent_region is None:
                             parent_region = chunk
                             parent_region_type = "r"
@@ -1272,8 +1388,8 @@ with open(os.path.join(this_dir, "items_generated2.py"), "w+") as regPyFile:
             regPyFile.write("rollable_chunks: dict[str, list[str]] = {\n")
             for rollable_name, chunk_list in rollable_chunks.items():
                 regPyFile.write(f"\t{str_format(rollable_name)}:[")
-                for chunk_id in chunk_list:
-                    chunk_id = convert_chunk_id(chunk_id.split("-",2)[0])
+                for full_chunk_id in chunk_list:
+                    chunk_id = convert_chunk_id(full_chunk_id.split("-",2)[0])
                     if chunk_id in banned_chunks:
                         continue
                     if chunk_id not in temp_backwards_dict:
