@@ -24,11 +24,19 @@ class FullTests(OSRSMTestBase):
             with self.subTest(region_name=region_row.id):
                 self.assertIn(region_row.id,region_cache,f"Region {region_row.id} was not created")
                 self.assertTrue(all_state.can_reach_region(region_row.id,1),f"Cannot reach region {region_row.id}")
+    
+    def test_creates_all_resources(self)->None:
+        all_state = self.multiworld.get_all_state(False)
+        region_cache = self.multiworld.regions.region_cache[1]
         for region_row in resource_rows:
             assert isinstance(region_row,ResourceRow)
             with self.subTest(region_name=region_row.name):
                 self.assertIn(region_row.name,region_cache,f"Resource {region_row.name} was not created")
                 self.assertTrue(all_state.can_reach_region(region_row.name,1),f"Cannot reach resource {region_row.name}")
+    
+    def test_creates_all_monsters(self)->None:
+        all_state = self.multiworld.get_all_state(False)
+        region_cache = self.multiworld.regions.region_cache[1]
         for region_row in monster_drops:
             assert isinstance(region_row,MonsterRow)
             with self.subTest(region_name=region_row.name):
