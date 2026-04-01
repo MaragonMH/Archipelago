@@ -264,6 +264,9 @@ me_entrances: list[EntranceRow] = []
 mm_entrances: list[EntranceRow] = []
 
 task_macros: dict[str,list[str]] = {}
+chunk_macros: dict[str,list[str]] = {}
+item_macros: dict[str,list[str]] = {}
+macro_names: list[str] = []
 rollable_chunks: dict[str,list[str]] = {}
 
 task_unlock_item: dict[str,list[RuleElement]] = {}
@@ -622,6 +625,12 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
         if macro_name not in resources:
             resources.append(macro_name)
             resource_list.append(ResourceRow(macro_name))
+        if macro_name not in macro_names:
+            macro_names.append(macro_name)
+        else:
+            print(macro_name)
+            breakpoint()
+        item_macros[macro_name] = []
         if macro_name in bidirectional_groups: #reversable macro group, e.g. decanting
             for sub_item in macro_list: 
                 if sub_item not in resources:
@@ -634,6 +643,7 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
             ee_entrances.append(EntranceRow(sub_item,macro_name,[]))
             if sub_item not in resources and sub_item not in missing_resources:
                 missing_resources.append(sub_item)
+            item_macros[macro_name].append(sub_item)
     for macro_name, macro_list in exportedJSON["codeItems"]["tasksPlus"].items():
         if macro_name in banned_groups:
             continue
@@ -648,6 +658,7 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
             chunk = {"Chunk_Name":None,"Contents":[]}
             chunks[macro_name] = chunk
             regions_list.append(RegionRow(macro_name,"")) #keep name empty so it doesn't make an item to access it
+        chunk_macros[original_macro_name] = []
         for sub_chunk in macro_list:
             sub_chunk = convert_chunk_id(sub_chunk)
             if sub_chunk not in chunks:
@@ -662,11 +673,17 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                     rr_entrances.append(EntranceRow(macro_name,sub_chunk,[RuleElement("has",f"Area: {sub_chunk_name}")]))
                 else:
                     rr_entrances.append(EntranceRow(macro_name,sub_chunk,[]))
+            chunk_macros[original_macro_name].append(sub_chunk)
             rr_entrances.append(EntranceRow(sub_chunk,macro_name,[])) #backwards normal because these are seach filters, not access
     for macro_name, macro_list in exportedJSON["codeItems"]["npcsPlus"].items():
         if macro_name not in resources:
             resources.append(macro_name)
             resource_list.append(ResourceRow(macro_name))
+        if macro_name not in macro_names:
+            macro_names.append(macro_name)
+        else:
+            print(macro_name)
+            breakpoint()
         for sub_item in macro_list:
             ee_entrances.append(EntranceRow(sub_item,macro_name,[]))
             if sub_item not in resources and sub_item not in missing_resources:
@@ -675,6 +692,11 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
         if macro_name not in resources:
             resources.append(macro_name)
             resource_list.append(ResourceRow(macro_name))
+        if macro_name not in macro_names:
+            macro_names.append(macro_name)
+        else:
+            print(macro_name)
+            breakpoint()
         for sub_item in macro_list:
             ee_entrances.append(EntranceRow(sub_item,macro_name,[]))
             if sub_item not in resources and sub_item not in missing_resources:
@@ -801,20 +823,24 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                 if "Chunks" in quest_data:
                     for chunk in quest_data["Chunks"]:
                         if "[+]" in chunk and not chunk.endswith("[+]"):
-                            chunk,_ = chunk.rsplit("x",1)
-                            #todo fix this
-                        chunk = convert_chunk_id(chunk)
-                        if chunk not in chunks:
-                            chunk = chunk+"-1"
+                            chunk,count = chunk.rsplit("x",1)
+                            if chunk not in chunk_macros:
+                                print(chunk)
+                                breakpoint()
+                            rule_list.append(RuleElement("chunkx"+count,chunk))
+                        else:
+                            chunk = convert_chunk_id(chunk)
                             if chunk not in chunks:
-                                chunk = chunk[:-2]+"-W1"
+                                chunk = chunk+"-1"
                                 if chunk not in chunks:
-                                    print(quest_name)
-                                    print(chunk[:-3])
-                                    breakpoint()
-                        if parent_region is None:
-                            parent_region = chunk
-                        rule_list.append(RuleElement("chunk",chunk))
+                                    chunk = chunk[:-2]+"-W1"
+                                    if chunk not in chunks:
+                                        print(quest_name)
+                                        print(chunk[:-3])
+                                        breakpoint()
+                            if parent_region is None:
+                                parent_region = chunk
+                            rule_list.append(RuleElement("chunk",chunk))
                 if "NPCs" in quest_data:
                     for npc in quest_data["NPCs"]:
                         if parent_region is None:
@@ -830,13 +856,14 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                         item = item.rstrip("*")
                         if "[+]" in item and not item.endswith("[+]"):
                             try:
-                                item,_ = item.rsplit("x",1)
-                                #todo fix this
+                                item,count = item.rsplit("x",1)
+                                rule_list.append(RuleElement("can_reachx"+count,item))
                             except:
                                 breakpoint()
-                        if parent_region is None:
-                            parent_region = item
-                        rule_list.append(RuleElement("can_reach",item))
+                        else:
+                            if parent_region is None:
+                                parent_region = item
+                            rule_list.append(RuleElement("can_reach",item))
                 if "Monsters" in quest_data:
                     for monster in quest_data["Monsters"]:
                         monster = convert_monster_name(monster)
@@ -1651,7 +1678,16 @@ with open(os.path.join(this_dir, "macros_generated2.py"), "w+") as regPyFile:
             for task_macro,task_macro_list in task_macros.items():
                 regPyFile.write(f"\t{str_format(task_macro)}:[{','.join([str_format(i) for i in task_macro_list])}],\n")
             regPyFile.write("}\n\n")
+            regPyFile.write("chunk_macros: dict[str, list[str]] = {\n")
+            for task_macro,task_macro_list in chunk_macros.items():
+                regPyFile.write(f"\t{str_format(task_macro)}:[{','.join([str_format(i) for i in task_macro_list])}],\n")
+            regPyFile.write("}\n\n")
+            regPyFile.write("item_macros: dict[str, list[str]] = {\n")
+            for task_macro,task_macro_list in item_macros.items():
+                regPyFile.write(f"\t{str_format(task_macro)}:[{','.join([str_format(i) for i in task_macro_list])}],\n")
+            regPyFile.write("}\n\n")
                 
+            
             
             regPyFile.write("skill_names: list[str] = [")
             for skill_name in skill_names:
