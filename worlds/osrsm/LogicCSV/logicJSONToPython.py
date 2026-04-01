@@ -1297,6 +1297,10 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                     description = task_data["Description"]
                 if task_type == "Nonskill" and "Chunks" in task_data and len(task_data) == 1: #If it's just a chunk it's a task macro, blame source
                     sub_quest_list.append(LocationRow(task_name,"event",parent_region,"",rule_list,kudos_reward,0,0))
+                elif task_type == "Nonskill" and str(task_name).endswith(" task"): #Stupid wilderness slayer events
+                    sub_quest_list.append(LocationRow(task_name,"event",parent_region,"",rule_list,kudos_reward,0,0))
+                elif task_type == "Nonskill" and str(task_name).endswith(" loot"): #Stupid item conversion events
+                    sub_quest_list.append(LocationRow(task_name,"event",parent_region,"",rule_list,kudos_reward,0,0))
                 elif "ConnectsSections" not in task_data and "UnlocksArea" not in task_data: #don't make these as locations
                     non_quest_list.append(LocationRow(task_name,task_type,parent_region,"",rule_list,kudos_reward,0,0))
                     non_quest_names.append(task_name)
