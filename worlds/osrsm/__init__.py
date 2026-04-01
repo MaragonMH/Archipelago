@@ -908,6 +908,111 @@ class SafeCanReachRegion(CanReachRegion["OSRSMWorld"],game="OSRSMWorld"):
         def _evaluate(self, state: "CollectionState") -> bool:
             return self.region_name in state.multiworld.regions.region_cache[self.player] and state.can_reach_region(self.region_name, self.player)
 
+@dataclasses.dataclass()
+class CanReachCount(Rule["OSRSMWorld"], game="OSRSMWorld"):
+    """A rule that checks if the player has access to at least a certain"""
+
+    regions: list[str]
+    """A mapping of item name to count to check for"""
+
+    count: int
+    """Number of region access needed"""
+
+    @override
+    def _instantiate(self, world: "OSRSMWorld") -> Rule.Resolved:
+        if len(self.regions) == 0:
+            # match state.has_any_count
+            return False_().resolve(world)
+        if len(self.regions) == 1:
+            return SafeCanReachRegion(self.regions[0]).resolve(world)
+        return self.Resolved(
+            tuple(self.regions),
+            self.count,
+            player=world.player,
+            caching_enabled=getattr(world, "rule_caching_enabled", False),
+        )
+
+    @override
+    def __str__(self) -> str:
+        regions = ", ".join(self.regions)
+        options = f", options={self.options}" if self.options else ""
+        return f"{self.__class__.__name__}([{regions}] x{self.count}{options})"
+
+    class Resolved(Rule.Resolved):
+        regions: tuple[str]
+        count: int
+
+        @override
+        def _evaluate(self, state: CollectionState) -> bool:
+            # implementation based on state.has_any_count
+            count = 0
+            for region_name in self.regions:
+                count += 1 if (region_name in state.multiworld.regions.region_cache[self.player] and state.can_reach_region(region_name, self.player)) else 0
+            return count >= self.count
+
+        @override
+        def region_dependencies(self) -> dict[str, set[int]]:
+            return {region_name: {id(self)} for region_name in self.regions}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            messages: list[JSONMessagePart] = []
+            if state is None:
+                messages = [
+                    {"type": "text", "text": "Can Reach at least "},
+                    {"type": "color", "color": "cyan", "text": str(self.count)},
+                    {"type": "text", "text": " of ("},
+                ]
+                for i, region_name in enumerate(self.regions):
+                    if i > 0:
+                        messages.append({"type": "text", "text": ", "})
+                    messages.append({"type": "color", "color":"yellow", "text": region_name})
+                messages.append({"type": "text", "text": ")"})
+                return messages
+
+            found = [region_name for region_name in self.regions if (region_name in state.multiworld.regions.region_cache[self.player] and state.can_reach_region(region_name, self.player))]
+            missing = [region_name for region_name in self.regions if region_name not in found]
+            messages = [
+                {"type": "text", "text": "Has " if found else "Missing "},
+                {"type": "color", "color": "cyan", "text": "some" if found else "all"},
+                {"type": "text", "text": " of ("},
+            ]
+            if found:
+                messages.append({"type": "text", "text": "Found: "})
+                for i, region_name in enumerate(found):
+                    if i > 0:
+                        messages.append({"type": "text", "text": ", "})
+                    messages.append({"type": "color", "color": "green", "text": region_name})
+                if missing:
+                    messages.append({"type": "text", "text": "; "})
+
+            if missing:
+                messages.append({"type": "text", "text": "Missing: "})
+                for i, region_name in enumerate(missing):
+                    if i > 0:
+                        messages.append({"type": "text", "text": ", "})
+                    messages.append({"type": "color", "color": "salmon", "text": region_name})
+            messages.append({"type": "text", "text": ") out of "})
+            messages.append({"type": "color", "color": "green" if len(found) >= self.count else "red", "text":str(self.count)})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return str(self)
+            found = [region_name for region_name in self.regions if (region_name in state.multiworld.regions.region_cache[self.player] and state.can_reach_region(region_name, self.player))]
+            missing = [region_name for region_name in self.regions if region_name not in found]
+            prefix = "Has some" if self(state) else "Missing all"
+            found_str = f"Found: {', '.join(found)}" if found else ""
+            missing_str = f"Missing: {', '.join(missing)}" if missing else ""
+            infix = "; " if found and missing else ""
+            return f"{prefix} of ({found_str}{infix}{missing_str}) out of {str(self.count)}"
+
+        @override
+        def __str__(self) -> str:
+            items = ", ".join(self.regions)
+            return f"Has any of ({items}) out of {str(self.count)}"
+
 
 @dataclasses.dataclass()
 class HasTraining(Rule["OSRSMWorld"],game="OSRSMWorld"):
