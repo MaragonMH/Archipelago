@@ -1181,7 +1181,7 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                         rule_list.append(RuleElement("kill",monster))
                 if "QuestPointsNeeded" in task_data:
                     rule_list.append(RuleElement("questPoints",str(task_data["QuestPointsNeeded"])))
-                if parent_region:
+                if parent_region and "UnlocksArea" not in task_data and "ConnectsSections" not in task_data:
                     parent_region = parent_region.rstrip("*")
                     rule_list = [value for value in rule_list if value.value != parent_region]
                 else:
