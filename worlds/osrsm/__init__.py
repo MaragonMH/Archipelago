@@ -313,7 +313,9 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         min_x = 49
         max_y = 0
         min_y = 35
-        for item in itempool:
+        temp_itempool = itempool.copy() #shallow copy is fine, we don't edit the item just the list
+        temp_itempool.append(self.create_item(self.starting_area_item))
+        for item in temp_itempool:
             if item.code is None:
                 continue
             cannon_name = self.item_rows_by_name[item.name].cannonical_chunk
@@ -333,7 +335,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             max_y = max(max_y, temp_y)
             min_y = min(min_y, temp_y)
         out_image = PIL.Image.new("RGBA",((max_x-min_x) * 192,(max_y-min_y) * 192))
-        for item in itempool:
+        for item in temp_itempool:
             if item.filler:
                 continue
             cannon_name = self.item_rows_by_name[item.name].cannonical_chunk
@@ -846,7 +848,6 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                         break #Exit early if we've already removed enough
             logger.error(f"Deleted {maximum_locations-locations_created} filler from {self.player_name}, {locations_created - items_created} remains")
 
-        itempool.append(self.create_item(self.starting_area_item)) #we need to add this just for the maps
         self.make_image(itempool,f"output_{self.player_name}")
 
     def create_items(self) -> None:
