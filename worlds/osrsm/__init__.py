@@ -25,7 +25,7 @@ from .LogicCSV.items_generated2 import item_rows, rollable_chunks
 from .LogicCSV.locations_generated2 import location_rows, sub_quests, quests, non_quests, training_methods
 from .LogicCSV.entrances_generated2 import rr_entrances,re_entrances,ee_entrances,rm_entrances,me_entrances, mm_entrances
 from .LogicCSV.monsters_generated2 import monster_drops, non_monster_drops
-from .LogicCSV.macros_generated2 import skill_names, task_macros
+from .LogicCSV.macros_generated2 import skill_names, task_macros, item_macros, chunk_macros
 from .Regions import RegionRow, ResourceRow, DropElement, MonsterRow, RuleElement, RewardElement, LocationRow, EntranceRow, TrainingRow
 
 from typing import Callable, Counter
@@ -225,10 +225,28 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             return Has(rule_element.value)
         elif rule_element.type == "task":
             return Has(rule_element.value)
-        elif rule_element.type == "chunk":
-            return SafeCanReachRegion(rule_element.value)
-        elif rule_element.type == "can_reach":
-            return SafeCanReachRegion(rule_element.value)
+        elif rule_element.type.startswith("chunk"):
+            if rule_element.type.startswith("chunkx"):
+                if rule_element.value not in chunk_macros:
+                    raise Exception("Chunk macro but it doesn't exist..."+rule_element.value)
+                _,count = rule_element.type.split("x",2)
+                if count.isdigit():
+                    count = int(count)
+                    return CanReachCount(chunk_macros[rule_element.value],count)
+                return SafeCanReachRegion("chunk_"+rule_element.value)
+            else:
+                return SafeCanReachRegion(rule_element.value)
+        elif rule_element.type.startswith("can_reach"):
+            if rule_element.type.startswith("can_reachx"):
+                if rule_element.value not in item_macros:
+                    raise Exception("Chunk macro but it doesn't exist..."+rule_element.value)
+                _,count = rule_element.type.split("x",2)
+                if count.isdigit():
+                    count = int(count)
+                    return CanReachCount(item_macros[rule_element.value],count)
+                return SafeCanReachRegion(rule_element.value)
+            else:
+                return SafeCanReachRegion(rule_element.value)
         elif rule_element.type == "kill":
             return SafeCanReachRegion(rule_element.value)
         elif rule_element.type == "skill":
