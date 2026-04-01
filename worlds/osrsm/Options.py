@@ -54,13 +54,18 @@ class GoalLocation(FreeText):
     display_name = "Goal Location"
     default = "~|Dragon Slayer I|~ Complete the quest"
 
-class DisableChunkCulling(Toggle):
+class DisableChunkCulling(Choice):
     """
     Disable the culling that reduces the number of chunks that are in the "playable" space
     DO NOT DO THIS UNLESS YOU HATE YOURSELF MORE THEN A NORMAL OSRS PLAYER
+
+    Useful will convert the chunks to useful, this means they won't actually be removed just not considered for logic
     """
     display_name = "Disable Chunk Culling"
-    default = False
+    option_enabled = 0
+    option_useful = 1
+    option_disabled = 2
+    default = 0
 class DisableLocationCulling(Toggle):
     """
     Disable the culling that reduces the number of Tasks that get created

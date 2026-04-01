@@ -10,8 +10,9 @@ from .Items import OSRSMItem, starting_area_dict, chunksanity_starting_chunks, Q
     chunksanity_special_region_names, OSRSMTrainingItem, OSRSMQuestPointItem, OSRSMKudosItem, OSRSMCombatPointsItem
 from .Locations import OSRSMLocation
 from .Rules import *
-from .Options import OSRSMOptions, StartingArea
+from .Options import OSRSMOptions, StartingArea, DisableChunkCulling
 from .Names import LocationNames, ItemNames, RegionNames
+from settings import Group,FolderPath
 from Utils import visualize_regions
 from Options import OptionError
 
@@ -32,6 +33,14 @@ from typing import Callable, Counter
 import logging
 
 logger = logging.getLogger(__name__)
+
+class OSRSMSettings(Group):
+    class ChunkPickerRepoPath(FolderPath):
+        """Path to the folder that Chunk-Picker is checked out to, if you don't know what that is just ignore this"""
+        description = "Location of the Chunk-Picker repo"
+        required = False
+    chunk_picker_repo_path: ChunkPickerRepoPath = ChunkPickerRepoPath("")
+
 class OSRSMWeb(WebWorld):
     theme = "stone"
 
@@ -87,6 +96,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
     base_id = base_id
     data_version = 1
     rule_caching_enabled = True
+    settings: ClassVar[OSRSMSettings]
 
     location_rows_by_category:dict[str,list[LocationRow]] = {}
     for location_row in location_rows:
@@ -121,7 +131,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
     def generate_early(self) -> None:
 
         if getattr(self.multiworld,"generation_is_fake",False):
-            self.options.disable_chunk_culling.value = True #don't cull in UT, this is fine because UT doens't do fill
+            self.options.disable_chunk_culling.value = DisableChunkCulling.option_disabled #don't cull in UT, this is fine because UT doens't do fill
             self.options.disable_task_culling.value = True 
 
         if self.options.starting_area.value in rollable_chunks:
@@ -284,6 +294,68 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             #return None
             raise Exception("unknown rule fragment found "+rule_element.type)
 
+
+    def make_image(self,itempool:list[Item], out_name:str):
+        # Temp code for PIL shenanigans
+        try:
+            import os
+            import PIL.Image
+            import PIL.ImageOps
+            import settings
+        except ImportError:
+            return
+        if not self.settings.chunk_picker_repo_path.exists():
+            return
+        if settings.no_gui:
+            return
+        root_image_folder = os.path.join(os.path.normpath(str(self.settings.chunk_picker_repo_path)),"resources","chunk_images")
+        max_x = 0
+        min_x = 49
+        max_y = 0
+        min_y = 35
+        for item in itempool:
+            if item.code is None:
+                continue
+            cannon_name = self.item_rows_by_name[item.name].cannonical_chunk
+            assert cannon_name
+            if "_" not in cannon_name:
+                continue
+            _,scoord = cannon_name.split("_",1)
+            if "-" in scoord:
+                scoord = scoord.split("-",1)[0]
+            if not scoord.isnumeric():
+                continue
+            temp_x = (int(scoord) // 256) - 14
+            temp_y = 66 - (int(scoord) %  256)
+            if temp_y > 34 or temp_y < 1: continue
+            max_x = max(max_x, temp_x)
+            min_x = min(min_x, temp_x)
+            max_y = max(max_y, temp_y)
+            min_y = min(min_y, temp_y)
+        out_image = PIL.Image.new("RGBA",((max_x-min_x) * 192,(max_y-min_y) * 192))
+        for item in itempool:
+            if item.filler:
+                continue
+            cannon_name = self.item_rows_by_name[item.name].cannonical_chunk
+            assert cannon_name
+            if "_" not in cannon_name:
+                continue
+            _,scoord = cannon_name.split("_",2)
+            if "-" in scoord:
+                scoord = scoord.split("-",1)[0]
+            if not scoord.isnumeric():
+                continue
+            temp_x = (int(scoord) // 256) - 14
+            temp_y = 66 - (int(scoord) %  256)
+            if temp_y > 34 or temp_y < 1: continue
+            temp_image = PIL.Image.open(os.path.join(root_image_folder,f"row-{temp_y}-column-{temp_x}.png"))
+            if item.name == self.starting_area_item:
+                temp_image = PIL.ImageOps.invert(temp_image)
+            if not item.advancement:
+                temp_image = temp_image.convert("L").convert("RGBA")
+            out_image.paste(temp_image,((temp_x-min_x)*192, (temp_y-min_y)*192))
+        with open(f"{out_name}.png","wb") as f:
+            out_image.save(f)
 
     def generate_lambda(self, rule_list:list[RuleElement]):
         output_list = []
@@ -583,6 +655,43 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         temp_state = base_state.copy()
 
 
+        pre_placed_advancements = [loc for loc in self.get_locations() if loc.advancement]
+        all_state = base_state.copy()
+        all_state.sweep_for_advancements(locations=pre_placed_advancements)
+        if all_state.stale[self.player]:
+            all_state.update_reachable_regions(self.player)
+
+        #pre remove regions/locations that aren't reachable with the full itempool
+        regions = self.multiworld.regions.region_cache[self.player]
+        temp_regions = regions.copy()
+        for region_name, region in temp_regions.items():
+            if all_state.can_reach_region(region_name,self.player):
+                temp_locs = region.locations.copy()
+                for loc in temp_locs:
+                    if not all_state.can_reach_location(loc.name,self.player):
+                        region.locations.remove(loc)
+            else:
+                for entrance in region.entrances: #disconnect entrances
+                    if entrance.parent_region:
+                        entrance.parent_region.exits.remove(entrance)
+                for exit in region.exits: #disconnect exists
+                    if exit.connected_region:
+                        exit.connected_region.entrances.remove(exit)
+                for location in region.locations: #delete all the locations in that region
+                    del self.multiworld.regions.location_cache[self.player][location.name]
+                del regions[region_name] #delete the region
+        
+        needed_items = []
+        for region_code, region_name in self.region_code_to_name.items():
+            item_name = f"Area: {region_name}"
+            if region_code in regions and item_name not in needed_items:
+                needed_items.append(item_name)
+                
+        itempool = [item for item in itempool if item.name in needed_items]
+        self.make_image(itempool,f"stage_1_{self.player_name}")
+        
+        pre_placed_advancements = [loc for loc in self.get_locations() if loc.advancement]
+
         temp_state.sweep_for_advancements()
         if not self.multiworld.completion_condition[self.player](temp_state):
             max_trained_levels:dict[str, int] = {}
@@ -596,24 +705,22 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             logger.error(max_trained_levels)
             raise OptionError("Game isn't beatable with current settings")
 
-        if not self.options.disable_chunk_culling:
+        useful_itempool = []
+
+        if not self.options.disable_chunk_culling.value == DisableChunkCulling.option_disabled:
             region_loc_count_lookup = {
                 region: len([loc for loc in region.locations if loc.address]) for region in self.get_regions()
             }
-
-            pre_placed_advancements = [loc for loc in self.get_locations() if loc.advancement]
                 
 
-            all_state = base_state.copy()
-            all_state.sweep_for_advancements(locations=pre_placed_advancements)
-            if all_state.stale[self.player]:
-                all_state.update_reachable_regions(self.player)
             max_chance = sum([region_loc_count_lookup[region] for region in all_state.reachable_regions[self.player]]) - len(itempool)
             base_itempool = itempool.copy()
             self.random.shuffle(base_itempool)
             exit_counter = 0
-            for i in range(20):
-                short_pool = base_itempool[i::20]
+            buckets = 80 #tuning parameter for how "choppy" the culling is, higher is more smooth
+            buckets = min(buckets,len(base_itempool)) #if the itempool is less then the the bucket tuning number just cap it
+            for i in range(buckets):
+                short_pool = base_itempool[i::buckets]
                 temp_state = base_state.copy()
                 for item in short_pool:
                     temp_state.remove(item)
@@ -627,10 +734,9 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                         if rand_value<curr_chance:
                             rand_value = 0 if curr_chance < 0 else self.random.randint(0,max_chance) #Roll the dice again, if we pass this time just demote to useful
                             base_state.remove(item) #Either it's being removed from the item pool or converted to Useful
-                            if rand_value<curr_chance:
-                                itempool.remove(item)
-                            else: #This way an item that had a low chance to get removed that got unlucky will probally stay, but dice be dice :)
-                                item.classification = ItemClassification.useful
+                            itempool.remove(item)
+                            if self.options.disable_chunk_culling.value == DisableChunkCulling.option_useful or not rand_value<curr_chance:#This way an item that had a low chance to get removed that got unlucky will probally stay, but dice be dice :)
+                                useful_itempool.append(item)
                         if rand_value == 0:
                             exit_counter += 1
                             if exit_counter > 5:
@@ -638,12 +744,11 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                     if exit_counter > 5:
                         break
 
-        self.multiworld.itempool+=itempool
-        self.items_already_created = len(itempool)
         all_state = CollectionState(self.multiworld)
         for item in itempool:
             all_state.collect(item,True)
-        all_state.sweep_for_advancements()
+        all_state.sweep_for_advancements(locations=pre_placed_advancements)
+        all_state.update_reachable_regions(self.player)
 
         reachable_loc_map:dict[Location,int] = {}
         region_depth_cache:dict[str,int]= {}
@@ -681,6 +786,35 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 for location in region.locations: #delete all the locations in that region
                     del self.multiworld.regions.location_cache[self.player][location.name]
                 del regions[region_name] #delete the region
+        
+        pre_placed_advancements = [loc for loc in self.get_locations() if loc.advancement] #update this for the culled locations
+        temp_state = all_state.copy()
+        for item in useful_itempool:
+            temp_state.collect(item,True)
+        temp_state.sweep_for_advancements(locations=pre_placed_advancements)
+        temp_state.update_reachable_regions(self.player)
+
+        prog_regions = [region.name for region in all_state.reachable_regions[self.player] if region.name in self.region_code_to_name] #all normally accessable regions
+        useful_regions = [region.name for region in temp_state.reachable_regions[self.player] if region.name in self.region_code_to_name and region not in all_state.reachable_regions[self.player]] #all newly accessable regions
+        really_needed_items = []
+        not_really_needed_items = []
+        for region_code, region_name in self.region_code_to_name.items():
+            item_name = f"Area: {region_name}"
+            if region_code in prog_regions and item_name not in really_needed_items:
+                really_needed_items.append(item_name)
+            if region_code in useful_regions and item_name not in not_really_needed_items:
+                not_really_needed_items.append(item_name)
+        
+        itempool+=useful_itempool #now put them back
+        self.make_image(itempool, f"stage_2_{self.player_name}")
+        itempool = [item for item in itempool if item.name in really_needed_items or item.name in not_really_needed_items]
+        self.make_image(itempool, f"stage_3_{self.player_name}")
+        for item in itempool:
+            if item.name not in really_needed_items:
+                item.classification = ItemClassification.useful
+        
+        self.multiworld.itempool+=itempool #itempool is done being edited now
+        self.items_already_created = len(itempool)
 
         if not self.options.disable_task_culling.value:
             location_list = list(reachable_loc_map.keys())
@@ -712,7 +846,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                         break #Exit early if we've already removed enough
             logger.error(f"Deleted {maximum_locations-locations_created} filler from {self.player_name}, {locations_created - items_created} remains")
 
-        #visualize_regions(self.region_name_to_data["chunk_11937"],"osrs_regions.puml",show_locations=False,show_entrance_names=False,show_other_regions=False)
+        itempool.append(self.create_item(self.starting_area_item)) #we need to add this just for the maps
+        self.make_image(itempool,f"output_{self.player_name}")
 
     def create_items(self) -> None:
         itempool = []
