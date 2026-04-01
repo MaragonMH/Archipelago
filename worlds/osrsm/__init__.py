@@ -918,6 +918,8 @@ class HasTraining(Rule["OSRSMWorld"],game="OSRSMWorld"):
     def _instantiate(self, world: "OSRSMWorld") -> Rule.Resolved:
         if self.skill_name in world.options.starting_skill_levels and self.skill_level <= world.options.starting_skill_levels[self.skill_name]:
             return True_.Resolved(player=world.player)
+        if self.skill_name in world.options.maximum_training_levels and self.skill_level > world.options.maximum_training_levels[self.skill_name]:
+            return False_.Resolved(player=world.player)
         pseudo_item_name = f"_Max_Training_{self.skill_name}"
         return self.Resolved(self.skill_name,self.skill_level,self.qp_run,self.qp_rise,pseudo_item_name,player=world.player)
 
