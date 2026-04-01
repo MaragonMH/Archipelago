@@ -241,6 +241,11 @@ double_named_chunks:list[str]=[
     "chunk_9783","chunk_11321","chunk_11578","chunk_12845","chunk_13102","chunk_10037","chunk_13618","chunk_6453","chunk_11566"
 ]
 
+banned_drop_table_items:dict[str,list[str]]={
+    "loot_RareDropTable+":["Nature talisman","Chaos talisman"],   
+    "loot_GemDropTable+":["Nature talisman","Chaos talisman"],   
+}
+
 quest_list:list[LocationRow] = []
 sub_quest_list:list[LocationRow] = []
 non_quest_list:list[LocationRow] = []
@@ -331,7 +336,10 @@ def iterate_drop_table(drop_table,drop_source):
     drop_list = []
     if set(drop_table.keys()).intersection(banned_drop_items):
         return [] #if there is any key that's on the banned list, quit out early
+    skip_list = banned_drop_table_items[drop_source] if drop_source in banned_drop_table_items else []
     for drop_item, rates_table in drop_table.items():
+        if drop_item in skip_list:
+            continue
         normal_item = True
         if drop_item in non_monster_names:
             drop_item = convert_loot_name(drop_item)
