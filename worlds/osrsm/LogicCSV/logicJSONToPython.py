@@ -94,17 +94,16 @@ banned_groups:list[str]=[
 ]
 
 banned_tasks:list[str]=[
-    "Cook a ~|cooked wild kebbit|~","Trade in an ent seed to an ent",
+    "Cook a ~|cooked wild kebbit|~","Trade in an ent seed to an ent","Wise old man tasks*","Use a ~|bronze pickaxe|~","Use a ~|crystal pickaxe|~",
     "(Ocean Encounters) Obtain a ~|tiny pearl|~","(Ocean Encounters) Obtain a ~|small pearl|~","(Ocean Encounters) Obtain a ~|shiny pearl|~",
     "(Ocean Encounters) Obtain a ~|bright pearl|~","(Ocean Encounters) Obtain a ~|big pearl|~","(Ocean Encounters) Obtain a ~|huge pearl|~",
     "(Ocean Encounters) Obtain an ~|enormous pearl|~","(Ocean Encounters) Obtain a ~|shimmering pearl|~","(Ocean Encounters) Obtain a ~|glistening pearl|~",
-    "(Ocean Encounters) Obtain a ~|brilliant pearl|~","(Ocean Encounters) Obtain a ~|radiant pearl|~",
-
-    "Clue nest loot","Use a ~|3rd age pickaxe|~","Make a ~|3rd age felling axe|~","Make a ~|3rd age felling axe|~ (alt)",
-    "Chop with a ~|3rd age axe|~","Chop with a ~|3rd age felling axe|~","(Master Treasure Trails) Obtain a ~|ring of 3rd age|~",
-    "Slay a ~|mutated terrorbird|~","Slay a ~|mutated tortoise|~",
-    "(Random Events) Obtain a ~|camo top|~",
-    "(Random Events) Obtain ~|camo bottoms|~",
+    "(Ocean Encounters) Obtain a ~|brilliant pearl|~","(Ocean Encounters) Obtain a ~|radiant pearl|~","Use a ~|dragon pickaxe|~","Use a ~|mithril pickaxe|~",
+    "Clue nest loot","Use a ~|3rd age pickaxe|~","Make a ~|3rd age felling axe|~","Make a ~|3rd age felling axe|~ (alt)","Use a ~|rune pickaxe|~",
+    "Chop with a ~|3rd age axe|~","Chop with a ~|3rd age felling axe|~","(Master Treasure Trails) Obtain a ~|ring of 3rd age|~","Use a ~|steel pickaxe|~",
+    "Slay a ~|mutated terrorbird|~","Slay a ~|mutated tortoise|~","Use an ~|adamant pickaxe|~","Use an ~|iron pickaxe|~",
+    "(Random Events) Obtain a ~|camo top|~","Kill monsters for a dark totem top*","Kill monsters for a dark totem middle*","Kill monsters for a dark totem bottom*",
+    "(Random Events) Obtain ~|camo bottoms|~","Cut logs from an ~|ent|~","Wield a ~|phoenix crossbow|~","Change your house style to Basic Wood at an ~|Estate Agent|~",
     "(Random Events) Obtain a ~|camo helmet|~","(Random Events) Obtain a ~|lederhosen top|~","(Random Events) Obtain ~|lederhosen shorts|~",
     "(Random Events) Obtain a ~|lederhosen hat|~","(Random Events) Obtain a ~|zombie shirt|~","(Random Events) Obtain ~|zombie trousers|~",
     "(Random Events) Obtain a ~|zombie mask|~","(Random Events) Obtain ~|zombie gloves|~","(Random Events) Obtain ~|zombie boots|~",
@@ -131,9 +130,6 @@ banned_tasks:list[str]=[
     "Create ~|avernic treads (pe)|~","Create ~|avernic treads (pe)(et)|~","Create ~|avernic treads (pr)(pe)|~","Create ~|avernic treads (max)|~",
     "Unlock the oak variant of the ~|greenman mask|~","Unlock the willow variant of the ~|greenman mask|~","Unlock the maple variant of the ~|greenman mask|~",
     "Unlock the yew variant of the ~|greenman mask|~","Unlock the magic variant of the ~|greenman mask|~"
-
-
-
 ]
 
 banned_chunks: list[str] = [
@@ -223,7 +219,8 @@ banned_drop_items:list[str]=[
     "Dagannoth mother","Damis","Demon of Balance","Demon of Darkness","Demon of Light","Derwen","Durial321","Evil Chicken (Recipe for Disaster)",
     "Forgotten Soul (Soul Wars)","Gang boss","Gangster","Giant Sea Snake","Glod","Golem","Justiciar Zachariah","Kebbit","Nazastarool",
     "Nylocas Vasilias","Pestilent Bloat","Pheasant","Porazdir","Shaeded Beast","Slash Bash","Sotetseg","The Maiden of Sugadinti","The Mimic",
-    "Undead Zealot","Verzik Vitur","Wolf (Soul Wars)","Xarpus","Zombie (Zogre Flesh Eaters)","Tanglefoot","Ent seed loot"
+    "Undead Zealot","Verzik Vitur","Wolf (Soul Wars)","Xarpus","Zombie (Zogre Flesh Eaters)","Tanglefoot","Ent seed loot","The Shaikahan",
+    "Wormbrain","Jonny the beard","Wise Old Man tasks"
 ]
 
 banned_thieving_objects:list[str]=[
