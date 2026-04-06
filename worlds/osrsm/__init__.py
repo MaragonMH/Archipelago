@@ -134,8 +134,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             self.options.disable_chunk_culling.value = DisableChunkCulling.option_disabled #don't cull in UT, this is fine because UT doens't do fill
             self.options.disable_task_culling.value = True 
 
-        if self.options.starting_area.value in rollable_chunks:
-            self.starting_area_item = self.random.choice(rollable_chunks[self.options.starting_area.value])
+        if self.options.starting_area.current_key in rollable_chunks:
+            self.starting_area_item = self.random.choice(rollable_chunks[self.options.starting_area.current_key])
         else:
             starting_area_name = f"Area: {self.options.starting_area.value}"
 
