@@ -183,7 +183,7 @@ Data("Shotgun Diplomacy - Resi Dist: Cathedral - Chp 8", regions=["Chapter 8"], 
 Data("Letrick - Aff Shift - Resi Dist: Cathedral"),  # Just a guess
 Data("Rites of Ruin - Resi Dist: Cathedral - Chp 8", regions=["Chapter 8"], depends=["The Miracle Maker"]),
 Data("Definian Love - Resi Dist: Ishmael Hills - Chp 12", regions=["Chapter 12"], depends=["Definian Downfall"]),
-Data("Phoskeran - Aff Shift - Resi Dist: Ishmael Hills", depends=["Dead Men Tell No Tales"]),  # Just a guess
+Data("Phoskeran - Aff Shift - Resi Dist: Ishmael Hills", depends=["An Ancient Legend", "The Good Thief"]),
 Data("Container - Resi Dist: Cathedral - Mechanical 2", regions=["Mechanical 2"]),
 Data("Trailer - Resi Dist: Cathedral - Mechanical 3", regions=["Mechanical 3"]),
 Data("A Fateful Choice - Resi Dist: Cathedral - Chp 12", regions=["Chapter 12", "Noct 85"], depends=["Divine Roost"]),
