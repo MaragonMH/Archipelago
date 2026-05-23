@@ -453,7 +453,10 @@ class XenobladeXContext(CommonContext):
             if Utils.is_windows:
                 appdata = os.getenv('APPDATA')
             elif Utils.is_linux:
-                appdata = os.path.join(pathlib.Path.home(), ".local/share")
+                home_path = pathlib.Path.home()
+                appdata = os.path.join(home_path, ".var/app/info.cemu.Cemu/config")
+                if not os.path.isdir(appdata):
+                    appdata = os.path.join(home_path, ".local/share")
             if not appdata:
                 raise Exception(CEMU_APPDATA_NOT_FOUND)
             cemu_appdata_path = os.path.join(appdata, "Cemu")
