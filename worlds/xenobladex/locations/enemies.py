@@ -631,7 +631,7 @@ Data("Valeriano, the Rolling Thunder - Obli: Leaning Ring - Electromagnetic Stor
 Data("EN090503_NAME_F00_127", valid=False),
 Data("EN090503_NAME_F00_128", valid=False),
 Data("EN090503_NAME_F00_129", valid=False),
-Data("Blind Scintimure - Sylv: Lake Ciel - Spores"),
+Data("Blind Scintimure - Sylv: Lake Ciel - Spores", regions=["Flight Module"]),
 Data("Zohan, the Thunderbolt - Sylv: Delusians North Summit - Spores", regions=["Skell License"]),  #TAJ
 Data("Tainted Scintimure - Noct: Dead Man's Gulch"),
 Data("EN090503_NAME_F00_130", valid=False),
