@@ -245,7 +245,7 @@ class XenobladeXHttpServer(HTTPServer):
 
     def download_death(self) -> bool:
         pattern = r'^KY Id=6 .*\n'
-        result: bool = re.match(pattern, self.locations) is not None
+        result: bool = len(re.findall(pattern, self.locations, re.MULTILINE)) != 0
         re.sub(pattern, "", self.locations)
         if result:
             self.upload_message("Deathlink", "Sent death")
