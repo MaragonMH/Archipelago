@@ -18,6 +18,8 @@ _enemyList_LC4:
 	.string "Flag"
 _enemyList_LC5:
 	.string "Named"
+_enemyList_LC6:
+	.string "enBook"
 _postEnemyList:
 	stwu r1,-80(r1)
 	mflr r0
@@ -85,6 +87,15 @@ _enemyList_L7:
 	bl getFlagVal
 	mr r9,r3
 	stw r9,48(r31)
+	lis r9,_enemyList_LC6@ha
+	addi r6,r9,_enemyList_LC6@l
+	lwz r5,40(r31)
+	lis r9,_enemyList_LC4@ha
+	addi r4,r9,_enemyList_LC4@l
+	lwz r3,24(r31)
+	bl getFlagVal
+	mr r9,r3
+	stw r9,52(r31)
 	lwz r10,36(r31)
 	lwz r9,16(r31)
 	cmpw cr0,r10,r9
@@ -93,6 +104,9 @@ _enemyList_L7:
 	cmpwi cr0,r9,0
 	bne cr0,_enemyList_L5
 	lwz r9,48(r31)
+	cmpwi cr0,r9,0
+	bne cr0,_enemyList_L5
+	lwz r9,52(r31)
 	cmpwi cr0,r9,0
 	beq cr0,_enemyList_L4
 _enemyList_L5:

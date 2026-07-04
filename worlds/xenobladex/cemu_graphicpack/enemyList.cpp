@@ -53,7 +53,8 @@ char* _postEnemyList(char* stringStartPtr, char* stringCurrentPtr, char* stringE
 				int enemyBaseId = getVal(btlBdatPtr, "BaseEnemyID", enemyId) >> 0x10;
 				int isBoss = getFlagVal(chrBdatPtr, "Flag", enemyBaseId, "mBoss");
 				int isNamed = getFlagVal(chrBdatPtr, "Flag", enemyBaseId, "Named");
-				if(defeat >= enemyThreshold || isBoss || isNamed) flag = 1;  // exactly what game does in getOpenType
+				int enBook = getFlagVal(chrBdatPtr, "Flag", enemyBaseId, "enBook");
+				if(defeat >= enemyThreshold || isBoss || isNamed || enBook) flag = 1;  // exactly what game does in getOpenType
 			} 
 		}
 		else {
