@@ -319,6 +319,7 @@ class XenobladeXContext(CommonContext):
     connected = False
     cemu_process: Optional[subprocess.Popen[bytes]] = None
     locations_checked: Set[int]
+    death_link_pending = False
 
     def __init__(self, server_address: Optional[str], password: Optional[str], xeno_port: int,
                  debug: bool = False) -> None:
@@ -355,6 +356,7 @@ class XenobladeXContext(CommonContext):
 
     def on_deathlink(self, data: dict):
         if "DeathLink" in self.tags:
+            self.death_link_pending = True
             death_source = data["source"]
             self.http_server.upload_death()
             self.http_server.upload_message(f"From {death_source}", "Death")
@@ -441,7 +443,10 @@ class XenobladeXContext(CommonContext):
     async def process_game(self) -> None:
         if self.connected:
             if "DeathLink" in self.tags and self.http_server.download_death():
-                await self.send_death()
+                if self.death_link_pending:
+                    self.death_link_pending = False
+                else:
+                    await self.send_death()
             await self.download_game_locations()
             await self.upload_game_items()
 
