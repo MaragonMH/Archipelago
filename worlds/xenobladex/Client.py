@@ -13,7 +13,7 @@ import re
 import urllib.parse
 import Utils
 from NetUtils import ClientStatus, NetworkItem
-from typing import Any, Coroutine, Counter, List, NamedTuple, Optional, OrderedDict, Set, Callable, cast
+from typing import Counter, List, NamedTuple, Optional, OrderedDict, Set, cast
 from itertools import groupby
 import colorama
 
@@ -60,10 +60,9 @@ class XenobladeXHttpServer(HTTPServer):
     upload_count = 0
     upload_limit = 25
 
-    def __init__(self, server_address, process_game: Callable[[], Coroutine[Any, Any, None]],
-                 bind_and_activate=True, debug: bool = False) -> None:
+    def __init__(self, server_address, bind_and_activate=True, debug: bool = False) -> None:
         self.debug = debug
-        self.process_game = process_game
+        self.process_game_event: asyncio.Event = asyncio.Event()
         super().__init__(server_address, XenobladeXHTTPRequestHandler, bind_and_activate)
 
     class Gear(NamedTuple):
@@ -284,7 +283,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.http_server.locations += locations
         if upload_ended:
             self.http_server.upload_in_progress = False
-            asyncio.run(self.http_server.process_game())
+            self.http_server.process_game_event.set()
 
     # Silence connection request logging
     def log_request(self, code='-', size='-'):
@@ -316,14 +315,14 @@ class XenobladeXContext(CommonContext):
     items_handling = 0b111  # get items from your own world
     want_slot_data = True
 
-    connected = False
     cemu_process: Optional[subprocess.Popen[bytes]] = None
     locations_checked: Set[int]
+    death_link = False
     death_link_pending = False
 
     def __init__(self, server_address: Optional[str], password: Optional[str], xeno_port: int,
                  debug: bool = False) -> None:
-        self.http_server = XenobladeXHttpServer(('::', xeno_port), debug=debug, process_game=self.process_game)
+        self.http_server = XenobladeXHttpServer(('::', xeno_port), debug=debug)
         self.xeno_port = xeno_port
         super().__init__(server_address, password)
 
@@ -333,33 +332,23 @@ class XenobladeXContext(CommonContext):
         await self.get_username()
         await self.send_connect()
 
-    async def disconnect(self, allow_autoreconnect: bool = False):
-        await super(XenobladeXContext, self).disconnect(allow_autoreconnect)
-        self.connected = False
-
     def on_package(self, cmd: str, args: dict):
         if cmd == "Connected":
             slot_data = args.get('slot_data', None)
             if slot_data:
                 cemu_options: list[XenobladeXOption] = [XenobladeXOption(**option)
                                                         for option in slot_data["cemu_options"]]
-                options: dict[str, int] = slot_data["options"]
-                if options["death_link"]:
-                    self.tags.add("DeathLink")
-                else:
-                    self.tags.discard("DeathLink")
+                self.death_link = "death_link" in slot_data["options"]
                 self.http_server.clear_locations()
                 self.prepare_cemu(cemu_options)
-                self.connected = True
         if cmd in {"RoomInfo"}:
             self.seed_name = args["seed_name"]
 
     def on_deathlink(self, data: dict):
-        if "DeathLink" in self.tags:
-            self.death_link_pending = True
-            death_source = data["source"]
-            self.http_server.upload_death()
-            self.http_server.upload_message(f"From {death_source}", "Death")
+        self.death_link_pending = True
+        death_source = data["source"]
+        self.http_server.upload_death()
+        self.http_server.upload_message(f"From {death_source}", "Death")
         super().on_deathlink(data)
 
     def on_print_json(self, args: dict):
@@ -441,14 +430,18 @@ class XenobladeXContext(CommonContext):
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
 
     async def process_game(self) -> None:
-        if self.connected:
-            if "DeathLink" in self.tags and self.http_server.download_death():
-                if self.death_link_pending:
-                    self.death_link_pending = False
-                else:
-                    await self.send_death()
-            await self.download_game_locations()
-            await self.upload_game_items()
+        while not self.exit_event.is_set():
+            await self.update_death_link(self.death_link)
+            if self.http_server.process_game_event.is_set():
+                self.http_server.process_game_event.clear()
+                if "DeathLink" in self.tags and self.http_server.download_death():
+                    if self.death_link_pending:
+                        self.death_link_pending = False
+                    else:
+                        await self.send_death()
+                await self.download_game_locations()
+                await self.upload_game_items()
+            await asyncio.sleep(0.1)
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try:
@@ -593,13 +586,15 @@ async def main(args) -> None:
         ctx.run_gui()
     ctx.run_cli()
 
-    asyncio.get_event_loop().run_in_executor(None, ctx.http_server.serve_forever)
+    asyncio.create_task(asyncio.to_thread(ctx.http_server.serve_forever), name="XenobladeXHttpServer")
+    xeno_sync_task = asyncio.create_task(ctx.process_game(), name="XenobladeXSync")
 
     await ctx.exit_event.wait()
+    await xeno_sync_task
 
     ctx.server_address = None
-    await asyncio.get_event_loop().run_in_executor(None, ctx.http_server.shutdown)
     await ctx.shutdown()
+    ctx.http_server.shutdown()
 
 
 def launch(*args) -> None:
