@@ -5,6 +5,8 @@ from BaseClasses import Item, ItemClassification as ItCl, MultiWorld
 from dataclasses import dataclass, replace
 from typing import Dict, Generator, List, Optional
 
+from worlds.xenobladex.Options import XenobladeXOptions
+
 
 @dataclass(frozen=True)
 class Itm:
@@ -108,17 +110,23 @@ xenobladeXItems: List[Itm] = [
 ]
 
 
-def create_items(world: MultiWorld, player, base_id, options, item_name_to_id: Dict[str, int]):
+def create_items(world: MultiWorld, player, base_id, options: XenobladeXOptions, item_name_to_id: Dict[str, int]):
     """Create all items"""
+    logic_level_steps = options.logic_level_steps.value
+    logic_level_overcap = options.logic_level_overcap.value
+    max_logic_level = 99
+    logic_levels = int(max_logic_level / logic_level_steps) + logic_level_overcap
+
     itempool: List[Item] = []
     requiredOptionalItems = [itm for itm in xenobladeXItems if itm.required]
     optionalFullItems = [itm for itm in xenobladeXOptionalFullItems
                          if itm.prefix and getattr(options, itm.prefix.lower()).value]
     # Add all important Items, these are always added to the item pool
     for item in xenobladeXImportantItems + requiredOptionalItems + optionalFullItems:
-        for idx in range(item.count):
+        item_count = item.count if not item.get_item() == "KEY: Level" else logic_levels
+        for idx in range(item_count):
             xeno_item = XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
-            if idx < item.count - world.precollected_items[player].count(xeno_item):
+            if idx < item_count - world.precollected_items[player].count(xeno_item):
                 itempool += [xeno_item]
 
     # Add all optional Items to the item pool, these are selected at random,

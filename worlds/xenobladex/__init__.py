@@ -43,7 +43,7 @@ class XenobladeXWorld(World):
     topology_present = True
     web = XenobladeXWeb()
 
-    data_version = 9
+    data_version = 10
     base_id: int = 4100000
 
     options_dataclass = XenobladeXOptions
@@ -65,7 +65,8 @@ class XenobladeXWorld(World):
         create_locations(self.multiworld, cast(XenobladeXOptions, self.options), self.player, self.base_id)
 
     def create_items(self):
-        create_items(self.multiworld, self.player, self.base_id, self.options, self.item_name_to_id)
+        create_items(self.multiworld, self.player, self.base_id, cast(XenobladeXOptions, self.options),
+                     self.item_name_to_id)
 
     def create_item(self, name: str) -> XenobladeXItem:
         return create_item(name, self.player, self.item_name_to_id[name])

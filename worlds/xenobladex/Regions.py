@@ -1,7 +1,10 @@
 import logging
 from functools import partial
+from typing import cast
 from BaseClasses import CollectionState, MultiWorld, Region, Entrance, Location
 from dataclasses import astuple, dataclass, field
+
+from worlds.xenobladex.Options import XenobladeXOptions
 
 
 @dataclass(frozen=True, eq=True)
@@ -47,6 +50,7 @@ from .regions.key import key_regions  # noqa: E402
 from .regions.shop import shop_regions  # noqa: E402
 from .regions.zones import zones_regions  # noqa: E402
 from .regions.quests import quest_regions  # noqa: E402
+from .regions.level import level_regions  # noqa: E402
 from .fnet.miranium import fnet_miranium_data  # noqa: E402
 from .fnet.credits import fnet_credits_data  # noqa: E402
 
@@ -59,6 +63,7 @@ xenobladeXRegions = [
     *shop_regions,
     *zones_regions,
     *quest_regions,
+    *level_regions,
 ]
 
 
@@ -165,6 +170,9 @@ def prepare_regions(world: MultiWorld, player: int) -> None:
                 world.register_indirect_condition(region, entrance)
 
 
+logic_step_size = 1
+
+
 def has_items(state: CollectionState, player, requirements: set[Requirement]) -> bool:
     """Returns true if the state satifies the item requirements"""
     result = True
@@ -183,6 +191,10 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
                 if zone_segment_count >= requirement.count:
                     break
             result = result and zone_segment_count >= requirement.count
+        elif requirement.name == "LVL":
+            logic_step_size = cast(XenobladeXOptions, state.multiworld.worlds[player].options).logic_level_steps.value
+            logic_count = int(requirement.count / logic_step_size)
+            result = result and state.has("KEY: Level", player, logic_count)
         else:
             result = result and state.has(requirement.name, player, requirement.count)
     return result

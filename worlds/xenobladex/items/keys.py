@@ -15,4 +15,5 @@ Data("PLACEHOLDER", valid=False),
 Data("PLACEHOLDER", valid=False),
 Data("PLACEHOLDER", valid=False),
 Data("Kill Enemy", count=0),
+Data("Level", count=0),
 ]

@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
-from Options import DeathLink, DefaultOnToggle, Choice, ExcludeLocations, LocalItems, NonLocalItems, OptionGroup, \
-    PerGameCommonOptions, PriorityLocations, StartHints, StartInventory, StartLocationHints, Visibility
+from Options import DeathLink, DefaultOnToggle, Choice, ExcludeLocations, LocalItems, NonLocalItems, Range, \
+    OptionGroup, PerGameCommonOptions, PriorityLocations, StartHints, StartInventory, StartLocationHints, Visibility
 
 
 class CemuChoice(Choice):
@@ -817,6 +817,22 @@ class IncludeBlueprints(CemuChoice):
     ]
 
 
+class LogicLevelSteps(Range):
+    """Defines the individual progress each level logic item provides"""
+    display_name = "Logic Level Steps"
+    default = 5
+    range_start = 2
+    range_end = 20
+
+
+class LogicLevelOvercap(Range):
+    """Adds the specified number of level logic items to increase the chance of progressing"""
+    display_name = "Logic Level Overcap"
+    default = 0
+    range_start = 0
+    range_end = 20
+
+
 class HiddenLocalItems(LocalItems):
     __doc__ = LocalItems.__doc__
     visibility = Visibility.template | Visibility.spoiler
@@ -874,6 +890,10 @@ class XenobladeXOptions(PerGameCommonOptions):
     skaug: IncludeSkellAugments
     impit: IncludeImportantItems
     # blp: IncludeBlueprints
+
+    # Logic
+    logic_level_steps: LogicLevelSteps
+    logic_level_overcap: LogicLevelOvercap
 
     # Graphic packs
     enemy_aggro: EnemyAggro
@@ -941,6 +961,10 @@ option_groups: list[OptionGroup] = [
         IncludeSkellAugments,
         IncludeImportantItems,
         # IncludeBlueprints,
+    ]),
+    OptionGroup("Logic", [
+        LogicLevelSteps,
+        LogicLevelOvercap,
     ]),
     OptionGroup("Graphic packs", [
         EnemyAggro,
