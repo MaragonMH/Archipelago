@@ -193,7 +193,8 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
             result = result and zone_segment_count >= requirement.count
         elif requirement.name == "LVL":
             logic_step_size = cast(XenobladeXOptions, state.multiworld.worlds[player].options).logic_level_steps.value
-            logic_count = int(requirement.count / logic_step_size)
+            logic_count = int(min(requirement.count, 50) / logic_step_size) + int(min(requirement.count - 50, 0) /
+                                                                                  (logic_step_size + 5))
             result = result and state.has("KEY: Level", player, logic_count)
         else:
             result = result and state.has(requirement.name, player, requirement.count)

@@ -115,7 +115,10 @@ def create_items(world: MultiWorld, player, base_id, options: XenobladeXOptions,
     logic_level_steps = options.logic_level_steps.value
     logic_level_overcap = options.logic_level_overcap.value
     max_logic_level = 99
-    logic_levels = int(max_logic_level / logic_level_steps) + logic_level_overcap
+    soft_logic_level = 50
+    high_logic_level_increase = 5
+    high_logic_levels = int((max_logic_level - soft_logic_level) / (logic_level_steps + high_logic_level_increase))
+    logic_levels = int(soft_logic_level / logic_level_steps) + high_logic_levels + logic_level_overcap
 
     itempool: List[Item] = []
     requiredOptionalItems = [itm for itm in xenobladeXItems if itm.required]
