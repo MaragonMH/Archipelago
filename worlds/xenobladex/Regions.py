@@ -1,6 +1,8 @@
 import logging
 from functools import partial
 from typing import cast
+# from line_profiler import profile
+from numpy import array, dtype, ndarray, uint8
 from BaseClasses import CollectionState, MultiWorld, Region, Entrance, Location
 from dataclasses import astuple, dataclass, field
 
@@ -127,12 +129,23 @@ def connect_regions(world: MultiWorld, player: int, source: str, target: str, ru
     connection.connect(target_region)
 
 
+# Convert the logic level into the required logic count
+def get_logic_level_count(logic_level: int, step_size: int):
+    return int(min(logic_level, 50) / step_size) + int(min(logic_level - 50, 0) / (step_size + 5))
+
+
+# Used by rules to improve performance of logic level checks
+logic_level_lookup: ndarray[tuple[int], dtype[uint8]] = array([])
 # Used by rules to improve performance of zone completion checks. player - zone - region - seg count
 segment_completion_lookup: dict[int, dict[str, dict[str, int]]] = {}
 
 
 # Only after items are inside itempool and before fill
 def prepare_regions(world: MultiWorld, player: int) -> None:
+    global logic_level_lookup
+    logic_step_size = cast(XenobladeXOptions, world.worlds[player].options).logic_level_steps.value
+    logic_level_lookup = array([get_logic_level_count(lvl, logic_step_size) for lvl in range(0, 100)])
+
     segment_completion_lookup[player] = {}
     zones = ["MIRA", "PRIM", "NOCT", "OBLI", "SYLV", "CAUL"]
     regions = world.get_regions(player)
@@ -170,9 +183,7 @@ def prepare_regions(world: MultiWorld, player: int) -> None:
                 world.register_indirect_condition(region, entrance)
 
 
-logic_step_size = 1
-
-
+# @profile
 def has_items(state: CollectionState, player, requirements: set[Requirement]) -> bool:
     """Returns true if the state satifies the item requirements"""
     result = True
@@ -192,10 +203,7 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
                     break
             result = result and zone_segment_count >= requirement.count
         elif requirement.name == "LVL":
-            logic_step_size = cast(XenobladeXOptions, state.multiworld.worlds[player].options).logic_level_steps.value
-            logic_count = int(min(requirement.count, 50) / logic_step_size) + int(min(requirement.count - 50, 0) /
-                                                                                  (logic_step_size + 5))
-            result = result and state.has("KEY: Level", player, logic_count)
+            result = result and state.has("KEY: Level", player, logic_level_lookup[requirement.count])
         else:
             result = result and state.has(requirement.name, player, requirement.count)
     return result

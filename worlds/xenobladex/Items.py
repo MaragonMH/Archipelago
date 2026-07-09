@@ -6,6 +6,7 @@ from dataclasses import dataclass, replace
 from typing import Dict, Generator, List, Optional
 
 from worlds.xenobladex.Options import XenobladeXOptions
+from worlds.xenobladex.Regions import get_logic_level_count
 
 
 @dataclass(frozen=True)
@@ -70,11 +71,11 @@ class _Itms:
 
 xenobladeXImportantItems = [
     *_Itms.gen("KEY", type=0, data=keys_data, prog=ItCl.progression),
-    *_Itms.gen("SKF", type=9, data=doll_frames_data, prog=ItCl.progression),
-    *_Itms.gen("DP", type=0x1c, data=dataprobes_data, prog=ItCl.progression),
+    *_Itms.gen("SKF", type=9, data=doll_frames_data, prog=ItCl.progression_deprioritized_skip_balancing),
+    *_Itms.gen("DP", type=0x1c, data=dataprobes_data, prog=ItCl.progression_deprioritized_skip_balancing),
     *_Itms.gen("ART", type=0x20, data=arts_data, prog=ItCl.useful),
     *_Itms.gen("SKL", type=0x21, data=skills_data, prog=ItCl.useful),
-    *_Itms.gen("FRD", type=0x22, data=friends_data, prog=ItCl.progression),
+    *_Itms.gen("FRD", type=0x22, data=friends_data, prog=ItCl.progression_deprioritized_skip_balancing),
     *_Itms.gen("FLDSK", type=0x23, data=field_skills_data, prog=ItCl.progression),
     *_Itms.gen("CL", type=0x24, data=classes_data, prog=ItCl.useful),
 ]
@@ -114,11 +115,7 @@ def create_items(world: MultiWorld, player, base_id, options: XenobladeXOptions,
     """Create all items"""
     logic_level_steps = options.logic_level_steps.value
     logic_level_overcap = options.logic_level_overcap.value
-    max_logic_level = 99
-    soft_logic_level = 50
-    high_logic_level_increase = 5
-    high_logic_levels = int((max_logic_level - soft_logic_level) / (logic_level_steps + high_logic_level_increase))
-    logic_levels = int(soft_logic_level / logic_level_steps) + high_logic_levels + logic_level_overcap
+    logic_levels = get_logic_level_count(99, logic_level_steps) + logic_level_overcap
 
     itempool: List[Item] = []
     requiredOptionalItems = [itm for itm in xenobladeXItems if itm.required]

@@ -196,3 +196,8 @@ _speedups.html
 .LSOverride
 Thumbs.db
 [Dd]esktop.ini
+
+# Profiler
+profile_output.txt
+profile_output.lprof
+profile_output_*.txt
