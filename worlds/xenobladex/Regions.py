@@ -2,7 +2,6 @@ import logging
 from functools import partial
 from typing import cast
 # from line_profiler import profile
-from numpy import array, dtype, ndarray, uint8
 from BaseClasses import CollectionState, MultiWorld, Region, Entrance, Location
 from dataclasses import astuple, dataclass, field
 

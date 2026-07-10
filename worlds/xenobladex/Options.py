@@ -818,8 +818,8 @@ class IncludeBlueprints(CemuChoice):
 
 
 class LogicLevelSteps(Range):
-    """Defines the individual progress each level logic item provides. Increases generation time a lot. 
-    To disable set to 0"""
+    """Defines the individual progress each level logic item provides. Increases generation time a lot.
+     To disable set to 0"""
     display_name = "Logic Level Steps"
     default = 5
     range_start = 0
