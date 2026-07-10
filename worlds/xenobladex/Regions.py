@@ -92,6 +92,15 @@ def init_region(world: MultiWorld, player: int, region_name: str):
                 if rule.region == "Menu":
                     break
                 requirements = requirements.union(rule.requirements)
+
+        # Remove same requirements with lower count
+        highest_requirements: dict[str, Requirement] = {}
+        for requirement in requirements:
+            existing = highest_requirements.get(requirement.name)
+            if existing is None or requirement.count > existing.count:
+                highest_requirements[requirement.name] = requirement
+        requirements = set(highest_requirements.values())
+
         connect_regions(world, player, "Menu", region_name,
                         partial(has_items, player=player, requirements=requirements))
 
@@ -134,18 +143,12 @@ def get_logic_level_count(logic_level: int, step_size: int):
     return int(min(logic_level, 50) / step_size) + int(min(logic_level - 50, 0) / (step_size + 5))
 
 
-# Used by rules to improve performance of logic level checks
-logic_level_lookup: ndarray[tuple[int], dtype[uint8]] = array([])
 # Used by rules to improve performance of zone completion checks. player - zone - region - seg count
 segment_completion_lookup: dict[int, dict[str, dict[str, int]]] = {}
 
 
 # Only after items are inside itempool and before fill
 def prepare_regions(world: MultiWorld, player: int) -> None:
-    global logic_level_lookup
-    logic_step_size = cast(XenobladeXOptions, world.worlds[player].options).logic_level_steps.value
-    logic_level_lookup = array([get_logic_level_count(lvl, logic_step_size) for lvl in range(0, 100)])
-
     segment_completion_lookup[player] = {}
     zones = ["MIRA", "PRIM", "NOCT", "OBLI", "SYLV", "CAUL"]
     regions = world.get_regions(player)
@@ -187,6 +190,7 @@ def prepare_regions(world: MultiWorld, player: int) -> None:
 def has_items(state: CollectionState, player, requirements: set[Requirement]) -> bool:
     """Returns true if the state satifies the item requirements"""
     result = True
+    logic_level_steps = cast(XenobladeXOptions, state.multiworld.worlds[player].options).logic_level_steps.value
     for requirement in requirements:
         if requirement.name == "MIRANIUM":
             result = result and has_miranium(state, player, requirement.count)
@@ -202,10 +206,14 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
                 if zone_segment_count >= requirement.count:
                     break
             result = result and zone_segment_count >= requirement.count
-        elif requirement.name == "LVL":
-            result = result and state.has("KEY: Level", player, logic_level_lookup[requirement.count])
+            # result = result and segment_completion_count[player][requirement.name] >= requirement.count
+        elif requirement.name == "LVL" and logic_level_steps != 0:
+            result = result and state.has("KEY: Level", player,
+                                          get_logic_level_count(requirement.count, logic_level_steps))
         else:
             result = result and state.has(requirement.name, player, requirement.count)
+        if not result:
+            break
     return result
 
 

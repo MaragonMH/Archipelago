@@ -115,7 +115,9 @@ def create_items(world: MultiWorld, player, base_id, options: XenobladeXOptions,
     """Create all items"""
     logic_level_steps = options.logic_level_steps.value
     logic_level_overcap = options.logic_level_overcap.value
-    logic_levels = get_logic_level_count(99, logic_level_steps) + logic_level_overcap
+    logic_levels = 0
+    if logic_level_steps > 0:
+        logic_levels = get_logic_level_count(99, logic_level_steps) + logic_level_overcap
 
     itempool: List[Item] = []
     requiredOptionalItems = [itm for itm in xenobladeXItems if itm.required]
