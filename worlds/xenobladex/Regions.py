@@ -68,40 +68,59 @@ xenobladeXRegions = [
 ]
 
 
-def init_region(world: MultiWorld, player: int, region_name: str):
+# Save all requirements for each region
+xenobladex_region_requirements: dict[int, dict[str, set[Requirement]]] = {}
+
+
+def init_region(world: MultiWorld, player: int, region_name: str) -> str:
     """Initialize the new region if it was not done before and establish the connection rules,
         based on its predecessors, if applicable"""
     region_names = [region.name for region in world.get_regions(player)]
     regions = set([rule.region for rule in xenobladeXRegions])
-    if region_name not in region_names:
-        logging.debug(f"Region Name: {region_name}")
-        assert set(region_name.split("+")) <= regions, f"{region_name} not in available regions"
+
+    assert set(region_name.split("+")) <= regions, f"{region_name} not in available regions"
+    if player not in xenobladex_region_requirements:
+        xenobladex_region_requirements[player] = {}
+    if region_name == "Menu" and "Menu" not in region_names:
         world.regions += [Region(region_name, player, world, region_name)]
-        if region_name == "Menu":
-            return
+        xenobladex_region_requirements[player]["Menu"] = set()
+        return "Menu"
 
-        # Add connections to this region
-        requirements: set[Requirement] = set()
-        for subregion in region_name.split("+"):
-            region_found = False
-            for rule in reversed(xenobladeXRegions):
-                if rule.region != subregion and not region_found:
-                    continue
-                region_found = True
-                if rule.region == "Menu":
-                    break
-                requirements = requirements.union(rule.requirements)
+    # Add connections to this region
+    requirements: set[Requirement] = set()
+    for subregion in region_name.split("+"):
+        region_found = False
+        for rule in reversed(xenobladeXRegions):
+            if rule.region != subregion and not region_found:
+                continue
+            region_found = True
+            if rule.region == "Menu":
+                break
+            requirements = requirements.union(rule.requirements)
 
-        # Remove same requirements with lower count
-        highest_requirements: dict[str, Requirement] = {}
-        for requirement in requirements:
-            existing = highest_requirements.get(requirement.name)
-            if existing is None or requirement.count > existing.count:
-                highest_requirements[requirement.name] = requirement
-        requirements = set(highest_requirements.values())
+    # Remove same requirements with lower count
+    highest_requirements: dict[str, Requirement] = {}
+    for requirement in requirements:
+        existing = highest_requirements.get(requirement.name)
+        if existing is None or requirement.count > existing.count:
+            highest_requirements[requirement.name] = requirement
+    requirements = set(highest_requirements.values())
 
+    # Check if region with same requirements already exists
+    dup_region = False
+    for req_region_name, region_requirements in xenobladex_region_requirements[player].items():
+        if req_region_name != region_name and requirements == region_requirements:
+            dup_region = True
+            logging.debug(f"Duplicate Region: {region_name} ||| {req_region_name}")
+            region_name = req_region_name
+            break
+    if not dup_region and region_name not in region_names:
+        logging.debug(f"Region Name: {region_name}")
+        xenobladex_region_requirements[player][region_name] = requirements
+        world.regions += [Region(region_name, player, world, region_name)]
         connect_regions(world, player, "Menu", region_name,
                         partial(has_items, player=player, requirements=requirements))
+    return region_name
 
 
 def trim_regions(regions: set[str]) -> list[str]:

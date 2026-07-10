@@ -92,7 +92,7 @@ _resolve_dependencies()
 
 
 def create_location(world: MultiWorld, region_name: str, location_name: str, player: int, abs_id: Optional[int]):
-    init_region(world, player, region_name)
+    region_name = init_region(world, player, region_name)
     return add_region_location(world, player, region_name,
                                XenobladeXLocation(player, location_name, abs_id, world.get_region(region_name, player)))
 
