@@ -5,8 +5,8 @@ from BaseClasses import Item, ItemClassification as ItCl, MultiWorld
 from dataclasses import dataclass, replace
 from typing import Dict, Generator, List, Optional
 
-from worlds.xenobladex.Options import XenobladeXOptions
-from worlds.xenobladex.Regions import get_logic_level_count
+from .Options import XenobladeXOptions
+from .Regions import get_logic_level_count
 
 
 @dataclass(frozen=True)

@@ -5,7 +5,7 @@ from typing import cast
 from BaseClasses import CollectionState, MultiWorld, Region, Entrance, Location
 from dataclasses import astuple, dataclass, field
 
-from worlds.xenobladex.Options import XenobladeXOptions
+from .Options import XenobladeXOptions
 
 
 @dataclass(frozen=True, eq=True)

@@ -1,4 +1,3 @@
-from worlds.zillion import region
 from ..Locations import Loc as Data
 
 # from helper
