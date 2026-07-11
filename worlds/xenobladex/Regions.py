@@ -189,19 +189,9 @@ def prepare_regions(world: MultiWorld, player: int) -> None:
         segment_completion_lookup[player][zone] = zone_dict
         # Find all affected entrances
         for entrance in world.get_entrances(player):
-            if not (zone.capitalize() in entrance.name):
-                # Do chapter regions manually
-                if (zone == "PRIM" and "Chapter 4" in entrance.name) or \
-                   (zone == "NOCT" and "Chapter 5" in entrance.name) or \
-                   (zone == "OBLI" and "Chapter 6" in entrance.name) or \
-                   (zone == "MIRA" and "Chapter 8" in entrance.name) or \
-                   (zone == "SYLV" and "Chapter 10" in entrance.name) or \
-                   (zone == "CAUL" and "Chapter 11" in entrance.name):
-                    pass
-                else:
-                    continue
-            for region in indirect_regions:
-                world.register_indirect_condition(region, entrance)
+            if zone in [req.name for req in xenobladex_region_requirements[player][entrance.name]]:
+                for region in indirect_regions:
+                    world.register_indirect_condition(region, entrance)
 
 
 # @profile
@@ -224,7 +214,6 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
                 if zone_segment_count >= requirement.count:
                     break
             result = result and zone_segment_count >= requirement.count
-            # result = result and segment_completion_count[player][requirement.name] >= requirement.count
         elif requirement.name == "LVL" and logic_level_steps != 0:
             result = result and state.has("KEY: Level", player,
                                           get_logic_level_count(requirement.count, logic_level_steps))
