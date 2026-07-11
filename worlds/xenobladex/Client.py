@@ -28,6 +28,10 @@ from .drops.skill import dropSkillsData
 from .items.dollFrames import doll_frame_ids
 from .items.groundAugments import ground_augments_data, ground_augments_type_data
 from .items.dollAugments import doll_augments_type_data
+from .items.groundArmor import ground_armor_type_data
+from .items.groundWeapons import ground_weapons_type_data
+from .items.dollArmor import doll_armor_type_data
+from .items.dollWeapons import doll_weapons_type_data
 from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
 from .Options import XenobladeXOption
@@ -54,15 +58,16 @@ class XenobladeXHttpServer(HTTPServer):
     address_family = socket.AF_INET6
     locations = ""
     items = ""
+    items_debug = ""
     death_link = ""
     messages: List[str] = []
-    upload_in_progress = False
     upload_count = 0
     upload_limit = 25
 
     def __init__(self, server_address, bind_and_activate=True, debug: bool = False) -> None:
         self.debug = debug
         self.process_game_event: asyncio.Event = asyncio.Event()
+        self.process_server_event: asyncio.Event = asyncio.Event()
         super().__init__(server_address, XenobladeXHTTPRequestHandler, bind_and_activate)
 
     class Gear(NamedTuple):
@@ -115,20 +120,26 @@ class XenobladeXHttpServer(HTTPServer):
 
         return self.Gear(affixes[0], affixes[1], affixes[2], slot_num)
 
-    def adjustTypeRange(self, item_game_type: int) -> int:
-        if item_game_type == 0x1:
-            return 5
-        if item_game_type == 0x6:
-            return 2
-        if item_game_type == 0xa:
-            return 5
-        if item_game_type == 0xf:
-            return 5
-        return 1
-
     def clear_uploaded_items(self):
         self.items = ""
         self.upload_count = 0
+
+    def adjust_item_type(self, item_game_type: int, item_game_id: int) -> int:
+        if 0x01 <= item_game_type <= 0x05:
+            return item_game_type + ground_armor_type_data[item_game_id - 1] - 1
+        elif 0x06 <= item_game_type <= 0x07:
+            return item_game_type + ground_weapons_type_data[item_game_id - 1] - 1
+        elif 0x0a <= item_game_type <= 0x0e:
+            return item_game_type + doll_armor_type_data[item_game_id - 1] - 1
+        elif 0x0f <= item_game_type <= 0x13:
+            return item_game_type + doll_weapons_type_data[item_game_id - 1] - 1
+        elif 0x14 <= item_game_type <= 0x15:
+            augment_idx = max([id for id in ground_augments_type_data.keys() if id <= item_game_id])
+            return item_game_type + ground_augments_type_data[augment_idx]
+        elif 0x16 <= item_game_type <= 0x18:
+            augment_idx = max([id for id in doll_augments_type_data.keys() if id <= item_game_id])
+            return item_game_type + doll_augments_type_data[augment_idx]
+        return item_game_type
 
     # Example: Invoke-WebRequest http://localhost:45872/items -Method POST -Body "I Tp=00000007 Id=00000039`n"
     def upload_item(self, item_game_type: int, item_game_id: int, seed_name: Optional[str],
@@ -137,29 +148,21 @@ class XenobladeXHttpServer(HTTPServer):
             return
         self.upload_count += 1
 
-        self.items += self._generate_message(f"From {player_name}", item_name)
+        logger.debug(f"Upload Item: {item_name} Id: {item_game_id} Type: {item_game_type}")
+        self.upload_message(f"From {player_name}", item_name)
 
         if item_game_type == 0:
             self.items += f"K Id={item_game_id:08x} Fg={1:08x}\n"
         elif item_game_type < 0x20:
-            # Currently the exact type for multitype tables is not saved, so we need to distribute all possible types
-            # This requires the game to reject every invalid type + item combination
             gear = self.generate_gear(item_name, seed_name)
-            for item_game_type in range(item_game_type, item_game_type + self.adjustTypeRange(item_game_type)):
-                if gear:
-                    self.items += f"G Tp={item_game_type:08x} Id={item_game_id:08x} A1={gear.affix_1:08x} " \
-                                  f"A2={gear.affix_2:08x} A3={gear.affix_3:08x} Sc={gear.slots:08x}\n"
-                else:
-                    if item_game_type == 0x9 and item_name in doll_frame_ids:
-                        item_game_id = doll_frame_ids[item_name]
-                    # Approach does not work for Augments so do them manually
-                    elif 0x14 <= item_game_type <= 0x15:
-                        augment_idx = max([id for id in ground_augments_type_data.keys() if id <= item_game_id])
-                        item_game_type += ground_augments_type_data[augment_idx]
-                    elif 0x16 <= item_game_type <= 0x18:
-                        augment_idx = max([id for id in doll_augments_type_data.keys() if id <= item_game_id])
-                        item_game_type += doll_augments_type_data[augment_idx]
-                    self.items += f"I Tp={item_game_type:08x} Id={item_game_id:08x}\n"
+            item_game_type = self.adjust_item_type(item_game_type, item_game_id)
+            if gear:
+                self.items += f"G Tp={item_game_type:08x} Id={item_game_id:08x} A1={gear.affix_1:08x} " \
+                              f"A2={gear.affix_2:08x} A3={gear.affix_3:08x} Sc={gear.slots:08x}\n"
+            else:
+                if item_game_type == 0x9 and item_name in doll_frame_ids:
+                    item_game_id = doll_frame_ids[item_name]
+                self.items += f"I Tp={item_game_type:08x} Id={item_game_id:08x}\n"
         elif item_game_type < 0x21:
             self.items += f"A Id={item_game_id:08x} Lv={1:08x}\n"
         elif item_game_type < 0x22:
@@ -263,18 +266,20 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def get_items(self):
         self.respond_success()
-        messages = "".join(self.http_server.messages[-4:])
-        self.http_server.messages = self.http_server.messages[:-4]
-        items_text = messages + self.http_server.items + self.http_server.death_link
-        self.wfile.write(items_text.encode())
-        self.http_server.items = ""
-        self.http_server.death_link = ""
+        if self.http_server.process_server_event.is_set():
+            self.http_server.process_server_event.clear()
+            messages = "".join(self.http_server.messages[-2:])
+            self.http_server.messages = self.http_server.messages[:-2]
+            items_text = messages + self.http_server.items + self.http_server.death_link + self.http_server.items_debug
+            self.http_server.items = ""
+            self.http_server.items_debug = ""
+            self.http_server.death_link = ""
+            self.wfile.write(items_text.encode())
 
     def post_locations(self):
         locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":", "\n")
         self.respond_success()
         if "^" in locations[0]:
-            self.http_server.upload_in_progress = True
             self.http_server.locations = ""
             locations = locations[1:]
         upload_ended = "$" in locations[-1]
@@ -282,7 +287,6 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
             locations = locations[0:-2]
         self.http_server.locations += locations
         if upload_ended:
-            self.http_server.upload_in_progress = False
             self.http_server.process_game_event.set()
 
     # Silence connection request logging
@@ -294,7 +298,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(self.http_server.locations.encode())
 
     def debug_post_items(self):
-        self.http_server.items += (self.rfile.read(int(self.headers['content-length']))).decode('cp437')
+        self.http_server.items_debug = (self.rfile.read(int(self.headers['content-length']))).decode('cp437')
         self.respond_success()
 
     def do_GET(self):
@@ -441,6 +445,7 @@ class XenobladeXContext(CommonContext):
                         await self.send_death()
                 await self.download_game_locations()
                 await self.upload_game_items()
+                self.http_server.process_server_event.set()
             await asyncio.sleep(0.1)
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
