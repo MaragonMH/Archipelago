@@ -148,7 +148,6 @@ class XenobladeXHttpServer(HTTPServer):
             return
         self.upload_count += 1
 
-        logger.debug(f"Upload Item: {item_name} Id: {item_game_id} Type: {item_game_type}")
         self.upload_message(f"From {player_name}", item_name)
 
         if item_game_type == 0:
@@ -173,6 +172,8 @@ class XenobladeXHttpServer(HTTPServer):
             self.items += f"D Id={item_game_id:08x} Lv={item_game_level + 1:08x}\n"
         elif item_game_type < 0x25:
             self.items += f"C Id={item_game_id:08x} Lv={10:08x}\n"
+
+        logger.debug(f"Upload Item: {item_name} Id: {item_game_id} Type: {item_game_type}")
 
     def _match_line(self, data: list[GameItem], game_type: Optional[int], regex: str, min: int = 1,
                     max: int = 0xFFFF, has_lvl: bool = False, lvl_change=lambda lvl: lvl):
@@ -275,6 +276,8 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
             self.http_server.items_debug = ""
             self.http_server.death_link = ""
             self.wfile.write(items_text.encode())
+            if items_text:
+                logger.debug(f"{items_text.encode()}")
 
     def post_locations(self):
         locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":", "\n")
