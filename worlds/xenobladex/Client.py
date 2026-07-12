@@ -438,18 +438,25 @@ class XenobladeXContext(CommonContext):
 
     async def process_game(self) -> None:
         while not self.exit_event.is_set():
-            await self.update_death_link(self.death_link)
-            if self.http_server.process_game_event.is_set():
-                self.http_server.process_game_event.clear()
-                if "DeathLink" in self.tags and self.http_server.download_death():
-                    if self.death_link_pending:
-                        self.death_link_pending = False
-                    else:
-                        await self.send_death()
-                await self.download_game_locations()
-                await self.upload_game_items()
-                self.http_server.process_server_event.set()
-            await asyncio.sleep(0.1)
+            try:
+                await self.update_death_link(self.death_link)
+                if self.http_server.process_game_event.is_set():
+                    self.http_server.process_game_event.clear()
+                    if "DeathLink" in self.tags and self.http_server.download_death():
+                        if self.death_link_pending:
+                            self.death_link_pending = False
+                        else:
+                            await self.send_death()
+                    await self.download_game_locations()
+                    await self.upload_game_items()
+                    self.http_server.process_server_event.set()
+                await asyncio.sleep(0.1)
+            except Exception as e:
+                logger.exception(e, extra={"compact_gui": True})
+                msg = "Aborted Xenoblade X Connection"
+                logger.error(msg)
+                self.gui_error(msg, e)
+                self.exit_event.set()
 
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try:
