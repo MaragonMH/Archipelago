@@ -24,9 +24,14 @@ int * getInnerEquipmentData(char* characterPtr, int equipPosition);
 
 
 // Use  https://xenoblade.github.io/xbx/bdat/common_local_us/TWN_FriendRank.html to match the ids
-// Ranges from 0 to 50, but 32 is already 5 hearts???
+// Ix=0 Ranged Weapon
+// Ix=1 Melee Weapon
+// Ix=2 Armor Head
+// Ix=3 Armor Torso
+// Ix=4 Armor Left Arm
+// Ix=5 Armor Right Arm
+// Ix=6 Armor Legs
 char* _postEquipList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
-	// Do this only for main character for now
     for(int characterId = 0; GetCharaDataPtr(characterId) != 0; characterId++){
 		char* characterPtr = (char*)GetCharaDataPtr(characterId);
 		 
