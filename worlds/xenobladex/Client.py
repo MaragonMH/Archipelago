@@ -13,7 +13,7 @@ import re
 import urllib.parse
 import Utils
 from NetUtils import ClientStatus, NetworkItem
-from typing import Counter, List, NamedTuple, Optional, OrderedDict, Set, cast
+from typing import Counter, List, NamedTuple, Optional, Set, cast
 from itertools import groupby
 import colorama
 
@@ -209,13 +209,11 @@ class XenobladeXHttpServer(HTTPServer):
         return locations
 
     def _match_line_augment(self, data: list[GameItem], game_type: int, regex: str,
-                            augment_type_data: OrderedDict[int, int], lower: int = 1, upper: int = 0xFFFF):
-        starting_index = 1
+                            lower: int = 0, upper: int = 0xFFFF):
         match = re.findall(regex, self.locations, re.MULTILINE)
         match = [tuple(int(entry_id, 16) for entry_id in entry_tuple) for entry_tuple in match]
-        data += [GameItem(game_type + augment_type_data[entry[i]], entry[i])
-                 for entry in match if lower <= entry[0] <= upper
-                 for i in range(starting_index + 3) if 0 < entry[i] < 0xFFFF and entry[i] in augment_type_data]
+        data += [GameItem(game_type, entry[i]) for entry in match if lower <= entry[1] <= upper
+                 for i in range(2, re.compile(regex).groups) if 0 < entry[i] < 0xFFFF]
 
     def download_items(self) -> list[GameItem]:
         items: list[GameItem] = []
@@ -224,18 +222,20 @@ class XenobladeXHttpServer(HTTPServer):
         self._match_line(items, None, r'^IT Id=([0-9a-fA-F]{3}) Tp=([0-9a-fA-F]{2})(?:\n| S1Id)')
         self._match_line(items, 0x1c, r'^IT Id=([0-9a-fA-F]{3}) Tp=1[cC] Cn=([0-9a-fA-F]{3})', has_lvl=True)
         self._match_line(items, 0x1d, r'^IT Id=([0-9a-fA-F]{3}) Tp=1[dD] Cn=([0-9a-fA-F]{3})')
-        equip_regex = r'^EQ CId=[0-9a-fA-F]{2} Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1})'
-        self._match_line(items, 0x6, equip_regex, min=0, max=2)
-        self._match_line(items, 0x1, equip_regex, min=3)
+        equip_regex = r'^EQ CId=[0-9a-fA-F]{3} Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1})'
+        self._match_line(items, 0x6, equip_regex, min=0, max=1)
+        self._match_line(items, 0x1, equip_regex, min=2, max=6)
         doll_regex = r'^DL GIx=[0-9a-fA-F]{2} Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1})'
         self._match_line(items, 0xf, doll_regex, min=0, max=0x9)
         self._match_line(items, 0x9, doll_regex, min=0xa, max=0xa)
-        self._match_line(items, 0xa, doll_regex, min=0xb)
-        augment_regex = r'.*Tp=([0-9a-fA-F]{2}).*A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4})'
-        self._match_line_augment(items, 0x14, rf'^IT{augment_regex}', ground_augments_type_data, lower=1, upper=7)
-        self._match_line_augment(items, 0x14, rf'^EQ{augment_regex}', ground_augments_type_data)
-        self._match_line_augment(items, 0x16, rf'^IT{augment_regex}', doll_augments_type_data, lower=0xa, upper=0x13)
-        self._match_line_augment(items, 0x16, rf'^DL{augment_regex}', doll_augments_type_data)
+        self._match_line(items, 0xa, doll_regex, min=0xb, max=0xf)
+        augment_regex_suffix = r'.*A1Id=([0-9a-fA-F]{4}) A2Id=([0-9a-fA-F]{4}) A3Id=([0-9a-fA-F]{4})'
+        augment_regex = r'.*Id=([0-9a-fA-F]{3}) Tp=([0-9a-fA-F]{2})' + augment_regex_suffix
+        self._match_line_augment(items, 0x14, rf'^IT{augment_regex}', lower=1, upper=7)
+        self._match_line_augment(items, 0x16, rf'^IT{augment_regex}', lower=0xa, upper=0x13)
+        augment_equip_regex = r'.*Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1})' + augment_regex_suffix
+        self._match_line_augment(items, 0x14, rf'^EQ{augment_equip_regex}')
+        self._match_line_augment(items, 0x16, rf'^DL{augment_equip_regex}')
         self._match_line(items, 0x20, r'^AT Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n')
         self._match_line(items, 0x21, r'^SK Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{1})\n')
         self._match_line(items, 0x22, r'^FD Id=([0-9a-fA-F]{2}) Lv=([0-9a-fA-F]{2}) Ch=.*\n',
