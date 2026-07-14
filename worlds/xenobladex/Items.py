@@ -88,7 +88,8 @@ xenobladeXAugments = [
     *_Itms.gen("AUG", type=0x14, type_count=2, data=ground_augments_data),
     *_Itms.gen("SKAUG", type=0x16, type_count=3, data=doll_augments_data),
 ]
-xenobladeXImpItems = [*_Itms.gen("IMPIT", type=0x1d, data=important_items_data)]
+xenobladeXImpItems = [*_Itms.gen("IMPIT", type=0x1d, data=important_items_data,
+                                 prog=ItCl.progression_skip_balancing)]
 # xenobladeXBlueprints = [*_Itms.gen("BLP", type=0x41, data=blueprints_data)]
 
 xenobladeXOptionalItems: Dict[str | None, List[Itm]] = {

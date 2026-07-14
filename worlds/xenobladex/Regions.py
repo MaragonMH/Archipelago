@@ -47,6 +47,7 @@ from .regions.chapters import chapter_regions  # noqa: E402
 from .regions.fieldSkills import field_skill_regions  # noqa: E402
 from .regions.fnet import fnet_regions  # noqa: E402
 from .regions.friends import friends_regions  # noqa: E402
+from .regions.importantItems import important_item_regions  # noqa: E402
 from .regions.key import key_regions  # noqa: E402
 from .regions.shop import shop_regions  # noqa: E402
 from .regions.zones import zones_regions  # noqa: E402
@@ -65,6 +66,7 @@ xenobladeXRegions = [
     *zones_regions,
     *quest_regions,
     *level_regions,
+    *important_item_regions,
 ]
 
 
@@ -78,7 +80,7 @@ def init_region(world: MultiWorld, player: int, region_name: str) -> str:
     region_names = [region.name for region in world.get_regions(player)]
     regions = set([rule.region for rule in xenobladeXRegions])
 
-    assert set(region_name.split("+")) <= regions, f"{region_name} not in available regions"
+    assert set(region_name.split("+")) <= regions, f"{set(region_name.split("+")) - regions} not in available regions"
     if player not in xenobladex_region_requirements:
         xenobladex_region_requirements[player] = {}
     if region_name == "Menu" and "Menu" not in region_names:
@@ -199,6 +201,7 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
     """Returns true if the state satifies the item requirements"""
     result = True
     logic_level_steps = cast(XenobladeXOptions, state.multiworld.worlds[player].options).logic_level_steps.value
+    important_items_enabled: bool = cast(XenobladeXOptions, state.multiworld.worlds[player].options).impit.value != 0
     for requirement in requirements:
         if requirement.name == "MIRANIUM":
             result = result and has_miranium(state, player, requirement.count)
@@ -218,7 +221,8 @@ def has_items(state: CollectionState, player, requirements: set[Requirement]) ->
             result = result and state.has("KEY: Level", player,
                                           get_logic_level_count(requirement.count, logic_level_steps))
         else:
-            result = result and state.has(requirement.name, player, requirement.count)
+            if (not requirement.name.startswith("IMPIT")) or important_items_enabled:
+                result = result and state.has(requirement.name, player, requirement.count)
         if not result:
             break
     return result

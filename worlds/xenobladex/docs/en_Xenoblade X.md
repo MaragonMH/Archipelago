@@ -160,8 +160,9 @@ In general locations are only in logic with these techniques if i was able to pu
 
 ## Known Issues
 - The first time you talk with the new L'shop you will still get denied by the `Only available online` prompt. Just interact with it twice in quick succession.
-- `Important Items` have no logic yet.
 - The `AS0115 Formula XT` can somehow not be configured in the garage.
 - `Overdrive` for skells will be activated by default if you unlocked skells.
 - Skells are configured without any weapons and are locked in a t-pose during combat. You can just disengage combat to get moving again or press `Remove all Gear` in the garage, which equips the default weapons.
 - The main inventory can display items of the weapon and armor categories for skells and characters incorrectly. They correctly appear in the corresponding equip menus though.
+- If you enable all the Items and disable all the Locations you will be unable to fit all the progression items into the Multiworld. The generation will fail.
+- Currently important items that are collected from the ground (these are red) are still received. Will be fixed in the future.

@@ -18,11 +18,11 @@ Data("Boot Camp - Indu Dist: Test Hangar - Gwin 1 - Chp 10", regions=["Chapter 1
 Data("Alien Wreckage - Indu Dist: Test Hangar - Archeological 2", regions=["Archeological 2"]),
 Data("A Girls Wings - Indu Dist: Test Hangar - Chp 9", regions=["Chapter 9", "Skell License", "Lvl 27"], depends=["The Skell License"]), # depends flight module quest
 Data("Muimuis Meltdown - Indu Dist: Central - Chp 9", regions=["Chapter 9", "Lvl 32"], depends=["Setting Forth"]),
-Data("Turf War - Indu Dist: Central - Chp 10", regions=["Chapter 10", "Lvl 36"], depends=["Waste Not, Want Not"]), # depends Blood Soaked Beast Fur
+Data("Turf War - Indu Dist: Central - Chp 10", regions=["Chapter 10", "Lvl 36", "Blood-Soaked Beast Fur"], depends=["Waste Not, Want Not"]),
 Data("Doug 2 H2H - Indu Dist: Central - Morning", regions=["Doug 2"], depends=["Doug 1 H2H"]), 
 Data("A Proper Chopper - Indu Dist: Central - Chp 4", regions=["Chapter 4", "Lvl 13"]),
 Data("Murderess 3 H2H - Indu Dist: Production Plant", regions=["Murderess 3"], depends=["Murderess 2 H2H"]), 
-Data("Forest Foray - Indu Dist: Production Plant - Chp 3", regions=["Chapter 3", "Noct 15"]), # depends 6 Phosphorus Tree Seeds
+Data("Forest Foray - Indu Dist: Production Plant - Chp 3", regions=["Chapter 3", "Noct 15", "Phosphorus-Tree Seed"]),
 Data("Pollution Solution - Indu Dist: Production Plant - Chp 7", regions=["Chapter 7", "FNet Resource"], depends=["The Voltant Visionary", "Prone Sweet Prone"]),
 Data("Good Neighbors - Indu Dist: Test Hangar - Chp 7", regions=["Chapter 7", "FNet Resource 2", "Lvl 30"], depends=["Circle of Life", "Lakeside Getaway", "Sunceleg Rises"]),
 Data("Irina 4 H2H - Indu Dist: Test Hangar", regions=["Irina 4"], depends=["Irina 3 H2H"]), 
@@ -30,29 +30,29 @@ Data("Lin 1 H2H - Indu Dist: Test Hangar", regions=["Lin 1"], depends=["Lin"]),
 Data("Data Probe Breakthrough - Indu Dist: Test Hangar - Chp 11", regions=["Chapter 11", "Miranium 20"], depends=["Data Probe Progress"]),
 Data("Data Probe Revolution - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12", "Miranium 40"], depends=["Data Probe Evolution"]),
 Data("Elma 1 H2H - Indu Dist: Central - Afternoon", regions=["Elma 1"], depends=["Elma"]), 
-Data("Lone Survivors - Indu Dist: Central - Chp 8", regions=["Chapter 8", "Lvl 30"], depends=["Circle of Life"]),
+Data("Lone Survivors - Indu Dist: Central - Chp 8", regions=["Chapter 8", "Lvl 30", "Summoning Goggles"], depends=["Circle of Life"]),
 Data("Entrepreneurial Spirit - Indu Dist: Central - Chp 8", regions=["Chapter 8", "Credits 130"], depends=["The Root of All Evil", "Vainamo, the Bellower"]),
-Data("Child of Mira - Indu Dist: Central - Chp 11", regions=["Chapter 11", "Lvl 39"], depends=["Pollution Solution", "Cavernous Abyss"]), # depends Gorkwa
+Data("Child of Mira - Indu Dist: Central - Chp 11", regions=["Chapter 11", "Lvl 39", "Gorkwa"], depends=["Pollution Solution", "Cavernous Abyss"]),
 Data("Container - Indu Dist: Production Plant - Mechanical 3", regions=["Mechanical 3"]),
 Data("Orphean Pluck - Indu Dist: Production Plant - Chp 10", regions=["Chapter 10", "Miranium"], depends=["No-show Nenceleg", "Planetary Pioneer IV"]),
 Data("Data Probe Progress - Indu Dist: Production Plant - Chp 10", regions=["Chapter 10", "Miranium 15"], depends=["Data Probe Challenge"]),
 Data("Data Probe Evolution - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12", "Miranium 30"], depends=["Data Probe Breakthrough"]),
-Data("The Pip-Squeak - Indu Dist: Test Hangar - Chp 5", regions=["Chapter 5"]), # depends frozen pizza, hot dog, hamburger aganeba alloy
-Data("Professorial - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12", "Lvl 43"], depends=["Definian Downfall", "Professor Bs Return"]), # depends Keycard
-Data("Rise of the Blood Lobster - Indu Dist: Test Hangar - Chp 3", regions=["Chapter 3", "Skell License", "Flight Module", "Lvl 60"], depends=["Definian Downfall"]),  # TAJ, MenuReset but too hard. depends 99 Stuffed Lobster
+Data("The Pip-Squeak - Indu Dist: Test Hangar - Chp 5", regions=["Chapter 5", "Frozen Pizza", "Hot Dog", "Hamburger", "Aganeba Alloy"]),
+Data("Professorial - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12", "Lvl 43", "Gray Keycard"], depends=["Definian Downfall", "Professor Bs Return"]),
+Data("Rise of the Blood Lobster - Indu Dist: Test Hangar - Chp 11", regions=["Chapter 3", "Skell License", "Flight Module", "Lvl 60", "Stuffed Lobster"], depends=["Definian Downfall"]),  # TAJ, MenuReset but too hard
 Data("Mia 3 H2H - Indu Dist: Test Hangar - Late Night", regions=["Mia 3"], depends=["Mia 2 H2H"]), 
 Data("Hope 3 H2H - Indu Dist: Central - Morning ", regions=["Hope 3"], depends=["Hope 2 H2H"]), 
 Data("Pack It In - Indu Dist: Central - Chp 9", regions=["Chapter 9", "FNet Resource 2", "Lvl 36"], depends=["Dead Men Tell No Tales"]),
 Data("Irina 1 H2H - Indu Dist: Central", regions=["Irina 1"], depends=["Irina"]), 
 Data("Frye 5 H2H - Indu Dist: Production Plant", regions=["Frye 5"], depends=["Frye 4 H2H"]), 
-Data("Alexa - Indu Dist: Test Hangar", regions=["Chapter 4", "Blade License", "Lvl 18"]),  # depends: Weaponized, Guinea Pigs Wanted!, Ramjet Rifle
+Data("Alexa - Indu Dist: Test Hangar", regions=["Chapter 4", "Blade License", "Lvl 18", "Quest Weaponized"]),  # depends: Weaponized, Guinea Pigs Wanted!
 Data("Celica 1 H2H - Indu Dist: Test Hangar", regions=["Celica 1"], depends=["Celica"]), 
-Data("Mystery Man - Indu Dist: Central - Chp 5", regions=["Chapter 5", "Lvl 18"]), # depends Tykki Sap
+Data("Mystery Man - Indu Dist: Central - Chp 5", regions=["Chapter 5", "Lvl 18", "Tykki Sap"]),
 Data("The Voltant Visionary - Indu Dist: Central - Chp 7", regions=["Chapter 7", "Lvl 29"], depends=["Dead Men Tell No Tales", "A Dubious Operation"]), # dubious operation maybe not required
 Data("Horonalderon - Aff Shift - Indu Dist: Central - Chp 11", depends=["The Good Thief", "Tree-mendous", "Slovitys Revenge"]),
 Data("Frye - Indu Dist: Repenta Diner", depends=["Bottoms Up"]),
-Data("The Good Thief - Indu Dist: Repenta Diner - Chp 9", regions=["Chapter 9", "Lvl 34"], depends=["Dead Men Tell No Tales", "Water Woes"]), # you receive voltant only one route though
-Data("Fitting In - Aff Mission - Indu Dist: Test Hangar - Chp 11", regions=["Chapter 11", "Celica 3", "Lvl 46"], depends=["BFFs", "New in New LA", "A Girls Wings", "Floating Reef"]),
+Data("The Good Thief - Indu Dist: Repenta Diner - Chp 9", regions=["Chapter 9", "Lvl 34"], depends=["Dead Men Tell No Tales", "Water Woes"]), # you receive voltant only one route
+Data("Fitting In - Aff Mission - Indu Dist: Test Hangar - Chp 11", regions=["Chapter 11", "Celica 3", "Lvl 46", "Aerozium"], depends=["BFFs", "New in New LA", "A Girls Wings", "Floating Reef"]),
 Data("Professor Bs Return - Indu Dist: Central - Chp 7", regions=["Chapter 7", "Lvl 30"], depends=["Mystery Man", "Great Washington Isle"]),
 Data("Gold Rush - Indu Dist: Central - Night - Chp 11", regions=["Chapter 11", "Lvl 50"], depends=["A Challenger Approaches", "The Celeste Three", "Law and Orders"]),
 Data("Frye 1 H2H - Indu Dist: Repenta Diner", regions=["Frye 1"], depends=["Frye"]), 
@@ -65,8 +65,8 @@ Data("Mia 4 H2H - Comm Dist: West Melville Street", regions=["Mia 4"], depends=[
 Data("Boze - Comm Dist: West Melville Street", regions=["Chapter 5", "Blade License", "Lvl 20"]),  # depends: The Mad Monk
 Data("Celica 3 H2H - Comm Dist: West Melville Street - Morning", regions=["Celica 3"], depends=["Celica 2 H2H"]), 
 Data("Container - Comm Dist: West Melville Street - Mechanical 2", regions=["Mechanical 2"]),
-Data("Stop, Thief! - Comm Dist: West Melville Street - Chp 9", regions=["Chapter 9"], depends=["A Dubious Operation"]), # depends Deep Blue Gem
-Data("A Dubious Operation - Comm Dist: West Melville Street - Chp 7", regions=["Chapter 7", "Lvl 32"], depends=["Dead Men Tell No Tales"]), # depends hazardous container, hazardous fuel cell, toxic chemical bomb
+Data("Stop, Thief! - Comm Dist: West Melville Street - Chp 9", regions=["Chapter 9", "Deep Blue Gem"], depends=["A Dubious Operation"]),
+Data("A Dubious Operation - Comm Dist: West Melville Street - Chp 7", regions=["Chapter 7", "Lvl 32", "Hazardous Container", "Hazardous Fuel Cell", "Toxic Chemical Bomb"], depends=["Dead Men Tell No Tales"]),
 Data("Mia 2 H2H - Comm Dist: West Melville Street - Late Night", regions=["Mia 2"], depends=["Mia 1 H2H"]), 
 Data("Alien Wreckage - Comm Dist: West Melville Street - Archeological 4", regions=["Archeological 4"]),
 Data("Phog 4 H2H - Comm Dist: Barista Court", regions=["Phog 4"], depends=["Phog 3 H2H"]),
@@ -75,9 +75,9 @@ Data("Better Latte Than Never - Comm Dist: West Melville Street - Day - Chp 2", 
 Data("Doug 4 H2H - Comm Dist: West Melville Street", regions=["Doug 4"], depends=["Doug 3 H2H"]), 
 Data("Quiquat - Aff Shift - Comm Dist: West Melville Street", depends=["Starboard"]),  # just a guess
 Data("Lin 4 H2H - Comm Dist: Barista Court - Evening", regions=["Lin 4"], depends=["Lin 3 H2H"]), 
-Data("Emotion Commotion - Comm Dist: Barista Court - Chp 7", regions=["Chapter 7", "Lvl 30"]), # depends Bobbys Watch
-Data("The Matchmaker - Aff Mission - Comm Dist: Central Melville Street - Chp 6", regions=["Chapter 6", "Lao 1", "FNet Resource", "Lvl 24"]), # pizza?
-Data("Definian Downfall - Comm Dist: Central Melville Street - Chp 11", regions=["Chapter 11", "Lvl 54"], depends=["Professor Bs Return", "Good Fortun"]), # depends First Barrier Key, Second Barrier Key, Third Barrier Key
+Data("Emotion Commotion - Comm Dist: Barista Court - Chp 7", regions=["Chapter 7", "Lvl 30", "Bobbys Watch"]),
+Data("The Matchmaker - Aff Mission - Comm Dist: Central Melville Street - Chp 6", regions=["Chapter 6", "Lao 1", "FNet Resource", "Lvl 24"]),
+Data("Definian Downfall - Comm Dist: Central Melville Street - Chp 11", regions=["Chapter 11", "Lvl 54", "First Barrier Key", "Second Barrier Key", "Third Barrier Key"], depends=["Professor Bs Return", "Good Fortun"]),
 Data("Irina 5 H2H - Comm Dist: North Founder Street", regions=["Irina 5"], depends=["Irina 4 H2H"]), 
 Data("Veverta - Aff Shift - Comm Dist: North Founder Street", depends=["Starboard"]),  # just a guess
 Data("Nine Lives - Aff Mission - Comm Dist: Barista Court - Chp 5", regions=["Chapter 5", "Lvl 20"]),
@@ -85,35 +85,35 @@ Data("Renewed Will - Aff Mission - Comm Dist: Central Melville Street - Chp 3", 
 Data("No Ma-non Need Apply - Comm Dist: Central Melville Street- Chp 5", regions=["Chapter 5"], depends=["Thats In-Credible!", "The Pip-Squeak"]),
 Data("L 4 H2H - Comm Dist: North Founder Street", regions=["L 4"], depends=["L 3 H2H"]), 
 Data("Nagi 3 H2H - Comm Dist: North Founder Street - Morning", regions=["Nagi 3"], depends=["Nagi 2 H2H"]), 
-Data("Sparking a Smile - Comm Dist: Barista Court - Chp 8", regions=["Chapter 8", "Mira 40", "FNet Resource", "Lvl 33"], depends=["BFFs"]), # depends 4 Nopon Contract, the Big Bang
+Data("Sparking a Smile - Comm Dist: Barista Court - Chp 8", regions=["Chapter 8", "Mira 40", "FNet Resource", "Lvl 33", "Nopon Contract"], depends=["BFFs"]), # depends the Big Bang
 Data("Unsatisfied Customer - Comm Dist: Barista Court - Chp 11", regions=["Chapter 11"], depends=["BFFs", "Floating Reef"]),
 Data("The Fashionista - Comm Dist: Central Melville Street - Chp 6", regions=["Chapter 6", "Lvl 4"]),
-Data("Planetary Pioneer III - Comm Dist: Central Melville Street - Chp 8", regions=["Chapter 8", "Miranium", "FNet Resource"], depends=["FN Node 408", "Nectar Scirpo", "Planetary Pioneer II"]), # depends Data Unit FN095, oblivia trailblazing 1/2/3
-Data("Yelv - Comm Dist: North Founder Street", regions=["Chapter 3", "Lvl 14"]), # depends meeting yelv, mission a/b/c, tissue sample from debris
-Data("The Sword of Legendaryness - Comm Dist: Central Melville Street - Chp 11", regions=["Chapter 11"], depends=["Bread and a Circus"]), # depends Sword of Legendaryness
+Data("Planetary Pioneer III - Comm Dist: Central Melville Street - Chp 8", regions=["Chapter 8", "Miranium", "FNet Resource", "Data Unit FN095"], depends=["FN Node 408", "Nectar Scirpo", "Planetary Pioneer II"]), # depends oblivia trailblazing 1/2/3
+Data("Yelv - Comm Dist: North Founder Street", regions=["Chapter 3", "Lvl 14", "Tissue Sample"]), # depends meeting yelv, mission a/b/c
+Data("The Sword of Legendaryness - Comm Dist: Central Melville Street - Chp 11", regions=["Chapter 11", "Sword of Legendaryness"], depends=["Bread and a Circus"]),
 Data("Murderess 2 H2H - Comm Dist: North Founder Street - Nighttime", regions=["Murderess 2"], depends=["Murderess 1 H2H"]), 
 Data("Serial Thriller - Aff Mission - Comm Dist: North Founder Street - Chp 12", regions=["Chapter 12", "Murderess 4", "Lvl 53"], depends=["A False Hope", "The Little Rich Girl"]),
 Data("Frye 4 H2H - Comm Dist: East Melville Street", regions=["Frye 4"], depends=["Frye 3 H2H"]), 
 Data("My Angel, My Lana - Comm Dist: East Melville Street - Chp 10", regions=["Chapter 10", "Lvl 42"], depends=["BFFs"]),
 Data("Alien Wreckage - Comm Dist: East Melville Street - Archeological 3", regions=["Archeological 3"]),
 Data("Hope 5 H2H - Comm Dist: East Melville Street", regions=["Hope 5"], depends=["Hope 4 H2H"]), 
-Data("Trade Agreement - Comm Dist: East Melville Street - Chp 7", regions=["Chapter 7"], depends=["Dead Men Tell No Tales", "Circle of Life", "Prone Sweet Prone"]), # depends Gold Nopopotamus Card
-Data("The Ties That Bind - Aff Mission - Comm Dist: East Melville Street - Chp 4", regions=["Chapter 4", "Lvl 15"]), # depends dadapons sunglasses
+Data("Trade Agreement - Comm Dist: East Melville Street - Chp 7", regions=["Chapter 7", "Gold Nopopotamus Card"], depends=["Dead Men Tell No Tales", "Circle of Life", "Prone Sweet Prone"]),
+Data("The Ties That Bind - Aff Mission - Comm Dist: East Melville Street - Chp 4", regions=["Chapter 4", "Lvl 15", "Dadapons Sunglasses"]),
 Data("L 1 H2H - Comm Dist: East Melville Street", regions=["L 1"], depends=["L"]), 
 Data("Beats - Aff Shift - Comm Dist: East Melville Street", depends=["The Art of War"]),
-Data("Murder Most Foul - Comm Dist: East Melville Street - Chp 9", regions=["Chapter 9", "Lvl 35"]), # depends Grenade Pizza
-Data("Wrothian Innovation - Comm Dist: East Melville Street - Chp 10", regions=["Chapter 10", "FNet Resource", "Miranium 10"], depends=["A Challenger Approaches", "Orphean Pluck"]),
+Data("Murder Most Foul - Comm Dist: East Melville Street - Chp 9", regions=["Chapter 9", "Lvl 35", "Grenade Pizza"]),
+Data("Wrothian Innovation - Comm Dist: East Melville Street - Chp 10", regions=["Chapter 10", "FNet Resource", "Miranium 10", "Practice Data Probe"], depends=["A Challenger Approaches", "Orphean Pluck"]),
 Data("Hope 2 H2H - Comm Dist: East Melville Street - Evening", regions=["Hope 2"], depends=["Hope 1 H2H"]), 
-Data("A Dish Served Cold - Comm Dist: East Melville Street - Chp 11", regions=["Chapter 11", "Lvl 39"], depends=["A Challenger Approaches"]),
+Data("A Dish Served Cold - Comm Dist: East Melville Street - Chp 11", regions=["Chapter 11", "Lvl 39", "Three Swords"], depends=["A Challenger Approaches"]),
 Data("Elma 3 H2H - Comm Dist: East Melville Street - Morning", regions=["Elma 3"], depends=["Elma 2 H2H"]), 
-Data("Forbidden Love - Ma-non Ship: Port Side - Chp 8", regions=["Chapter 8", "Lvl 38"], depends=["Prone Sweet Prone"]), # depends Ringstone
+Data("Forbidden Love - Ma-non Ship: Port Side - Chp 8", regions=["Chapter 8", "Lvl 38", "Ringstone"], depends=["Prone Sweet Prone"]),
 Data("No-show Nenceleg - Ma-non Ship: Port Side - Chp 10", regions=["Chapter 10", "Lvl 35"], depends=["House Call"]),
-Data("Gorkwa Games - Ma-non Ship: Port Side - Chp 7", regions=["Chapter 7", "Lvl 35"], depends=["Dead Men Tell No Tales"]),
-Data("House Call - Ma-non Ship: Port Side - Chp 10", regions= ["Chapter 10", "Lvl 35"], depends=["Circle of Life"]), # depends Lumenoa Leaf
+Data("Gorkwa Games - Ma-non Ship: Port Side - Chp 7", regions=["Chapter 7", "Lvl 35", "Troylans Gorkwa", "Troylans Gorkwa Fake"], depends=["Dead Men Tell No Tales"]),
+Data("House Call - Ma-non Ship: Port Side - Chp 10", regions= ["Chapter 10", "Lvl 35", "Lumenoa Leaf"], depends=["Circle of Life"]),
 Data("A New Life - Ma-non Ship: Port Side - Chp 11", regions=["Chapter 11", "Obli 70", "Lvl 39"], depends=["Here Come the Brides", "Kintrees"]), # maybe Kintrees
 Data("Here Come the Brides - Ma-non Ship: Port Side - Chp 9", regions=["Chapter 9", "Lvl 36"], depends=["Prone Sweet Prone"]),
-Data("The Unbreakable Sword - Ma-non Ship: Port Side - Chp 12", regions=["Chapter 12", "FNet Resource", "Lvl 39"], depends=["A Challenger Approaches"]), # depends Weapon unbreakable sword
-Data("A Grim Undertaking - Ma-non Ship: Port Side - Chp 6", regions=["Chapter 6", "Lvl 23"], depends=["Prone Sweet Prone"]), # depends Queggas Gift, Queggas Note, Dancers Clothes
+Data("The Unbreakable Sword - Ma-non Ship: Port Side - Chp 12", regions=["Chapter 12", "FNet Resource", "Lvl 39", "Unbreakable Sword"], depends=["A Challenger Approaches"]),
+Data("A Grim Undertaking - Ma-non Ship: Port Side - Chp 6", regions=["Chapter 6", "Lvl 23", "Queggas Note", "Dancers Clothes"], depends=["Prone Sweet Prone"]),
 Data("L 2 H2H - Ma-non Ship: Deck - Nighttime", regions=["L 2"], depends=["L 1 H2H"]), 
 Data("The Lurker - Ma-non Ship: Deck - Chp 12", regions=["Chapter 12", "Lvl 36"], depends=["The Duel IV", "A Challenger Approaches"]),
 Data("Snipe Hunt - Ma-non Ship: Deck - Chp 12", regions=["Chapter 12", "Lvl 50"]),
@@ -121,25 +121,25 @@ Data("Mia - Ma-non Ship: Deck", depends=["Mia Is Missing!"]),
 Data("Sunceleg Rises - Ma-non Ship: Deck", regions=["Chapter 6", "Lvl 30"], depends=["Rescue at the Ensconced Citadel"]),
 Data("Zurranik - Aff Shift - Ma-non Ship: Deck", depends=["Deck", "Gold Rush"]),
 Data("The Membership - Ma-non Ship: Starboard - Chp 6", regions=["Chapter 6", "FNet Resource", "Miranium 10"], depends=["Planetary Pioneer III"]),
-Data("Tree-mendous - Ma-non Ship: Starboard - Chp 5", regions=["Chapter 5", "Lvl 30"], depends=["Prone Sweet Prone"]), # depends Kidnapped: Uzoma Vassago, Kidnapped: Oll Valdileo, Kidnapped: Rada Valdileo, Ajiibas key, Mujiibas key
+Data("Tree-mendous - Ma-non Ship: Starboard - Chp 5", regions=["Chapter 5", "Lvl 30", "Ajibas Key", "Mujibas Key"], depends=["Prone Sweet Prone"]), # depends Kidnapped: Uzoma Vassago, Kidnapped: Oll Valdileo, Kidnapped: Rada Valdileo
 Data("Elma 4 H2H - Ma-non Ship: Starboard - Evening", regions=["Elma 4"], depends=["Elma 3 H2H"]), 
-Data("The Old Gods - Ma-non Ship: Starboard - Chp 12", regions=["Chapter 12", "Lvl 55"], depends=["Dead Men Tell No Tales", "Slavebird Isle"]), # depends zirtodiamond
+Data("The Old Gods - Ma-non Ship: Starboard - Chp 12", regions=["Chapter 12", "Lvl 55", "Zirtodiamond", "Golboggas Disk"], depends=["Dead Men Tell No Tales", "Slavebird Isle"]),
 Data("An Ancient Legend - Ma-non Ship: Starboard - Chp 12", regions=["Chapter 12", "Lvl 39"], depends=["Slovitys Revenge"]),
 Data("Training Day - Ma-non Ship: Starboard - Chp 7", regions=["Chapter 7", "Lvl 30"], depends=["Prone Sweet Prone"]),
 Data("The Art of War - Ma-non Ship: Starboard - Chp 8", regions=["Chapter 8", "Lvl 34"], depends=["Prone Sweet Prone"]),
 Data("Slovitys Revenge - Ma-non Ship: Starboard - Chp 11", regions=["Chapter 11", "Lvl 40"], depends=["Slovitys Rampage"]),
-Data("The Party Line - Ma-non Ship: Starboard - Chp 12", regions=["Chapter 12"], depends=["A Challenger Approaches", "BFFs", "Circle of Life", "Dead Men Tell No Tales", "Prone Sweet Prone"]), # depends Traditional Orphean Drug
+Data("The Party Line - Ma-non Ship: Starboard - Chp 12", regions=["Chapter 12", "Traditional Orphean Drug"], depends=["A Challenger Approaches", "BFFs", "Circle of Life", "Dead Men Tell No Tales", "Prone Sweet Prone"]),
 Data("Phog 1 H2H - Resi Dist: Deliverance Park", regions=["Phog 1"], depends=["Phog"]), 
-Data("Circle of Life - Resi Dist: Deliverance Park - Chp 7", regions=["Chapter 7"], depends=["The Journey Begins", "Water Woes"]), # depends Senirapa Water
+Data("Circle of Life - Resi Dist: Deliverance Park - Chp 7", regions=["Chapter 7", "Senirapa Water"], depends=["The Journey Begins", "Water Woes"]),
 Data("Phog - Resi Dist: Deliverance Park", depends=["Foggy Dilemma"]),
 Data("Lin 5 H2H - Resi Dist: Deliverance Park - Morning", regions=["Lin 5"], depends=["Lin 4 H2H"]), 
 Data("Off the Record Archeological - Resi Dist: Deliverance Park", regions=["Archeological 4", "Blade License"], depends=["Sentinels Nest", "Calore, the Lava Walker", "Land Forfex"]),
 Data("Phog 3 H2H - Resi Dist: Sports Complex", regions=["Phog 3"], depends=["Phog 2 H2H"]), 
 Data("Alien Wreckage - Resi Dist: Sports Complex - Archeological 4", regions=["Archeological 4"]),
 Data("Gwin 2 H2H - Resi Dist: Sports Complex - Late Night", regions=["Gwin 2"], depends=["Gwin 1 H2H"]), 
-Data("Herbivores, Unite! - Resi Dist: Deliverance Park - Chp 9", regions=["Chapter 9", "Noct 45"], depends=["Prone Sweet Prone", "Circle of Life", "Divine Roost"]),
-Data("A Present for Hope - Aff Mission - Resi Dist: Deliverance Park - Hope 4 - Chp 10", regions=["Chapter 10", "Hope 4", "Lvl 44"], depends=["A False Hope"]),
-Data("The Celeste Three - Resi Dist: Deliverance Park - Chp 4", regions=["Chapter 4", "Lvl 27"]),
+Data("Herbivores, Unite! - Resi Dist: Deliverance Park - Chp 9", regions=["Chapter 9", "Noct 45", "Gnarlbranch Sap"], depends=["Prone Sweet Prone", "Circle of Life", "Divine Roost"]),
+Data("A Present for Hope - Aff Mission - Resi Dist: Deliverance Park - Hope 4 - Chp 10", regions=["Chapter 10", "Hope 4", "Lvl 44", "Reverends Journal"], depends=["A False Hope"]),
+Data("The Celeste Three - Resi Dist: Deliverance Park - Chp 5", regions=["Chapter 5", "Lvl 27", "White Gold Ore", "Briggss Key"]), # maybe Frosdykes/Moorehouses Key
 Data("L 5 H2H - Resi Dist: Sports Complex - Early Morning", regions=["L 5"], depends=["L 4 H2H"]), 
 Data("Celica 2 H2H - Resi Dist: Sports Complex - Morning", regions=["Celica 2"], depends=["Celica 1 H2H"]), 
 Data("Doug 3 H2H - Resi Dist: Sports Complex - Daytime", regions=["Doug 3"], depends=["Doug 2 H2H"]), 
@@ -147,7 +147,7 @@ Data("Gwin 3 H2H - Resi Dist: Water Puri Plant - Late Night", regions=["Gwin 3"]
 Data("Frye 3 H2H - Resi Dist: Water Purification Plant", regions=["Frye 3"], depends=["Frye 2 H2H"]), 
 Data("The Line of Fire - Resi Dist: Deliverance Park - Chp 9", regions=["Chapter 9", "Lvl 40"], depends=["Shotgun Diplomacy"]),
 Data("Hope - Resi Dist: Deliverance Park", depends=["Hope Springs Eternal"]),
-Data("Planetary Pioneer V - Resi Dist: Deliverance Park - Chp 11", regions=["Chapter 11", "Miranium", "Lvl 51"], depends=["FN Node 505", "Planetary Pioneer IV"]), # depends Data Unit FN097, Cauldros Trailblazing 1/2/3
+Data("Planetary Pioneer V - Resi Dist: Deliverance Park - Chp 11", regions=["Chapter 11", "Miranium", "Lvl 51", "Data Unit FN097"], depends=["FN Node 505", "Planetary Pioneer IV"]), # depends Cauldros Trailblazing 1/2/3
 Data("Gwin 4 H2H - Resi Dist: Sports Complex", regions=["Gwin 4"], depends=["Gwin 3 H2H"]), 
 Data("Mia 5 H2H - Resi Dist: Sports Complex", regions=["Mia 5"], depends=["Mia 4 H2H"]), 
 Data("Hope 4 H2H - Resi Dist: Sports Complex", regions=["Hope 4"], depends=["Hope 3 H2H"]), 
@@ -157,27 +157,27 @@ Data("Murderess 1 H2H - Resi Dist: Cathedral", regions=["Murderess 1"], depends=
 Data("Murderess 4 H2H - Resi Dist: Cathedral", regions=["Murderess 4"], depends=["Murderess 3 H2H", "Nine Lives"]), 
 Data("Alien Wreckage - Resi Dist: Ishmael Hills - Archeological 3", regions=["Archeological 3"]),
 Data("Doug 1 H2H - Resi Dist: Ishmael Hills", regions=["Doug 1"], depends=["Doug", "Nine Lives"]), 
-Data("Bread and a Circus - Resi Dist: Ishmael Hills - Chp 10", regions=["Chapter 10"], depends=["Muimuis Meltdown"]), # depends Slive of Bread
+Data("Bread and a Circus - Resi Dist: Ishmael Hills - Chp 10", regions=["Chapter 10", "Slice of Bread"], depends=["Muimuis Meltdown"]),
 Data("Elma 2 H2H - Resi Dist: Water Puri Plant - Night", regions=["Elma 2"], depends=["Elma 1 H2H", "Nine Lives"]), 
-Data("New Frontier - Resi Dist: Cathedral - Chp 12", regions=["Chapter 12", "FNet Resource", "Miranium 20"], depends=["Planetary Pioneer V", "Entrepreneurial Spirit", "Wrothian Innovation"]), # depends Data Unit FN098
+Data("New Frontier - Resi Dist: Cathedral - Chp 12", regions=["Chapter 12", "FNet Resource", "Miranium 20", "Data Unit FN098"], depends=["Planetary Pioneer V", "Entrepreneurial Spirit", "Wrothian Innovation"]),
 Data("Off the Record Mechanical - Resi Dist: Cathedral", regions=["Mechanical 4", "Blade License", "Lvl 55"], depends=["Lyla's Galdr", "Mount Edge Peak", "Savage Sketch"]),
 Data("Mia 1 H2H - Resi Dist: Cathedral", regions=["Mia 1"], depends=["Mia"]), 
 Data("Caroline - Aff Shift - Resi Dist: Ishmael Hills - Chp 7", regions=["Chapter 7"], depends=["Circle of Life"]),
 Data("Alexs Last Stand - Resi Dist: Ishmael Hills - Chp 10", regions=["Chapter 10", "Lvl 43"], depends=["The Line of Fire"]),
 Data("Phog 2 H2H - Resi Dist: Ishmael Hills", regions=["Phog 2"], depends=["Phog 1 H2H", "Nine Lives"]), 
 Data("Konluarb - Aff Shift - Resi Dist: Ishmael Hills - Chp 7", depends=["Circle of Life"]),  # Just a guess
-Data("Lakeside Getaway - Resi Dist: Water Puri Plant - Chp 6", regions=["Chapter 6", "Lvl 22"], depends=["Water Woes", "The Miracle Maker"]),
-Data("Water Woes - Resi Dist: Water Puri Plant - Chp 5", regions=["Chapter 5", "FNet Resource", "Lvl 20"]),
+Data("Lakeside Getaway - Resi Dist: Water Puri Plant - Chp 6", regions=["Chapter 6", "Lvl 22", "Ajoas ID Card", "Ians ID Card", "Keycard Lakeside Getaway"], depends=["Water Woes", "The Miracle Maker"]),
+Data("Water Woes - Resi Dist: Water Puri Plant - Chp 5", regions=["Chapter 5", "FNet Resource", "Lvl 20", "Sampling Bottle"]),
 Data("Irina 2 H2H - Resi Dist: Cathedral - Evening", regions=["Irina 2"], depends=["Irina 1 H2H", "Nine Lives"]), 
 Data("L 3 H2H - Resi Dist: Cathedral", regions=["L 3"], depends=["L 2 H2H", "Nine Lives"]), 
 Data("Murderess 5 H2H - Resi Dist: Ishmael Hills", regions=["Murderess 5"], depends=["Murderess 4 H2H"]), 
 Data("Wendy - Aff Shift - Resi Dist: Ishmael Hills", depends=["Special Delivery"]),
 Data("Nagi 5 H2H - Resi Dist: Ishmael Hills - Afternoon", regions=["Nagi 5"], depends=["Nagi 4 H2H"]), 
 Data("H.B. - Resi Dist: Water Puri Plant", regions=["Chapter 3", "Credits", "Miranium", "Lvl 15"], depends=["FN Node 118"]),  # depends A New Rival?, Installation, Research, Miranium
-Data("Hope Springs Eternal - Aff Mission - Resi Dist: Cathedral - Chp 3", regions=["Chapter 3", "Blade License", "Lvl 21"]),  # depends Marry Me!, 10 natural Pearl
-Data("The Miracle Maker - Resi Dist: Cathedral - Chp 6", regions=["Chapter 6"], depends=["Water Woes"]), # depends Malyteths Bottle
-Data("The Divine Nopopon - Resi Dist: Ishmael Hills - Chp 12", regions=["Chapter 12", "Mira 80", "Lvl 68"], depends=["BFFs"]),
-Data("A Great Divide - Aff Mission - Resi Dist: Ishmael Hills - Phog 2 - Chp 7", regions=["Chapter 7", "Phog 2", "Lvl 30"], depends=["Bottoms Up", "Foggy Dilemma"]), # depends Massive Ring Fragment, Buttle Ruin Fragments, North Coast Riddle Rock
+Data("Hope Springs Eternal - Aff Mission - Resi Dist: Cathedral - Chp 3", regions=["Chapter 3", "Blade License", "Lvl 21", "Natural Pearl"]),  # depends Marry Me!
+Data("The Miracle Maker - Resi Dist: Cathedral - Chp 6", regions=["Chapter 6", "Malyteths Bottle"], depends=["Water Woes"]),
+Data("The Divine Nopopon - Resi Dist: Ishmael Hills - Chp 12", regions=["Chapter 12", "Mira 80", "Lvl 68", "Nopon Gemstone"], depends=["BFFs"]),
+Data("A Great Divide - Aff Mission - Resi Dist: Ishmael Hills - Phog 2 - Chp 7", regions=["Chapter 7", "Phog 2", "Lvl 30", "Massive Ring Fragment", "Butte Ruin Fragments", "North Coast Riddle Rock"], depends=["Bottoms Up", "Foggy Dilemma"]),
 Data("The Bug Whisperer - Resi Dist: Ishmael Hills - Chp 10", regions=["Chapter 10", "Lvl 36"], depends=["Prone Sweet Prone", "Circle of Life", "BFFs"]),
 Data("Shotgun Diplomacy - Resi Dist: Cathedral - Chp 8", regions=["Chapter 8", "Lvl 30"], depends=["Alien Nation"]),
 Data("Letrick - Aff Shift - Resi Dist: Cathedral - Chp 7", depends=["Emotion Commotion"]),
@@ -186,7 +186,7 @@ Data("Definian Love - Resi Dist: Ishmael Hills - Chp 12", regions=["Chapter 12",
 Data("Phoskeran - Aff Shift - Resi Dist: Ishmael Hills", depends=["An Ancient Legend", "The Good Thief"]),
 Data("Container - Resi Dist: Cathedral - Mechanical 2", regions=["Mechanical 2"]),
 Data("Trailer - Resi Dist: Cathedral - Mechanical 3", regions=["Mechanical 3"]),
-Data("A Fateful Choice - Resi Dist: Cathedral - Chp 12", regions=["Chapter 12", "Noct 85"], depends=["Circle of Life", "The Nopon Heir", "Divine Roost"]), # maybe lvl 99 
+Data("A Fateful Choice - Resi Dist: Cathedral - Chp 12", regions=["Chapter 12", "Noct 85", "Runtonams Right Arm"], depends=["Circle of Life", "The Nopon Heir", "Divine Roost"]), # maybe lvl 99, arm might be optional
 Data("The Journey Begins - Resi Dist: Cathedral - Chp 7", regions=["Chapter 7"], depends=["Sunceleg Rises"]),
 Data("Hope 1 H2H - Resi Dist: Ishmael Hills", regions=["Hope 1"], depends=["Hope"]), 
 Data("The Duel II - Admi Dist: BLADE Tower - Chp 11", regions=["Chapter 11", "Lvl 40"], depends=["The Duel I"]),
@@ -194,7 +194,7 @@ Data("Nagi - Admi Dist: BLADE Tower", depends=["Nagis Time"]),
 Data("Cavern Crushers - Admi Dist: BLADE Tower - Chp 9", regions=["Chapter 9", "Lvl 35"], depends=["Prone Sweet Prone"]),
 Data("Attack on Biahno Hills - Admi Dist: BLADE Tower - Chp 7", regions=["Chapter 7", "Lvl 31"]),
 Data("Dead Men Tell No Tales - Admi Dist: BLADE Tower - Chp 7", regions=["Chapter 7", "Prim 50", "Lvl 28"]),
-Data("Prone Sweet Prone - Admi Dist: BLADE Tower - Chp 5", regions=["Chapter 5", "Obli 40"]), # depends internment camp key
+Data("Prone Sweet Prone - Admi Dist: BLADE Tower - Chp 5", regions=["Chapter 5", "Obli 40", "Internment Camp Key"]),
 Data("Large Container - Admi Dist: BLADE Tower - Mechanical 4", regions=["Mechanical 4"]),
 Data("Gwin 1 H2H - Admi Dist: Hangar", regions=["Gwin 1"], depends=["Gwin"]), 
 Data("Irina 3 H2H - Admi Dist: Hangar - Morning", regions=["Irina 3"], depends=["Irina 2 H2H"]), 
@@ -203,46 +203,46 @@ Data("Trailer - Admi Dist: Armory Alley - Mechanical 2", regions=["Mechanical 2"
 Data("Manhunt - Aff Mission - Admi Dist: BLADE Tower - Chp 8", regions=["Chapter 8", "Lvl 33"]),
 Data("Spy Games - Aff Mission - Admi Dist: BLADE Tower - Chp 7", regions=["Chapter 7", "Lvl 28"]),
 Data("Rescue at the Ensconced Citadel - Admi Dist: BLADE Tower - Chp 6", regions=["Chapter 6", "Noct 30", "Lvl 24"]),
-Data("The Ultimate Price - Admi Dist: BLADE Tower - Chp 10", regions=["Chapter 10", "Lvl 38"], depends=["Cavern Crushers"]), # depends Crimson Tear
-Data("The Handy Ma-non - Admi Dist: Hangar - Chp 5", regions=["Chapter 5", "Lvl 21"]), # depends Windshield Glass
-Data("My Dream - Aff Mission - Admi Dist: Hangar - Chp 5", regions=["Chapter 5", "Lvl 22"]), # receive L-002 Experimental Plant
+Data("The Ultimate Price - Admi Dist: BLADE Tower - Chp 10", regions=["Chapter 10", "Lvl 38", "Crimson Tear"], depends=["Cavern Crushers"]),
+Data("The Handy Ma-non - Admi Dist: Hangar - Chp 5", regions=["Chapter 5", "Lvl 21", "Windshield Glass"]),
+Data("My Dream - Aff Mission - Admi Dist: Hangar - Chp 5", regions=["Chapter 5", "Lvl 22", "L-002 Experimental Plant"]),
 Data("Cedric - Aff Shift - Admi Dist: Hangar - Chp 5", depends=["Tree-mendous"]),
-Data("The Nopon Heir - Aff Mission - Admi Dist: Armory Alley - L 4 - Chp 12", regions=["Chapter 12", "L 4", "Lvl 49"], depends=["BFFs", "A Girls Wings", "Ls Conundrum", "Divine Roost"]), # depends Guardian Etherscale
+Data("The Nopon Heir - Aff Mission - Admi Dist: Armory Alley - L 4 - Chp 12", regions=["Chapter 12", "L 4", "Lvl 49", "Guardian Etherscale"], depends=["BFFs", "A Girls Wings", "Ls Conundrum", "Divine Roost"]),
 Data("L - Admi Dist: Armory Alley - Chp 4", regions=["Chapter 4"]),
-Data("Thats In-Credible! - Admi Dist: BLADE Tower - Chp 5", regions=["Chapter 5", "Lvl 23"]), # depends Weapon Hyde Dyads, Diagonal Twins
+Data("Thats In-Credible! - Admi Dist: BLADE Tower - Chp 5", regions=["Chapter 5", "Lvl 23", "Quest Thats Incredible"]),
 Data("Reporting for Duty - Aff Mission - Admi Dist: BLADE Tower - Nagi 3 - Chp 10", regions=["Chapter 10", "Nagi 3", "Lvl 41"], depends=["Nagis Time"]),
 Data("A False Hope - Aff Mission - Admi Dist: BLADE Tower - Hope 2 - Chp 5", regions=["Chapter 5", "Hope 2", "Lvl 24"], depends=["Hope Springs Eternal"]),
-Data("Planetary Pioneer II - Admi Dist: BLADE Tower - Chp 5", regions=["Chapter 5", "FNet Resource"], depends=["Planetary Pioneer I"]), # depends Data Unit FN094, Noctilum Trailblazing 1/2/3
+Data("Planetary Pioneer II - Admi Dist: BLADE Tower - Chp 5", regions=["Chapter 5", "FNet Resource", "Data Unit FN094"], depends=["Planetary Pioneer I"]), # depends Noctilum Trailblazing 1/2/3
 Data("Nopopon - Aff Shift - Admi Dist: BLADE Tower - Chp 12", depends=["The Divine Nopopon"]),
 Data("Mamma Mia! - Admi Dist: Hangar - Chp 3", regions=["Chapter 3", "Shop Mia"]),
-Data("Mia Grows Up - Aff Mission - Admi Dist: Hangar - Mia 4 - Chp 12", regions=["Chapter 12", "Mia 4", "FNet Resource", "Lvl 53"], depends=["Sparking a Smile", "Mia Is Missing!", "Floating Reef"]), # optional Hailing the Chief!, floatstone shard
-Data("Brotherly Love - Aff Mission - Admi Dist: Hangar - Phog 4 Frye 4 - Chp 11", regions=["Chapter 11", "Phog 4", "Frye 4", "Lvl 46"]),
+Data("Mia Grows Up - Aff Mission - Admi Dist: Hangar - Mia 4 - Chp 12", regions=["Chapter 12", "Mia 4", "FNet Resource", "Lvl 53", "Floatstone Shard"], depends=["Sparking a Smile", "Mia Is Missing!", "Floating Reef"]), # optional Hailing the Chief!
+Data("Brotherly Love - Aff Mission - Admi Dist: Hangar - Phog 4 Frye 4 - Chp 11", regions=["Chapter 11", "Phog 4", "Frye 4", "Lvl 46", "Phogrium"]),
 Data("Doug 5 H2H - Admi Dist: Hangar", regions=["Doug 5"], depends=["Doug 4 H2H"]), 
 Data("Ls Conundrum - Aff Mission - Admi Dist: Armory Alley - L 2 - Chp 10", regions=["Chapter 10", "L 2", "FNet Resource 2", "Lvl 38"], depends=["Booming Business"]), # depends Material Hunt A/B/C
 Data("Booming Business - Admi Dist: Armory Alley - Chp 5", regions=["Chapter 5", "Obli 30", "Lvl 26"]),
-Data("Lend an Ear - Admi Dist: BLADE Tower - Chp 11", regions=["Chapter 11", "Shop Lend an Ear", "Lvl 38"], depends=["A Challenger Approaches"]), # depends Chrome Knife
-Data("Setting Forth - Admi Dist: Mimeo Maint Center - Chp 8", regions=["Chapter 8", "Lvl 31"], depends=["BFFs"]), # depends smelly legen-dar
+Data("Lend an Ear - Admi Dist: BLADE Tower - Chp 11", regions=["Chapter 11", "Shop Lend an Ear", "Lvl 38"], depends=["A Challenger Approaches"]),
+Data("Setting Forth - Admi Dist: Mimeo Maint Center - Chp 8", regions=["Chapter 8", "Lvl 31", "Smelly Legen-dar", "Legen-dar"], depends=["BFFs"]),
 Data("Nagi 1 H2H - Admi Dist: Mimeo Maint Center", regions=["Nagi 1"], depends=["Nagi"]), 
-Data("Planetary Pioneer IV - Admi Dist: Division Drive - Chp 8", regions=["Chapter 8", "FNet Resource", "Miranium", "Lvl 25"], depends=["FN Node 408", "Planetary Pioneer III"]), # depends Data Unit FN096, Sylvalum Trailblazing 1/2/3
-Data("Waste Not, Want Not - Admi Dist: Hangar - Chp 10", regions=["Chapter 10"]), # depends cockpit wreckage, engine wreckage, Zu Phargs wreckage
-Data("The Skell License - Admi Dist: Hangar - Chp 6", regions=["Chapter 6", "Credits 15", "Quest Skell License"], depends=["FN Node 117", "Shatskikh, the Flash", "The Pip-Squeak", "Thats In-Credible!", "The Handy Ma-non"]), # depends Proficiency Exam 1-8, 8 skell license certificates, 1 of Trial Knife, Trial Assault Rifle or Trial Sword
+Data("Planetary Pioneer IV - Admi Dist: Division Drive - Chp 8", regions=["Chapter 8", "FNet Resource", "Miranium", "Lvl 25", "Data Unit FN096"], depends=["FN Node 408", "Planetary Pioneer III"]), # depends Sylvalum Trailblazing 1/2/3
+Data("Waste Not, Want Not - Admi Dist: Hangar - Chp 10", regions=["Chapter 10", "Cockpit Wreckage", "Engine Wreckage", "Zu Pharg Wreckage"]),
+Data("The Skell License - Admi Dist: Hangar - Chp 6", regions=["Chapter 6", "Credits 15", "Quest Skell License", "Skell License Certificate"], depends=["FN Node 117", "Shatskikh, the Flash", "The Pip-Squeak", "Thats In-Credible!", "The Handy Ma-non"]), # depends Proficiency Exam 1-8. only 1 of 3 quests
 Data("Frye 2 H2H - Admi Dist: Hangar - Nighttime", regions=["Frye 2"], depends=["Frye 1 H2H"]), 
-Data("House of Cards - Admi Dist: Armory Alley - Chp 5", regions=["Chapter 5"], depends=["Yardleys Scheme"]), # depends keycard
-Data("White Lifehold - Admi Dist: Armory Alley - Chp 11", regions=["Chapter 11", "Lvl 41"], depends=["Waste Not, Want Not"]), # receive communication data
+Data("House of Cards - Admi Dist: Armory Alley - Chp 5", regions=["Chapter 5", "Keycard House of Cards"], depends=["Yardleys Scheme"]),
+Data("White Lifehold - Admi Dist: Armory Alley - Chp 11", regions=["Chapter 11", "Lvl 41", "Communication Data"], depends=["Waste Not, Want Not"]),
 Data("BLADE Level Basics - Admi Dist: BLADE Concourse - Chp 3", regions=["Chapter 3", "Blade License"]),
 Data("Soldier of the Harriers - Aff Mission - Admi Dist: Mimeo Maint Center - Doug 3 - Chp 7", regions=["Chapter 7", "Doug 3", "Lvl 30"], depends=["Close Comrades"]),
 Data("The Probe-fessional - Admi Dist: Mimeo Maint Center - Chp 2", regions=["Chapter 2", "Quest Probe-fessional"]),
 Data("The Duel III - Admi Dist: Mimeo Maint Center - Chp 11", regions=["Chapter 11", "Lvl 42"], depends=["The Duel II", "Prone Sweet Prone"]),
-Data("The Little Rich Girl - Aff Mission - Admi Dist: Division Drive - Murderess 2 - Chp 10", regions=["Chapter 10", "Murderess 2", "Lvl 39"], depends=["Haywire!", "My Dream"]), # depends weapon scrap duo, Hackers, Securing Lan'cord
+Data("The Little Rich Girl - Aff Mission - Admi Dist: Division Drive - Murderess 2 - Chp 10", regions=["Chapter 10", "Murderess 2", "Lvl 39"], depends=["Haywire!", "My Dream"]), # depends Hackers, Securing Lan'cord
 Data("Lao - Admi Dist: Division Drive - Chp 4", regions=["Chapter 4"]),
 Data("Gwin - Admi Dist: Division Drive - Chp 3", regions=["Chapter 3"]),
 Data("City Saviors - Admi Dist: Division Drive - Chp 3", regions=["Chapter 3", "Prim 15", "Lvl 8"]),
 Data("Close Comrades - Aff Mission - Admi Dist: BLADE Barracks - Chp 4", regions=["Chapter 4", "Lvl 20"]),
-Data("Planetary Pioneer I - Admi Dist: BLADE Concourse - Chp 3", regions=["Chapter 3", "FNet Resource", "Miranium", "Lvl 8"], depends=["The Probe-fessional"]), # depends Data unit FN093, Primordia Trailblazing 1/2/3
+Data("Planetary Pioneer I - Admi Dist: BLADE Concourse - Chp 3", regions=["Chapter 3", "FNet Resource", "Miranium", "Lvl 8", "Data Unit FN093"], depends=["The Probe-fessional"]), # depends Primordia Trailblazing 1/2/3
 Data("Wolf - Aff Shift - Admi Dist: BLADE Concourse - Chp 12", depends=["The Lurker"]),
-Data("Ovah and Out - Admi Dist: Mimeo Maint Center - Chp 7", regions=["Chapter 7", "Shop Ovah and Out", "Lvl 20"], depends=["Circle of Life", "Going Viral"]), # depends weapon savage ziyse
-Data("Cooking Schooled - Admi Dist: Mimeo Maint Center - Chp 12", regions=["Chapter 12", "Shop Cooking Schooled", "Lvl 42"], depends=["Lionhearted"]), # depends Chrome Sword
-Data("Mia Is Missing! - Admi Dist: Mimeo Maint Center - Chp 11", regions=["Chapter 11", "Caul 65", "Lvl 50"], depends=["Its-a Mia!", "Definian Downfall"]), # depends container key
+Data("Ovah and Out - Admi Dist: Mimeo Maint Center - Chp 7", regions=["Chapter 7", "Shop Ovah and Out", "Lvl 20"], depends=["Circle of Life", "Going Viral"]),
+Data("Cooking Schooled - Admi Dist: Mimeo Maint Center - Chp 12", regions=["Chapter 12", "Shop Cooking Schooled", "Lvl 42"], depends=["Lionhearted"]),
+Data("Mia Is Missing! - Admi Dist: Mimeo Maint Center - Chp 11", regions=["Chapter 11", "Caul 65", "Lvl 50", "Container Key"], depends=["Its-a Mia!", "Definian Downfall"]),
 Data("Unknown Assailant - Admi Dist: Division Drive - Chp 10", regions=["Chapter 10", "Lvl 37"], depends=["Frontier Spirit"]),
 Data("Frontier Spirit - Admi Dist: Division Drive - Chp 6", regions=["Chapter 6", "Lvl 22"]),
 Data("Lin 3 H2H - Admi Dist: Division Drive - Afternoon", regions=["Lin 3"], depends=["Lin 2 H2H", "Nine Lives"]), 
@@ -250,7 +250,7 @@ Data("Close Encounters - Admi Dist: BLADE Barracks - Chp 6", regions=["Chapter 6
 Data("The Root of All Evil - Admi Dist: BLADE Barracks", regions=["Credits 70"], depends=["Planetary Pioneer IV"]),
 Data("Irina - Admi Dist: BLADE Concourse - Chp 3", regions=["Chapter 3"]),
 Data("Murderess - Admi Dist: Mimeo Maint Center", depends=["My Dream"]),
-Data("Myles to Go - Admi Dist: East Gate - Chp 2", regions=["Chapter 2", "Lvl 9"]),
+Data("Myles to Go - Admi Dist: East Gate - Chp 2", regions=["Chapter 2", "Lvl 9", "Repair Kit"]),
 Data("Slovitys Rampage - Admi Dist: East Gate - Chp 10", regions=["Chapter 10", "Lvl 37"], depends=["Cavern Crushers"]),
 Data("Blitzkrieg - Aff Mission - Admi Dist: East Gate - Phog 3 Frye 3 - Chp 8", regions=["Chapter 8", "Phog 3", "Frye 3", "Lvl 33"], depends=["A Great Divide", "Bottoms Up", "Nine Lives"]),
 Data("Caesar, the Hundred-Eyed - Prim: Stonelattice Cavern - Tyrant", depends=["Stonelattice Cavern"]),
@@ -293,7 +293,7 @@ Data("Mesgen, the Fairweathered - Prim: Sayram Lake - Tyrant", depends=["Mesgen,
 Data("Close Encounters - Prim: Arendt Brdige", depends=["Close Encounters"]),
 Data("Nagis Time - Prim: Northpointe Beach", depends=["Nagis Time"]),
 Data("Shatskikh, the Flash - Prim: Northpointe Cove - Tyrant - Rarely", depends=["Shatskikh, the Flash"]),
-Data("Welcome Back, Conner - Prim: Sayram Northeast Plain - Chp 2", regions=["Chapter 2"]), # depends Connoers comm device
+Data("Welcome Back, Conner - Prim: Sayram Northeast Plain - Chp 2", regions=["Chapter 2", "Conners Comm Device"]),
 Data("Here Come the Brides - Prim: Sickle Rock Rise", depends=["Here Come the Brides"]),
 Data("Alien Wreckage - Prim: Sickle Rock Rise - Archeological 2", regions=["Archeological 2"]),
 Data("Vehicle Wreckage - Prim: East Gate Plain - Mechanical 1", regions=["Mechanical 1"]),
@@ -354,7 +354,7 @@ Data("Dead Men Tell No Tales - Noct: Millstone Ridge", depends=["Dead Men Tell N
 Data("Murder Most Foul - Noct: Weeping Whitewood", depends=["Murder Most Foul"]),
 Data("Elena, the Infernal - Noct: Weeping Whitewood - Tyrant - Fog", depends=["Elena, the Infernal"]),
 Data("Griffus, the Tartarean - Noct: Fukai Pass - Tyrant", depends=["Griffus, the Tartarean"]),
-Data("Adventure! - Noct: Skybound Coil Tree - Chp 5", regions=["Chapter 5", "Lvl 22"], depends=["Mamma Mia!"]), # depends Mias comm device
+Data("Adventure! - Noct: Skybound Coil Tree - Chp 5", regions=["Chapter 5", "Lvl 22", "Mias Comm Device"], depends=["Mamma Mia!"]),
 Data("Tormenta, the Scarlet-Clad - Noct: Decapotamon - Tyrant", depends=["Tormenta, the Scarlet-Clad"]),
 Data("Lone Survivors - Noct: Seabound Coil Tree", depends=["Lone Survivors"]),
 Data("Sarcosuchus, the Iron-Eater - Noct: Rust Lake - Tyrant", depends=["Sarcosuchus, the Iron-Eater"]),
@@ -370,7 +370,7 @@ Data("Desdemona, the Subterranean - Noct: Rustpool Banks - Tyrant", depends=["De
 Data("Buchwald, the Guardian - Noct: Rockmoles Burrow - Tyrant", depends=["Buchwald, the Guardian"]),
 Data("Skell Wreckage - Noct: Ensanguined Font - Mechanical 2", regions=["Mechanical 2"]),
 Data("Alien Container - Noct: Lakeview Stronghold - Archeological 4", regions=["Archeological 4"]),
-Data("Data Miner - Noct: Potters Rock - Chp 3", regions=["Chapter 3"]),
+Data("Data Miner - Noct: Potters Rock - Chp 3", regions=["Chapter 3", "Weapon Test Data"]),
 Data("White Whale Debris - Obli: Oblivia Ingress - Mechanical 4", regions=["Mechanical 4"]),
 Data("Melanya, the Sound Sleeper - Obli: Oblivia Ingress - Tyrant", depends=["Melanya, the Sound Sleeper"]),
 Data("Sunceleg Rises - Obli: Stoyanov Trail", depends=["Sunceleg Rises"]),
@@ -446,7 +446,7 @@ Data("Alien Container - Obli: Jair Fortress - Archeological 4", regions=["Archeo
 Data("Spy Games - Obli: Jair Fortress", depends=["Spy Games"]),
 Data("White Whale Debris - Caul: Far Isle of Tzuo - Mechanical 1", regions=["Mechanical 1"]),
 Data("Alien Reliquary - Caul: Scholes Battlegrounds - Archeological 2", regions=["Archeological 2"]),
-Data("Supplies Surprise - Caul: Drongo Caravan - Chp 4", regions=["Chapter 4"]),
+Data("Supplies Surprise - Caul: Drongo Caravan - Chp 4", regions=["Chapter 4", "Nalus Present"]),
 Data("Indigen Nest - Caul: Ancient Warscape - Biological 1", regions=["Biological 1"]),
 Data("Indigen Nest - Caul: Forgotten Mining Frigate - Biological 5", regions=["Biological 5", "Flight Module"]),
 Data("Gorkwa Games - Caul: White Phosphorus", depends=["Gorkwa Games"]),
@@ -471,7 +471,7 @@ Data("Chantais Galdr - Caul: Orrh Sim Capital Ruins - Tyrant - Daytime", depends
 Data("Patrol Chopper Wreckage - Caul: Orrh Sim Capital Ruins - Mechanical 3", regions=["Mechanical 3"]),
 Data("To Serve Nopon - Caul: Dragonbone Promontory", depends=["To Serve Nopon"]),
 Data("Rites of Ruin - Caul: Ternion Fork", depends=["Rites of Ruin"]),
-Data("Black Lifehold - Caul: Slavebird Isle - Chp 11", regions=["Chapter 11", "Caul 50"], depends=["Slavebird Isle"]),
+Data("Black Lifehold - Caul: Slavebird Isle - Chp 11", regions=["Chapter 11", "Caul 50", "Medical Data"], depends=["Slavebird Isle"]),
 Data("Eisen, the Ebon Rock - Caul: Abandoned Bivouac - Tyrant - Nighttime", depends=["Eisen, the Ebon Rock"]),
 Data("Alien Container - Caul: Abandoned Bivouac - Archeological 2", regions=["Archeological 2"]),
 Data("Lionhearted - Caul: Ganglion Weapons Hangar - Chp 12", regions=["Chapter 12", "Lvl 51"], depends=["A Challenger Approaches"]),
@@ -492,7 +492,7 @@ Data("Patrol Chopper Wreckage - Caul: Kwarah Villa - Mechanical 2", regions=["Me
 Data("Alien Reliquary - Caul: Bestial Utopia - Archeological 2", regions=["Archeological 2"]),
 Data("Terenty, the Blademaster - Caul: Mgando Gorge - Tyrant", depends=["Terenty, the Blademaster"]),
 Data("Patrol Chopper Wreckage - Caul: Mgando Gorge - Mechanical 2", regions=["Mechanical 2"]),
-Data("Until the End - Caul: Mgando Gorge - Chp 11", regions=["Chapter 11", "Lvl 39"], depends=["A Challenger Approaches"]), # depends Vi Sezhas Bracelet
+Data("Until the End - Caul: Mgando Gorge - Chp 11", regions=["Chapter 11", "Lvl 39", "Vi Sezhas Bracelet", "Ge Jewhes Dagger"], depends=["A Challenger Approaches"]),
 Data("Gi-zho, the Iron Deity - Caul: Kwarah Villa - Tyrant", depends=["Gi-zho, the Iron Deity"]),  # TAJ
 Data("Jia Mian, the Beloved - Caul: Mount Mgando - Tyrant", depends=["Jia Mian, the Beloved"]),
 Data("The Queen Is Dead - Caul: Mount Mgando - Caul: Mount Mgando", depends=["The Queen Is Dead"]),
@@ -508,19 +508,19 @@ Data("Yune, the Ambusher - Sylv: Seabirds Beak - Tyrant - Rarely", depends=["Yun
 Data("Strange Petrified Tree - Sylv: Seabirds Beak - Biological 3", regions=["Biological 3"]),
 Data("Alien Wreckage - Sylv: Cavernous Abyss - Archeological 5", regions=["Archeological 5"], depends=["Cavernous Abyss"]),
 Data("Behemoth, the Netherdweller - Sylv: Cavernous Abyss - Tyrant - Rarely", depends=["Behemoth, the Netherdweller"]),
-Data("Lesson from the Grave - Sylv: Shivering Sands - Chp 4", regions=["Chapter 4"]),
-Data("Predator and Prey - Sylv: Shivering Sands - Chp 6", regions=["Chapter 6", "Lvl 32"]), # depends ice cream cake
+Data("Lesson from the Grave - Sylv: Shivering Sands - Chp 4", regions=["Chapter 4", "Rectangular Chest"]),
+Data("Predator and Prey - Sylv: Shivering Sands - Chp 6", regions=["Chapter 6", "Lvl 32", "Ice Cream Cake", "Noble Silk"]),
 Data("Strange Petrified Tree - Sylv: Hilal Meadow - Biological 2", regions=["Biological 2"]),
 Data("Bottoms Up - Sylv: Seabirds Beak", depends=["Bottoms Up"]),
 Data("Stola, the Champion - Sylv: Seabirds Beak - Tyrant - Crimson aurora", depends=["Stola, the Champion"]),
 Data("Alien Container - Sylv: Badr Stronghold - Archeological 4", regions=["Archeological 4"]),
 Data("Alexei, the Jade - Sylv: West Ciel Sandsea - Tyrant", depends=["Alexei, the Jade"]),
 Data("Alien Reliquary - Sylv: West Ciel Sandsea - Archeological 4", regions=["Archeological 4"]),
-Data("Castle in the Sky - Sylv: Lake Ciel - Night - Chp 4", regions=["Chapter 4", "Lvl 32"]), # depends kutas cargo
+Data("Castle in the Sky - Sylv: Lake Ciel - Night - Chp 4", regions=["Chapter 4", "Lvl 32", "Kutas Cargo"]),
 Data("Florence, the Hell Maggot - Sylv: Hilal Meadow - Tyrant - Nighttime", depends=["Florence, the Hell Maggot"]),
 Data("Antara, the Water Diviner - Sylv: West Cinderdunes - Tyrant", depends=["Antara, the Water Diviner"]),
 Data("Alien Container - Sylv: Lesser Anvil - Archeological 3", regions=["Archeological 3", "Skell License"]),
-Data("Plans of Attack - Sylv: Badr Basin - Chp 11", regions=["Chapter 11", "Lvl 55"], depends=["A Challenger Approaches", "Lend an Ear"]), # depends new weapon blueprint
+Data("Plans of Attack - Sylv: Badr Basin - Chp 11", regions=["Chapter 11", "Lvl 55", "New Weapon Blueprint"], depends=["A Challenger Approaches", "Lend an Ear"]),
 Data("Radovan, the Sky Baron - Sylv: Lake Ciel - Tyrant - Daytime", depends=["Radovan, the Sky Baron"]),
 Data("Laurencio, the Fog Bow - Sylv: Lake Ciel - Tyrant", depends=["Laurencio, the Fog Bow"]),
 Data("Asana, the Azure Star - Sylv: Lake Ciel - Tyrant", depends=["Asana, the Azure Star"]),
@@ -531,12 +531,12 @@ Data("Strange Petrified Tree - Sylv: Banshee Cove - Biological 5", regions=["Bio
 Data("Candelario, the Bronze - Sylv: Anvil Sandplain - Tyrant", depends=["Candelario, the Bronze"]),
 Data("Alien Container - Sylv: Badr Strongbridge - Archeological 4", regions=["Archeological 4"]),
 Data("Soldier of the Harriers - Sylv: South Cinderdunes", depends=["Soldier of the Harriers"]),
-Data("Hair Apparent - Sylv: Lake Ciel - Chp 8", regions=["Chapter 8"]), # depends Sapphire Ring
+Data("Hair Apparent - Sylv: Lake Ciel - Chp 8", regions=["Chapter 8", "Sapphire Ring", "Nios IOU"]),
 Data("Patrol Chopper Wreckage - Sylv: South Ciel Sandsea - Mechanical 3", regions=["Mechanical 3"]),
 Data("Alien Container - Sylv: Hilal Stronghold - Archeological 4", regions=["Archeological 4"]),
 Data("Luxaars Xern - Sylv: Arc Rock - Tyrant", depends=["Luxaar's Xern"]),
 Data("Patrol Chopper Wreckage - Sylv: Anvil Rock Two - Mechanical 5", regions=["Mechanical 5"]),
-Data("Law and Orders - Sylv: Anvil Sandplains", regions=["Chapter 11", "Lvl 43"], depends=["A Challenger Approaches", "The Celeste Three"]),
+Data("Law and Orders - Sylv: Anvil Sandplains", regions=["Chapter 11", "Lvl 43", "Laws Pendant"], depends=["A Challenger Approaches", "The Celeste Three"]),
 Data("Strange Petrified Tree - Sylv: South Cinderdunes - Biological 3", regions=["Biological 3"]),
 Data("Serial Thriller - Sylv: Xanadu Overlook", depends=["Serial Thriller"]),
 Data("Alien Reliquary - Sylv: Lake Ciel - Archeological 5", regions=["Archeological 5"]),
@@ -559,7 +559,7 @@ Data("Alien Reliquary - Sylv: Lake Ciel - Archeological 4", regions=["Archeologi
 Data("Thaddaeus, the Ultramafic - Sylv: East Lake Ciel - Tyrant", depends=["Thaddaeus, the Ultramafic"]),
 Data("Alien Container - Sylv: Quay Hollows - Archeological 4", regions=["Archeological 4"], depends=["Quay Hollows"]),
 Data("Alien Wreckage - Sylv: Cauldros Threshold - Archeological 2", regions=["Archeological 2"]),
-Data("Special Delivery - Sylv: North Silent Sandsea - Chp 7", regions=["Chapter 7", "Lvl 17"], depends=["The Bodyguard"]),
+Data("Special Delivery - Sylv: North Silent Sandsea - Chp 7", regions=["Chapter 7", "Lvl 17", "Zazazans Package"], depends=["The Bodyguard"]),
 Data("The Duel III - Sylv: Delusian North Summit", depends=["The Duel III"]),
 Data("Brotherly Love - Sylv: South Hardheart Canyon", depends=["Brotherly Love"]),
 Data("Sadars Qmoeva - Sylv: North Ciel Sandsea - Tyrant - Daytime", depends=["Sadar's Qmoeva"]),
@@ -575,21 +575,21 @@ Data("Alien Container - Sylv: North Hardheart Canyon - Archeological 4", regions
 Data("The Sword of Legendaryness - Sylv: Behemoths Shadows", depends=["The Sword of Legendaryness"]),
 Data("Alien Container - Sylv: Southern Searoad - Archeological 2", regions=["Archeological 2"]),
 Data("Oc-serv, the Ancient - Sylv: Sylvalum Searoad - Tyrant", depends=["Oc-serv, the Ancient"]),
-Data("The Repair Job - Aff Mission - BLADE Barracks - Lin 1 - Chp 3", regions=["Chapter 3", "Lin 1", "FNet Resource", "Lvl 13"]), # depends 3 L-002 Power Cable
+Data("The Repair Job - Aff Mission - BLADE Barracks - Lin 1 - Chp 3", regions=["Chapter 3", "Lin 1", "FNet Resource", "Lvl 13", "L-002 Power Cable"]),
 Data("Lin - BLADE Barracks", regions=["Chapter 1"]),
 Data("A Day in the Life - Aff Mission - BLADE Barracks - Chp 4", regions=["Chapter 4", "Lvl 16"]),
 Data("Then and Now - Aff Mission - BLADE Barracks - Elma 4 - Chp 12", regions=["Chapter 12", "Elma 4", "Lvl 58"]),
 Data("To Serve Nopon - Aff Mission - BLADE Barracks - Lin 4 - Chp 12", regions=["Chapter 12", "Lin 4", "Lvl 52"], depends=["BFFs"]),
 Data("Elma 5 H2H - Night", regions=["Elma 5"], depends=["Elma 4 H2H"]), 
 Data("Nagis Time - Aff Mission - BLADE Barracks - Chp 8", regions=["Chapter 8", "Lvl 32"]),
-Data("A Challenger Approaches - Aff Mission - BLADE Barracks - Chp 10", regions=["Chapter 10", "Lvl 42"], depends=["Prospective Partners"]), # depends 5 med kits each NLA, Ganglion
+Data("A Challenger Approaches - Aff Mission - BLADE Barracks - Chp 10", regions=["Chapter 10", "Lvl 42", "Med Kit NLA", "Med Kit Ganglion"], depends=["Prospective Partners"]),
 Data("Nagi 4 H2H - BLADE Barracks", regions=["Nagi 4"], depends=["Nagi 3 H2H"]), 
-Data("We Were Soldiers - Aff Mission - BLADE Barracks - Elma 1 - Chp 3", regions=["Chapter 3", "Elma 1", "Lvl 12"]), # depends 3 White Whale Parts
+Data("We Were Soldiers - Aff Mission - BLADE Barracks - Elma 1 - Chp 3", regions=["Chapter 3", "Elma 1", "Lvl 12", "White Whale Parts_1", "White Whale Parts_2"]),
 Data("Elma - BLADE Barracks"),
 Data("Two Peas in a Pod - Aff Mission - BLADE Barracks - Lin 3 - Chp 11", regions=["Chapter 11", "Lin 3", "FNet Resource 2", "Lvl 47"], depends=["A Day in the Life"]),
-Data("Fathers and Sons - Aff Mission - BLADE Barracks - Irina 40 - Chp 11", regions=["Chapter 11", "Irina 4", "Lvl 50"], depends=["A Girls Wings", "Renewed Will"]), # depends 5 flemtide
-Data("BFFs - Aff Mission - BLADE Barracks - Chp 5", regions=["Chapter 5", "Lvl 22"], depends=["The Ties That Bind", "Dodonga Caravan", "Dorian Caravan"]), # depends 2 signature from caravans
-Data("Prospective Partners - Aff Mission - BLADE Barracks - Chp 9", regions=["Chapter 9", "Mira 18", "Mira 20", "Lvl 34"]), # depends 2 wrothian part
+Data("Fathers and Sons - Aff Mission - BLADE Barracks - Irina 40 - Chp 11", regions=["Chapter 11", "Irina 4", "Lvl 50", "Flemtide"], depends=["A Girls Wings", "Renewed Will"]),
+Data("BFFs - Aff Mission - BLADE Barracks - Chp 5", regions=["Chapter 5", "Lvl 22", "Dodonga Treaty", "Dorian Treaty"], depends=["The Ties That Bind", "Dodonga Caravan", "Dorian Caravan"]), # need the items the missions are the way to get them
+Data("Prospective Partners - Aff Mission - BLADE Barracks - Chp 9", regions=["Chapter 9", "Mira 18", "Mira 20", "Lvl 34", "Wrothian Part"]),
 Data("A Friend in Need - Aff Mission - BLADE Barracks - Chp 5", regions=["Chapter 5", "Lvl 19"]),
 ]
 # use helper
