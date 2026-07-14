@@ -182,7 +182,7 @@ Data("The Bug Whisperer - Resi Dist: Ishmael Hills - Chp 10", regions=["Chapter 
 Data("Shotgun Diplomacy - Resi Dist: Cathedral - Chp 8", regions=["Chapter 8", "Lvl 30"], depends=["Alien Nation"]),
 Data("Letrick - Aff Shift - Resi Dist: Cathedral - Chp 7", depends=["Emotion Commotion"]),
 Data("Rites of Ruin - Resi Dist: Cathedral - Chp 8", regions=["Chapter 8", "Lvl 30"], depends=["The Miracle Maker"]),
-Data("Definian Love - Resi Dist: Ishmael Hills - Chp 12", regions=["Chapter 12", "Lvl 39"], depends=["Definian Downfall"]), # can be Fortun and Glory as well. Definian Love requires either Snowy Angelhair, Muranadium, Primitive Colossus Statue or penginion, nirvana jonquil, hummingstone
+Data("Definian Love - Resi Dist: Ishmael Hills - Chp 12", regions=["Chapter 12", "Lvl 39"], depends=["Definian Downfall"]), # can be Fortun and Glory as well
 Data("Phoskeran - Aff Shift - Resi Dist: Ishmael Hills", depends=["An Ancient Legend", "The Good Thief"]),
 Data("Container - Resi Dist: Cathedral - Mechanical 2", regions=["Mechanical 2"]),
 Data("Trailer - Resi Dist: Cathedral - Mechanical 3", regions=["Mechanical 3"]),
