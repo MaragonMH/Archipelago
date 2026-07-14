@@ -43,12 +43,34 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x027eaa3c = nop
 
 # filter quest rewards
+addNum = 0x02779870
 0x0229572c = bl _addRewardItemEquipment
 0x022957c4 = bl _addRewardItemEquipment
 0x0229585c = bl _addRewardItemEquipment
 0x022958f4 = bl _addRewardItemEquipment
 # filter treasure box rewards
 0x022d8d50 = bl _addRewardItemEquipment
+# filter mission event rewards
+# important items
+0x027a3f28 = bl _addNumAdjusted 
+0x027a3fb8 = bl _addNumAdjusted
+# collectables
+# 0x027a4008 = bl _addNumAdjusted
+# 0x027a4098 = bl _addNumAdjusted
+# materials
+# 0x027a40e8 = bl _addNumAdjusted
+# 0x027a4178 = bl _addNumAdjusted
+# 0x42 unkown probably info
+# 0x027a41c8 = bl _addNumAdjusted
+# 0x027a4258 = bl _addNumAdjusted
+# data probes
+0x027a42a8 = bl _addNumAdjusted
+0x027a4338 = bl _addNumAdjusted
+# ground weapons
+0x027a4410 = bl _addNumAdjusted
+# 0x44 unkown
+# 0x027a45ac = bl _addNumAdjusted
+# 0x027a463c = bl _addNumAdjusted
 
 # disable field skills
 0x0238e138 = nop
@@ -75,6 +97,10 @@ moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 
 0x02b051a4 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
 0x02b051c4 = nop # remove original error message
+
+# disable getting skell after skell license quest in doll_present
+0x029cc078 = nop # disable doll creation
+0x029cc088 = nop # disable doll assign
 
 # filter enemy rewards
 0x02b07540 = bl _getItemNumAdjusted
@@ -107,6 +133,10 @@ moduleMatches = 0x30B6E091 ; 1.0.2U
 
 0x02b05194 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
 0x02b051b4 = nop # remove original error message
+
+# disable getting skell after skell license quest in doll_present
+0x029cc068 = nop # disable doll creation
+0x029cc078 = nop # disable doll assign
 
 # filter enemy rewards
 0x02b07530 = bl _getItemNumAdjusted
@@ -156,6 +186,7 @@ void openHudTelop(int* menuBasePtr, int errorIdx);
 int chkLv(int p1, int p2);
 
 int addItemEquipment(int type, int id, int* data, int flag);
+int addNum(int* ptr, int type, int* data, int flag);
 
 int* getItem(int* ptr, int enemies, int boxes, int items);
 int getItemNum(int* ptr, int enemies, int boxes);
@@ -207,7 +238,6 @@ int _loadFNet(){
 }
 
 int _checkType(int type){
-	// use this for now, but use options later
 	if(type >= 0x1 && type <= 0x5) return disableGroundArmor;
 	if(type >= 0x6 && type <= 0x7) return disableGroundWeapons;
 	if(type >= 0xa && type <= 0xe) return disableSkellArmor;
@@ -225,6 +255,13 @@ int _addRewardItemEquipment(int type, int id, int* data, int flag){
 		return addItemEquipment(type, id, data, flag);
 	}
 	return 0;
+}
+
+void _addNumAdjusted(int* ptr, int type, int* data, int flag){
+	if(_checkType(type)){
+		addNum(ptr, type, data, flag);
+	}
+	return;
 }
 
 int _getItemNumAdjusted(int* ptr, int enemies, int boxes){
