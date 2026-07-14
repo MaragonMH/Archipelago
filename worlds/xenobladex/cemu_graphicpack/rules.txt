@@ -20,6 +20,8 @@ $curlPort = 45872
 [Preset]
 name = "on"
 category = "GroundArmor"
+default = 1
+$disableGroundArmor = 0
 
 [Preset]
 name = "disable"
@@ -29,6 +31,8 @@ $disableGroundArmor = 1
 [Preset]
 name = "on"
 category = "GroundWeapons"
+default = 1
+$disableGroundWeapons = 0
 
 [Preset]
 name = "disable"
@@ -38,6 +42,8 @@ $disableGroundWeapons = 1
 [Preset]
 name = "on"
 category = "GroundAugments"
+default = 1
+$disableGroundAugments = 0
 
 [Preset]
 name = "disable"
@@ -47,6 +53,8 @@ $disableGroundAugments = 1
 [Preset]
 name = "on"
 category = "SkellArmor"
+default = 1
+$disableSkellArmor = 0
 
 [Preset]
 name = "disable"
@@ -56,6 +64,8 @@ $disableSkellArmor = 1
 [Preset]
 name = "on"
 category = "SkellWeapons"
+default = 1
+$disableSkellWeapons = 0
 
 [Preset]
 name = "disable"
@@ -65,6 +75,8 @@ $disableSkellWeapons = 1
 [Preset]
 name = "on"
 category = "SkellAugments"
+default = 1
+$disableSkellAugments = 0
 
 [Preset]
 name = "disable"
@@ -74,6 +86,8 @@ $disableSkellAugments = 1
 [Preset]
 name = "disable"
 category = "ImportantItems"
+default = 1
+$disableImportantItems = 1
 
 [Preset]
 name = "on"
@@ -83,15 +97,13 @@ $disableImportantItems = 0
 [Preset]
 name = "disable"
 category = "Blueprints"
+default = 1
+$disableBlueprints = 1
 
 [Preset]
 name = "on"
 category = "Blueprints"
 $disableBlueprints = 0
-
-[Preset]
-name = "3"
-category = "EnemyBookThreshold"
 
 [Preset]
 name = "discovery"
@@ -107,3 +119,9 @@ $enemyBookThreshold = 1
 name = "2"
 category = "EnemyBookThreshold"
 $enemyBookThreshold = 2
+
+[Preset]
+name = "3"
+category = "EnemyBookThreshold"
+default = 1
+$enemyBookThreshold = 3
