@@ -43,7 +43,7 @@ class XenobladeXWorld(World):
     topology_present = True
     web = XenobladeXWeb()
 
-    data_version = 10
+    data_version = 11
     base_id: int = 4100000
 
     options_dataclass = XenobladeXOptions

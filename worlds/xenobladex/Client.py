@@ -148,7 +148,8 @@ class XenobladeXHttpServer(HTTPServer):
             return
         self.upload_count += 1
 
-        self.upload_message(f"From {player_name}", item_name)
+        if not item_name.startswith("DEBUG"):
+            self.upload_message(f"From {player_name}", item_name)
 
         if item_game_type == 0:
             self.items += f"K Id={item_game_id:08x} Fg={1:08x}\n"
