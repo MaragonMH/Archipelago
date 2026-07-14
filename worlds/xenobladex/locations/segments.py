@@ -37,7 +37,7 @@ Data("Container - Indu Dist: Production Plant - Mechanical 3", regions=["Mechani
 Data("Orphean Pluck - Indu Dist: Production Plant - Chp 10", regions=["Chapter 10", "Miranium"], depends=["No-show Nenceleg", "Planetary Pioneer IV"]),
 Data("Data Probe Progress - Indu Dist: Production Plant - Chp 10", regions=["Chapter 10", "Miranium 15"], depends=["Data Probe Challenge"]),
 Data("Data Probe Evolution - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12", "Miranium 30"], depends=["Data Probe Breakthrough"]),
-Data("The Pip-Squeak - Indu Dist: Test Hangar - Chp 5", regions=["Chapter 5"]), # depends frozen pizza, aganeba alloy
+Data("The Pip-Squeak - Indu Dist: Test Hangar - Chp 5", regions=["Chapter 5"]), # depends frozen pizza, hot dog, hamburger aganeba alloy
 Data("Professorial - Indu Dist: Test Hangar - Chp 12", regions=["Chapter 12", "Lvl 43"], depends=["Definian Downfall", "Professor Bs Return"]), # depends Keycard
 Data("Rise of the Blood Lobster - Indu Dist: Test Hangar - Chp 3", regions=["Chapter 3", "Skell License", "Flight Module", "Lvl 60"], depends=["Definian Downfall"]),  # TAJ, MenuReset but too hard. depends 99 Stuffed Lobster
 Data("Mia 3 H2H - Indu Dist: Test Hangar - Late Night", regions=["Mia 3"], depends=["Mia 2 H2H"]), 
