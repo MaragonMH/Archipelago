@@ -11,6 +11,7 @@ import socket
 import random
 import re
 import urllib.parse
+import requests
 import Utils
 from NetUtils import ClientStatus, NetworkItem
 from typing import Counter, List, NamedTuple, Optional, Set, cast
@@ -438,6 +439,7 @@ class XenobladeXContext(CommonContext):
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
 
     async def process_game(self) -> None:
+        await self.check_server()
         while not self.exit_event.is_set():
             try:
                 await self.update_death_link(self.death_link)
@@ -459,6 +461,30 @@ class XenobladeXContext(CommonContext):
                 self.gui_error(msg, e)
                 self.exit_event.set()
 
+    async def check_server(self) -> None:
+        url = f"http://localhost:{self.xeno_port}/"
+        # Give server time to spin up
+        while not self.exit_event.is_set():
+            await asyncio.sleep(2)
+            try:
+                # Check if items is reachable. Should be enough to test if game can connect.
+                response = requests.get(f"{url}items", timeout=3)
+                if not response.status_code == 200:
+                    raise Exception(f"XenoX Server refused connection for items with code: {response.status_code}")
+                else:
+                    return
+
+            except Exception as e:
+                logger.exception(e, extra={"compact_gui": True})
+                msg = "Unable to establish the game server"
+                detail = f"Check your firewall popups and settings. Make sure that '{url}' " \
+                         f"is reachable. Check docs for more info."
+                logger.error(msg)
+                self.gui_error(msg, detail)
+                while self.ui and self._messagebox and self._messagebox._is_open:
+                    await asyncio.sleep(1)
+
+    # region Cemu-Config
     def prepare_cemu(self, options: list[XenobladeXOption]):
         try:
             mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
@@ -489,7 +515,7 @@ class XenobladeXContext(CommonContext):
             self.copy_port(cemu_mod_path)
             self.open_cemu()
         except Exception as e:
-            logger.exception(str(e))
+            logger.exception(str(e), extra={"compact_gui": True})
             logger.error(str(e))
             self.gui_error(str(e), e)
             self.exit_event.set()
@@ -576,6 +602,7 @@ class XenobladeXContext(CommonContext):
                 self.cemu_process = subprocess.Popen(cemu_exe)
         except Exception:
             raise Exception(CEMU_NOT_FOUND)
+    # endregion
 
 
 async def main(args) -> None:
