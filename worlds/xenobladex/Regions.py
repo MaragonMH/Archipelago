@@ -80,7 +80,7 @@ def init_region(world: MultiWorld, player: int, region_name: str) -> str:
     region_names = [region.name for region in world.get_regions(player)]
     regions = set([rule.region for rule in xenobladeXRegions])
 
-    assert set(region_name.split("+")) <= regions, f"{set(region_name.split("+")) - regions} not in available regions"
+    assert set(region_name.split("+")) <= regions, f"{set(region_name.split('+')) - regions} not in available regions"
     if player not in xenobladex_region_requirements:
         xenobladex_region_requirements[player] = {}
     if region_name == "Menu" and "Menu" not in region_names:
