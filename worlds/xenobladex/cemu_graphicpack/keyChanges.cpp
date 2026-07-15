@@ -54,6 +54,9 @@ addNum = 0x02779870
 # important items
 0x027a3f28 = bl _addNumAdjusted 
 0x027a3fb8 = bl _addNumAdjusted
+# pop items
+addItem = 0x02365934
+0x02389ef0 = bl _addItemAdjusted
 # collectables
 # 0x027a4008 = bl _addNumAdjusted
 # 0x027a4098 = bl _addNumAdjusted
@@ -187,6 +190,7 @@ int chkLv(int p1, int p2);
 
 int addItemEquipment(int type, int id, int* data, int flag);
 int addNum(int* ptr, int type, int* data, int flag);
+int addItem(int type, int id, int* item);
 
 int* getItem(int* ptr, int enemies, int boxes, int items);
 int getItemNum(int* ptr, int enemies, int boxes);
@@ -262,6 +266,13 @@ void _addNumAdjusted(int* ptr, int type, int* data, int flag){
 		addNum(ptr, type, data, flag);
 	}
 	return;
+}
+
+int _addItemAdjusted(int type, int id, int* item){
+	if(_checkType(type)){
+		return addItem(type, id, item);
+	}
+	return 0;
 }
 
 int _getItemNumAdjusted(int* ptr, int enemies, int boxes){
