@@ -790,7 +790,7 @@ class IncludeSkellAugments(CemuChoice):
 
 
 class IncludeImportantItems(CemuChoice):
-    """Allows you to receive important items and adds those items to the pool. Has no logic currently"""
+    """Allows you to receive important items and adds those items to the pool. Increases generation time"""
     display_name = "Include Important Items"
     default = 0
     option_off = 0
