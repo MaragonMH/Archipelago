@@ -101,7 +101,7 @@ If you can reach it, but it requires a lot of effort, but no further items, it's
 ### Beginning
 At first you are trying to become stronger. You can level up and receive arts, skills, armor, weapons
 and maybe a few augments if you get lucky with slots in your weapons and armor. You can play through the story until the
-end of Chapter 3. The best way to get checks in the early game is to do uncover new ingame locations, kill enemies for the 
+end of Chapter 3. The best way to get checks in the early game is to uncover new ingame locations, kill enemies for the 
 `Enemy Index` and complete some basic segments through early game missions, low level treasure and low level tyrants. You will be
 very weak and struggling to kill even basic enemies. You can not venture outside Primordia until you complete Chapter 3.
 During Chapter 2 you will notice that you dont unlock the `Frontier-Nav` this has very big implications because you will receive all the
@@ -130,18 +130,22 @@ Once you managed to finish Chapter 4. You are now only locked by soft checks unt
 To continue you mostly need the required affinity 1 out of 5 with Lao `FRD: Lao` which at this point you will probably already have, 
 to start the affinity mission `The Matchmaker` for Chapter 8. And complete segments and 
 affinity missions which shouln't be too hard for you. You can decide to take some detours to get either the `KEY: Skell License`,
-which allows you to pilot `Skells`, if you received specific models as items and already have the `KEY: Blade License`.
+which allows you to pilot `Skells`, if you received specific skell models as items and already have the `KEY: Blade License`.
 Just use the garage terminal. All skell equipment can be received through AP if enabled. Or get the `KEY: Overdrive` to grant you access
 to the Overdrive ability in combat. After that you should look for the `WPN: Solider Assault Rifle` this is required for the affinity mission `Boot Camp` for Chapter 11.
-The item exists multiple times, all of them work but the `WPN: Solider Assault Rifle_1` is the one in logic. Be careful with weapons 
-that are part of quest chains because if you sell them you get credits but AP will no longer send the items again even if they are quest related. 
+The item exists multiple times, all of them work but the `WPN: Solider Assault Rifle_1` is the one in logic. Dont be afraid of selling items for credits, because all relevant
+weapons, armor for quest chains is not sellable. If you do sell anything else though it will be gone forever and you are not getting more of it.
 Similarly you need `FRD: Gwin` for this affinity mission.
 
 ### End Game
-For Chapter 12 you need to unlock both the `KEY: Skell License` and finish the missions `Skell License` and `A Girl's Wings`.
-All of the submissions are doable without any other items. The only more involved mission is the 15k credits in one Fnet tick,
-which just require a few FN-Nodes. You dont need the `KEY: Flight License` to get on top of `Talon Rock`. After that you can start Chapter 12
-and finish the game.
+For Chapter 12 you need to unlock both the `KEY: Skell License` and finish the missions `The Skell License` and `A Girl's Wings`. Usually during these quests you would be put into a
+skell. This is disabled for AP, which also means that you have to complete `A Girl's Wings` with your own skell instead. Be careful to only start this affinity mission if you have a skell.
+Otherwise you might run into the issue mentioned in `Known Issues`.
+You dont need the `KEY: Flight Module` to get on top of `Talon Rock`.
+For the submissions of `The Skell License` you should watch the 15k credits in one Fnet tick,
+which just require a few FN-Nodes and Dataprobes and the slaying of the grexes, with a specific weapon. 
+There are three option available `WPN: Trial Knife` (this is the one in logic), `WPN: Trial Sword` and `WPN: Trial Assault Rifle`
+After that you can start Chapter 12 and finish the game.
 
 ## Advanced Tech
 There are three techniques that are included in logic that you should know about.
@@ -152,6 +156,13 @@ Such as `Sandsprint Cavity` without a skell.
 Third there is the ability to jump upwards very steep slopes on ground so you can reach areas like `Slavebird Island` or `Atop the Giant Ring`.
 In general locations are only in logic with these techniques if i was able to pull them off with relative ease.
 [Video Overview](https://www.youtube.com/watch?v=zafEIlrlQeM)
+
+## Important Items
+If you enabled the option `IncludeImportantItems` you will have a lot more missions that require items from AP.
+In general you cant obtain important items through the ingame way. Be careful with affinity missions because they can lock you out 
+(See `Known Issues`). In some quests you can skip steps because you bypass the original way to get these items.
+`The Skell License` for example does only ask for the 8 certificates, you dont have to do any of the proficiency quests.
+If you would activate a cutscene after getting a specific item you will now just get teleported to the spot if you fullfill the request.
 
 ## Whats next?
 - Add Shop items to the available locations.
@@ -165,7 +176,6 @@ In general locations are only in logic with these techniques if i was able to pu
 - Skells are configured without any weapons and are locked in a t-pose during combat. You can just disengage combat to get moving again or press `Remove all Gear` in the garage, which equips the default weapons.
 - The main inventory can display items of the weapon and armor categories for skells and characters incorrectly. They correctly appear in the corresponding equip menus though.
 - If you enable all the Items and disable all the Locations you will be unable to fit all the progression items into the Multiworld. The generation will fail.
-- Currently important items that are collected from the ground (these are red) are still received. This will be fixed in the future.
 - You can softlock yourself if you enabled `Important Items`, during Affinity Missions. Because some of them require `Important Items` and those can be placed behind other missions
   that you cant start if you already started a Affinity Mission. There are two solutions either dont save during Affinity Mission or make sure you have the required Items beforehand.
   You can send the item to yourself if you are stuck to rectifiy the situation.

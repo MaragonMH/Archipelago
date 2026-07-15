@@ -3287,8 +3287,8 @@ Data("Mighty Glaive: Galaxy Chief"),
 Data("Bewitched Glaive: Receding Rust"),
 Data("Legendary Nopopopopon"),
 Data("Trial Knife", required=True, progression=ItCl.progression_skip_balancing),
-Data("Trial Assault Rifle"), # same as above but 1 is enough
-Data("Trial Sword"), # same as above but 1 is enough
+Data("Trial Assault Rifle", required=True), # same as above but 1 is enough
+Data("Trial Sword", required=True), # same as above but 1 is enough
 Data("Titanium Knife_4"),
 Data("Advanced Soldier Assault Rifle_2"),
 ]
