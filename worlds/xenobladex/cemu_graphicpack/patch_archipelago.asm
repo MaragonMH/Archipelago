@@ -1,7 +1,9 @@
 [Archipelago_archipelago]
-moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07, 0xF882D5CF, 0x218F6E07, 0x30B6E091 # 1.0.1E, 1.0.2U, 1.0.0E, 1.0.1E, 1.0.0E, 1.0.2U
+moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07, 0xF882D5CF, 0x218F6E07, 0x30B6E091, 0x7672271D, 0xAB97DE6B, 0x676EB33E, 0x785CA8A9 # 1.0.1E, 1.0.2U, 1.0.0E, 1.0.1E, 1.0.0E, 1.0.2U, 1.0.2J, 1.0.1U, 1.0.0U, 1.0.0J
 .origin = codecave
 
+Unsupported_Game_Version:
+	.int    0
 _postArchipelago:
 	stwu r1,-48(r1)
 	mflr r0
@@ -827,5 +829,14 @@ __sprintf_s = 0x031332d4
 __malloc = 0x03b1ae30
 __free = 0x03b1af68
 __strtol = 0x03b1b1fc
+
+
+[Archipelago_archipelago_Unsupported]
+moduleMatches = 0x7672271D, 0xAB97DE6B, 0x676EB33E, 0x785CA8A9 # 1.0.2J, 1.0.1U, 1.0.0U, 1.0.0J
+.origin = codecave
+
+# Error Box for bad game versions
+Unsupported_Game_Version:
+	.int	$Unsupported_Game_Version
 
 

@@ -62,6 +62,17 @@ __free = 0x03b1af68
 __strtol = 0x03b1b1fc
 #endif
 
+#ifdef Unsupported
+moduleMatches = 0x7672271D, 0xAB97DE6B, 0x676EB33E, 0x785CA8A9 ; 1.0.2J, 1.0.1U, 1.0.0U, 1.0.0J
+.origin = codecave
+
+# Error Box for bad game versions
+Unsupported_Game_Version:
+	.int	$Unsupported_Game_Version
+#endif
+
+int Unsupported_Game_Version;
+
 int changeTime(int hour, int minute);
 void writeSystemLog(int* menuBasePtr, char* str1, char* str2);
 
