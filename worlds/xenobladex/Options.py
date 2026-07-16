@@ -698,7 +698,7 @@ class IncludeShopLocations(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "SHP"
+    cemu_option = "Shops"
     cemu_selection_names = [
         "disable",
         "on",
@@ -712,7 +712,7 @@ class IncludeGroundArmor(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "AMR"
+    cemu_option = "GroundArmor"
     cemu_selection_names = [
         "disable",
         "on",
@@ -726,7 +726,7 @@ class IncludeGroundWeapons(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "WPN"
+    cemu_option = "GroundWeapons"
     cemu_selection_names = [
         "disable",
         "on",
@@ -740,7 +740,7 @@ class IncludeGroundAugments(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "AUG"
+    cemu_option = "GroundAugments"
     cemu_selection_names = [
         "disable",
         "on",
@@ -754,7 +754,7 @@ class IncludeSkellArmor(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "SKAMR"
+    cemu_option = "SkellArmor"
     cemu_selection_names = [
         "disable",
         "on",
@@ -768,7 +768,7 @@ class IncludeSkellWeapons(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "SKWPN"
+    cemu_option = "SkellWeapons"
     cemu_selection_names = [
         "disable",
         "on",
@@ -782,7 +782,7 @@ class IncludeSkellAugments(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "SKAUG"
+    cemu_option = "SkellAugments"
     cemu_selection_names = [
         "disable",
         "on",
@@ -796,7 +796,7 @@ class IncludeImportantItems(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "IMPIT"
+    cemu_option = "ImportantItems"
     cemu_selection_names = [
         "disable",
         "on",
@@ -810,7 +810,7 @@ class IncludeBlueprints(CemuChoice):
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "BLP"
+    cemu_option = "Blueprints"
     cemu_selection_names = [
         "disable",
         "on",
