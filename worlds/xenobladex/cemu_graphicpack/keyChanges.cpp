@@ -36,8 +36,8 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x027ea74c = nop
 0x027ea7c0 = nop
 # replace setupDollWeapon
-0x027ea85c = nop
-0x027ea8d4 = nop
+0x027ea834 = bl _getDefaultSkellWeapon
+0x027ea8ac = bl _getDefaultSkellWeapon
 0x027ea94c = nop
 0x027ea9c4 = nop
 0x027eaa3c = nop
@@ -237,6 +237,18 @@ int _getDefaultWeapon(int* DEF_PcList_bdat, char weaponColumn[], int charId, int
 	char* weaponType = weaponColumn + 6; 
 	__sprintf_s(newWeaponColumn, 0x20, "%sWeapon", weaponType);
 	return getValCheck(bdatPtr, newWeaponColumn, classId, 1) >> 0x8;
+}
+
+// overwrite starting skell weapon with default weapon
+// from https://xenoblade.github.io/xbx/bdat/common_local_us/DEF_PcList.html for Weapon calls
+// offset is the index
+// weaponColumn is "WPN" with https://xenoblade.github.io/xbx/bdat/common_local_us/WPN_DlList.html
+// returns id of part shifted left by 0x10
+int _getDefaultSkellWeapon(int* DEF_DlList_bdat, char weaponColumn[], int skellId, int offset){
+	// Left 
+	if (offset == 0) return 0x20000;
+	if (offset == 1) return 0x10000;
+	return 0;
 }
 
 // keep in mind that you need to reload your skell to trigger this
