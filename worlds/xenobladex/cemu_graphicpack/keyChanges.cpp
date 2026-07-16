@@ -27,6 +27,9 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x026a52e8 = blr # disable OpenArts::CharacterData
 0x026a5308 = blr # disable OpenSkills::CharacterData
 0x027e41f8 = b 0x027e4334 # disable automatic skill asignment
+# remove reequip of assault hammer and flame granade for drifter
+0x022736ec = lis r3, 0
+0x02273734 = lis r3, 0
 
 # remove all equipment for new skells
 # replace setupDollArmor
