@@ -17,6 +17,12 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 IsReady = 0x021ccdec
 0x024bf00c = bl _IsReadyAdjusted
 
+# division points disable until KEY Blade license
+0x02847ef8 = bl _isUnlock
+0x02847fbc = bl _isUnlock
+# join division only if you get blade license, otherwise not
+EntryUnion = 0x0288e3f4
+
 0x022e2c24 = nop # dont set all the arts/skills/classes if you change your Class
 0x020c48c4 = blr # disable Class exp
 0x020c63d8 = blr # disable friend exp
@@ -108,6 +114,10 @@ moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 0x02b051a4 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
 0x02b051c4 = nop # remove original error message
 
+# join division only if you get blade license
+0x02c20118 = nop
+0x0288e418 = nop
+
 # disable getting skell after skell license quest in doll_present
 0x029cc078 = nop # disable doll creation
 0x029cc088 = nop # disable doll assign
@@ -146,6 +156,9 @@ moduleMatches = 0x30B6E091 ; 1.0.2U
 
 0x02b05194 = bl _assignDollCheck # replace lvlCheck with dollLicense + lvlCheck
 0x02b051b4 = nop # remove original error message
+
+# join divison only if blade license
+0x02c20124 = nop
 
 # disable getting skell after skell license quest in doll_present
 0x029cc068 = nop # disable doll creation
@@ -196,6 +209,7 @@ int __strcmp (const char* str1, const char* str2);
 int __sprintf_s(char *buffer, size_t sizeOfBuffer, const char *format, ...);
 
 int IsReady(int value);
+int EntryUnion(int* ptr, int union_id);
 
 int* getFP(const char* bdat);
 int getValCheck(int* bdatPtr, const char* columnName, int id, int offset);
@@ -263,6 +277,13 @@ int _getDefaultSkellWeapon(int* DEF_DlList_bdat, char weaponColumn[], int skellI
 	if (offset == 0) return 0x20000;
 	if (offset == 1) return 0x10000;
 	return 0;
+}
+
+// Unlock Blade Lvl
+int _isUnlock(int* ptr, int value2){
+	// join division if you havent
+	EntryUnion(ptr, 1);
+	return _hasPreciousItem(24 + 5 - 1);
 }
 
 // keep in mind that you need to reload your skell to trigger this
