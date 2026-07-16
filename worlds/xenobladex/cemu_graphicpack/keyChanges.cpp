@@ -13,6 +13,10 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 0x027d6da0 = bl _loadFNet # replace getScenarioFlag for initial load
 0x027d5748 = blr # return original call to changeScenarioFlag Fnet
 
+# doll overdrive
+IsReady = 0x021ccdec
+0x024bf00c = bl _IsReadyAdjusted
+
 0x022e2c24 = nop # dont set all the arts/skills/classes if you change your Class
 0x020c48c4 = blr # disable Class exp
 0x020c63d8 = blr # disable friend exp
@@ -191,6 +195,8 @@ extern void* _itemLoopEnd;
 int __strcmp (const char* str1, const char* str2);
 int __sprintf_s(char *buffer, size_t sizeOfBuffer, const char *format, ...);
 
+int IsReady(int value);
+
 int* getFP(const char* bdat);
 int getValCheck(int* bdatPtr, const char* columnName, int id, int offset);
 
@@ -211,6 +217,11 @@ int beginScript(int** scriptPtr);
 
 int _IsPermit(){
 	return _hasPreciousItem(24 + 3 - 1);
+}
+
+int _IsReadyAdjusted(int value){
+	if(_hasPreciousItem(24 + 3 - 1)) return IsReady(value);
+	return 0;
 }
 
 int _assignDollCheck(int p1, int p2){
