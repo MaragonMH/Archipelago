@@ -105,6 +105,9 @@ moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 0x029cc078 = nop # disable doll creation
 0x029cc088 = nop # disable doll assign
 
+# required quest items from equipment disallow sell
+0x02b73a20 = bl _getFlagValAdjusted
+
 # filter enemy rewards
 0x02b07540 = bl _getItemNumAdjusted
 0x02b076d4 = b _preItemLoopAdjustment
@@ -140,6 +143,9 @@ moduleMatches = 0x30B6E091 ; 1.0.2U
 # disable getting skell after skell license quest in doll_present
 0x029cc068 = nop # disable doll creation
 0x029cc078 = nop # disable doll assign
+
+# required quest items from equipment disallow sell
+0x02b73a10 = bl _getFlagValAdjusted
 
 # filter enemy rewards
 0x02b07530 = bl _getItemNumAdjusted
@@ -194,6 +200,8 @@ int addItem(int type, int id, int* item);
 
 int* getItem(int* ptr, int enemies, int boxes, int items);
 int getItemNum(int* ptr, int enemies, int boxes);
+
+int getFlagVal(int* bdatPtr, const char* flagName, int id, const char* columnName);
 
 int beginScript(int** scriptPtr);
 
@@ -273,6 +281,27 @@ int _addItemAdjusted(int type, int id, int* item){
 		return addItem(type, id, item);
 	}
 	return 0;
+}
+
+int _getFlagValAdjusted(int* bdatPtr, const char* flagName, int id, const char* columnName){
+	register int type asm("r30");
+	// AMR: Combat Bodywear 1-3
+	if(type == 0x2 && (id == 246 || id == 251 || id == 256)) return 1;
+	// WPN: Iron Sword
+	if(type == 0x7 && (id == 26 || id == 27 || id == 28)) return 1;
+	// WPN: Chrome Sword
+	if(type == 0x7 && (id == 32 || id == 33 || id == 34)) return 1;
+	// WPN: Iron Blades
+	if(type == 0x7 && (id == 287 || id == 288 || id == 289)) return 1;
+	// WPN: Chrome Knife
+	if(type == 0x7 && (id == 550 || id == 551 || id == 552)) return 1;
+	// WPN: Titanium Shield
+	if(type == 0x7 && (id == 810 || id == 811 || id == 812)) return 1;
+	// WPN: Soldier Assault Rifle
+	if(type == 0x6 && (id == 1587 || id == 1588 || id == 1589)) return 1;
+	// WPN: Warrior Assault Rifle
+	if(type == 0x6 && (id == 1590 || id == 1591 || id == 1592)) return 1;
+	return getFlagVal(bdatPtr, flagName, id, columnName);
 }
 
 int _getItemNumAdjusted(int* ptr, int enemies, int boxes){

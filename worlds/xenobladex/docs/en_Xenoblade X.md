@@ -179,8 +179,5 @@ If you would activate a cutscene after getting a specific item you will now just
 - You can softlock yourself if you enabled `Important Items`, during Affinity Missions. Because some of them require `Important Items` and those can be placed behind other missions
   that you cant start if you already started a Affinity Mission. There are two solutions either dont save during Affinity Mission or make sure you have the required Items beforehand.
   You can send the item to yourself if you are stuck to rectifiy the situation.
-- Sold items will not be sent again even if you receive the item through AP again. So be extra careful if you sell items you would get from the shop for missions.
-  If you do, for all of these there are backups with the same name but another postfix try to get them instead then. Otherwise you can just disable the AP Extension inside the 
-  graphic packs and just buy them from the shop like you usually would and then renable AP again.
 - On startup of Cemu the graphic pack settings will reset to the last settings if you click on the individual graphic packs without starting it once. Then the last settings can be applied by AP.
   
