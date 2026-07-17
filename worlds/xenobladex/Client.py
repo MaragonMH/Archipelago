@@ -347,7 +347,7 @@ class XenobladeXContext(CommonContext):
             if slot_data:
                 cemu_options: list[XenobladeXOption] = [XenobladeXOption(**option)
                                                         for option in slot_data["cemu_options"]]
-                self.death_link = "death_link" in slot_data["options"]
+                self.death_link = slot_data.get("options", {}).get("death_link", 0) != 0
                 self.http_server.clear_locations()
                 self.prepare_cemu(cemu_options)
         if cmd in {"RoomInfo"}:
