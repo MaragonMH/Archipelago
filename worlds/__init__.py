@@ -73,6 +73,13 @@ class WorldSource:
             return False
 
 
+# AP_TEST_WORLDS (pytest only) scopes auto-loading to the named worlds; these are always loaded for the
+# suite's fixtures but aren't themselves worlds under test.
+_SUITE_FIXTURE_WORLDS = {"generic", "apquest"}
+_test_worlds_env = os.environ.get("AP_TEST_WORLDS") if "pytest" in sys.modules else None
+_requested_worlds = {name.strip() for name in _test_worlds_env.split(",") if name.strip()} if _test_worlds_env else None
+test_worlds_filter = _requested_worlds | _SUITE_FIXTURE_WORLDS if _requested_worlds else None
+
 # find potential world containers, currently folders and zip-importable .apworld's
 world_sources: List[WorldSource] = []
 for folder in (folder for folder in (user_folder, local_folder) if folder):
@@ -80,6 +87,8 @@ for folder in (folder for folder in (user_folder, local_folder) if folder):
     for entry in os.scandir(folder):
         # prevent loading of __pycache__ and allow _* for non-world folders, disable files/folders starting with "."
         if not entry.name.startswith(("_", ".")):
+            if test_worlds_filter is not None and Path(entry.name).stem not in test_worlds_filter:
+                continue
             file_name = entry.name if relative else os.path.join(folder, entry.name)
             if entry.is_dir():
                 if os.path.isfile(os.path.join(entry.path, '__init__.py')):
@@ -203,6 +212,16 @@ if apworlds:
     del load_apworlds
 
 del apworlds
+
+# snapshot the worlds under test (a copy, so tests reassigning world_types can't leak in), dropping the
+# force-loaded fixtures unless they were explicitly requested.
+if _requested_worlds:
+    AutoWorldRegister.testable_worlds = {
+        game: world for game, world in AutoWorldRegister.world_types.items()
+        if Path(world.__file__).parent.name in _requested_worlds
+    }
+else:
+    AutoWorldRegister.testable_worlds = dict(AutoWorldRegister.world_types)
 
 # Build the data package for each game.
 network_data_package: DataPackage = {
