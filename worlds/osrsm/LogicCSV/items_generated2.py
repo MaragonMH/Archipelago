@@ -693,7 +693,7 @@ item_rows: list[ItemRow] = [
 	ItemRow('Area: Gu\'Tanoth Island', 1, ItemClassification.progression,'chunk_10287-1'),
 	ItemRow('Area: East Yanille', 1, ItemClassification.progression,'chunk_10288-1'),
 	ItemRow('Area: Fight Arena', 1, ItemClassification.progression,'chunk_10289'),
-	ItemRow('Area: Ardougne Monastery', 1, ItemClassification.progression,'chunk_10290'),
+	ItemRow('Area: Ardougne Monastery', 1, ItemClassification.progression,'chunk_10290-1'),
 	ItemRow('Area: Ardougne Castle', 1, ItemClassification.progression,'chunk_10291'),
 	ItemRow('Area: Chaos Druid Tower', 1, ItemClassification.progression,'chunk_10292'),
 	ItemRow('Area: Fishing Guild', 1, ItemClassification.progression,'chunk_10293'),
@@ -783,7 +783,7 @@ item_rows: list[ItemRow] = [
 	ItemRow('Area: Ocean Chunk (10N 26W)', 1, ItemClassification.progression,'chunk_11044'),
 	ItemRow('Area: Ocean Chunk (10N 24W)', 1, ItemClassification.progression,'chunk_11045'),
 	ItemRow('Area: Ocean Chunk (10N 22W)', 1, ItemClassification.progression,'chunk_11046'),
-	ItemRow('Area: Red Rock', 1, ItemClassification.progression,'chunk_11047'),
+	ItemRow('Area: Red Rock', 1, ItemClassification.progression,'chunk_11047-1'),
 	ItemRow('Area: Ocean Chunk (10N 18W)', 1, ItemClassification.progression,'chunk_11048'),
 	ItemRow('Area: Ocean Chunk (10N 16W)', 1, ItemClassification.progression,'chunk_11049'),
 	ItemRow('Area: East Ape Atoll', 1, ItemClassification.progression,'chunk_11050-1'),
@@ -814,7 +814,7 @@ item_rows: list[ItemRow] = [
 	ItemRow('Area: Ocean Chunk (12N 32W)', 1, ItemClassification.progression,'chunk_11297'),
 	ItemRow('Area: Ocean Chunk (12N 30W)', 1, ItemClassification.progression,'chunk_11298'),
 	ItemRow('Area: Ocean Chunk (12N 28W)', 1, ItemClassification.progression,'chunk_11299'),
-	ItemRow('Area: Last Light', 1, ItemClassification.progression,'chunk_11300'),
+	ItemRow('Area: Last Light', 1, ItemClassification.progression,'chunk_11300-1'),
 	ItemRow('Area: Ocean Chunk (12N 24W)', 1, ItemClassification.progression,'chunk_11301'),
 	ItemRow('Area: Ocean Chunk (12N 22W)', 1, ItemClassification.progression,'chunk_11302'),
 	ItemRow('Area: Ocean Chunk (12N 20W)', 1, ItemClassification.progression,'chunk_11303'),
@@ -1178,6 +1178,7 @@ item_rows: list[ItemRow] = [
 	ItemRow('Area: Strange Stone', 1, ItemClassification.progression,'chunk_15164'),
 	ItemRow('Area: East Mos Le\'Harmless Shore', 1, ItemClassification.progression,'chunk_15406'),
 	ItemRow('Area: Northeast Mos Le\'Harmless Shore', 1, ItemClassification.progression,'chunk_15407'),
+	ItemRow('Tear of Guthix', 0, ItemClassification.progression, ''),
 ]
 
 rollable_chunks: dict[str, list[str]] = {

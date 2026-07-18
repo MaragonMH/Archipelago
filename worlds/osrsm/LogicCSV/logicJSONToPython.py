@@ -129,7 +129,7 @@ banned_tasks:list[str]=[
     "Buy the 8th upgrade to ~|bank space|~ for 200m","Buy the 9th upgrade to ~|bank space|~ for 500m","Trade-in for platinum token*","Build a ~|tip jar|~",
     "Create ~|avernic treads (pe)|~","Create ~|avernic treads (pe)(et)|~","Create ~|avernic treads (pr)(pe)|~","Create ~|avernic treads (max)|~",
     "Unlock the oak variant of the ~|greenman mask|~","Unlock the willow variant of the ~|greenman mask|~","Unlock the maple variant of the ~|greenman mask|~",
-    "Unlock the yew variant of the ~|greenman mask|~","Unlock the magic variant of the ~|greenman mask|~"
+    "Unlock the yew variant of the ~|greenman mask|~","Unlock the magic variant of the ~|greenman mask|~","10038-1 via Fishing cape" #Need to look into this one, but for now yeet
 ]
 
 banned_chunks: list[str] = [
@@ -209,7 +209,8 @@ banned_chunks: list[str] = [
     "chunk_10827","chunk_7236","chunk_10394","chunk_14234","chunk_11928","chunk_11937","chunk_12190","chunk_11931","chunk_11932","chunk_10903",
     "chunk_9295","chunk_12437","chunk_6036","chunk_6298","chunk_9291","chunk_14495","chunk_10389","chunk_103891","chunk_103892","chunk_103893",
     "chunk_103894","chunk_103895","chunk_103896","chunk_103897","chunk_8858","chunk_10388","chunk_11089","chunk_13215","chunk_13216","chunk_13473",
-    "chunk_13474","chunk_13727","chunk_13728","chunk_13472","chunk_13211","chunk_11168","chunk_11680","chunk_6483","chunk_7508"
+    "chunk_13474","chunk_13727","chunk_13728","chunk_13472","chunk_13211","chunk_11168","chunk_11680","chunk_6483","chunk_7508",
+    "chunk_10105","chunk_10106","chunk_12188","chunk_13976"
 
 
 ]
@@ -238,7 +239,7 @@ dead_chunks:list[str]=[
 ]
 
 double_named_chunks:list[str]=[
-    "chunk_9783","chunk_11321","chunk_11578","chunk_12845","chunk_13102","chunk_10037","chunk_13618","chunk_6453","chunk_11566"
+    "chunk_9783","chunk_11321","chunk_11578","chunk_12845","chunk_13102","chunk_10037","chunk_13618","chunk_6453","chunk_11566","chunk_14132"
 ]
 
 banned_drop_table_items:dict[str,list[str]]={
@@ -1313,7 +1314,7 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                             "ManualNonProcessing","Source","InfoLink","ConnectsSections","Sections",
                             "QuestPointsNeeded","TotalLevelNeeded","Reward",
                             "ForcedSecondary","ClueTier","ClueType","StarRegion","Label","Requirements",
-                            "Not Skiller","RequiredMonsterSource"
+                            "Not Skiller","RequiredMonsterSource","ClueId"
                         ]:
                         print(field)
                         print(task_name)
@@ -1419,6 +1420,9 @@ with open(os.path.join(this_dir, "items_generated2.py"), "w+") as regPyFile:
                 row_line += ")"
                 regPyFile.write(f"\t{row_line},\n")
                 item_csv_rows.append([str_format("Area: "+region_name), "1", "progression", "Area", chunk_id.replace("chunk_","").split("-")[0]])
+
+            regPyFile.write("\tItemRow('Tear of Guthix', 0, ItemClassification.progression, ''),\n")
+            item_csv_rows.append(['Tear of Guthix', '0', 'progression','Bingo',''])
             regPyFile.write("]\n\n")
 
             regPyFile.write("rollable_chunks: dict[str, list[str]] = {\n")
@@ -1605,6 +1609,12 @@ with open(os.path.join(this_dir, "locations_generated2.py"), "w+") as regPyFile:
                 row_line += str(location_row.combat_point_reward)
                 row_line += ")"
                 regPyFile.write(f"\t{row_line},\n")
+            
+            regPyFile.write("\tLocationRow('Bingo: Forward Diagonal','bingo','Menu','',[],0,0,0),\n")
+            regPyFile.write("\tLocationRow('Bingo: Reverse Diagonal','bingo','Menu','',[],0,0,0),\n")
+            for index in range(0,51):
+                regPyFile.write(f"\tLocationRow('Bingo: Row {index+1}','bingo','Menu','',[],0,0,0),\n")
+                regPyFile.write(f"\tLocationRow('Bingo: Column {index+1}','bingo','Menu','',[],0,0,0),\n")
             
             regPyFile.write("]\n\n")
 
