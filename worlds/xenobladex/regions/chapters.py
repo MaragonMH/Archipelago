@@ -16,5 +16,5 @@ Rule("Chapter 8", {Req("FRD: Lao"), Req("MIRA", 70), Req("LVL", 31)}),
 Rule("Chapter 9", {Req("LVL", 34)}),
 Rule("Chapter 10", {Req("SYLV", 14), Req("LVL", 39)}),
 Rule("Chapter 11", {Req("FRD: Gwin"), Req("CAUL", 8), Req("WPN: Soldier Assault Rifle_1"), Req("LVL", 45)}),
-Rule("Chapter 12", {Req("KEY: Skell License"), Req("SKF"), Req("LVL", 50)}), # TAJ Talon Rock
+Rule("Chapter 12", {Req("KEY: Skell License"), Req("SKF"), Req("KEY: Flight Module"), Req("LVL", 50), Req("CREDITS", 15), Req("WPN: Trial Knife"), Req("IMPIT: Skell License Certificate", 8)}), # TAJ Talon Rock
 ]
