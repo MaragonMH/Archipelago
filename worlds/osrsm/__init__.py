@@ -1,4 +1,5 @@
 import typing
+from collections import defaultdict
 
 from BaseClasses import Item, Tutorial, ItemClassification, Region, MultiWorld, CollectionState,Entrance,Location
 from rule_builder.rules import *
@@ -128,6 +129,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         self.pre_completed_locations = []
         self.items_already_created = 0
 
+        self.bingo_board:list[list[str]] = []
+
     def generate_early(self) -> None:
 
         if getattr(self.multiworld,"generation_is_fake",False):
@@ -176,6 +179,9 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         data = self.options.as_dict("brutal_grinds")
         data["data_csv_tag"] = data_csv_tag
         data["starting_area"] = str(self.starting_area_item) #these aren't actually strings, they just play them on tv
+        data["goal"] = self.options.goal_type.value
+        data["bingo_size"] = self.options.bingo_size.value
+        data["bingo_board"] = self.bingo_board
         data["goal_task"] = self.options.goal_location.value
         return data
 
@@ -415,12 +421,13 @@ class OSRSMWorld(CachedRuleBuilderWorld):
 
         # place "Victory" at the option from the yaml
 
-        goal_location_name = self.options.goal_location.value if self.options.goal_location.value in self.location_name_to_id else "~|Dragon Slayer I|~ Complete the quest"
-        self.options.goal_location.value = goal_location_name
-        real_goal_location = self.multiworld.get_location(goal_location_name, self.player)
-        goal_location = OSRSMLocation(self.player,f"Victory {goal_location_name}",None,real_goal_location.parent_region)
-        goal_location.place_locked_item(self.create_event("Victory"))
-        real_goal_location.parent_region.locations.append(goal_location)
+        if self.options.goal_type.value in [self.options.goal_type.option_task, self.options.goal_type.option_both]:
+            goal_location_name = self.options.goal_location.value if self.options.goal_location.value in self.location_name_to_id else "~|Dragon Slayer I|~ Complete the quest"
+            self.options.goal_location.value = goal_location_name
+            real_goal_location = self.multiworld.get_location(goal_location_name, self.player)
+            goal_location = OSRSMLocation(self.player,f"Victory {goal_location_name}",None,real_goal_location.parent_region)
+            goal_location.place_locked_item(self.create_event("Victory"))
+            real_goal_location.parent_region.locations.append(goal_location)
 
         #set_rules
         rr_entrances_cache:dict[str,tuple[Entrance,list]] = {}
@@ -592,6 +599,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 continue
             if location_row.parent_region in self.options.banned_chunks:
                 continue
+            if location_row.category == 'bingo':
+                continue
             if location_row.rule:
                 location = self.multiworld.get_location(location_row.name,self.player)
                 fake_location = self.multiworld.get_location(location_row.name+" event",self.player)
@@ -599,7 +608,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 if rule is not None:
                     if not (location_row.name in self.pre_completed_locations or location_row.name in self.options.exclude_locations):
                         self.set_rule(location,rule)
-                    if location_row.name == goal_location_name:
+                    if self.options.goal_type.value in [self.options.goal_type.option_task, self.options.goal_type.option_both] and location_row.name == goal_location_name:
                         self.set_rule(goal_location,rule)
                     self.set_rule(fake_location,rule)
                 if location_row.quest_point_reward > 0:
@@ -639,7 +648,6 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 if rule is not None:
                     self.set_rule(method,rule)
 
-        self.multiworld.completion_condition[self.player] = lambda state: (state.has("Victory", self.player))
         #create_items
         itempool:list[Item]= []
         for item_row in item_rows:
@@ -647,7 +655,18 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 for c in range(item_row.amount):
                     item = self.create_item(item_row.name)
                     itempool.append(item)
-
+        
+        forced_locations = []
+        bingo_locations:list[Location] = []
+        temp_plando_block = self.options.plando_items.value.copy()
+        for opt in temp_plando_block:
+            if isinstance(opt.count, int) and opt.count == len(opt.locations) or isinstance(opt.count, bool) and not opt.count:
+                for location in opt.locations:
+                    if location in self.location_name_to_row:
+                        forced_locations.append(location)
+                        if "Tear of Guthix" in opt.items:
+                            bingo_locations.append(self.get_location(location))
+                            self.options.plando_items.value.remove(opt)
         
         #culling time
 
@@ -671,6 +690,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 temp_locs = region.locations.copy()
                 for loc in temp_locs:
                     if not all_state.can_reach_location(loc.name,self.player):
+                        if loc.name in forced_locations:
+                            raise OptionError("Plando'd location unreachable in all state")
                         region.locations.remove(loc)
             else:
                 for entrance in region.entrances: #disconnect entrances
@@ -680,8 +701,31 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                     if exit.connected_region:
                         exit.connected_region.entrances.remove(exit)
                 for location in region.locations: #delete all the locations in that region
+                    if location.name in forced_locations:
+                        raise OptionError("Plando'd location unreachable in all state")
                     del self.multiworld.regions.location_cache[self.player][location.name]
-                del regions[region_name] #delete the region
+                del regions[region_name] #delete the 
+        
+        #Delay this as long as we could, but we need the victory condition now
+
+        completion_condition:list[Rule] = []
+        temp_completion_condition:list[Rule] = []
+        if self.options.goal_type.value in [self.options.goal_type.option_task, self.options.goal_type.option_both]:
+            completion_condition.append(Has("Victory"))
+            temp_completion_condition.append(Has("Victory"))
+        if self.options.goal_type.value in [self.options.goal_type.option_bingo, self.options.goal_type.option_both]:
+            completion_condition.append(Has("Tear of Guthix",self.options.bingo_size.value * self.options.bingo_size.value))
+            temp_completion_condition.append(Has("Tear of Guthix",len(bingo_locations)))
+            bingo_tasks = [task for task in self.location_rows_by_category["bingo"]]
+            menu_region = self.region_name_to_data["Menu"]
+            for _ in range(2+(self.options.bingo_size.value * 2)): # diagonals + n rows and cols
+                task = bingo_tasks.pop(0) #grab from front
+                location_id = self.location_name_to_id[task.name]
+                location = OSRSMLocation(self.player,task.name,location_id)
+                self.location_name_to_data[task.name] = location
+                location.parent_region = menu_region
+                menu_region.locations.append(location)
+        self.set_completion_rule(And(*temp_completion_condition))
         
         needed_items = []
         for region_code, region_name in self.region_code_to_name.items():
@@ -727,7 +771,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 for item in short_pool:
                     temp_state.remove(item)
                 temp_state.sweep_for_advancements(locations=pre_placed_advancements)
-                if self.multiworld.completion_condition[self.player](temp_state):
+                if self.multiworld.completion_condition[self.player](temp_state) and all([temp_state.can_reach_location(loc,self.player) for loc in forced_locations]):
                     if temp_state.stale[self.player]:
                         temp_state.update_reachable_regions(self.player)
                     curr_chance = sum([region_loc_count_lookup[region] for region in temp_state.reachable_regions[self.player]]) - len(itempool)
@@ -774,10 +818,15 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 max_depth = max(max_depth,depth)
                 temp_locs = region.locations.copy()
                 for loc in temp_locs:
+                    if loc.address and self.location_name_to_row[loc.name].category == "bingo":
+                        continue #ignore bingo locations
                     if not all_state.can_reach_location(loc.name,self.player):
+                        if loc.name in forced_locations:
+                            raise OptionError("Plando'd location made unreachable somehow")
                         region.locations.remove(loc)
                     else:
-                        if loc.address: reachable_loc_map[loc] = depth
+                        if loc.address and loc.name not in forced_locations:
+                            reachable_loc_map[loc] = depth
             else:
                 for entrance in region.entrances: #disconnect entrances
                     if entrance.parent_region:
@@ -786,6 +835,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                     if exit.connected_region:
                         exit.connected_region.entrances.remove(exit)
                 for location in region.locations: #delete all the locations in that region
+                    if location.name in forced_locations:
+                        raise OptionError("Plando'd location made unreachable somehow")
                     del self.multiworld.regions.location_cache[self.player][location.name]
                 del regions[region_name] #delete the region
         
@@ -823,6 +874,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             #get my fraction parts
             maximum_locations = len(location_list)
             items_created = self.items_already_created
+            if self.options.goal_type.value in [self.options.goal_type.option_bingo, self.options.goal_type.option_both]:
+                items_created += ((self.options.bingo_size.value*self.options.bingo_size.value) - len(bingo_locations))
             locations_created = len(location_list)
             #start to cull
             self.random.shuffle(location_list) #look at them in random order, just to make sure it's not going to cull from whoever was made first
@@ -839,6 +892,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                     ) >= 1:
                     assert loc.parent_region
                     loc.parent_region.locations.remove(loc)
+                    del reachable_loc_map[loc]
                     locations_created -= 1
                     #logger.info(f"Location {loc.name} deleted, {rolled_value}/{goal_number}/{maximum_locations}, {locations_created - items_created} left")
                     if not self.multiworld.completion_condition[self.player](all_state):
@@ -848,6 +902,57 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                         break #Exit early if we've already removed enough
             logger.error(f"Deleted {maximum_locations-locations_created} filler from {self.player_name}, {locations_created - items_created} remains")
 
+        if self.options.goal_type.value in [self.options.goal_type.option_bingo, self.options.goal_type.option_both]:
+            inverted_loc_depth: dict[int, list[Location]] = defaultdict(list)
+            #invert depth dict to get it "sorted" by depth
+            for loc, depth in reachable_loc_map.items():
+                inverted_loc_depth[depth].append(loc)
+            flattened_ild:list[Location] = []
+            #Now flatten it so we can sample it correctly
+            for lloc in inverted_loc_depth.values():
+                self.random.shuffle(lloc)
+                for loc in lloc:
+                    flattened_ild.append(loc)
+            #TODO: do this smarter lol
+            bingo_needed = ((self.options.bingo_size.value*self.options.bingo_size.value) - len(bingo_locations))
+            if len(flattened_ild) < bingo_needed:
+                raise OptionError("Not enough locations to fill the bingo board...")
+            bingo_locations.extend(self.random.sample(flattened_ild,bingo_needed))
+            self.random.shuffle(bingo_locations)
+            for i in range(self.options.bingo_size.value):
+                self.bingo_board.append([])
+                for j in range(self.options.bingo_size.value):
+                    loc = bingo_locations.pop()
+                    loc.place_locked_item(self.create_item("Tear of Guthix"))
+                    self.bingo_board[i].append(loc.name)
+            
+            # time for the bingo rules
+            
+            for_rules:list[Rule] = []
+            bak_rules:list[Rule] = []
+            max_index = self.options.bingo_size.value - 1
+            for index in range(self.options.bingo_size.value):
+                temp_loc = self.bingo_board[index][index]
+                for_rules.append(CanReachLocation(temp_loc))
+                temp_loc = self.bingo_board[index][max_index-index]
+                bak_rules.append(CanReachLocation(temp_loc))
+
+                row_rules:list[Rule] = []
+                col_rules:list[Rule] = []
+                for j_index in range(self.options.bingo_size.value):
+                    temp_loc = self.bingo_board[index][j_index]
+                    row_rules.append(CanReachLocation(temp_loc))
+                    temp_loc = self.bingo_board[j_index][index]
+                    col_rules.append(CanReachLocation(temp_loc))
+                self.set_rule(self.get_location(f"Bingo: Row {index+1}"), And(*row_rules))
+                self.set_rule(self.get_location(f"Bingo: Column {index+1}"), And(*col_rules))
+            self.set_rule(self.get_location(f"Bingo: Forward Diagonal"), And(*for_rules))
+            self.set_rule(self.get_location(f"Bingo: Reverse Diagonal"), And(*bak_rules))
+
+
+            
+        #Time to set the actual condition now that we're sure they're all set
+        self.set_completion_rule(And(*completion_condition))
         self.make_image(itempool,f"output_{self.player_name}")
 
     def create_items(self) -> None:
@@ -864,6 +969,8 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         return "Area: Nothing :("
 
     def create_location(self, location_row:LocationRow):
+        if location_row.category == "bingo":
+            return #We make the bingo locations later if we need to
         if location_row.name in self.pre_completed_locations:
             #Don't do most of this, just add the events to precollected :)
             self.push_precollected(self.create_event(location_row.name))

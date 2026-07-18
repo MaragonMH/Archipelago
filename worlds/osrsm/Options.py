@@ -47,12 +47,36 @@ StartingArea = type("StartingArea", (TextChoice,), {
 })
 del (locations)
 
+class GoalType(Choice):
+    """
+    Decide what kind of goal you want
+    Task  : Your goal is a specific task
+    Bingo : Your goal is to complete the Bingo board
+    Both  : You goal is to complete a specific task AND clear the bingo board
+    """
+    display_name = "Goal Type"
+    option_task  = 0
+    option_bingo = 1
+    option_both  = 2
+    default = 0
+
 class GoalLocation(FreeText):
     """
     Which location name to consider to be the goal.
     """
     display_name = "Goal Location"
     default = "~|Dragon Slayer I|~ Complete the quest"
+
+class BingoSize(Range):
+    """
+    How Big of a bingo board to generate, value is used for both the width and height
+    
+    Locations will be sent for every column, row, and diagonal
+    """
+    display_name = "Bingo Size"
+    default = 9
+    range_start = 3
+    range_end = 51
 
 class DisableChunkCulling(Choice):
     """
@@ -575,7 +599,9 @@ class GeneralTaskWeight(Range):
 @dataclass
 class OSRSMOptions(PerGameCommonOptions):
     starting_area: StartingArea
+    goal_type: GoalType
     goal_location: GoalLocation
+    bingo_size: BingoSize
     disable_chunk_culling: DisableChunkCulling
     disable_task_culling: DisableLocationCulling
     max_drop_rate: MaxDropRate
