@@ -1,32 +1,17 @@
 from collections import Counter, OrderedDict
 import itertools
 import logging
-from BaseClasses import Item, ItemClassification as ItCl, MultiWorld
-from dataclasses import dataclass, replace
-from typing import Dict, Generator, List, Optional
+from BaseClasses import Item, ItemClassification as ItCl
+from dataclasses import replace
+from typing import TYPE_CHECKING, Generator, cast
+
+if TYPE_CHECKING:
+    from . import XenobladeXWorld
 
 from .Options import XenobladeXOptions
-from .Regions import get_logic_level_count
+from .rules.level import get_logic_level_count
 
-
-@dataclass(frozen=True)
-class Itm:
-    name: str
-    valid: bool = True
-    count: int = 1
-    type: Optional[int] = None
-    id: Optional[int] = None
-    prefix: Optional[str] = None
-    progression: ItCl = ItCl.filler
-    type_count: int = 1
-    required: bool = False
-
-    def get_item(self):
-        if self.prefix is None:
-            return self.name
-        return f"{self.prefix}: {self.name}"
-
-
+from .items import Itm
 from .items.arts import arts_data  # noqa: E402
 from .items.classes import classes_data  # noqa: E402
 from .items.dataprobes import dataprobes_data  # noqa: E402
@@ -88,11 +73,10 @@ xenobladeXAugments = [
     *_Itms.gen("AUG", type=0x14, type_count=2, data=ground_augments_data),
     *_Itms.gen("SKAUG", type=0x16, type_count=3, data=doll_augments_data),
 ]
-xenobladeXImpItems = [*_Itms.gen("IMPIT", type=0x1d, data=important_items_data,
-                                 prog=ItCl.progression_skip_balancing)]
+xenobladeXImpItems = [*_Itms.gen("IMPIT", type=0x1d, data=important_items_data, prog=ItCl.progression_skip_balancing)]
 # xenobladeXBlueprints = [*_Itms.gen("BLP", type=0x41, data=blueprints_data)]
 
-xenobladeXOptionalItems: Dict[str | None, List[Itm]] = {
+xenobladeXOptionalItems: dict[str | None, list[Itm]] = {
     xenobladeXArmor[0].prefix: xenobladeXArmor,
     xenobladeXWeapons[0].prefix: xenobladeXWeapons,
     xenobladeXSkellArmor[0].prefix: xenobladeXSkellArmor,
@@ -105,49 +89,51 @@ xenobladeXOptionalFullItems: list[Itm] = [
     # *xenobladeXBlueprints,
 ]
 
-xenobladeXItems: List[Itm] = [
+xenobladeXItems: list[Itm] = [
     *xenobladeXImportantItems,
     *xenobladeXOptionalFullItems,
     *(itertools.chain(*xenobladeXOptionalItems.values())),
 ]
 
 
-def create_items(world: MultiWorld, player, base_id, options: XenobladeXOptions, item_name_to_id: Dict[str, int]):
+def create_items(world):
     """Create all items"""
+    options = cast(XenobladeXOptions, world.options)
     logic_level_steps = options.logic_level_steps.value
     logic_level_overcap = options.logic_level_overcap.value
     logic_levels = 0
     if logic_level_steps > 0:
         logic_levels = get_logic_level_count(99, logic_level_steps) + logic_level_overcap
 
-    itempool: List[Item] = []
+    itempool: list[Item] = []
     requiredOptionalItems = [itm for itm in xenobladeXItems if itm.required]
     optionalFullItems = [itm for itm in xenobladeXOptionalFullItems
-                         if itm.prefix and getattr(options, itm.prefix.lower()).value]
+                         if itm.prefix and getattr(world.options, itm.prefix.lower()).value]
     # Add all important Items, these are always added to the item pool
     for item in xenobladeXImportantItems + requiredOptionalItems + optionalFullItems:
         item_count = item.count if not item.get_item() == "KEY: Level" else logic_levels
         for idx in range(item_count):
-            xeno_item = XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
-            if idx < item_count - world.precollected_items[player].count(xeno_item):
+            assert item.id is not None, f"{item.get_item()} has no id"
+            xeno_item = XenobladeXItem(item.get_item(), item.progression, world.base_id + item.id, world.player)
+            if idx < item_count - world.multiworld.precollected_items[world.player].count(xeno_item):
                 itempool += [xeno_item]
 
     # Add all optional Items to the item pool, these are selected at random,
     # depending on how many slots are left in the location pool
-    optional_items: List[Itm] = []
+    optional_items: list[Itm] = []
 
     # Keep enough space for the victory item_event
-    total_locations = len(world.get_unfilled_locations(player)) - 1
+    total_locations = len(world.multiworld.get_unfilled_locations(world.player)) - 1
     optionals_data = {prefix: len(category) for prefix, category in xenobladeXOptionalItems.items()
-                      if prefix and getattr(options, prefix.lower()).value}
+                      if prefix and getattr(world.options, prefix.lower()).value}
     optionals_length: int = sum(optionals_data.values())
     missing_item_count: int = min(total_locations - len(itempool), optionals_length)
     # Throw error if overfilled. Make more graceful in future
-    assert missing_item_count >= 0, f"{world.get_player_name(player)} overfilled locations. " \
+    assert missing_item_count >= 0, f"{world.get_player_name()} overfilled locations. " \
         "Please select more locations or less items"
 
     if len(optionals_data) > 0:
-        world.random.seed(world.seed)
+        world.random.seed(world.multiworld.seed)
         max_category_size = 950  # -49 for shop item buffer
         maxed_categories: list[str] = []
         optionals_counter: Counter = Counter()
@@ -180,21 +166,23 @@ def create_items(world: MultiWorld, player, base_id, options: XenobladeXOptions,
                 break
 
     for item in optional_items:
-        xeno_item = XenobladeXItem(item.get_item(), item.progression, base_id + item.id, player)
-        if xeno_item not in world.precollected_items[player]:
+        assert item.id is not None, f"{item.get_item()} has no id"
+        xeno_item = XenobladeXItem(item.get_item(), item.progression, world.base_id + item.id, world.player)
+        if xeno_item not in world.multiworld.precollected_items[world.player]:
             itempool += [xeno_item]
-    world.itempool += itempool
+    world.multiworld.itempool += itempool
 
-    world.itempool += [create_filler(player, item_name_to_id) for _ in range(total_locations - len(itempool))]
+    world.multiworld.itempool += [create_filler(world) for _ in range(total_locations - len(itempool))]
 
 
-def create_item(item_name: str, player: int, abs_id: int, is_prog: bool = True) -> XenobladeXItem:
+def create_item(world, item_name: str, is_prog: bool = True) -> XenobladeXItem:
     """Create another item"""
-    return XenobladeXItem(item_name, ItCl.progression if is_prog else ItCl.filler, abs_id, player)
+    return XenobladeXItem(item_name, ItCl.progression if is_prog else ItCl.filler,
+                          world.item_name_to_id[item_name], world.player)
 
 
-def create_filler(player: int, item_name_to_id: Dict[str, int]) -> XenobladeXItem:
-    return create_item("KEY: Filler", player, item_name_to_id["KEY: Filler"], is_prog=False)
+def create_filler(world) -> XenobladeXItem:
+    return create_item(world, "KEY: Filler", is_prog=False)
 
 
 def debug_print_duplicates():

@@ -1,4 +1,4 @@
-from ..Items import Itm as Data
+from . import Itm as Data
 
 # flake8: noqa
 keys_data:list[Data] = [
