@@ -10,14 +10,14 @@ if TYPE_CHECKING:
 from .Regions import add_region_location, init_region
 
 from .locations import Loc
-from .locations.collepedia import collepedia_data  # noqa: E402
-from .locations.enemies import enemies_data  # noqa: E402
-from .locations.fnNodes import fn_nodes_data  # noqa: E402
-from .locations.locations import locations_data  # noqa: E402
-from .locations.segments import segments_data  # noqa: E402
-from .locations.tmp import tmp_data  # noqa: E402
-# from .locations.quests import quests_data  # noqa: E402
-# from .locations.shops import shops_data  # noqa: E402
+from .locations.collepedia import collepedia_data
+from .locations.enemies import enemies_data
+from .locations.fnNodes import fn_nodes_data
+from .locations.locations import locations_data
+from .locations.segments import segments_data
+from .locations.tmp import tmp_data
+# from .locations.quests import quests_data
+# from .locations.shops import shops_data
 
 
 class XenobladeXLocation(Location):
@@ -77,7 +77,7 @@ def _resolve_dependencies() -> None:
 _resolve_dependencies()
 
 
-def create_location(world, region_name: str, location_name: str):
+def create_location(world: "XenobladeXWorld", region_name: str, location_name: str):
     init_region(world, region_name)
     assert location_name in xenobladeXLocations, f"{location_name} not in locations"
     location_id = xenobladeXLocations[location_name].id
@@ -87,7 +87,7 @@ def create_location(world, region_name: str, location_name: str):
                                XenobladeXLocation(world.player, location_name, id, world.get_region(region_name)))
 
 
-def create_locations(world):
+def create_locations(world: "XenobladeXWorld"):
     for location in xenobladeXLocations.values():
         if location.prefix is None or location.id is None:
             continue

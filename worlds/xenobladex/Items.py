@@ -12,22 +12,22 @@ from .Options import XenobladeXOptions
 from .rules.level import get_logic_level_count
 
 from .items import Itm
-from .items.arts import arts_data  # noqa: E402
-from .items.classes import classes_data  # noqa: E402
-from .items.dataprobes import dataprobes_data  # noqa: E402
-from .items.dollArmor import doll_armor_data  # noqa: E402
-from .items.dollAugments import doll_augments_data  # noqa: E402
-from .items.dollFrames import doll_frames_data  # noqa: E402
-from .items.dollWeapons import doll_weapons_data  # noqa: E402
-from .items.fieldSkills import field_skills_data  # noqa: E402
-from .items.friends import friends_data  # noqa: E402
-from .items.groundArmor import ground_armor_data  # noqa: E402
-from .items.groundAugments import ground_augments_data  # noqa: E402
-from .items.groundWeapons import ground_weapons_data  # noqa: E402
-from .items.importantItems import important_items_data  # noqa: E402
-# from .items.blueprints import blueprints_data  # noqa: E402
-from .items.keys import keys_data  # noqa: E402
-from .items.skills import skills_data  # noqa: E402
+from .items.arts import arts_data
+from .items.classes import classes_data
+from .items.dataprobes import dataprobes_data
+from .items.dollArmor import doll_armor_data
+from .items.dollAugments import doll_augments_data
+from .items.dollFrames import doll_frames_data
+from .items.dollWeapons import doll_weapons_data
+from .items.fieldSkills import field_skills_data
+from .items.friends import friends_data
+from .items.groundArmor import ground_armor_data
+from .items.groundAugments import ground_augments_data
+from .items.groundWeapons import ground_weapons_data
+from .items.importantItems import important_items_data
+# from .items.blueprints import blueprints_data
+from .items.keys import keys_data
+from .items.skills import skills_data
 
 
 class XenobladeXItem(Item):
@@ -89,14 +89,14 @@ xenobladeXOptionalFullItems: list[Itm] = [
     # *xenobladeXBlueprints,
 ]
 
-xenobladeXItems: list[Itm] = [
-    *xenobladeXImportantItems,
-    *xenobladeXOptionalFullItems,
-    *(itertools.chain(*xenobladeXOptionalItems.values())),
-]
+xenobladeXItems: dict[str, Itm] = {
+    **{itm.get_item(): itm for itm in xenobladeXImportantItems},
+    **{itm.get_item(): itm for itm in xenobladeXOptionalFullItems},
+    **{itm.get_item(): itm for itm in itertools.chain(*xenobladeXOptionalItems.values())},
+}
 
 
-def create_items(world):
+def create_items(world: "XenobladeXWorld"):
     """Create all items"""
     options = cast(XenobladeXOptions, world.options)
     logic_level_steps = options.logic_level_steps.value
@@ -106,7 +106,7 @@ def create_items(world):
         logic_levels = get_logic_level_count(99, logic_level_steps) + logic_level_overcap
 
     itempool: list[Item] = []
-    requiredOptionalItems = [itm for itm in xenobladeXItems if itm.required]
+    requiredOptionalItems = [itm for itm in xenobladeXItems.values() if itm.required]
     optionalFullItems = [itm for itm in xenobladeXOptionalFullItems
                          if itm.prefix and getattr(world.options, itm.prefix.lower()).value]
     # Add all important Items, these are always added to the item pool
@@ -175,18 +175,23 @@ def create_items(world):
     world.multiworld.itempool += [create_filler(world) for _ in range(total_locations - len(itempool))]
 
 
-def create_item(world, item_name: str, is_prog: bool = True) -> XenobladeXItem:
+def create_item(world:  "XenobladeXWorld", item_name: str) -> XenobladeXItem:
     """Create another item"""
-    return XenobladeXItem(item_name, ItCl.progression if is_prog else ItCl.filler,
+    assert item_name in xenobladeXItems, f"Item not found: {item_name}"
+    return XenobladeXItem(item_name, xenobladeXItems[item_name].progression,
                           world.item_name_to_id[item_name], world.player)
 
 
-def create_filler(world) -> XenobladeXItem:
-    return create_item(world, "KEY: Filler", is_prog=False)
+def create_filler(world:  "XenobladeXWorld") -> XenobladeXItem:
+    return create_item(world, "KEY: Filler")
+
+
+def get_random_filler_item_name(world: "XenobladeXWorld") -> str:
+    return world.random.choice([*itertools.chain(*xenobladeXOptionalItems.values())]).get_item()
 
 
 def debug_print_duplicates():
-    xs = [i.get_item() for i in xenobladeXItems]
+    xs = [i.get_item() for i in xenobladeXItems.values()]
     dup = {x: xs.count(x) for x in xs if xs.count(x) > 1}
     for name, n in dup.items():
         logging.debug(f"Duplicate: {name}, Count: {n}")

@@ -23,8 +23,8 @@ Data("Doug 2 H2H - Indu Dist: Central - Morning", rules=["Doug 2"], depends=["Do
 Data("A Proper Chopper - Indu Dist: Central - Chp 4", rules=["Lvl 13"], depends=["Chapter 4"]),
 Data("Murderess 3 H2H - Indu Dist: Production Plant", rules=["Murderess 3"], depends=["Murderess 2 H2H"]), 
 Data("Forest Foray - Indu Dist: Production Plant - Chp 3", rules=["Noct 15", "Phosphorus-Tree Seed"], depends=["Chapter 3"]),
-Data("Pollution Solution - Indu Dist: Production Plant - Chp 7", rules=["FNet Resource"], depends=["Chapter 7", "The Voltant Visionary", "Prone Sweet Prone"]),
-Data("Good Neighbors - Indu Dist: Test Hangar - Chp 7", rules=["FNet Resource 2", "Lvl 30"], depends=["Chapter 7", "Circle of Life", "Lakeside Getaway", "Sunceleg Rises"]),
+Data("Pollution Solution - Indu Dist: Production Plant - Chp 7", rules=["FNet"], depends=["Chapter 7", "The Voltant Visionary", "Prone Sweet Prone"]),
+Data("Good Neighbors - Indu Dist: Test Hangar - Chp 7", rules=["FNet Resource", "Lvl 30"], depends=["Chapter 7", "Circle of Life", "Lakeside Getaway", "Sunceleg Rises"]),
 Data("Irina 4 H2H - Indu Dist: Test Hangar", rules=["Irina 4"], depends=["Irina 3 H2H"]), 
 Data("Lin 1 H2H - Indu Dist: Test Hangar", rules=["Lin 1"], depends=["Lin"]), 
 Data("Data Probe Breakthrough - Indu Dist: Test Hangar - Chp 11", rules=["Miranium 20"], depends=["Chapter 11", "Data Probe Progress"]),
@@ -34,7 +34,7 @@ Data("Lone Survivors - Indu Dist: Central - Chp 8", rules=["Lvl 30", "Summoning 
 Data("Entrepreneurial Spirit - Indu Dist: Central - Chp 8", rules=["Credits 130"], depends=["Chapter 8", "The Root of All Evil", "Vainamo, the Bellower"]),
 Data("Child of Mira - Indu Dist: Central - Chp 11", rules=["Lvl 39", "Gorkwa"], depends=["Chapter 11", "Pollution Solution", "Cavernous Abyss"]),
 Data("Container 1 - Indu Dist: Production Plant - Mechanical 3", rules=["Mechanical 3"]),
-Data("Orphean Pluck - Indu Dist: Production Plant - Chp 10", rules=["Miranium"], depends=["Chapter 10", "No-show Nenceleg", "Planetary Pioneer IV"]),
+Data("Orphean Pluck - Indu Dist: Production Plant - Chp 10", rules=["FNet"], depends=["Chapter 10", "No-show Nenceleg", "Planetary Pioneer IV"]),
 Data("Data Probe Progress - Indu Dist: Production Plant - Chp 10", rules=["Miranium 15"], depends=["Chapter 10", "Data Probe Challenge"]),
 Data("Data Probe Evolution - Indu Dist: Test Hangar - Chp 12", rules=["Miranium 30"], depends=["Chapter 12", "Data Probe Breakthrough"]),
 Data("The Pip-Squeak - Indu Dist: Test Hangar - Chp 5", rules=["Frozen Pizza", "Hot Dog", "Hamburger", "Aganeba Alloy"], depends=["Chapter 5"]),
@@ -42,7 +42,7 @@ Data("Professorial - Indu Dist: Test Hangar - Chp 12", rules=["Lvl 43", "Gray Ke
 Data("Rise of the Blood Lobster - Indu Dist: Test Hangar - Chp 11", rules=["Skell License", "Flight Module", "Lvl 60", "Stuffed Lobster"], depends=["Chapter 3", "Definian Downfall"]),  # TAJ, MenuReset but too hard
 Data("Mia 3 H2H - Indu Dist: Test Hangar - Late Night", rules=["Mia 3"], depends=["Mia 2 H2H"]), 
 Data("Hope 3 H2H - Indu Dist: Central - Morning ", rules=["Hope 3"], depends=["Hope 2 H2H"]), 
-Data("Pack It In - Indu Dist: Central - Chp 9", rules=["FNet Resource 2", "Lvl 36"], depends=["Chapter 9", "Dead Men Tell No Tales"]),
+Data("Pack It In - Indu Dist: Central - Chp 9", rules=["FNet Resource", "Lvl 36"], depends=["Chapter 9", "Dead Men Tell No Tales"]),
 Data("Irina 1 H2H - Indu Dist: Central", rules=["Irina 1"], depends=["Irina"]), 
 Data("Frye 5 H2H - Indu Dist: Production Plant", rules=["Frye 5"], depends=["Frye 4 H2H"]), 
 Data("Alexa - Indu Dist: Test Hangar", rules=["Blade License", "Lvl 18", "Quest Weaponized"], depends=["Chapter 4"]),  # depends: Weaponized, Guinea Pigs Wanted!
@@ -76,7 +76,7 @@ Data("Doug 4 H2H - Comm Dist: West Melville Street", rules=["Doug 4"], depends=[
 Data("Quiquat - Aff Shift - Comm Dist: West Melville Street", depends=["Starboard"]),  # just a guess
 Data("Lin 4 H2H - Comm Dist: Barista Court - Evening", rules=["Lin 4"], depends=["Lin 3 H2H"]), 
 Data("Emotion Commotion - Comm Dist: Barista Court - Chp 7", rules=["Lvl 30", "Bobbys Watch"], depends=["Chapter 7"]),
-Data("The Matchmaker - Aff Mission - Comm Dist: Central Melville Street - Chp 6", rules=["Lao 1", "FNet Resource", "Lvl 24"], depends=["Chapter 6"]),
+Data("The Matchmaker - Aff Mission - Comm Dist: Central Melville Street - Chp 6", rules=["Lao 1", "FNet", "Lvl 24"], depends=["Chapter 6"]),
 Data("Definian Downfall - Comm Dist: Central Melville Street - Chp 11", rules=["Lvl 54", "First Barrier Key", "Second Barrier Key", "Third Barrier Key"], depends=["Chapter 11", "Professor Bs Return", "Good Fortun"]),
 Data("Irina 5 H2H - Comm Dist: North Founder Street", rules=["Irina 5"], depends=["Irina 4 H2H"]), 
 Data("Veverta - Aff Shift - Comm Dist: North Founder Street", depends=["Starboard"]),  # just a guess
@@ -85,10 +85,10 @@ Data("Renewed Will - Aff Mission - Comm Dist: Central Melville Street - Chp 3", 
 Data("No Ma-non Need Apply - Comm Dist: Central Melville Street- Chp 5", depends=["Chapter 5", "Thats In-Credible!", "The Pip-Squeak"]),
 Data("L 4 H2H - Comm Dist: North Founder Street", rules=["L 4"], depends=["L 3 H2H"]), 
 Data("Nagi 3 H2H - Comm Dist: North Founder Street - Morning", rules=["Nagi 3"], depends=["Nagi 2 H2H"]), 
-Data("Sparking a Smile - Comm Dist: Barista Court - Chp 8", rules=["Mira 40", "FNet Resource", "Lvl 33", "Nopon Contract"], depends=["Chapter 8", "BFFs"]), # depends the Big Bang
+Data("Sparking a Smile - Comm Dist: Barista Court - Chp 8", rules=["Mira 40", "FNet", "Lvl 33", "Nopon Contract"], depends=["Chapter 8", "BFFs"]), # depends the Big Bang
 Data("Unsatisfied Customer - Comm Dist: Barista Court - Chp 11", depends=["Chapter 11", "BFFs", "Floating Reef"]),
 Data("The Fashionista - Comm Dist: Central Melville Street - Chp 6", rules=["Lvl 4"], depends=["Chapter 6"]),
-Data("Planetary Pioneer III - Comm Dist: Central Melville Street - Chp 8", rules=["Miranium", "FNet Resource", "Data Unit FN095"], depends=["Chapter 8", "FN Node 408", "Nectar Scirpo", "Planetary Pioneer II"]), # depends oblivia trailblazing 1/2/3
+Data("Planetary Pioneer III - Comm Dist: Central Melville Street - Chp 8", rules=["FNet", "Data Unit FN095"], depends=["Chapter 8", "FN Node 408", "Nectar Scirpo", "Planetary Pioneer II"]), # depends oblivia trailblazing 1/2/3
 Data("Yelv - Comm Dist: North Founder Street", rules=["Lvl 14", "Tissue Sample"], depends=["Chapter 3"]), # depends meeting yelv, mission a/b/c
 Data("The Sword of Legendaryness - Comm Dist: Central Melville Street - Chp 11", rules=["Sword of Legendaryness"], depends=["Chapter 11", "Bread and a Circus"]),
 Data("Murderess 2 H2H - Comm Dist: North Founder Street - Nighttime", rules=["Murderess 2"], depends=["Murderess 1 H2H"]), 
@@ -102,7 +102,7 @@ Data("The Ties That Bind - Aff Mission - Comm Dist: East Melville Street - Chp 4
 Data("L 1 H2H - Comm Dist: East Melville Street", rules=["L 1"], depends=["L"]), 
 Data("Beats - Aff Shift - Comm Dist: East Melville Street", depends=["The Art of War"]),
 Data("Murder Most Foul - Comm Dist: East Melville Street - Chp 9", rules=["Lvl 35", "Grenade Pizza"], depends=["Chapter 9"]),
-Data("Wrothian Innovation - Comm Dist: East Melville Street - Chp 10", rules=["FNet Resource", "Miranium 10", "Practice Data Probe"], depends=["Chapter 10", "A Challenger Approaches", "Orphean Pluck"]),
+Data("Wrothian Innovation - Comm Dist: East Melville Street - Chp 10", rules=["Miranium 10", "Practice Data Probe"], depends=["Chapter 10", "A Challenger Approaches", "Orphean Pluck"]),
 Data("Hope 2 H2H - Comm Dist: East Melville Street - Evening", rules=["Hope 2"], depends=["Hope 1 H2H"]), 
 Data("A Dish Served Cold - Comm Dist: East Melville Street - Chp 11", rules=["Lvl 39", "Three Swords"], depends=["Chapter 11", "A Challenger Approaches"]),
 Data("Elma 3 H2H - Comm Dist: East Melville Street - Morning", rules=["Elma 3"], depends=["Elma 2 H2H"]), 
@@ -112,7 +112,7 @@ Data("Gorkwa Games - Ma-non Ship: Port Side - Chp 7", rules=["Lvl 35", "Troylans
 Data("House Call - Ma-non Ship: Port Side - Chp 10", rules= ["Lvl 35", "Lumenoa Leaf"], depends=["Chapter 10", "Circle of Life"]),
 Data("A New Life - Ma-non Ship: Port Side - Chp 11", rules=["Obli 70", "Lvl 39"], depends=["Chapter 11", "Here Come the Brides", "Kintrees"]), # maybe Kintrees
 Data("Here Come the Brides - Ma-non Ship: Port Side - Chp 9", rules=["Lvl 36"], depends=["Chapter 9", "Prone Sweet Prone"]),
-Data("The Unbreakable Sword - Ma-non Ship: Port Side - Chp 12", rules=["FNet Resource", "Lvl 39", "Unbreakable Sword"], depends=["Chapter 12", "A Challenger Approaches"]),
+Data("The Unbreakable Sword - Ma-non Ship: Port Side - Chp 12", rules=["FNet", "Lvl 39", "Unbreakable Sword"], depends=["Chapter 12", "A Challenger Approaches"]),
 Data("A Grim Undertaking - Ma-non Ship: Port Side - Chp 6", rules=["Lvl 23", "Queggas Note", "Dancers Clothes"], depends=["Chapter 6", "Prone Sweet Prone"]),
 Data("L 2 H2H - Ma-non Ship: Deck - Nighttime", rules=["L 2"], depends=["L 1 H2H"]), 
 Data("The Lurker - Ma-non Ship: Deck - Chp 12", rules=["Lvl 36"], depends=["Chapter 12", "The Duel IV", "A Challenger Approaches"]),
@@ -120,7 +120,7 @@ Data("Snipe Hunt - Ma-non Ship: Deck - Chp 12", rules=["Lvl 50"], depends=["Chap
 Data("Mia - Ma-non Ship: Deck", depends=["Mia Is Missing!"]),
 Data("Sunceleg Rises - Ma-non Ship: Deck", rules=["Lvl 30"], depends=["Chapter 6", "Rescue at the Ensconced Citadel"]),
 Data("Zurranik - Aff Shift - Ma-non Ship: Deck", depends=["Deck", "Gold Rush"]),
-Data("The Membership - Ma-non Ship: Starboard - Chp 6", rules=["FNet Resource", "Miranium 10"], depends=["Chapter 6", "Planetary Pioneer III"]),
+Data("The Membership - Ma-non Ship: Starboard - Chp 6", rules=["Miranium 10"], depends=["Chapter 6", "Planetary Pioneer III"]),
 Data("Tree-mendous - Ma-non Ship: Starboard - Chp 5", rules=["Lvl 30", "Ajibas Key", "Mujibas Key"], depends=["Chapter 5", "Prone Sweet Prone"]), # depends Kidnapped: Uzoma Vassago, Kidnapped: Oll Valdileo, Kidnapped: Rada Valdileo
 Data("Elma 4 H2H - Ma-non Ship: Starboard - Evening", rules=["Elma 4"], depends=["Elma 3 H2H"]), 
 Data("The Old Gods - Ma-non Ship: Starboard - Chp 12", rules=["Lvl 55", "Zirtodiamond", "Golboggas Disk"], depends=["Chapter 12", "Dead Men Tell No Tales", "Slavebird Isle"]),
@@ -147,7 +147,7 @@ Data("Gwin 3 H2H - Resi Dist: Water Puri Plant - Late Night", rules=["Gwin 3"], 
 Data("Frye 3 H2H - Resi Dist: Water Purification Plant", rules=["Frye 3"], depends=["Frye 2 H2H"]), 
 Data("The Line of Fire - Resi Dist: Deliverance Park - Chp 9", rules=["Lvl 40"], depends=["Chapter 9", "Shotgun Diplomacy"]),
 Data("Hope - Resi Dist: Deliverance Park", depends=["Hope Springs Eternal"]),
-Data("Planetary Pioneer V - Resi Dist: Deliverance Park - Chp 11", rules=["Miranium", "Lvl 51", "Data Unit FN097"], depends=["Chapter 11", "FN Node 505", "Planetary Pioneer IV"]), # depends Cauldros Trailblazing 1/2/3
+Data("Planetary Pioneer V - Resi Dist: Deliverance Park - Chp 11", rules=["FNet", "Lvl 51", "Data Unit FN097"], depends=["Chapter 11", "FN Node 505", "Planetary Pioneer IV"]), # depends Cauldros Trailblazing 1/2/3
 Data("Gwin 4 H2H - Resi Dist: Sports Complex", rules=["Gwin 4"], depends=["Gwin 3 H2H"]), 
 Data("Mia 5 H2H - Resi Dist: Sports Complex", rules=["Mia 5"], depends=["Mia 4 H2H"]), 
 Data("Hope 4 H2H - Resi Dist: Sports Complex", rules=["Hope 4"], depends=["Hope 3 H2H"]), 
@@ -159,7 +159,7 @@ Data("Alien Wreckage 5 - Resi Dist: Ishmael Hills - Archeological 3", rules=["Ar
 Data("Doug 1 H2H - Resi Dist: Ishmael Hills", rules=["Doug 1"], depends=["Doug", "Nine Lives"]), 
 Data("Bread and a Circus - Resi Dist: Ishmael Hills - Chp 10", rules=["Slice of Bread"], depends=["Chapter 10", "Muimuis Meltdown"]),
 Data("Elma 2 H2H - Resi Dist: Water Puri Plant - Night", rules=["Elma 2"], depends=["Elma 1 H2H", "Nine Lives"]), 
-Data("New Frontier - Resi Dist: Cathedral - Chp 12", rules=["FNet Resource", "Miranium 20", "Data Unit FN098"], depends=["Chapter 12", "Planetary Pioneer V", "Entrepreneurial Spirit", "Wrothian Innovation"]),
+Data("New Frontier - Resi Dist: Cathedral - Chp 12", rules=["FNet", "Miranium 20", "Data Unit FN098"], depends=["Chapter 12", "Planetary Pioneer V", "Entrepreneurial Spirit", "Wrothian Innovation"]),
 Data("Off the Record Mechanical - Resi Dist: Cathedral", rules=["Mechanical 4", "Blade License", "Lvl 55"], depends=["Lyla's Galdr", "Mount Edge Peak", "Savage Sketch"]),
 Data("Mia 1 H2H - Resi Dist: Cathedral", rules=["Mia 1"], depends=["Mia"]), 
 Data("Caroline - Aff Shift - Resi Dist: Ishmael Hills - Chp 7", depends=["Chapter 7", "Circle of Life"]),
@@ -167,13 +167,13 @@ Data("Alexs Last Stand - Resi Dist: Ishmael Hills - Chp 10", rules=["Lvl 43"], d
 Data("Phog 2 H2H - Resi Dist: Ishmael Hills", rules=["Phog 2"], depends=["Phog 1 H2H", "Nine Lives"]), 
 Data("Konluarb - Aff Shift - Resi Dist: Ishmael Hills - Chp 7", depends=["Circle of Life"]),  # Just a guess
 Data("Lakeside Getaway - Resi Dist: Water Puri Plant - Chp 6", rules=["Lvl 22", "Ajoas ID Card", "Ians ID Card", "Keycard Lakeside Getaway"], depends=["Chapter 6", "Water Woes", "The Miracle Maker"]),
-Data("Water Woes - Resi Dist: Water Puri Plant - Chp 5", rules=["FNet Resource", "Lvl 20", "Sampling Bottle"], depends=["Chapter 5"]),
+Data("Water Woes - Resi Dist: Water Puri Plant - Chp 5", rules=["FNet", "Lvl 20", "Sampling Bottle"], depends=["Chapter 5"]),
 Data("Irina 2 H2H - Resi Dist: Cathedral - Evening", rules=["Irina 2"], depends=["Irina 1 H2H", "Nine Lives"]), 
 Data("L 3 H2H - Resi Dist: Cathedral", rules=["L 3"], depends=["L 2 H2H", "Nine Lives"]), 
 Data("Murderess 5 H2H - Resi Dist: Ishmael Hills", rules=["Murderess 5"], depends=["Murderess 4 H2H"]), 
 Data("Wendy - Aff Shift - Resi Dist: Ishmael Hills", depends=["Special Delivery"]),
 Data("Nagi 5 H2H - Resi Dist: Ishmael Hills - Afternoon", rules=["Nagi 5"], depends=["Nagi 4 H2H"]), 
-Data("H.B. - Resi Dist: Water Puri Plant", rules=["Credits", "Miranium", "Lvl 15"], depends=["Chapter 3", "FN Node 118"]),  # depends A New Rival?, Installation, Research, Miranium
+Data("H.B. - Resi Dist: Water Puri Plant", rules=["FNet", "Lvl 15"], depends=["Chapter 3", "FN Node 118"]),  # depends A New Rival?, Installation, Research, Miranium
 Data("Hope Springs Eternal - Aff Mission - Resi Dist: Cathedral - Chp 3", rules=["Blade License", "Lvl 21", "Natural Pearl"], depends=["Chapter 3"]),  # depends Marry Me!
 Data("The Miracle Maker - Resi Dist: Cathedral - Chp 6", rules=["Malyteths Bottle"], depends=["Chapter 6", "Water Woes"]),
 Data("The Divine Nopopon - Resi Dist: Ishmael Hills - Chp 12", rules=["Mira 80", "Lvl 68", "Nopon Gemstone"], depends=["Chapter 12", "BFFs"]),
@@ -212,18 +212,18 @@ Data("L - Admi Dist: Armory Alley - Chp 4", depends=["Chapter 4"]),
 Data("Thats In-Credible! - Admi Dist: BLADE Tower - Chp 5", rules=["Lvl 23", "Quest Thats Incredible"], depends=["Chapter 5"]),
 Data("Reporting for Duty - Aff Mission - Admi Dist: BLADE Tower - Nagi 3 - Chp 10", rules=["Nagi 3", "Lvl 41"], depends=["Chapter 10", "Nagis Time"]),
 Data("A False Hope - Aff Mission - Admi Dist: BLADE Tower - Hope 2 - Chp 5", rules=["Hope 2", "Lvl 24"], depends=["Chapter 5", "Hope Springs Eternal"]),
-Data("Planetary Pioneer II - Admi Dist: BLADE Tower - Chp 5", rules=["FNet Resource", "Data Unit FN094"], depends=["Chapter 5", "Planetary Pioneer I"]), # depends Noctilum Trailblazing 1/2/3
+Data("Planetary Pioneer II - Admi Dist: BLADE Tower - Chp 5", rules=["FNet", "Data Unit FN094"], depends=["Chapter 5", "Planetary Pioneer I"]), # depends Noctilum Trailblazing 1/2/3
 Data("Nopopon - Aff Shift - Admi Dist: BLADE Tower - Chp 12", depends=["The Divine Nopopon"]),
 Data("Mamma Mia! - Admi Dist: Hangar - Chp 3", rules=["Shop Mia"], depends=["Chapter 3"]),
-Data("Mia Grows Up - Aff Mission - Admi Dist: Hangar - Mia 4 - Chp 12", rules=["Mia 4", "FNet Resource", "Lvl 53", "Floatstone Shard"], depends=["Chapter 12", "Sparking a Smile", "Mia Is Missing!", "Floating Reef"]), # optional Hailing the Chief!
+Data("Mia Grows Up - Aff Mission - Admi Dist: Hangar - Mia 4 - Chp 12", rules=["Mia 4", "FNet", "Lvl 53", "Floatstone Shard"], depends=["Chapter 12", "Sparking a Smile", "Mia Is Missing!", "Floating Reef"]), # optional Hailing the Chief!
 Data("Brotherly Love - Aff Mission - Admi Dist: Hangar - Phog 4 Frye 4 - Chp 11", rules=["Phog 4", "Frye 4", "Lvl 46", "Phogrium"], depends=["Chapter 11"]),
 Data("Doug 5 H2H - Admi Dist: Hangar", rules=["Doug 5"], depends=["Doug 4 H2H"]), 
-Data("Ls Conundrum - Aff Mission - Admi Dist: Armory Alley - L 2 - Chp 10", rules=["L 2", "FNet Resource 2", "Lvl 38"], depends=["Chapter 10", "Booming Business"]), # depends Material Hunt A/B/C
+Data("Ls Conundrum - Aff Mission - Admi Dist: Armory Alley - L 2 - Chp 10", rules=["L 2", "FNet Resource", "Lvl 38"], depends=["Chapter 10", "Booming Business"]), # depends Material Hunt A/B/C
 Data("Booming Business - Admi Dist: Armory Alley - Chp 5", rules=["Obli 30", "Lvl 26"], depends=["Chapter 5"]),
 Data("Lend an Ear - Admi Dist: BLADE Tower - Chp 11", rules=["Shop Lend an Ear", "Lvl 38"], depends=["Chapter 11", "A Challenger Approaches"]),
 Data("Setting Forth - Admi Dist: Mimeo Maint Center - Chp 8", rules=["Lvl 31", "Smelly Legen-dar", "Legen-dar"], depends=["Chapter 8", "BFFs"]),
 Data("Nagi 1 H2H - Admi Dist: Mimeo Maint Center", rules=["Nagi 1"], depends=["Nagi"]), 
-Data("Planetary Pioneer IV - Admi Dist: Division Drive - Chp 8", rules=["FNet Resource", "Miranium", "Lvl 25", "Data Unit FN096"], depends=["Chapter 8", "FN Node 408", "Planetary Pioneer III"]), # depends Sylvalum Trailblazing 1/2/3
+Data("Planetary Pioneer IV - Admi Dist: Division Drive - Chp 8", rules=["FNet", "Lvl 25", "Data Unit FN096"], depends=["Chapter 8", "FN Node 408", "Planetary Pioneer III"]), # depends Sylvalum Trailblazing 1/2/3
 Data("Waste Not, Want Not - Admi Dist: Hangar - Chp 10", rules=["Cockpit Wreckage", "Engine Wreckage", "Zu Pharg Wreckage"], depends=["Chapter 10"]),
 Data("The Skell License - Admi Dist: Hangar - Chp 6", rules=["Credits 15", "Quest Skell License", "Skell License Certificate"], depends=["Chapter 6", "FN Node 117", "Shatskikh, the Flash", "The Pip-Squeak", "Thats In-Credible!", "The Handy Ma-non"]), # depends Proficiency Exam 1-8. only 1 of 3 quests
 Data("Frye 2 H2H - Admi Dist: Hangar - Nighttime", rules=["Frye 2"], depends=["Frye 1 H2H"]), 
@@ -238,7 +238,7 @@ Data("Lao - Admi Dist: Division Drive - Chp 4", depends=["Chapter 4"]),
 Data("Gwin - Admi Dist: Division Drive - Chp 3", depends=["Chapter 3"]),
 Data("City Saviors - Admi Dist: Division Drive - Chp 3", rules=["Prim 15", "Lvl 8"], depends=["Chapter 3"]),
 Data("Close Comrades - Aff Mission - Admi Dist: BLADE Barracks - Chp 4", rules=["Lvl 20"], depends=["Chapter 4"]),
-Data("Planetary Pioneer I - Admi Dist: BLADE Concourse - Chp 3", rules=["FNet Resource", "Miranium", "Lvl 8", "Data Unit FN093"], depends=["Chapter 3", "The Probe-fessional"]), # depends Primordia Trailblazing 1/2/3
+Data("Planetary Pioneer I - Admi Dist: BLADE Concourse - Chp 3", rules=["FNet", "Lvl 8", "Data Unit FN093"], depends=["Chapter 3", "The Probe-fessional"]), # depends Primordia Trailblazing 1/2/3
 Data("Wolf - Aff Shift - Admi Dist: BLADE Concourse - Chp 12", depends=["The Lurker"]),
 Data("Ovah and Out - Admi Dist: Mimeo Maint Center - Chp 7", rules=["Shop Ovah and Out", "Lvl 20"], depends=["Chapter 7", "Circle of Life", "Going Viral"]),
 Data("Cooking Schooled - Admi Dist: Mimeo Maint Center - Chp 12", rules=["Shop Cooking Schooled", "Lvl 42"], depends=["Chapter 12", "Lionhearted"]),
@@ -246,7 +246,7 @@ Data("Mia Is Missing! - Admi Dist: Mimeo Maint Center - Chp 11", rules=["Caul 65
 Data("Unknown Assailant - Admi Dist: Division Drive - Chp 10", rules=["Lvl 37"], depends=["Chapter 10", "Frontier Spirit"]),
 Data("Frontier Spirit - Admi Dist: Division Drive - Chp 6", rules=["Lvl 22"], depends=["Chapter 6"]),
 Data("Lin 3 H2H - Admi Dist: Division Drive - Afternoon", rules=["Lin 3"], depends=["Lin 2 H2H", "Nine Lives"]), 
-Data("Close Encounters - Admi Dist: BLADE Barracks - Chp 6", rules=["FNet Resource", "Lvl 28"], depends=["Chapter 6"]),
+Data("Close Encounters - Admi Dist: BLADE Barracks - Chp 6", rules=["FNet", "Lvl 28"], depends=["Chapter 6"]),
 Data("The Root of All Evil - Admi Dist: BLADE Barracks", rules=["Credits 70"], depends=["Planetary Pioneer IV"]),
 Data("Irina - Admi Dist: BLADE Concourse - Chp 3", depends=["Chapter 3"]),
 Data("Murderess - Admi Dist: Mimeo Maint Center", depends=["My Dream"]),
@@ -575,7 +575,7 @@ Data("Alien Container 14 - Sylv: North Hardheart Canyon - Archeological 4", rule
 Data("The Sword of Legendaryness - Sylv: Behemoths Shadows", depends=["The Sword of Legendaryness"]),
 Data("Alien Container 15 - Sylv: Southern Searoad - Archeological 2", rules=["Archeological 2"]),
 Data("Oc-serv, the Ancient - Sylv: Sylvalum Searoad - Tyrant", depends=["Oc-serv, the Ancient"]),
-Data("The Repair Job - Aff Mission - BLADE Barracks - Lin 1 - Chp 3", rules=["Lin 1", "FNet Resource", "Lvl 13", "L-002 Power Cable"], depends=["Chapter 3"]),
+Data("The Repair Job - Aff Mission - BLADE Barracks - Lin 1 - Chp 3", rules=["Lin 1", "FNet", "Lvl 13", "L-002 Power Cable"], depends=["Chapter 3"]),
 Data("Lin - BLADE Barracks", depends=["Chapter 1"]),
 Data("A Day in the Life - Aff Mission - BLADE Barracks - Chp 4", rules=["Lvl 16"], depends=["Chapter 4"]),
 Data("Then and Now - Aff Mission - BLADE Barracks - Elma 4 - Chp 12", rules=["Elma 4", "Lvl 58"], depends=["Chapter 12"]),
@@ -586,7 +586,7 @@ Data("A Challenger Approaches - Aff Mission - BLADE Barracks - Chp 10", rules=["
 Data("Nagi 4 H2H - BLADE Barracks", rules=["Nagi 4"], depends=["Nagi 3 H2H"]), 
 Data("We Were Soldiers - Aff Mission - BLADE Barracks - Elma 1 - Chp 3", rules=["Elma 1", "Lvl 12", "White Whale Parts"], depends=["Chapter 3"]),
 Data("Elma - BLADE Barracks"),
-Data("Two Peas in a Pod - Aff Mission - BLADE Barracks - Lin 3 - Chp 11", rules=["Lin 3", "FNet Resource 2", "Lvl 47"], depends=["Chapter 11", "A Day in the Life"]),
+Data("Two Peas in a Pod - Aff Mission - BLADE Barracks - Lin 3 - Chp 11", rules=["Lin 3", "FNet Resource", "Lvl 47"], depends=["Chapter 11", "A Day in the Life"]),
 Data("Fathers and Sons - Aff Mission - BLADE Barracks - Irina 40 - Chp 11", rules=["Irina 4", "Lvl 50", "Flemtide"], depends=["Chapter 11", "A Girls Wings", "Renewed Will"]),
 Data("BFFs - Aff Mission - BLADE Barracks - Chp 5", rules=["Lvl 22", "Dodonga Treaty", "Dorian Treaty"], depends=["Chapter 5", "The Ties That Bind", "Dodonga Caravan", "Dorian Caravan"]), # need the items the missions are the way to get them
 Data("Prospective Partners - Aff Mission - BLADE Barracks - Chp 9", rules=["Mira 18", "Mira 20", "Lvl 34", "Wrothian Part"], depends=["Chapter 9"]),

@@ -1,3 +1,4 @@
+from BaseClasses import ItemClassification
 from . import Itm as Data
 
 # flake8: noqa
@@ -8,7 +9,7 @@ Data("Overdrive"),
 Data("FNet"),
 Data("Blade License"),
 Data("Death", count=0),
-Data("Filler", count=0),
+Data("Filler", count=0, progression=ItemClassification.filler),
 Data("Victory", count=0),
 Data("PLACEHOLDER", valid=False),
 Data("PLACEHOLDER", valid=False),

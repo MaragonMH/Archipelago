@@ -19,7 +19,7 @@ from .rules.shop import shop_rules
 from .rules.zones import zone_rules
 
 
-xenobladeXRules: dict[str, Rule] = {
+xenobladeXRules: dict[str, Rule["XenobladeXWorld"]] = {
     **doll_rules,
     **field_skill_rules,
     **fnet_rules,
@@ -32,7 +32,7 @@ xenobladeXRules: dict[str, Rule] = {
 }
 
 
-def set_rules(world):
+def set_rules(world: "XenobladeXWorld"):
     """Setting all the rules for region connections and region->item connections"""
     for loc in world.get_locations():
         rule_names = xenobladeXLocations[loc.name].rules

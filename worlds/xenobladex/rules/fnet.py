@@ -1,22 +1,25 @@
 import dataclasses
-from typing import override
+from typing import override, TYPE_CHECKING
 from BaseClasses import CollectionState
-from rule_builder.rules import Has, Rule
+from rule_builder.rules import Has, HasAll, Rule
 from ..fnet.miranium import fnet_miranium_data
 from ..fnet.credits import fnet_credits_data
 from ..fnet.miranium import Mir
 from ..fnet.credits import Crd
 
+if TYPE_CHECKING:
+    from .. import XenobladeXWorld
+
 
 @dataclasses.dataclass()
-class HasMiranium(Rule, game="Xenoblade X"):
+class HasMiranium(Rule["XenobladeXWorld"], game="Xenoblade X"):
     target: int
 
     @override
-    def _instantiate(self, world) -> Rule.Resolved:
+    def _instantiate(self, world: "XenobladeXWorld") -> Rule.Resolved:
         # caching_enabled only needs to be passed in when your world inherits from CachedRuleBuilderWorld
         return self.Resolved(self.target, player=world.player,
-                             caching_enabled=False)
+                             caching_enabled=getattr(world, "rule_caching_enabled", False))
 
     class Resolved(Rule.Resolved):
         target: int
@@ -52,13 +55,14 @@ class HasMiranium(Rule, game="Xenoblade X"):
 
 
 @dataclasses.dataclass()
-class HasCredits(Rule, game="Xenoblade X"):
+class HasCredits(Rule["XenobladeXWorld"], game="Xenoblade X"):
     target: int
 
     @override
-    def _instantiate(self, world) -> Rule.Resolved:
+    def _instantiate(self, world: "XenobladeXWorld") -> Rule.Resolved:
         # caching_enabled only needs to be passed in when your world inherits from CachedRuleBuilderWorld
-        return self.Resolved(self.target, player=world.player, caching_enabled=False)
+        return self.Resolved(self.target, player=world.player,
+                             caching_enabled=getattr(world, "rule_caching_enabled", False))
 
     class Resolved(Rule.Resolved):
         target: int
@@ -93,14 +97,13 @@ class HasCredits(Rule, game="Xenoblade X"):
             }
 
 
-fnet_rules: dict[str, Rule] = {
-    "FNet": Has("KEY: FNet"),
-    "FNet Resource": Has("KEY: FNet"),
-    # Boiled-Egg Ore, Ouroboros Crystal, Parhelion Platinum, Marine Rutile
-    "FNet Resource 2": Has("KEY: FNet") & Has("FLDSK: Mechanical", 1),
+fnet_rules: dict[str, Rule["XenobladeXWorld"]] = {
+    # All other resources, miranium < 6k, credits < 3k
     # Anything < 6k: 700, 750, 900, 1200, 1800, 2400, 2500, 3600, 4000, 4200, 5500, 5700
-    "Miranium": Has("KEY: FNet"),
-    "Miranium 7": Has("DP: Storage Probe"),
+    "FNet": Has("KEY: FNet"),
+    # Boiled-Egg Ore, Ouroboros Crystal, Parhelion Platinum, Marine Rutile
+    "FNet Resource": Has("KEY: FNet") & Has("FLDSK: Mechanical", 1),
+    "Miranium 7": HasAll("KEY: FNet", "DP: Storage Probe"),
     "Miranium 10": HasMiranium(10),
     "Miranium 12": HasMiranium(12),
     "Miranium 15": HasMiranium(15),
@@ -109,8 +112,6 @@ fnet_rules: dict[str, Rule] = {
     "Miranium 40": HasMiranium(40),
     "Miranium 50": HasMiranium(50),  # Ares 70
     "Miranium 100": HasMiranium(100),  # Ares 90
-    # 3k just unlock all default mech 1 probes
-    "Credits": Has("KEY: FNet"),
     "Credits 15": HasCredits(15),
     "Credits 70": HasCredits(70),
     "Credits 130": HasCredits(130),

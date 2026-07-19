@@ -1,19 +1,22 @@
 import dataclasses
-from typing import override
+from typing import override, TYPE_CHECKING
 from BaseClasses import CollectionState
-from rule_builder.rules import Rule, True_
+from rule_builder.rules import Rule
 from ..Locations import xenobladeXLocations
+
+if TYPE_CHECKING:
+    from .. import XenobladeXWorld
 
 
 @dataclasses.dataclass()
-class HasZoneCount(Rule, game="Xenoblade X"):
+class HasZoneCount(Rule["XenobladeXWorld"], game="Xenoblade X"):
     zone: str
     target: int
 
-    def _instantiate(self, world) -> Rule.Resolved:
+    def _instantiate(self, world: "XenobladeXWorld") -> Rule.Resolved:
         # caching_enabled only needs to be passed in when your world inherits from CachedRuleBuilderWorld
         return self.Resolved(self.zone, self.target, player=world.player,
-                             caching_enabled=False)
+                             caching_enabled=getattr(world, "rule_caching_enabled", False))
 
     class Resolved(Rule.Resolved):
         zone: str
@@ -21,7 +24,7 @@ class HasZoneCount(Rule, game="Xenoblade X"):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            return True_
+            return True
             count = 0
             for loc in xenobladeXLocations.values():
                 if loc.get_location().startswith(("SEG", "FNO")):
@@ -41,7 +44,7 @@ class HasZoneCount(Rule, game="Xenoblade X"):
                     if loc.get_location().startswith(("SEG", "FNO"))}
 
 
-zone_rules: dict[str, Rule] = {
+zone_rules: dict[str, Rule["XenobladeXWorld"]] = {
     # 693 Segments
     "Mira 10": HasZoneCount("Mira", 70),
     "Mira 18": HasZoneCount("Mira", 125),

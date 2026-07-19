@@ -4,11 +4,7 @@ from worlds.LauncherComponents import Component, components, launch_subprocess, 
 from functools import partial
 from typing import cast
 
-from .Slot import generate_slot_data
-from .Items import create_items, create_item, xenobladeXItems
-from .Locations import create_locations, xenobladeXLocations
-from .Rules import set_rules
-from .Options import XenobladeXOptions, option_groups
+from . import Slot, Items, Locations, Rules, Options
 
 
 def launch_client(*args):
@@ -30,7 +26,7 @@ class XenobladeXWeb(WebWorld):
         ["Maragon", "Nina"]
     )]
 
-    option_groups = option_groups
+    option_groups = Options.option_groups
 
 
 class XenobladeXWorld(World):
@@ -45,30 +41,33 @@ class XenobladeXWorld(World):
     data_version = 12
     base_id: int = 4100000
 
-    options_dataclass = XenobladeXOptions
+    options_dataclass = Options.XenobladeXOptions
 
     item_name_to_id = (lambda b_id: {item.get_item(): b_id + item.id
-                                     for item in xenobladeXItems if item.id is not None})(base_id)
+                                     for item in Items.xenobladeXItems.values() if item.id is not None})(base_id)
     location_name_to_id = (lambda b_id: {location.get_location(): b_id + location.id
-                                         for location in xenobladeXLocations.values()
+                                         for location in Locations.xenobladeXLocations.values()
                                          if location.id is not None})(base_id)
 
     item_name_groups = {
-        prefix: {itm.get_item() for itm in xenobladeXItems if itm.prefix == prefix}
-        for prefix in {itm.prefix for itm in xenobladeXItems} if prefix
+        prefix: {itm.get_item() for itm in Items.xenobladeXItems.values() if itm.prefix == prefix}
+        for prefix in {itm.prefix for itm in Items.xenobladeXItems.values()} if prefix
     }
 
     def create_regions(self):
-        create_locations(self)
+        Locations.create_locations(self)
 
     def create_items(self):
-        create_items(self)
+        Items.create_items(self)
 
-    def create_item(self, name: str):
-        return create_item(self, name)
+    def create_item(self, name: str) -> Items.XenobladeXItem:
+        return Items.create_item(self, name)
+
+    def get_filler_item_name(self) -> str:
+        return Items.get_random_filler_item_name(self)
 
     def set_rules(self):
-        set_rules(self)
+        Rules.set_rules(self)
 
     def generate_early(self):
         pass
@@ -77,4 +76,4 @@ class XenobladeXWorld(World):
         pass
 
     def fill_slot_data(self) -> dict[str, object]:
-        return generate_slot_data(cast(XenobladeXOptions, self.options))
+        return Slot.generate_slot_data(cast(Options.XenobladeXOptions, self.options))
