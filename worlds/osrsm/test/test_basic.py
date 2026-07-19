@@ -2,7 +2,7 @@ from . import OSRSMTestBase
 from rule_builder import *
 from .. import *
 import unittest
-from ..Options import MaxDropRate, FullMaxDropRate, DisableChunkCulling
+from ..Options import MaxDropRate, FullMaxDropRate, DisableChunkCulling, GoalType
 from ..LogicCSV.regions_generated2 import region_rows, resource_rows 
 from ..LogicCSV.locations_generated2 import location_rows, sub_quests
 from ..LogicCSV.monsters_generated2 import monster_drops
@@ -30,6 +30,11 @@ def get_logical_path(state: CollectionState, target: Region) -> None:
     for k, v in paths:
         if v:
             print(v)
+
+class BingoTests(OSRSMTestBase):
+    options = {
+        "goal_type": GoalType.option_bingo
+    }
 
 class AgilityTests(OSRSMTestBase):
     options = {
@@ -127,6 +132,8 @@ class FullTests(OSRSMTestBase):
         location_cache = self.multiworld.regions.location_cache[1]
         for location_row in location_rows:
             assert isinstance(location_row,LocationRow)
+            if location_row.category == "bingo":
+                continue #skip bingo locations
             with self.subTest(location_name=location_row.name):
                 self.assertIn(location_row.name,location_cache,f"Location {location_row.name} was not created")
                 self.assertTrue(all_state.can_reach_location(location_row.name,1),f"Location {location_row.name} is not reachable")

@@ -11,7 +11,7 @@ from .Items import OSRSMItem, starting_area_dict, chunksanity_starting_chunks, Q
     chunksanity_special_region_names, OSRSMTrainingItem, OSRSMQuestPointItem, OSRSMKudosItem, OSRSMCombatPointsItem
 from .Locations import OSRSMLocation
 from .Rules import *
-from .Options import OSRSMOptions, StartingArea, DisableChunkCulling
+from .Options import OSRSMOptions, StartingArea, DisableChunkCulling, logic_relevent_options
 from .Names import LocationNames, ItemNames, RegionNames
 from settings import Group,FolderPath
 from Utils import visualize_regions
@@ -98,6 +98,13 @@ class OSRSMWorld(CachedRuleBuilderWorld):
     data_version = 1
     rule_caching_enabled = True
     settings: ClassVar[OSRSMSettings]
+    ut_can_gen_without_yaml = True
+
+    tracker_world: typing.ClassVar = {
+        "map_page_folder": "pack",
+        "map_page_maps": "jsons/maps.json",
+        "map_page_locations": "jsons/locations.json"
+    }
 
     location_rows_by_category:dict[str,list[LocationRow]] = {}
     for location_row in location_rows:
@@ -131,18 +138,40 @@ class OSRSMWorld(CachedRuleBuilderWorld):
 
         self.bingo_board:list[list[str]] = []
 
-    def generate_early(self) -> None:
+    """
+    This function pulls from LogicCSVToPython so that it sends the correct tag of the repository to the client.
+    _Make sure to update that value whenever the CSVs change!_
+    """
 
-        if getattr(self.multiworld,"generation_is_fake",False):
+    def fill_slot_data(self):
+        data = {}
+        data["data_csv_tag"] = data_csv_tag
+        data["starting_area"] = str(self.starting_area_item) #these aren't actually strings, they just play them on tv
+        data["bingo_board"] = self.bingo_board
+        data["goal_task"] = self.options.goal_location.value
+        data["options"] = self.options.as_dict(*logic_relevent_options)
+        return data
+    
+    def generate_early(self) -> None:
+        re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough",{})
+        if re_gen_passthrough and self.game in re_gen_passthrough:
+            re_gen_passthrough = re_gen_passthrough[self.game]
             self.options.disable_chunk_culling.value = DisableChunkCulling.option_disabled #don't cull in UT, this is fine because UT doens't do fill
             self.options.disable_task_culling.value = True 
-
-        if self.options.starting_area.current_key in rollable_chunks:
-            self.starting_area_item = self.random.choice(rollable_chunks[self.options.starting_area.current_key])
+            for option_name in logic_relevent_options:
+                if option_name in re_gen_passthrough["options"]:
+                    getattr(self.options,option_name).value = re_gen_passthrough["options"][option_name]
+            self.options.goal_location.value = re_gen_passthrough["goal_task"]
+            self.starting_area_item = re_gen_passthrough["starting_area"]
+            self.bingo_board = re_gen_passthrough["bingo_board"]
+            self.options.banned_chunks.value = set(self.options.banned_chunks.value) #it's a list from slot data, make it a set
         else:
-            starting_area_name = f"Area: {self.options.starting_area.value}"
+            if self.options.starting_area.current_key in rollable_chunks:
+                self.starting_area_item = self.random.choice(rollable_chunks[self.options.starting_area.current_key])
+            else:
+                starting_area_name = f"Area: {self.options.starting_area.value}"
 
-            self.starting_area_item = starting_area_name if starting_area_name in self.item_name_to_id else "Area: Lumbridge Castle"
+                self.starting_area_item = starting_area_name if starting_area_name in self.item_name_to_id else "Area: Lumbridge Castle"
 
         defered_banned_chunks:set[str] = set()
         region_codes = self.region_code_to_name.keys()
@@ -170,51 +199,37 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             if any(part_name in loc_name for part_name in partial_names):
                 self.pre_completed_locations.append(loc_name)
 
-    """
-    This function pulls from LogicCSVToPython so that it sends the correct tag of the repository to the client.
-    _Make sure to update that value whenever the CSVs change!_
-    """
-
-    def fill_slot_data(self):
-        data = self.options.as_dict("brutal_grinds")
-        data["data_csv_tag"] = data_csv_tag
-        data["starting_area"] = str(self.starting_area_item) #these aren't actually strings, they just play them on tv
-        data["goal"] = self.options.goal_type.value
-        data["bingo_size"] = self.options.bingo_size.value
-        data["bingo_board"] = self.bingo_board
-        data["goal_task"] = self.options.goal_location.value
-        return data
-
-    def explain_rule(self, dest_name: str, state: CollectionState):
+    def explain_rule(self, dest_name: str, state: CollectionState) -> list["JSONMessagePart"] | None:
         dest_name = dest_name.lower()
+        bingo = self.options.goal_type.value in [self.options.goal_type.option_bingo, self.options.goal_type.option_both]
+        from NetUtils import JSONMessagePart
+        ret:list[JSONMessagePart] = []
         if dest_name in [skill.lower() for skill in skill_names]:
             if dest_name in ("attack","strength","defence","prayer","hitpoints","combat","hp"):
                 if state.can_reach_region("kill_Monster[+]",self.player):
-                    return [{"type":"text","text": f"Standard combat skill to level {1+(state.count('Quest Point',self.player)//2)}"}]
+                    ret.append({"type":"text","text": f"Standard combat skill to level {1+(state.count('Quest Point',self.player)//2)}"})
                 else:
-                    return [{"type":"text","text":"Standard combat skill, but no monster to kill to level"}]
+                    ret.append({"type":"text","text":"Standard combat skill, but no monster to kill to level"})
             elif dest_name == "slayer":
                 if state.can_reach_region("PointSlayerMasters[+]",self.player):
-                    return [{"type":"text","text": f"Slayer skill to level {1+(state.count('Quest Point',self.player)//2)}"}]
+                    ret.append({"type":"text","text": f"Slayer skill to level {1+(state.count('Quest Point',self.player)//2)}"})
                 else:
-                    return [{"type":"text","text":"Slayer skill, but no master to get tasks"}]
+                    ret.append({"type":"text","text":"Slayer skill, but no master to get tasks"})
             elif dest_name == "ranged":
                 if state.can_reach_region("kill_Monster[+]",self.player) and state.can_reach_region("Iron arrow",self.player):
-                    return [{"type":"text","text": f"Standard combat skill to level {1+(state.count('Quest Point',self.player)//2)}"}]
+                    ret.append({"type":"text","text": f"Standard combat skill to level {1+(state.count('Quest Point',self.player)//2)}"})
                 else:
-                    return [{"type":"text","text":"Standard combat skill, but no monster to kill to level (or no iron arrows)"}]
+                    ret.append({"type":"text","text":"Standard combat skill, but no monster to kill to level (or no iron arrows)"})
             else:
                 relevent_methods = sorted([method_name for method_name,method in self.training_to_row.items() if method.skill_name.lower() == dest_name and self.training_to_data[method_name].can_reach(state)],key=lambda method_name: self.training_to_row[method_name].required_level)
-                return_list = []
                 delta_level = self.options.base_training_levels + ((state.count("Quest Point",self.player)//self.options.qp_per_level) * self.options.levels_per_qp)
                 for method_name in relevent_methods:
                     loc = self.training_to_data[method_name]
                     method = self.training_to_row[method_name]
                     if "Unlock ~|Herblore|~ after Druidic Ritual" in loc.name:
-                        return_list.extend([{"type":"text","text":f"{method.required_level} -> {method.required_level + 2} via "},{"type": "color", "color": "salmon", "text": loc.name},{"type":"text","text":"\n"}])
+                        ret.extend([{"type":"text","text":f"{method.required_level} -> {method.required_level + 2} via "},{"type": "color", "color": "salmon", "text": loc.name},{"type":"text","text":"\n"}])
                         continue
-                    return_list.extend([{"type":"text","text":f"{method.required_level} -> {method.required_level + delta_level} via "},{"type": "color", "color": "salmon", "text": loc.name},{"type":"text","text":"\n"}])
-                return return_list
+                    ret.extend([{"type":"text","text":f"{method.required_level} -> {method.required_level + delta_level} via "},{"type": "color", "color": "salmon", "text": loc.name},{"type":"text","text":"\n"}])
         elif dest_name.startswith("where "):
             _,location = dest_name.split(" ",2)
             if not location.startswith("chunk_"):
@@ -232,7 +247,46 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             x = (int(id) // 256 ) * 64 + 32
             y = (int(id)  % 256 ) * 64 + 32
             webbrowser.open(f"https://explv.github.io/?centreX={str(x)}&centreY={str(y)}&centreZ=0&zoom=9",2)
-            return [{"type":"text","text":f"Chunk {id} otherwise known as {self.region_code_to_name[location]}"}]
+            ret.append({"type":"text","text":f"Chunk {id} otherwise known as {self.region_code_to_name[location]}"})
+        elif bingo and dest_name in ["/","forward","forward diagonal", "bingo: forward diagonal"]:
+            ret.append({"type":"text","text":"Bingo : Forward Diagonal : \n"})
+            for i in range(self.options.bingo_size.value):
+                temp_str = self.bingo_board[i][((self.options.bingo_size.value)-1)-i]
+                temp_status = state.can_reach_location(temp_str,self.player)
+                ret.extend([{"type":"text","text":f"{temp_str}"},{"type":"color","text":f" ({str(temp_status)}) \n","color":"green" if temp_status else "red"}])
+        elif bingo and dest_name in ["\\","reverse","reverse diagonal", "bingo: reverse diagonal","backwards","backwards diagonal", "bingo: backwards diagonal"]:
+            ret.append({"type":"text","text":"Bingo : Reverse Diagonal : \n"})
+            for i in range(self.options.bingo_size.value):
+                temp_str = self.bingo_board[i][i]
+                temp_status = state.can_reach_location(temp_str,self.player)
+                ret.extend([{"type":"text","text":f"{temp_str}"},{"type":"color","text":f" ({str(temp_status)}) \n","color":"green" if temp_status else "red"}])
+        elif bingo and dest_name.startswith("r ") or dest_name.startswith("row ") or dest_name.startswith("bingo: row "):
+            if dest_name.startswith("bingo: "):
+                dest_name = dest_name[7:] #strip bingo prefix
+            _,row = dest_name.split(" ",2)
+            if not row.isdecimal():
+                return None
+            row_i = int(row)-1 #zero indexing lol
+            ret.append({"type":"text","text":f"Bingo : Row {row} : \n"})
+            for i in range(self.options.bingo_size.value):
+                temp_str = self.bingo_board[row_i][i]
+                temp_status = state.can_reach_location(temp_str,self.player)
+                ret.extend([{"type":"text","text":f"{temp_str}"},{"type":"color","text":f" ({str(temp_status)}) \n","color":"green" if temp_status else "red"}])
+        elif bingo and dest_name.startswith("c ") or dest_name.startswith("col ") or dest_name.startswith("column ") or dest_name.startswith("bingo: column "):
+            if dest_name.startswith("bingo: "):
+                dest_name = dest_name[7:] #strip bingo prefix
+            _,col = dest_name.split(" ",2)
+            if not col.isdecimal():
+                return None
+            col_i = int(col)-1 #zero indexing lol
+            ret.append({"type":"text","text":f"Bingo : Column {col} : \n"})
+            for i in range(self.options.bingo_size.value):
+                temp_str = self.bingo_board[i][col_i]
+                temp_status = state.can_reach_location(temp_str,self.player)
+                ret.extend([{"type":"text","text":f"{temp_str}"},{"type":"color","text":f" ({str(temp_status)}) \n","color":"green" if temp_status else "red"}])
+        
+        if ret:
+            return ret
         else:
             return None
 
@@ -300,9 +354,10 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             #return None
             raise Exception("unknown rule fragment found "+rule_element.type)
 
-
     def make_image(self,itempool:list[Item], out_name:str):
         # Temp code for PIL shenanigans
+        if getattr(self.multiworld,"generation_is_fake",False):
+            return #Don't make images in UT
         try:
             import os
             import PIL.Image
@@ -386,6 +441,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         during generate_early or basic as well.
         """
 
+        ut_gen = getattr(self.multiworld,"generation_is_fake",False)
         # First, create the "Menu" region to start
         menu_region = self.create_region("Menu")
 
@@ -681,30 +737,31 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         all_state.sweep_for_advancements(locations=pre_placed_advancements)
         if all_state.stale[self.player]:
             all_state.update_reachable_regions(self.player)
-
-        #pre remove regions/locations that aren't reachable with the full itempool
         regions = self.multiworld.regions.region_cache[self.player]
-        temp_regions = regions.copy()
-        for region_name, region in temp_regions.items():
-            if all_state.can_reach_region(region_name,self.player):
-                temp_locs = region.locations.copy()
-                for loc in temp_locs:
-                    if not all_state.can_reach_location(loc.name,self.player):
-                        if loc.name in forced_locations:
+
+        if not ut_gen:
+            #pre remove regions/locations that aren't reachable with the full itempool
+            temp_regions = regions.copy()
+            for region_name, region in temp_regions.items():
+                if all_state.can_reach_region(region_name,self.player):
+                    temp_locs = region.locations.copy()
+                    for loc in temp_locs:
+                        if not all_state.can_reach_location(loc.name,self.player):
+                            if loc.name in forced_locations:
+                                raise OptionError("Plando'd location unreachable in all state")
+                            region.locations.remove(loc)
+                else:
+                    for entrance in region.entrances: #disconnect entrances
+                        if entrance.parent_region:
+                            entrance.parent_region.exits.remove(entrance)
+                    for exit in region.exits: #disconnect exists
+                        if exit.connected_region:
+                            exit.connected_region.entrances.remove(exit)
+                    for location in region.locations: #delete all the locations in that region
+                        if location.name in forced_locations:
                             raise OptionError("Plando'd location unreachable in all state")
-                        region.locations.remove(loc)
-            else:
-                for entrance in region.entrances: #disconnect entrances
-                    if entrance.parent_region:
-                        entrance.parent_region.exits.remove(entrance)
-                for exit in region.exits: #disconnect exists
-                    if exit.connected_region:
-                        exit.connected_region.entrances.remove(exit)
-                for location in region.locations: #delete all the locations in that region
-                    if location.name in forced_locations:
-                        raise OptionError("Plando'd location unreachable in all state")
-                    del self.multiworld.regions.location_cache[self.player][location.name]
-                del regions[region_name] #delete the 
+                        del self.multiworld.regions.location_cache[self.player][location.name]
+                    del regions[region_name] #delete the 
         
         #Delay this as long as we could, but we need the victory condition now
 
@@ -801,44 +858,45 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         max_depth = 0
 
         #now remove regions/locations that aren't reachable with the reduced itempool
-        regions = self.multiworld.regions.region_cache[self.player]
-        temp_regions = regions.copy()
-        for region_name, region in temp_regions.items():
-            if all_state.can_reach_region(region_name,self.player):
-                depth = 0
-                if region.name != self.origin_region_name:
-                    if region.name in region_depth_cache:
-                        depth = region_depth_cache[region.name]
-                    else:
-                        temp_path = all_state.path[region]
-                        while temp_path[1] is not None:
-                            temp_path = temp_path[1]
-                            depth += 1
-                        region_depth_cache[region.name] = depth
-                max_depth = max(max_depth,depth)
-                temp_locs = region.locations.copy()
-                for loc in temp_locs:
-                    if loc.address and self.location_name_to_row[loc.name].category == "bingo":
-                        continue #ignore bingo locations
-                    if not all_state.can_reach_location(loc.name,self.player):
-                        if loc.name in forced_locations:
+        if not ut_gen:
+            regions = self.multiworld.regions.region_cache[self.player]
+            temp_regions = regions.copy()
+            for region_name, region in temp_regions.items():
+                if all_state.can_reach_region(region_name,self.player):
+                    depth = 0
+                    if region.name != self.origin_region_name:
+                        if region.name in region_depth_cache:
+                            depth = region_depth_cache[region.name]
+                        else:
+                            temp_path = all_state.path[region]
+                            while temp_path[1] is not None:
+                                temp_path = temp_path[1]
+                                depth += 1
+                            region_depth_cache[region.name] = depth
+                    max_depth = max(max_depth,depth)
+                    temp_locs = region.locations.copy()
+                    for loc in temp_locs:
+                        if loc.address and self.location_name_to_row[loc.name].category == "bingo":
+                            continue #ignore bingo locations
+                        if not all_state.can_reach_location(loc.name,self.player):
+                            if loc.name in forced_locations:
+                                raise OptionError("Plando'd location made unreachable somehow")
+                            region.locations.remove(loc)
+                        else:
+                            if loc.address and loc.name not in forced_locations:
+                                reachable_loc_map[loc] = depth
+                else:
+                    for entrance in region.entrances: #disconnect entrances
+                        if entrance.parent_region:
+                            entrance.parent_region.exits.remove(entrance)
+                    for exit in region.exits: #disconnect exists
+                        if exit.connected_region:
+                            exit.connected_region.entrances.remove(exit)
+                    for location in region.locations: #delete all the locations in that region
+                        if location.name in forced_locations:
                             raise OptionError("Plando'd location made unreachable somehow")
-                        region.locations.remove(loc)
-                    else:
-                        if loc.address and loc.name not in forced_locations:
-                            reachable_loc_map[loc] = depth
-            else:
-                for entrance in region.entrances: #disconnect entrances
-                    if entrance.parent_region:
-                        entrance.parent_region.exits.remove(entrance)
-                for exit in region.exits: #disconnect exists
-                    if exit.connected_region:
-                        exit.connected_region.entrances.remove(exit)
-                for location in region.locations: #delete all the locations in that region
-                    if location.name in forced_locations:
-                        raise OptionError("Plando'd location made unreachable somehow")
-                    del self.multiworld.regions.location_cache[self.player][location.name]
-                del regions[region_name] #delete the region
+                        del self.multiworld.regions.location_cache[self.player][location.name]
+                    del regions[region_name] #delete the region
         
         pre_placed_advancements = [loc for loc in self.get_locations() if loc.advancement] #update this for the culled locations
         temp_state = all_state.copy()
@@ -903,28 +961,29 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             logger.error(f"Deleted {maximum_locations-locations_created} filler from {self.player_name}, {locations_created - items_created} remains")
 
         if self.options.goal_type.value in [self.options.goal_type.option_bingo, self.options.goal_type.option_both]:
-            inverted_loc_depth: dict[int, list[Location]] = defaultdict(list)
-            #invert depth dict to get it "sorted" by depth
-            for loc, depth in reachable_loc_map.items():
-                inverted_loc_depth[depth].append(loc)
-            flattened_ild:list[Location] = []
-            #Now flatten it so we can sample it correctly
-            for lloc in inverted_loc_depth.values():
-                self.random.shuffle(lloc)
-                for loc in lloc:
-                    flattened_ild.append(loc)
-            #TODO: do this smarter lol
-            bingo_needed = ((self.options.bingo_size.value*self.options.bingo_size.value) - len(bingo_locations))
-            if len(flattened_ild) < bingo_needed:
-                raise OptionError("Not enough locations to fill the bingo board...")
-            bingo_locations.extend(self.random.sample(flattened_ild,bingo_needed))
-            self.random.shuffle(bingo_locations)
-            for i in range(self.options.bingo_size.value):
-                self.bingo_board.append([])
-                for j in range(self.options.bingo_size.value):
-                    loc = bingo_locations.pop()
-                    loc.place_locked_item(self.create_item("Tear of Guthix"))
-                    self.bingo_board[i].append(loc.name)
+            if not ut_gen: #In UT gen we already have the board made
+                inverted_loc_depth: dict[int, list[Location]] = defaultdict(list)
+                #invert depth dict to get it "sorted" by depth
+                for loc, depth in reachable_loc_map.items():
+                    inverted_loc_depth[depth].append(loc)
+                flattened_ild:list[Location] = []
+                #Now flatten it so we can sample it correctly
+                for lloc in inverted_loc_depth.values():
+                    self.random.shuffle(lloc)
+                    for loc in lloc:
+                        flattened_ild.append(loc)
+                #TODO: do this smarter lol
+                bingo_needed = ((self.options.bingo_size.value*self.options.bingo_size.value) - len(bingo_locations))
+                if len(flattened_ild) < bingo_needed:
+                    raise OptionError("Not enough locations to fill the bingo board...")
+                bingo_locations.extend(self.random.sample(flattened_ild,bingo_needed))
+                self.random.shuffle(bingo_locations)
+                for i in range(self.options.bingo_size.value):
+                    self.bingo_board.append([])
+                    for j in range(self.options.bingo_size.value):
+                        loc = bingo_locations.pop()
+                        loc.place_locked_item(self.create_item("Tear of Guthix"))
+                        self.bingo_board[i].append(loc.name)
             
             # time for the bingo rules
             
@@ -933,9 +992,9 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             max_index = self.options.bingo_size.value - 1
             for index in range(self.options.bingo_size.value):
                 temp_loc = self.bingo_board[index][index]
-                for_rules.append(CanReachLocation(temp_loc))
-                temp_loc = self.bingo_board[index][max_index-index]
                 bak_rules.append(CanReachLocation(temp_loc))
+                temp_loc = self.bingo_board[index][max_index-index]
+                for_rules.append(CanReachLocation(temp_loc))
 
                 row_rules:list[Rule] = []
                 col_rules:list[Rule] = []
@@ -944,12 +1003,13 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                     row_rules.append(CanReachLocation(temp_loc))
                     temp_loc = self.bingo_board[j_index][index]
                     col_rules.append(CanReachLocation(temp_loc))
+                    if ut_gen: #Time to make some fake entrances JUST for the map tab, they're functionally useless otherwise
+                        fake_region = self.create_region(f"Bingo: {temp_loc}")
+                        menu_region.connect(fake_region,f"Bingo: R{j_index+1}C{index+1}",CanReachLocation(temp_loc))
                 self.set_rule(self.get_location(f"Bingo: Row {index+1}"), And(*row_rules))
                 self.set_rule(self.get_location(f"Bingo: Column {index+1}"), And(*col_rules))
             self.set_rule(self.get_location(f"Bingo: Forward Diagonal"), And(*for_rules))
             self.set_rule(self.get_location(f"Bingo: Reverse Diagonal"), And(*bak_rules))
-
-
             
         #Time to set the actual condition now that we're sure they're all set
         self.set_completion_rule(And(*completion_condition))
@@ -1070,7 +1130,10 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             item_id = None
             if name in self.item_name_to_id:
                 item_id = self.item_name_to_id[name]
-            return OSRSMItem(item.name, item.progression, item_id, self.player)
+            flags = item.progression
+            if getattr(self.multiworld,"generation_is_fake",False):
+                flags = ItemClassification.filler #in ut we can't know if an item is actually prog or not so let UT deal with it
+            return OSRSMItem(item.name, flags, item_id, self.player)
         raise Exception("Not able to find item "+name)
 
     def create_event(self, event: str):
@@ -1159,6 +1222,27 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                             break
                     state.prog_items[self.player][psuedo_item_name] = next_highest_level
         return super().remove(state, item)
+
+    def write_spoiler(self, spoiler_handle: typing.TextIO):
+        if self.options.goal_type not in [self.options.goal_type.option_bingo, self.options.goal_type.option_both]:
+            return
+        max_index = self.options.bingo_size.value
+        max_width = 14
+        for i in range(max_index):
+            for j in range(max_index):
+                max_width = max(max_width , len(self.bingo_board[i][j]))
+        max_width += 1 #leave gap
+        spoiler_handle.write(f"Bingo Board for Player {self.player_name}\n{' '*17}")
+        for i in range(max_index):
+            spoiler_handle.write(f"|Bingo: Col {i+1}{' ' if i < 9 else ''}{' '*(max_width-13)}")
+        spoiler_handle.write("\n")
+        for i in range(max_index):
+            spoiler_handle.write(f"Bingo: Row {i+1}{' ' if i < 9 else ''}    ")
+            row = self.bingo_board[i]
+            for el in row:
+                spoiler_handle.write(f"|{el}{' '*(max_width-len(el))}")
+            spoiler_handle.write("\n")
+        spoiler_handle.write(f"Forward Diagonal {' '*((max_width+1)*max_index)}Reverse Diagonal")
 
 
 @dataclasses.dataclass()
