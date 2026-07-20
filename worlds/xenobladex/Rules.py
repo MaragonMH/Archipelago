@@ -6,8 +6,7 @@ from rule_builder.rules import Has, Rule, True_
 if TYPE_CHECKING:
     from . import XenobladeXWorld
 
-from .Items import create_item
-from .Locations import xenobladeXLocations
+from . import Items, Locations
 from .rules.doll import doll_rules
 from .rules.fieldSkills import field_skill_rules
 from .rules.fnet import fnet_rules
@@ -35,7 +34,7 @@ xenobladeXRules: dict[str, Rule["XenobladeXWorld"]] = {
 def set_rules(world: "XenobladeXWorld"):
     """Setting all the rules for region connections and region->item connections"""
     for loc in world.get_locations():
-        rule_names = xenobladeXLocations[loc.name].rules
+        rule_names = Locations.xenobladeXLocations[loc.name].rules
         rules = [xenobladeXRules[rule] for rule in rule_names]
         if not rules:
             rules = [True_()]
@@ -43,6 +42,6 @@ def set_rules(world: "XenobladeXWorld"):
         print(new_rules)
         world.set_rule(loc, new_rules)
 
-    world.get_location("EBK: Lao Boss - Chp 12: Story").place_locked_item(create_item(world, "KEY: Victory"))
+    world.get_location("EBK: Lao Boss - Chp 12: Story").place_locked_item(Items.create_item(world, "KEY: Victory"))
 
     world.set_completion_rule(Has("KEY: Victory"))

@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Generator, cast
 if TYPE_CHECKING:
     from . import XenobladeXWorld
 
-from .Options import XenobladeXOptions
+from . import Options
 from .rules.level import get_logic_level_count
 
 from .items import Itm
@@ -98,7 +98,7 @@ xenobladeXItems: dict[str, Itm] = {
 
 def create_items(world: "XenobladeXWorld"):
     """Create all items"""
-    options = cast(XenobladeXOptions, world.options)
+    options = cast(Options.XenobladeXOptions, world.options)
     logic_level_steps = options.logic_level_steps.value
     logic_level_overcap = options.logic_level_overcap.value
     logic_levels = 0

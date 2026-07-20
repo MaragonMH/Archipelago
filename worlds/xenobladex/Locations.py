@@ -1,4 +1,5 @@
-from collections import OrderedDict
+import re
+from collections import Counter, OrderedDict
 from BaseClasses import Location
 from Options import Option
 from dataclasses import replace
@@ -7,7 +8,7 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from . import XenobladeXWorld
 
-from .Regions import add_region_location, init_region
+from . import Regions
 
 from .locations import Loc
 from .locations.collepedia import collepedia_data
@@ -52,6 +53,30 @@ xenobladeXLocations = {
 }
 
 
+def compress_rules(rules: list[str]) -> list[str]:
+    new_rules = list(set(rules))
+    if "Blade License" in new_rules and ("Flight Module" in new_rules or "Skell License" in new_rules):
+        new_rules.remove("Blade License")
+    if "Skell License" in new_rules and "Flight Module" in new_rules:
+        new_rules.remove("Skell License")
+    rule_lvls = [[match.group(1).strip(), int(match.group(2)) if match.group(2) else 0]
+                 for match in (re.fullmatch(r"^(.+?)(?: (\d+)?)?$", rule) for rule in new_rules) if match]
+    compressed: list[str] = []
+    highest: dict[str, int] = {}
+    for rule_lvl in rule_lvls:
+        name = str(rule_lvl[0])
+        lvl = int(rule_lvl[1])
+        if rule_lvl[1] == 0:
+            compressed.append(name)
+        else:
+            if rule_lvl[0] in highest:
+                highest[rule_lvl[0]] = max(lvl, highest[name])
+            else:
+                highest[name] = lvl
+    result = sorted(compressed + [f"{name} {lvl}" for name, lvl in highest.items()])
+    return result
+
+
 def _resolve_dependencies() -> None:
     dependency_lookup: dict[str, str] = {}
     for loc in xenobladeXLocations.values():
@@ -71,20 +96,20 @@ def _resolve_dependencies() -> None:
             dep_loc = xenobladeXLocations[dependency_lookup[dependency]]
             dependencies += dep_loc.depends
             rules += dep_loc.rules
-        xenobladeXLocations[loc.get_location()] = replace(loc, rules=list(set(rules)), depends=[])
+        xenobladeXLocations[loc.get_location()] = replace(loc, rules=compress_rules(rules), depends=[])
 
 
 _resolve_dependencies()
 
 
 def create_location(world: "XenobladeXWorld", region_name: str, location_name: str):
-    init_region(world, region_name)
+    Regions.init_region(world, region_name)
     assert location_name in xenobladeXLocations, f"{location_name} not in locations"
     location_id = xenobladeXLocations[location_name].id
     assert location_id is not None, f"{location_name} has no id"
     id = world.base_id + location_id
-    return add_region_location(world, region_name,
-                               XenobladeXLocation(world.player, location_name, id, world.get_region(region_name)))
+    return Regions.add_region_location(world, region_name, XenobladeXLocation(world.player, location_name,
+                                                                              id, world.get_region(region_name)))
 
 
 def create_locations(world: "XenobladeXWorld"):
