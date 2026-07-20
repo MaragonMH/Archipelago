@@ -1032,28 +1032,30 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                         non_quest_dupes.append(task_name)
                     continue #for now just ignore it and hope it goes away (it won't)
                 if "Output" in task_data:
-                    output = task_data["Output"]
-                    if output in non_monster_names:
-                        output = convert_loot_name(output)
-                    if output not in resources:
-                        if output in regions:
-                            print(output)
+                    if "ForcedSecondary" not in task_data or not task_data["ForcedSecondary"]:
+                        #Not a real training method? not a real source of resources
+                        output = task_data["Output"]
+                        if output in non_monster_names:
+                            output = convert_loot_name(output)
+                        if output not in resources:
+                            if output in regions:
+                                print(output)
+                                breakpoint()
+                            resources.append(output)
+                            resource_list.append(ResourceRow(output))
+                        if output in missing_resources:
+                            missing_resources.remove(output)
+                        if output in task_unlock_item:
+                            rule_list = rule_list + task_unlock_item[output]
+                        if parent_region_type == "r":
+                            re_entrances.append(EntranceRow(parent_region,output,rule_list))
+                        elif parent_region_type == "e":
+                            ee_entrances.append(EntranceRow(parent_region,output,rule_list))
+                        elif parent_region_type == "m":
+                            me_entrances.append(EntranceRow(parent_region,output,rule_list))
+                        else:
+                            print(task_name)
                             breakpoint()
-                        resources.append(output)
-                        resource_list.append(ResourceRow(output))
-                    if output in missing_resources:
-                        missing_resources.remove(output)
-                    if output in task_unlock_item:
-                        rule_list = rule_list + task_unlock_item[output]
-                    if parent_region_type == "r":
-                        re_entrances.append(EntranceRow(parent_region,output,rule_list))
-                    elif parent_region_type == "e":
-                        ee_entrances.append(EntranceRow(parent_region,output,rule_list))
-                    elif parent_region_type == "m":
-                        me_entrances.append(EntranceRow(parent_region,output,rule_list))
-                    else:
-                        print(task_name)
-                        breakpoint()
                 if "Output Object" in task_data:
                     output_obj = task_data["Output Object"]
                     if output_obj not in resources:
@@ -1298,13 +1300,18 @@ with open(os.path.join(this_dir, "chunkpicker-chunkinfo-export.json"), 'r') as l
                     kudos_reward = int(task_data["Kudos"])
                 if "Description" in task_data:
                     description = task_data["Description"]
-                if task_type == "Nonskill" and "Chunks" in task_data and len(task_data) == 1: #If it's just a chunk it's a task macro, blame source
+                if task_type == "Nonskill" and len(task_data) == 1 and next(iter(task_data)) in ["Chunks","Items","Monsters","Tasks","Objects","NPCs","QuestPointsNeeded"]:
+                    #If it's just a chunk it's a task macro, blame source
                     sub_quest_list.append(LocationRow(task_name,"event",parent_region,"",rule_list,kudos_reward,0,0))
                 elif task_type == "Nonskill" and str(task_name).endswith(" task"): #Stupid wilderness slayer events
                     sub_quest_list.append(LocationRow(task_name,"event",parent_region,"",rule_list,kudos_reward,0,0))
                 elif task_type == "Nonskill" and str(task_name).endswith(" loot"): #Stupid item conversion events
                     sub_quest_list.append(LocationRow(task_name,"event",parent_region,"",rule_list,kudos_reward,0,0))
                 elif "ConnectsSections" not in task_data and "UnlocksArea" not in task_data: #don't make these as locations
+                    if len(task_data) == 1:
+                        print(task_name)
+                        print(next(iter(task_data)))
+                        breakpoint()
                     non_quest_list.append(LocationRow(task_name,task_type,parent_region,"",rule_list,kudos_reward,0,0))
                     non_quest_names.append(task_name)
                 for field in task_data.keys():
