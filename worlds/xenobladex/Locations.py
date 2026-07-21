@@ -103,19 +103,57 @@ _resolve_dependencies()
 
 
 def create_location(world: "XenobladeXWorld", region_name: str, location_name: str):
-    Regions.init_region(world, region_name)
     assert location_name in xenobladeXLocations, f"{location_name} not in locations"
     location_id = xenobladeXLocations[location_name].id
     assert location_id is not None, f"{location_name} has no id"
     id = world.base_id + location_id
-    return Regions.add_region_location(world, region_name, XenobladeXLocation(world.player, location_name,
-                                                                              id, world.get_region(region_name)))
+    if region_name == "":
+        region_name = "Menu"
+    xenox_location = XenobladeXLocation(world.player, location_name, id, None)
+    return Regions.add_region_location(world, region_name, xenox_location)
 
 
 def create_locations(world: "XenobladeXWorld"):
+    # simplify_region_names([loc for loc in xenobladeXLocations.values()])
     for location in xenobladeXLocations.values():
         if location.prefix is None or location.id is None:
             continue
         location_option: Optional[Option] = getattr(world.options, location.prefix.lower(), None)
         if location.required or location_option is None or location_option.value:
-            create_location(world, "Menu", location.get_location())
+            create_location(world, location.get_region(), location.get_location())
+
+
+def transform_regex(string):
+    return re.sub(r" \d+(?=\+|$)", "", string)
+
+
+def simplify_region_names(locations: list[Loc]) -> dict[str, str]:
+    rules = {loc.get_region(): [rule for rule in loc.rules] for loc in locations if loc.get_region()}
+    regions_count = Counter([loc.get_region() for loc in locations])
+    result: dict[str, str] = {}
+
+    for name, rule in rules.items():
+        ancestor_count: dict[str, int] = {}
+        for other_name, other_rule in rules.items():
+            if other_name == name:
+                continue
+            # this check is not enough to say if region is a super set, because of lvls
+            # if you have a lvl 3 check and your ancestor is a lvl 2 check than its still a child
+            if set(other_rule).issubset(set(rule)):
+                ancestor_count[other_name] = len(rule) - len(other_rule)
+
+        if not ancestor_count:
+            result[name] = "+".join(rule)
+            continue
+
+        min_count = min(ancestor_count.values())
+        max_region_count = 0
+        for ancestor, count in ancestor_count.items():
+            if count > min_count:
+                continue
+            ancestor_rules = set({rule for rule in ancestor.split("+")})
+            region_count = regions_count[ancestor]
+            if max_region_count < region_count:
+                max_region_count = region_count
+                result[name] = "+".join(set(rule) - ancestor_rules)
+    return result

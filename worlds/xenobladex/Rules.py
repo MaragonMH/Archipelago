@@ -1,12 +1,13 @@
 from functools import reduce
 import operator
 from typing import TYPE_CHECKING
+from BaseClasses import Entrance
 from rule_builder.rules import Has, Rule, True_
 
 if TYPE_CHECKING:
     from . import XenobladeXWorld
 
-from . import Items, Locations
+from . import Items
 from .rules.doll import doll_rules
 from .rules.fieldSkills import field_skill_rules
 from .rules.fnet import fnet_rules
@@ -31,17 +32,28 @@ xenobladeXRules: dict[str, Rule["XenobladeXWorld"]] = {
 }
 
 
+def connect_with_rule(world: "XenobladeXWorld", source: str, target: str, rule: Rule["XenobladeXWorld"]):
+    source_region = world.get_region(source)
+    target_region = world.get_region(target)
+
+    connection = Entrance(world.player, target, source_region)
+    source_region.exits.append(connection)
+    connection.connect(target_region)
+
+    world.set_rule(connection, rule)
+
+
 def set_rules(world: "XenobladeXWorld"):
     """Setting all the rules for region connections and region->item connections"""
-    for loc in world.get_locations():
-        rule_names = Locations.xenobladeXLocations[loc.name].rules
+    for region in world.get_regions():
+        if region.name == "Menu":
+            continue
+        rule_names = region.name.split("+")
         rules = [xenobladeXRules[rule] for rule in rule_names]
         if not rules:
             rules = [True_()]
-        new_rules = reduce(operator.iand, rules)
-        print(new_rules)
-        world.set_rule(loc, new_rules)
+        new_rule = reduce(operator.iand, rules)
+        connect_with_rule(world, "Menu", region.name, new_rule)
 
     world.get_location("EBK: Lao Boss - Chp 12: Story").place_locked_item(Items.create_item(world, "KEY: Victory"))
-
     world.set_completion_rule(Has("KEY: Victory"))

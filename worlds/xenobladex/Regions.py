@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-from BaseClasses import Region, Entrance, Location
+from BaseClasses import Region, Location
 
 if TYPE_CHECKING:
     from . import XenobladeXWorld
@@ -13,18 +13,8 @@ def init_region(world: "XenobladeXWorld", region_name: str) -> None:
 
 
 def add_region_location(world: "XenobladeXWorld", region_name: str, location: Location) -> Location:
+    init_region(world, region_name)
     region = world.get_region(region_name)
+    location.parent_region = region
     region.locations += [location]
     return location
-
-
-def connect_regions(world: "XenobladeXWorld", source: str, target: str, rule):
-    """Connect a single region to another with a specified rule"""
-    source_region = world.get_region(source)
-    target_region = world.get_region(target)
-
-    connection = Entrance(world.player, target, source_region)
-    connection.access_rule = rule
-
-    source_region.exits.append(connection)
-    connection.connect(target_region)
