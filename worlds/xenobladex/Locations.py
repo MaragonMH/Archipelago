@@ -101,6 +101,36 @@ def _resolve_dependencies() -> None:
 
 _resolve_dependencies()
 
+xenobladeXSegmentLookup: dict[str, dict[str, int]] = {}
+
+
+def _prepare_segment_lookup() -> None:
+    zones = ["Mira", "Prim", "Noct", "Obli", "Sylv", "Caul"]
+    regions: dict[str, set[str]] = {}
+    for name, loc in xenobladeXLocations.items():
+        reg = loc.get_region()
+        if reg:
+            if reg in regions:
+                regions[reg].add(name)
+            else:
+                regions[reg] = {name}
+
+    for zone in zones:
+        zone_dict: dict[str, int] = {}
+        for region, loc_names in regions.items():
+            count: int = 0
+            for loc_name in loc_names:
+                if loc_name.startswith(("SEG", "FNO")):
+                    if zone == "Mira" or f" - {zone}" in loc_name:
+                        count += 1
+            if count > 0:
+                zone_dict[region] = count
+        xenobladeXSegmentLookup[zone] = zone_dict
+    print({zone: sum(reg.values()) for zone, reg in xenobladeXSegmentLookup.items()})
+
+
+_prepare_segment_lookup()
+
 
 def create_location(world: "XenobladeXWorld", region_name: str, location_name: str):
     assert location_name in xenobladeXLocations, f"{location_name} not in locations"
@@ -114,7 +144,6 @@ def create_location(world: "XenobladeXWorld", region_name: str, location_name: s
 
 
 def create_locations(world: "XenobladeXWorld"):
-    # simplify_region_names([loc for loc in xenobladeXLocations.values()])
     for location in xenobladeXLocations.values():
         if location.prefix is None or location.id is None:
             continue
@@ -123,9 +152,8 @@ def create_locations(world: "XenobladeXWorld"):
             create_location(world, location.get_region(), location.get_location())
 
 
-def transform_regex(string):
-    return re.sub(r" \d+(?=\+|$)", "", string)
-
+# Currently unused maybe use it in the future. Still has issues though
+# simplify_region_names([loc for loc in xenobladeXLocations.values()])
 
 def simplify_region_names(locations: list[Loc]) -> dict[str, str]:
     rules = {loc.get_region(): [rule for rule in loc.rules] for loc in locations if loc.get_region()}

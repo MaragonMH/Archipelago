@@ -2,7 +2,7 @@ import dataclasses
 from typing import override, TYPE_CHECKING
 from BaseClasses import CollectionState
 from rule_builder.rules import Rule
-from ..Locations import xenobladeXLocations
+from ..Locations import xenobladeXSegmentLookup
 
 if TYPE_CHECKING:
     from .. import XenobladeXWorld
@@ -24,24 +24,17 @@ class HasZoneCount(Rule["XenobladeXWorld"], game="Xenoblade X"):
 
         @override
         def _evaluate(self, state: CollectionState) -> bool:
-            return True
             count = 0
-            for loc in xenobladeXLocations.values():
-                if loc.get_location().startswith(("SEG", "FNO")):
-                    if self.zone == "Mira" or f"- {self.zone.capitalize()}" in loc.get_location():
-                        if state.can_reach_location(loc.get_location(), self.player):
-                            count += 1
-            return count >= self.target
+            for reg, reg_count in xenobladeXSegmentLookup[self.zone].items():
+                if state.can_reach_region(reg, self.player):
+                    count += reg_count
+                    if count >= self.target:
+                        return True
+            return False
 
         @override
-        def item_dependencies(self) -> dict[str, set[int]]:
-            # this function is only required if you have caching enabled
-            return {}
-
-        @override
-        def location_dependencies(self) -> dict[str, set[int]]:
-            return {loc.get_location(): {id(self)} for loc in xenobladeXLocations.values()
-                    if loc.get_location().startswith(("SEG", "FNO"))}
+        def region_dependencies(self) -> dict[str, set[int]]:
+            return {reg: {id(self)} for reg in xenobladeXSegmentLookup[self.zone].keys()}
 
 
 zone_rules: dict[str, Rule["XenobladeXWorld"]] = {
@@ -70,7 +63,7 @@ zone_rules: dict[str, Rule["XenobladeXWorld"]] = {
     "Obli 50": HasZoneCount("Obli", 48),
     "Obli 70": HasZoneCount("Obli", 67),
     # 92 Segments
-    "Sylv 15": HasZoneCount("SYLV", 14),
+    "Sylv 15": HasZoneCount("Sylv", 14),
     # 75 Segments
     "Caul 10": HasZoneCount("Caul", 8),
     "Caul 50": HasZoneCount("Caul", 38),
