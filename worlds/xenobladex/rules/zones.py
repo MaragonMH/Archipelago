@@ -14,7 +14,6 @@ class HasZoneCount(Rule["XenobladeXWorld"], game="Xenoblade X"):
     target: int
 
     def _instantiate(self, world: "XenobladeXWorld") -> Rule.Resolved:
-        # caching_enabled only needs to be passed in when your world inherits from CachedRuleBuilderWorld
         return self.Resolved(self.zone, self.target, player=world.player,
                              caching_enabled=getattr(world, "rule_caching_enabled", False))
 

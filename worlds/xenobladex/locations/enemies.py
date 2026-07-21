@@ -3,9 +3,9 @@ from . import Loc as Data
 # https://xenoblade.github.io/xbx/bdat/common_local_us/BTL_EnBook.html
 # flake8: noqa
 enemies_data: list[Data] = [
-Data("Origin Blatta - Prologue", rules=["Lvl 1"], depends=["Chapter 0"]),
-Data("Callow Grex - Prologue", rules=["Lvl 3"], depends=["Chapter 0"]),
-Data("Elder Grex - Prologue", rules=["Lvl 4"], depends=["Chapter 0"]),
+Data("Origin Blatta - Prologue", rules=["Lvl 1"]),
+Data("Callow Grex - Prologue", rules=["Lvl 3"]),
+Data("Elder Grex - Prologue", rules=["Lvl 4"]),
 Data("Volkampf, the Pursuer - Chp 2: Story", rules=["Lvl 5"], depends=["Chapter 2"]),
 Data("Glennar - Chp 3: Story", rules=["Lvl 10"], depends=["Chapter 3"]),
 Data("Goetia - Chp 4: Story", rules=["Lvl 16"], depends=["Chapter 4"]),

@@ -17,7 +17,6 @@ class HasMiranium(Rule["XenobladeXWorld"], game="Xenoblade X"):
 
     @override
     def _instantiate(self, world: "XenobladeXWorld") -> Rule.Resolved:
-        # caching_enabled only needs to be passed in when your world inherits from CachedRuleBuilderWorld
         return self.Resolved(self.target, player=world.player,
                              caching_enabled=getattr(world, "rule_caching_enabled", False))
 
@@ -44,7 +43,6 @@ class HasMiranium(Rule["XenobladeXWorld"], game="Xenoblade X"):
 
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
-            # this function is only required if you have caching enabled
             return {
                 "DP: Storage Probe": {id(self)},
                 "DP: Duplicator Probe": {id(self)},
@@ -60,7 +58,6 @@ class HasCredits(Rule["XenobladeXWorld"], game="Xenoblade X"):
 
     @override
     def _instantiate(self, world: "XenobladeXWorld") -> Rule.Resolved:
-        # caching_enabled only needs to be passed in when your world inherits from CachedRuleBuilderWorld
         return self.Resolved(self.target, player=world.player,
                              caching_enabled=getattr(world, "rule_caching_enabled", False))
 
@@ -87,7 +84,6 @@ class HasCredits(Rule["XenobladeXWorld"], game="Xenoblade X"):
 
         @override
         def item_dependencies(self) -> dict[str, set[int]]:
-            # this function is only required if you have caching enabled
             return {
                 **{f"DP: Research Probe G{i}": {id(self)} for i in range(1, 7)},
                 "DP: Duplicator Probe": {id(self)},

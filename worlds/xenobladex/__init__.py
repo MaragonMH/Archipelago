@@ -1,5 +1,6 @@
 from BaseClasses import Tutorial
-from ..AutoWorld import World, WebWorld
+from rule_builder.cached_world import CachedRuleBuilderWorld
+from ..AutoWorld import WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
 from functools import partial
 from typing import cast
@@ -29,7 +30,7 @@ class XenobladeXWeb(WebWorld):
     option_groups = Options.option_groups
 
 
-class XenobladeXWorld(World):
+class XenobladeXWorld(CachedRuleBuilderWorld):
     """
      Xenoblade Chronicles X another 100+ hour game. Sounds like fun?
     """

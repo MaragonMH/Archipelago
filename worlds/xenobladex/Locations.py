@@ -126,7 +126,6 @@ def _prepare_segment_lookup() -> None:
             if count > 0:
                 zone_dict[region] = count
         xenobladeXSegmentLookup[zone] = zone_dict
-    print({zone: sum(reg.values()) for zone, reg in xenobladeXSegmentLookup.items()})
 
 
 _prepare_segment_lookup()
@@ -149,12 +148,13 @@ def create_locations(world: "XenobladeXWorld"):
             continue
         location_option: Optional[Option] = getattr(world.options, location.prefix.lower(), None)
         if location.required or location_option is None or location_option.value:
-            create_location(world, location.get_region(), location.get_location())
+            # temporary to not include chapter locations
+            if location.pooled:
+                create_location(world, location.get_region(), location.get_location())
 
 
 # Currently unused maybe use it in the future. Still has issues though
 # simplify_region_names([loc for loc in xenobladeXLocations.values()])
-
 def simplify_region_names(locations: list[Loc]) -> dict[str, str]:
     rules = {loc.get_region(): [rule for rule in loc.rules] for loc in locations if loc.get_region()}
     regions_count = Counter([loc.get_region() for loc in locations])

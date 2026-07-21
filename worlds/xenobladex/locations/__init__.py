@@ -12,6 +12,7 @@ class Loc:
     id: Optional[int] = None
     prefix: Optional[str] = None
     required: bool = False
+    pooled: bool = True
 
     def get_location(self):
         return f"{self.prefix}: {self.name}"
