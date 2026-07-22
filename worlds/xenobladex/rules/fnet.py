@@ -1,5 +1,6 @@
 import dataclasses
-from typing import override, TYPE_CHECKING
+from typing import TYPE_CHECKING
+from typing_extensions import override
 from BaseClasses import CollectionState
 from rule_builder.rules import Has, HasAll, Rule
 from ..fnet.miranium import fnet_miranium_data

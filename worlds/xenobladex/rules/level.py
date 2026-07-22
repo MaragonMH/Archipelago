@@ -1,5 +1,6 @@
 import dataclasses
-from typing import cast, override
+from typing import cast
+from typing_extensions import override
 from rule_builder.field_resolvers import FieldResolver
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, Rule
