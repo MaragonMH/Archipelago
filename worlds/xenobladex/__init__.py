@@ -8,7 +8,7 @@ from typing import cast
 from . import Slot, Items, Locations, Rules, Options
 
 
-def launch_client(*args):
+def launch_client(*args: str) -> None:
     from .Client import launch
     launch_subprocess(partial(launch, *args), name="XenobladeXClient")
 
@@ -55,10 +55,10 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
         for prefix in {itm.prefix for itm in Items.xenobladeXItems.values()} if prefix
     }
 
-    def create_regions(self):
+    def create_regions(self) -> None:
         Locations.create_locations(self)
 
-    def create_items(self):
+    def create_items(self) -> None:
         Items.create_items(self)
 
     def create_item(self, name: str) -> Items.XenobladeXItem:
@@ -67,13 +67,13 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
     def get_filler_item_name(self) -> str:
         return Items.get_random_filler_item_name(self)
 
-    def set_rules(self):
+    def set_rules(self) -> None:
         Rules.set_rules(self)
 
-    def generate_early(self):
+    def generate_early(self) -> None:
         pass
 
-    def generate_basic(self):
+    def generate_basic(self) -> None:
         pass
 
     def fill_slot_data(self) -> dict[str, object]:

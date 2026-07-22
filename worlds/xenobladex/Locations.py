@@ -1,7 +1,7 @@
 import re
 from collections import Counter, OrderedDict
 from BaseClasses import Location
-from Options import Option
+from Options import NumericOption
 from dataclasses import replace
 from typing import TYPE_CHECKING, Optional
 
@@ -70,7 +70,7 @@ def compress_rules(rules: list[str]) -> list[str]:
             compressed.append(name)
         else:
             if rule_lvl[0] in highest:
-                highest[rule_lvl[0]] = max(lvl, highest[name])
+                highest[str(rule_lvl[0])] = max(lvl, highest[name])
             else:
                 highest[name] = lvl
     result = sorted(compressed + [f"{name} {lvl}" for name, lvl in highest.items()])
@@ -131,7 +131,7 @@ def _prepare_segment_lookup() -> None:
 _prepare_segment_lookup()
 
 
-def create_location(world: "XenobladeXWorld", region_name: str, location_name: str):
+def create_location(world: "XenobladeXWorld", region_name: str, location_name: str) -> Location:
     assert location_name in xenobladeXLocations, f"{location_name} not in locations"
     location_id = xenobladeXLocations[location_name].id
     assert location_id is not None, f"{location_name} has no id"
@@ -142,11 +142,12 @@ def create_location(world: "XenobladeXWorld", region_name: str, location_name: s
     return Regions.add_region_location(world, region_name, xenox_location)
 
 
-def create_locations(world: "XenobladeXWorld"):
+def create_locations(world: "XenobladeXWorld") -> None:
     for location in xenobladeXLocations.values():
         if location.prefix is None or location.id is None:
             continue
-        location_option: Optional[Option] = getattr(world.options, location.prefix.lower(), None)
+        # location options are booleans in this world, so specify the generic type to satisfy type checkers
+        location_option: Optional[NumericOption] = getattr(world.options, location.prefix.lower(), None)
         if location.required or location_option is None or location_option.value:
             # temporary to not include chapter locations
             if location.pooled:

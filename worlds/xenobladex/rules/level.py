@@ -8,7 +8,7 @@ from ..Options import LogicLevelSteps, XenobladeXOptions
 
 
 # Convert the logic level into the required logic count
-def get_logic_level_count(logic_level: int, step_size: int):
+def get_logic_level_count(logic_level: int, step_size: int) -> int:
     return int(min(logic_level, 50) / step_size) + int(min(logic_level - 50, 0) / (step_size + 5))
 
 

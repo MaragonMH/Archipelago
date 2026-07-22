@@ -15,7 +15,7 @@ class Itm:
     type_count: int = 1
     required: bool = False
 
-    def get_item(self):
+    def get_item(self) -> str:
         if self.prefix is None:
             return self.name
         return f"{self.prefix}: {self.name}"

@@ -32,7 +32,7 @@ xenobladeXRules: dict[str, Rule["XenobladeXWorld"]] = {
 }
 
 
-def connect_with_rule(world: "XenobladeXWorld", source: str, target: str, rule: Rule["XenobladeXWorld"]):
+def connect_with_rule(world: "XenobladeXWorld", source: str, target: str, rule: Rule["XenobladeXWorld"]) -> None:
     source_region = world.get_region(source)
     target_region = world.get_region(target)
 
@@ -43,7 +43,7 @@ def connect_with_rule(world: "XenobladeXWorld", source: str, target: str, rule: 
     world.set_rule(connection, rule)
 
 
-def set_rules(world: "XenobladeXWorld"):
+def set_rules(world: "XenobladeXWorld") -> None:
     """Setting all the rules for region connections and region->item connections"""
     for region in world.get_regions():
         if region.name == "Menu":

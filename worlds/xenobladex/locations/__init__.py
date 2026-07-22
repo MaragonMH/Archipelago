@@ -14,8 +14,8 @@ class Loc:
     required: bool = False
     pooled: bool = True
 
-    def get_location(self):
+    def get_location(self) -> str:
         return f"{self.prefix}: {self.name}"
 
-    def get_region(self):
+    def get_region(self) -> str:
         return "+".join(sorted(self.rules))

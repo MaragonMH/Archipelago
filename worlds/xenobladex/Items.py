@@ -96,7 +96,7 @@ xenobladeXItems: dict[str, Itm] = {
 }
 
 
-def create_items(world: "XenobladeXWorld"):
+def create_items(world: "XenobladeXWorld") -> None:
     """Create all items"""
     options = cast(Options.XenobladeXOptions, world.options)
     logic_level_steps = options.logic_level_steps.value
@@ -136,7 +136,7 @@ def create_items(world: "XenobladeXWorld"):
         world.random.seed(world.multiworld.seed)
         max_category_size = 950  # -49 for shop item buffer
         maxed_categories: list[str] = []
-        optionals_counter: Counter = Counter()
+        optionals_counter: Counter[str] = Counter()
         while True:
             optionals_data_temp = optionals_data.copy()
             # Remove maxed categories from further rolls
@@ -190,7 +190,7 @@ def get_random_filler_item_name(world: "XenobladeXWorld") -> str:
     return world.random.choice([*itertools.chain(*xenobladeXOptionalItems.values())]).get_item()
 
 
-def debug_print_duplicates():
+def debug_print_duplicates() -> None:
     xs = [i.get_item() for i in xenobladeXItems.values()]
     dup = {x: xs.count(x) for x in xs if xs.count(x) > 1}
     for name, n in dup.items():
