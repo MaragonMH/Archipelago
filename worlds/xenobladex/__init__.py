@@ -3,9 +3,9 @@ from rule_builder.cached_world import CachedRuleBuilderWorld
 from ..AutoWorld import WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
 from functools import partial
-from typing import cast
+from typing import ClassVar, cast
 
-from . import Slot, Items, Locations, Rules, Options
+from . import Slot, Items, Locations, Rules, Options, Settings
 
 
 def launch_client(*args: str) -> None:
@@ -43,6 +43,8 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
     base_id: int = 4100000
 
     options_dataclass = Options.XenobladeXOptions
+
+    settings: ClassVar[Settings.XenobladeXSettings]  # pyright: ignore[reportIncompatibleVariableOverride]
 
     item_name_to_id = (lambda b_id: {item.get_item(): b_id + item.id
                                      for item in Items.xenobladeXItems.values() if item.id is not None})(base_id)
