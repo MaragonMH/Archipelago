@@ -620,7 +620,7 @@ async def main(args: dict[str, Any]) -> None:
             if url.password:
                 args["password"] = urllib.parse.unquote(url.password)
         else:
-            logger.error(f"bad url, found {args["url"]}, expected url in form of archipelago://archipelago.gg:38281")
+            logger.error(f"bad url, found {args['url']}, expected url in form of archipelago://archipelago.gg:38281")
 
     ctx = XenobladeXContext(args["connect"], args["password"], args["xeno_port"], args["debug"])
     ctx.auth = args["name"]
