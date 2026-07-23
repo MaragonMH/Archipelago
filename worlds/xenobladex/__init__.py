@@ -39,7 +39,7 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
     topology_present = True
     web = XenobladeXWeb()
 
-    data_version = 12
+    data_version = 13
     base_id: int = 4100000
 
     options_dataclass = Options.XenobladeXOptions
