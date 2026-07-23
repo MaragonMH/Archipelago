@@ -1,5 +1,4 @@
 import asyncio
-from asyncio.trsock import _RetAddress
 import os
 import pathlib
 import shutil
@@ -7,7 +6,7 @@ import sys
 import zipfile
 import subprocess
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from socketserver import _RequestType, BaseServer
+from socketserver import BaseServer
 import socket
 import random
 import re
@@ -15,7 +14,7 @@ import urllib.parse
 import requests
 import Utils
 from NetUtils import ClientStatus, NetworkItem
-from typing import Any, Tuple, Counter, List, NamedTuple, Optional, Set, cast, Callable
+from typing import Any, Counter, List, NamedTuple, Optional, Set, cast, Callable
 from itertools import groupby
 import colorama
 
@@ -66,7 +65,7 @@ class XenobladeXHttpServer(HTTPServer):
     upload_count = 0
     upload_limit = 25
 
-    def __init__(self, server_address: Tuple[str, int], bind_and_activate: bool = True, debug: bool = False) -> None:
+    def __init__(self, server_address, bind_and_activate: bool = True, debug: bool = False) -> None:
         self.debug = debug
         self.process_game_event: asyncio.Event = asyncio.Event()
         self.process_server_event: asyncio.Event = asyncio.Event()
@@ -259,7 +258,7 @@ class XenobladeXHttpServer(HTTPServer):
 
 
 class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
-    def __init__(self, request: _RequestType, client_address: _RetAddress, server: BaseServer) -> None:
+    def __init__(self, request, client_address, server: BaseServer) -> None:
         self.http_server: XenobladeXHttpServer = cast(XenobladeXHttpServer, server)
         super().__init__(request, client_address, server)
 
