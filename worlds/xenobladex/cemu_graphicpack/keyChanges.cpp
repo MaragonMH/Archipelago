@@ -93,9 +93,6 @@ addItem = 0x02365934
 # disable field skills
 0x0238e138 = nop
 
-# disable affinity quest arts reward
-0x029c7dc0 = li r3,0
-
 0x02814cf4 = b _prepareBladeTerminal # in loadEnd::ScriptManager
 
 # reconfigure rentalCharTerminal to LShop
@@ -131,6 +128,9 @@ moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 0x02b076d4 = b _preItemLoopAdjustment
 _itemLoopStart = 0x02b07584
 _itemLoopEnd = 0x02b076e8
+
+# disable affinity quest arts reward
+0x029c7dc0 = li r3,0
 
 __strcmp = 0x03b16c50
 
@@ -180,7 +180,6 @@ _itemLoopEnd = 0x02b076d8
 __strcmp = 0x03b16bd0
 
 # reconfigure BladeTerminal Locks
-# need further testing
 bladeTerminalScenarioFlagPtr = 0x20343604-0xB821D
 shopTerminalScenarioFlagPtr = 0x20343634-0xB821D
 
