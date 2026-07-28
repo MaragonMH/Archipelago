@@ -28,6 +28,10 @@ getMyUnionNo = 0x0288d380
 0x022e2c24 = nop # dont set all the arts/skills/classes if you change your Class
 0x020c48c4 = blr # disable Class exp
 0x020c63d8 = blr # disable friend exp
+# disable character exp
+addInnerExp = 0x020c395c
+0x022953b4 = bl _addInnerExpAdjusted
+0x02562504 = bl _addInnerExpAdjusted
 
 # remove all equipment for new playable characters
 0x027e43d0 = nop # replace setupPcArmor
@@ -198,7 +202,7 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 #endif
 
 // Parameters from rules.txt
-int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints;
+int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, characterLevel;
 
 extern int* menuBasePtr;
 extern int bladeTerminalScenarioFlagPtr, shopTerminalScenarioFlagPtr;
@@ -221,6 +225,7 @@ int chkLv(int p1, int p2);
 int addItemEquipment(int type, int id, int* data, int flag);
 int addNum(int* ptr, int type, int* data, int flag);
 int addItem(int type, int id, int* item);
+void addInnerExp(int* ptr, int exp, int value);
 
 int* getItem(int* ptr, int enemies, int boxes, int items);
 int getItemNum(int* ptr, int enemies, int boxes);
@@ -329,6 +334,12 @@ int _addItemAdjusted(int type, int id, int* item){
 		return addItem(type, id, item);
 	}
 	return 0;
+}
+
+void _addInnerExpAdjusted(int* ptr, int exp, int value){
+	if(!characterLevel){
+		addInnerExp(ptr, exp, value);
+	}
 }
 
 int _getFlagValAdjusted(int* bdatPtr, const char* flagName, int id, const char* columnName){

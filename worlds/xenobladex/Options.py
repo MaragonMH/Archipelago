@@ -834,6 +834,21 @@ class LogicLevelOvercap(Range):
     range_end = 20
 
 
+class CharacterLevel(CemuChoice):
+    """Connects your logic level to your character level. This disables the normal way to increase your level.
+     Dont enable if Logic Level Steps is set to 0."""
+    display_name = "Link Character Level"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "CharacterLevel"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
 class HiddenLocalItems(LocalItems):
     __doc__ = LocalItems.__doc__
     visibility = Visibility.template | Visibility.spoiler
@@ -895,6 +910,7 @@ class XenobladeXOptions(PerGameCommonOptions):
     # Logic
     logic_level_steps: LogicLevelSteps
     logic_level_overcap: LogicLevelOvercap
+    character_level: CharacterLevel
 
     # Graphic packs
     enemy_aggro: EnemyAggro
@@ -966,6 +982,7 @@ option_groups: list[OptionGroup] = [
     OptionGroup("Logic", [
         LogicLevelSteps,
         LogicLevelOvercap,
+        CharacterLevel,
     ]),
     OptionGroup("Graphic packs", [
         EnemyAggro,

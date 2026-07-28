@@ -15,6 +15,7 @@ $disableSkellAugments = 0
 $disableImportantItems = 1
 $disableBlueprints = 1
 $enemyBookThreshold = 3
+$characterLevel = 1
 $curlPort = 45872
 
 [Preset]
@@ -125,3 +126,14 @@ name = "3"
 category = "EnemyBookThreshold"
 default = 1
 $enemyBookThreshold = 3
+
+[Preset]
+name = "on"
+category = "CharacterLevel"
+default = 1
+$characterLevel = 1
+
+[Preset]
+name = "disable"
+category = "CharacterLevel"
+$characterLevel = 0
