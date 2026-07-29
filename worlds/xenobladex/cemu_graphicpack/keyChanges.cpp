@@ -30,8 +30,8 @@ getMyUnionNo = 0x0288d380
 0x020c63d8 = blr # disable friend exp
 # disable character exp
 addInnerExp = 0x020c395c
-0x022953b4 = bl _addInnerExpAdjusted
-0x02562504 = bl _addInnerExpAdjusted
+# 0x022953b4 = bl _addInnerExpAdjusted
+# 0x02562504 = bl _addInnerExpAdjusted
 
 # remove all equipment for new playable characters
 0x027e43d0 = nop # replace setupPcArmor
@@ -202,7 +202,9 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 #endif
 
 // Parameters from rules.txt
-int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, characterLevel;
+int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints;
+
+extern int characterLevel;
 
 extern int* menuBasePtr;
 extern int bladeTerminalScenarioFlagPtr, shopTerminalScenarioFlagPtr;

@@ -278,63 +278,63 @@ _addFieldSkill:
 	mr r1,r11
 	blr
 _addKey:
-	stwu r1,-64(r1)
+	stwu r1,-80(r1)
 	mflr r0
-	stw r0,68(r1)
-	stw r30,56(r1)
-	stw r31,60(r1)
+	stw r0,84(r1)
+	stw r30,72(r1)
+	stw r31,76(r1)
 	mr r31,r1
-	stw r3,40(r31)
-	stw r4,44(r31)
-	lwz r9,40(r31)
+	stw r3,56(r31)
+	stw r4,60(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,6
 	bne cr0,_add_L21
-	addi r9,r31,24
+	addi r9,r31,44
 	li r4,0
 	mr r3,r9
 	bl getCharaHandle
-	addi r9,r31,24
+	addi r9,r31,44
 	mr r4,r9
 	li r3,0
 	bl SetDead
 	b _add_L22
 _add_L21:
-	lwz r9,40(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,13
 	bne cr0,_add_L23
 	li r3,0
 	bl _reqForceDamagePlayerTargetGoner
 	b _add_L22
 _add_L23:
-	lwz r9,40(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,32
 	bne cr0,_add_L24
-	lwz r5,44(r31)
+	lwz r5,60(r31)
 	li r4,1
 	li r3,16
 	bl setLocal
 	b _add_L22
 _add_L24:
-	lwz r9,40(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,33
 	bne cr0,_add_L25
 	lis r9,fnetBasePtr@ha
 	lwz r9,fnetBasePtr@l(r9)
-	lwz r4,44(r31)
+	lwz r4,60(r31)
 	mr r3,r9
 	bl changeScenarioFlag
 	b _add_L22
 _add_L25:
-	lwz r9,40(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,34
 	bne cr0,_add_L26
 	li r5,1
-	lwz r4,44(r31)
+	lwz r4,60(r31)
 	li r3,1
 	bl setLocal
 	b _add_L22
 _add_L26:
-	lwz r9,40(r31)
+	lwz r9,56(r31)
 	addi r9,r9,23
 	li r5,1
 	mr r4,r9
@@ -342,51 +342,51 @@ _add_L26:
 	bl _addItem
 _add_L22:
 	li r9,24155
-	stw r9,12(r31)
-	li r9,30224
 	stw r9,16(r31)
-	li r9,27587
+	li r9,30224
 	stw r9,20(r31)
-	lwz r9,40(r31)
+	li r9,27587
+	stw r9,24(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,1
 	bne cr0,_add_L27
-	lwz r5,44(r31)
-	lwz r4,12(r31)
-	li r3,1
-	bl setLocal
-	b _add_L36
-_add_L27:
-	lwz r9,40(r31)
-	cmpwi cr0,r9,2
-	bne cr0,_add_L29
-	lwz r5,44(r31)
+	lwz r5,60(r31)
 	lwz r4,16(r31)
 	li r3,1
 	bl setLocal
-	b _add_L36
-_add_L29:
-	lwz r9,40(r31)
-	cmpwi cr0,r9,3
-	bne cr0,_add_L30
-	lwz r5,44(r31)
+	b _add_L41
+_add_L27:
+	lwz r9,56(r31)
+	cmpwi cr0,r9,2
+	bne cr0,_add_L29
+	lwz r5,60(r31)
 	lwz r4,20(r31)
 	li r3,1
 	bl setLocal
-	b _add_L36
+	b _add_L41
+_add_L29:
+	lwz r9,56(r31)
+	cmpwi cr0,r9,3
+	bne cr0,_add_L30
+	lwz r5,60(r31)
+	lwz r4,24(r31)
+	li r3,1
+	bl setLocal
+	b _add_L41
 _add_L30:
-	lwz r9,40(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,4
 	bne cr0,_add_L31
 	lis r9,fnetBasePtr@ha
 	lwz r10,fnetBasePtr@l(r9)
-	lwz r9,44(r31)
+	lwz r9,60(r31)
 	mulli r9,r9,3001
 	mr r4,r9
 	mr r3,r10
 	bl changeScenarioFlag
-	b _add_L36
+	b _add_L41
 _add_L31:
-	lwz r9,40(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,5
 	bne cr0,_add_L32
 	lis r9,_collepediaFlag@ha
@@ -401,26 +401,26 @@ _add_L31:
 	mr r4,r9
 	li r3,2
 	bl setLocal
-	b _add_L36
+	b _add_L41
 _add_L32:
-	lwz r9,40(r31)
+	lwz r9,56(r31)
 	cmpwi cr0,r9,14
-	bne cr0,_add_L36
+	bne cr0,_add_L41
 	lis r9,characterLevel@ha
 	lwz r9,characterLevel@l(r9)
 	cmpwi cr0,r9,0
-	beq cr0,_add_L36
-	lwz r9,44(r31)
+	beq cr0,_add_L41
+	lwz r9,60(r31)
 	cmpwi cr0,r9,60
 	ble cr0,_add_L33
 	li r9,60
-	stw r9,44(r31)
+	stw r9,60(r31)
 _add_L33:
 	li r9,0
 	stw r9,8(r31)
 	b _add_L34
 _add_L35:
-	lwz r9,44(r31)
+	lwz r9,60(r31)
 	mr r30,r9
 	lwz r3,8(r31)
 	bl GetCharaDataPtr
@@ -434,9 +434,54 @@ _add_L34:
 	lwz r9,8(r31)
 	cmpwi cr0,r9,18
 	ble cr0,_add_L35
-_add_L36:
+	li r9,0
+	stw r9,12(r31)
+	b _add_L36
+_add_L40:
+	li r9,0
+	stw r9,52(r31)
+	addi r9,r31,52
+	lwz r4,12(r31)
+	mr r3,r9
+	bl getInnerHandle
+	lis r9,0x1036
+	ori r9,r9,0x7664
+	stw r9,28(r31)
+	lwz r9,52(r31)
+	srwi r9,r9,19
+	stw r9,32(r31)
+	lwz r9,32(r31)
+	mulli r9,r9,12
+	lwz r10,28(r31)
+	add r9,r10,r9
+	stw r9,36(r31)
+	lwz r9,36(r31)
+	lwz r9,0(r9)
+	cmpwi cr0,r9,0
+	beq cr0,_add_L42
+	lwz r9,36(r31)
+	lwz r9,0(r9)
+	mr r3,r9
+	bl getPropAccessor
+	mr r9,r3
+	stw r9,40(r31)
+	lwz r4,60(r31)
+	lwz r3,40(r31)
+	bl setLv
+	b _add_L39
+_add_L42:
 	nop
-	addi r11,r31,64
+_add_L39:
+	lwz r9,12(r31)
+	addi r9,r9,1
+	stw r9,12(r31)
+_add_L36:
+	lwz r9,12(r31)
+	cmpwi cr0,r9,3
+	ble cr0,_add_L40
+_add_L41:
+	nop
+	addi r11,r31,80
 	lwz r0,4(r11)
 	mtlr r0
 	lwz r30,-8(r11)
@@ -487,6 +532,9 @@ GetCharaDataPtr = 0x027f70ac # ::Util
 setLocal = 0x0228f008 # ::GameFlag
 changeScenarioFlag = 0x027d5638 # ::FNet
 addGarage = 0x0234c620 # ::CmdCommon::SceneCmdPrm
+getInnerHandle = 0x023727c0 # ::PartyManager
+setLv = 0x027e1510 # ::DataAccessorHuman
+getPropAccessor = 0x023eefb0
 
 
 [Archipelago_add_V101E]

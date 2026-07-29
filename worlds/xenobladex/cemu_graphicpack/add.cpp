@@ -26,6 +26,9 @@ GetCharaDataPtr = 0x027f70ac # ::Util
 setLocal = 0x0228f008 # ::GameFlag
 changeScenarioFlag = 0x027d5638 # ::FNet
 addGarage = 0x0234c620 # ::CmdCommon::SceneCmdPrm
+getInnerHandle = 0x023727c0 # ::PartyManager
+setLv = 0x027e1510 # ::DataAccessorHuman
+getPropAccessor = 0x023eefb0
 #endif
 
 #ifdef V101E
@@ -62,6 +65,9 @@ int * GetCharaDataPtr(int charaId);
 void setLocal(int width, int position, int value);
 void changeScenarioFlag(int* basePtr, int flag);
 void addGarage(int* idPtr);
+void getInnerHandle(unsigned int* handle, int partyId);
+int* getPropAccessor(int* ptr);
+void setLv(int* ptr, int lv);
 
 void* __malloc (size_t size);
 void __free (void* ptr);
@@ -207,6 +213,17 @@ void _addKey(int id, int flag){
 		for (int charId = 0; charId < 0x13; charId++)
 			// same as DataAccessorHuman::setLv but that function is broken
 			((char*)GetCharaDataPtr(charId))[0x7a] = flag;
+		for (int partyId = 0; partyId < 4; partyId++){
+			unsigned int innerHandle = 0;
+			getInnerHandle(&innerHandle, partyId);
+			// from addInnerExpChara
+			int** base = (int**)0x10367664;
+			int idx = innerHandle >> 0x13 & 0xfff;
+			int** base_offset = base + idx * 3;
+			if (*base_offset == 0) continue;
+			int* propAccessor = getPropAccessor(*base_offset);
+			setLv(propAccessor, flag);
+		}
 	}
 }
 
