@@ -817,6 +817,21 @@ class IncludeBlueprints(CemuChoice):
     ]
 
 
+class IncludeCharacterLevel(CemuChoice):
+    """Connects your logic level to your character level. This disables the normal way to increase your level.
+     Dont enable if Logic Level Steps is set to 0."""
+    display_name = "Link Character Level"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "IncludeCharacterLevel"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
 class LogicLevelSteps(Range):
     """Defines the individual progress each level logic item provides. Increases generation time a lot.
      To disable set to 0"""
@@ -834,18 +849,47 @@ class LogicLevelOvercap(Range):
     range_end = 20
 
 
-class CharacterLevel(CemuChoice):
-    """Connects your logic level to your character level. This disables the normal way to increase your level.
-     Dont enable if Logic Level Steps is set to 0."""
-    display_name = "Link Character Level"
-    default = 1
-    option_off = 0
-    option_on = 1
+class DrifterRangedWeaponType(CemuChoice):
+    """Select the ranged weapon starter type for the drifter class"""
+    display_name = "Drifter Ranged Weapon Type"
+    default = 0
+    option_assault_rifle = 0
+    option_sniper_rifle = 1
+    option_dual_guns = 2
+    option_gatling_gun = 3
+    option_raygun = 4
+    option_psycho_launchers = 5
     cemu_pack = "AP"
-    cemu_option = "CharacterLevel"
+    cemu_option = "DrifterRangedWeapon"
     cemu_selection_names = [
-        "disable",
-        "on",
+        "Assault Rifle",
+        "Sniper Rifle",
+        "Dual Guns",
+        "Gatling Gun",
+        "Raygun",
+        "Psycho Launchers",
+    ]
+
+
+class DrifterMeleeWeaponType(CemuChoice):
+    """Select the melee weapon starter type for the drifter class"""
+    display_name = "Drifter Melee Weapon Type"
+    default = 4
+    option_longsword = 0
+    option_javelin = 1
+    option_dual_swords = 2
+    option_shield = 3
+    option_knife = 4
+    option_photon_sabre = 5
+    cemu_pack = "AP"
+    cemu_option = "DrifterMeleeWeapon"
+    cemu_selection_names = [
+        "Longsword",
+        "Javelin",
+        "Dual Swords",
+        "Shield",
+        "Knife",
+        "Photon Sabre",
     ]
 
 
@@ -896,6 +940,7 @@ class XenobladeXOptions(PerGameCommonOptions):
     # qst: IncludeQuestLocations
     ebk: IncludeEnemyBookLocations
     enemy_book_threshold: EnemyBookThreshold
+    character_level: IncludeCharacterLevel
 
     # Items
     amr: IncludeGroundArmor
@@ -910,7 +955,10 @@ class XenobladeXOptions(PerGameCommonOptions):
     # Logic
     logic_level_steps: LogicLevelSteps
     logic_level_overcap: LogicLevelOvercap
-    character_level: CharacterLevel
+
+    # Customisation
+    drifter_ranged_weapon_type: DrifterRangedWeaponType
+    drifter_melee_weapon_type: DrifterMeleeWeaponType
 
     # Graphic packs
     enemy_aggro: EnemyAggro
@@ -968,6 +1016,7 @@ option_groups: list[OptionGroup] = [
         # IncludeShopLocations,
         IncludeEnemyBookLocations,
         EnemyBookThreshold,
+        IncludeCharacterLevel,
     ]),
     OptionGroup("Items", [
         IncludeGroundArmor,
@@ -982,7 +1031,10 @@ option_groups: list[OptionGroup] = [
     OptionGroup("Logic", [
         LogicLevelSteps,
         LogicLevelOvercap,
-        CharacterLevel,
+    ]),
+    OptionGroup("Customisation", [
+        DrifterRangedWeaponType,
+        DrifterMeleeWeaponType,
     ]),
     OptionGroup("Graphic packs", [
         EnemyAggro,
