@@ -55,6 +55,12 @@ class DeferredEntranceMode(Enum):
     default = "default"
     disabled = "off"
 
+class TrackerException(Exception):
+
+    def __init__(self, *args: object, message:str) -> None:
+        self.message = message
+        super().__init__(*args)
+
 class TrackerSettings(Group):
     class TrackerPlayersPath(UserFolderPath):
         """Players folder for UT look for YAMLs"""
