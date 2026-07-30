@@ -1674,6 +1674,7 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
         return
     relevent_region = None
     relevent_location = None
+    relevent_entrance = None
     tracker_struct = ctx.updateTracker()
     state = None
     current_world = ctx.tracker_core.get_current_world()
@@ -1702,13 +1703,14 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
     from Utils import get_intended_text
     location_names = set(ctx.tracker_core.multiworld.regions.location_cache[ctx.tracker_core.player_id])
     region_names = set(ctx.tracker_core.multiworld.regions.region_cache[ctx.tracker_core.player_id])
-    result, usable, response = get_intended_text(dest_name, location_names.union(region_names))
+    entrance_names = set(ctx.tracker_core.multiworld.regions.entrance_cache[ctx.tracker_core.player_id])
+    result, usable, response = get_intended_text(dest_name, location_names.union(region_names).union(entrance_names))
     if not usable:
         logger.error(response)
         return
     dest_name = result
     if dest_name in location_names:
-        location = ctx.tracker_core.multiworld.get_location(dest_name, ctx.tracker_core.player_id)
+        location = current_world.get_location(dest_name)
         state = tracker_struct.state
         if not state: return
         if location.can_reach(state):
@@ -1720,7 +1722,7 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
             state = tracker_struct.glitches_state
             ctx.print_json([{"type":"text","text":"using "},{"type":"color","color":"yellow","text":"Glitches:"}])
     elif dest_name in region_names:
-        relevent_region = ctx.tracker_core.multiworld.get_region(dest_name,ctx.tracker_core.player_id)
+        relevent_region = current_world.get_region(dest_name)
         state = tracker_struct.state
         if not state: return
         if relevent_region.can_reach(state):
@@ -1730,6 +1732,19 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
             ctx.print_json([{"type":"text","text":"using "},{"type":"color","color":"yellow","text":"Glitches:"}])
         else: #all else fails, we need to give up
             relevent_region = None
+    elif dest_name in entrance_names:
+        entrance = current_world.get_entrance(dest_name)
+        state = tracker_struct.state
+        if not state: return
+        if not entrance.parent_region: return
+        if entrance.can_reach(state):
+            relevent_region = entrance.parent_region
+            relevent_entrance = entrance
+        elif tracker_struct.glitches_state and entrance.can_reach(tracker_struct.glitches_state):
+            relevent_region = entrance.parent_region
+            relevent_entrance = entrance
+            state = tracker_struct.glitches_state
+            ctx.print_json([{"type":"text","text":"using "},{"type":"color","color":"yellow","text":"Glitches:"}])
     else:
         logger.error(response)
         return
@@ -1788,6 +1803,22 @@ def get_logical_path(ctx: TrackerGameContext, dest_name: str):
                     returned_json.append({"type":"text","text":":\n    "})
                     returned_json.extend(relevent_location.access_rule.explain_json(state))
                 ctx.print_json(returned_json)
+            if relevent_entrance:
+                if hasattr(current_world, "explain_path"):
+                    returned_json = current_world.explain_path(relevent_entrance,state)
+                    if returned_json:
+                        if isinstance(returned_json,list) and not isinstance(returned_json[0],list):
+                            ctx.print_json(returned_json)
+                        else:
+                            for message in returned_json:
+                                ctx.print_json(message)
+                        return
+                returned_json = [{"type":"text","text":"->"},{"type":"color","color":"blue","text":relevent_entrance.name}]
+                if hasattr(relevent_entrance.access_rule,"explain_json"):
+                    returned_json.append({"type":"text","text":":\n    "})
+                    returned_json.extend(relevent_entrance.access_rule.explain_json(state))
+                ctx.print_json(returned_json)
+
         else:
             logger.info(f"{dest_name} not in logic")
 
