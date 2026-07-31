@@ -230,6 +230,8 @@ class FullTests(OSRSMTestBase):
         self.assertTrue( rule1.resolve(world)(all_state))  #fails
             
     def test_lumbridge_diary_not_in_logic(self)-> None:
+        assert isinstance(self.world,OSRSMWorld)
+        self.assertEqual(self.multiworld.get_all_state().prog_items[self.player]["Quest Point"], int(self.world.location_name_to_row["Buy the ~|Quest point cape|~"].rule[0].value))
         self.assertTrue(self.multiworld.get_all_state().can_reach_location("~|Lumbridge and Draynor Diary#Elite|~ Task 6",self.player))
 
     def test_items_needed_for_task(self)-> None:
