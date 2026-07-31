@@ -137,6 +137,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         self.items_already_created = 0
 
         self.bingo_board:list[list[str]] = []
+        self.prog_chunks:list[int]=[]
 
     """
     This function pulls from LogicCSVToPython so that it sends the correct tag of the repository to the client.
@@ -150,12 +151,15 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         data["bingo_board"] = self.bingo_board
         data["goal_task"] = self.options.goal_location.value
         data["options"] = self.options.as_dict(*logic_relevent_options)
+        data["prog_chunks"] = self.prog_chunks
         return data
     
     def generate_early(self) -> None:
         re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough",{})
         if re_gen_passthrough and self.game in re_gen_passthrough:
             re_gen_passthrough = re_gen_passthrough[self.game]
+            if "data_csv_tag" not in re_gen_passthrough or re_gen_passthrough["data_csv_tag"] != data_csv_tag:
+                raise OptionError(f"Attempting to track an incorrect csv tag, local: {data_csv_tag}, remote: {'missing' if 'data_csv_tag' not in re_gen_passthrough else re_gen_passthrough['data_csv_tag']}")
             self.options.disable_chunk_culling.value = DisableChunkCulling.option_disabled #don't cull in UT, this is fine because UT doens't do fill
             self.options.disable_task_culling.value = True 
             for option_name in logic_relevent_options:
@@ -165,6 +169,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             self.starting_area_item = re_gen_passthrough["starting_area"]
             self.bingo_board = re_gen_passthrough["bingo_board"]
             self.options.banned_chunks.value = set(self.options.banned_chunks.value) #it's a list from slot data, make it a set
+            self.prog_chunks = re_gen_passthrough["prog_chunks"]
         else:
             if self.options.starting_area.current_key in rollable_chunks:
                 self.starting_area_item = self.random.choice(rollable_chunks[self.options.starting_area.current_key])
@@ -180,7 +185,9 @@ class OSRSMWorld(CachedRuleBuilderWorld):
                 defered_banned_chunks |= {code for code in region_codes if (chunk_id+"-") in code}
         self.options.banned_chunks.value |= defered_banned_chunks
 
-        self.multiworld.push_precollected(self.create_item(self.starting_area_item))
+        starting_item = self.create_item(self.starting_area_item)
+        starting_item.classification = ItemClassification.progression
+        self.multiworld.push_precollected(starting_item)
 
         partial_names = []
         for loc_name in self.options.pre_completed_tasks.value:
@@ -445,6 +452,9 @@ class OSRSMWorld(CachedRuleBuilderWorld):
         # First, create the "Menu" region to start
         menu_region = self.create_region("Menu")
 
+        #Tutorial island gives a quest point now
+        self.push_precollected(self.create_event("Quest Point"))
+
         for region_row in region_rows:
             if region_row.id not in self.options.banned_chunks:
                 self.create_region(region_row.id) #id is the name of the region, name is the name of the item that unlocks it
@@ -706,11 +716,19 @@ class OSRSMWorld(CachedRuleBuilderWorld):
 
         #create_items
         itempool:list[Item]= []
-        for item_row in item_rows:
-            if item_row.name not in [self.starting_area_item]:
-                for c in range(item_row.amount):
-                    item = self.create_item(item_row.name)
+        if ut_gen:
+            for item_id in self.prog_chunks:
+                item_name = self.item_id_to_name[item_id]
+                if item_name not in [self.starting_area_item]:
+                    item = self.create_item(item_name)
+                    item.classification = ItemClassification.progression #In UT we have to make sure that intentionally created items have prog flag
                     itempool.append(item)
+        else:
+            for item_row in item_rows:
+                if item_row.name not in [self.starting_area_item]:
+                    for c in range(item_row.amount):
+                        item = self.create_item(item_row.name) #They're already prog in real gen
+                        itempool.append(item)
         
         forced_locations = []
         bingo_locations:list[Location] = []
@@ -913,6 +931,7 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             item_name = f"Area: {region_name}"
             if region_code in prog_regions and item_name not in really_needed_items:
                 really_needed_items.append(item_name)
+                self.prog_chunks.append(self.item_name_to_id[item_name])
             if region_code in useful_regions and item_name not in not_really_needed_items:
                 not_really_needed_items.append(item_name)
         
@@ -1130,9 +1149,10 @@ class OSRSMWorld(CachedRuleBuilderWorld):
             item_id = None
             if name in self.item_name_to_id:
                 item_id = self.item_name_to_id[name]
-            flags = item.progression
-            if getattr(self.multiworld,"generation_is_fake",False):
-                flags = ItemClassification.filler #in ut we can't know if an item is actually prog or not so let UT deal with it
+            if not getattr(self.multiworld,"generation_is_fake",False):
+                flags = item.progression
+            else:
+                flags = ItemClassification.filler #In a UT Gen, just make everything filler, we'll sort it out later
             return OSRSMItem(item.name, flags, item_id, self.player)
         raise Exception("Not able to find item "+name)
 
