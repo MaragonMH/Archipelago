@@ -6,11 +6,6 @@ from .LogicCSV.macros_generated2 import skill_names
 from .LogicCSV.items_generated2 import rollable_chunks
 from schema import Schema,Optional,And
 
-logic_relevent_options = [
-    "goal_type","bingo_size","max_drop_rate","full_drop_rate","maximum_training_levels","starting_skill_levels",
-    "qp_per_level","levels_per_qp","base_training_levels","tutorial_island_items","pre_completed_tasks","banned_chunks"
-]
-
 locations = {"option_" + start: i for i, start in enumerate(rollable_chunks.keys())}
 # This way the dynamic start names are picked up by the MetaClass Choice belongs to
 StartingArea = type("StartingArea", (TextChoice,), {
@@ -201,6 +196,11 @@ class BannedChunks(OptionSet):
     """
     display_name = "Banned Chunks"
 
+
+logic_relevent_options = [
+    "goal_type","bingo_size","goal_location","max_drop_rate","full_drop_rate","maximum_training_levels","starting_skill_levels",
+    "qp_per_level","levels_per_qp","base_training_levels","tutorial_island_items","pre_completed_tasks","banned_chunks"
+]
 
 @dataclass
 class OSRSMOptions(PerGameCommonOptions):
