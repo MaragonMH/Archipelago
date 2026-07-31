@@ -221,7 +221,8 @@ banned_drop_items:list[str]=[
     "Forgotten Soul (Soul Wars)","Gang boss","Gangster","Giant Sea Snake","Glod","Golem","Justiciar Zachariah","Kebbit","Nazastarool",
     "Nylocas Vasilias","Pestilent Bloat","Pheasant","Porazdir","Shaeded Beast","Slash Bash","Sotetseg","The Maiden of Sugadinti","The Mimic",
     "Undead Zealot","Verzik Vitur","Wolf (Soul Wars)","Xarpus","Zombie (Zogre Flesh Eaters)","Tanglefoot","Ent seed loot","The Shaikahan",
-    "Wormbrain","Jonny the beard","Wise Old Man tasks"
+    "Wormbrain","Jonny the beard","Wise Old Man tasks","Baby impling","Dragon impling","Earth impling","Eclectic impling","Essence impling",
+    "Gourmet impling","Magpie impling","Nature impling","Ninja impling","Young impling"
 ]
 
 banned_thieving_objects:list[str]=[
