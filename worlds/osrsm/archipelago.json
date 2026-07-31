@@ -1,7 +1,7 @@
 {
     "compatible_version": 7, 
     "minimum_ap_version": "0.6.7",
-    "world_version": "0.1.8",
+    "world_version": "0.1.10",
     "authors": ["Digiholic","FarisTheAncient"],
     "version": 7, 
     "game": "Old School Runescape Members"
