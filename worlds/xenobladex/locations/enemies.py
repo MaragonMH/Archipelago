@@ -186,7 +186,7 @@ Data("Tellurium Oc-serv - Sylv: Seabird's Beak", rules=["Lvl 21"]),
 Data("Niobium Oc-serv - Sylv: South Hardheart Canyon", rules=["Lvl 31"]),
 Data("Thallium Oc-serv - Sylv: Badr Stronghold", rules=["Lvl 41"]),
 Data("Bismuth Oc-serv - Sylv: FN Site 404", rules=["Lvl 51"]),
-Data("Si-el, the Vacuous - Noct: Qing Long Glade", rules=["Lvl 19"]),
+Data("Si-el, the Vacuous - Noct: Qing Long Glade", rules=["Lvl 19", "Skell License"]),  # skell to wake up
 Data("Chromium Oc-serv - Obli: Alexander Ridge", rules=["Lvl 41"]),
 Data("EN090503_NAME_F00_21", valid=False, rules=["Lvl 51"]),
 Data("Ro-darm, the Demon Claw - Obli: North Coast", rules=["Lvl 38", "Skell License"]),
