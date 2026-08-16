@@ -13,7 +13,7 @@ Data("Celica 4 H2H - Indu Dist: Production Plant - Cat", rules=["Celica 4"], dep
 Data("New in New LA - Indu Dist: Production Plant - Chp 9", rules=["Lvl 44"], depends=["Chapter 9", "Manhunt"]),
 Data("Celica - Indu Dist: Production Plant", depends=["New in New LA"]),
 Data("Yardleys Scheme - Indu Dist: Test Hangar - Chp 3", depends=["Chapter 3"]),
-Data("Off the Record Biological - Indu Dist: Test Hangar - Chp 3", rules=["Blade License", "Biological 4", "Lvl 41"], depends=["Chapter 3"]),
+Data("Off the Record Biological - Indu Dist: Test Hangar - Chp 3", rules=["Blade License", "Biological 4", "Lvl 41"], depends=["Chapter 3"]), # not quite sure but dont think it needs the field skill lvls
 Data("Boot Camp - Indu Dist: Test Hangar - Gwin 1 - Chp 10", rules=["Gwin 1", "Shop Boot Camp", "Lvl 46"], depends=["Chapter 10", "Nine Lives"]),
 Data("Alien Wreckage 1 - Indu Dist: Test Hangar - Chp 8 - Archeological 2", rules=["Archeological 2"], depends=["Chapter 8"]),
 Data("A Girls Wings - Indu Dist: Test Hangar - Chp 9", rules=["Skell License", "Lvl 27"], depends=["Chapter 9", "The Skell License"]), # depends flight module quest
@@ -133,7 +133,7 @@ Data("Phog 1 H2H - Resi Dist: Deliverance Park - Afternoon", rules=["Phog 1"], d
 Data("Circle of Life - Resi Dist: Deliverance Park - Chp 7", rules=["Senirapa Water"], depends=["Chapter 7", "The Journey Begins", "Water Woes"]),
 Data("Phog - Resi Dist: Deliverance Park", depends=["Foggy Dilemma"]),
 Data("Lin 5 H2H - Resi Dist: Deliverance Park - Morning", rules=["Lin 5"], depends=["Lin 4 H2H", "Chapter 10", "A Girls Wings"]), 
-Data("Off the Record Archeological - Resi Dist: Deliverance Park", rules=["Archeological 4", "Blade License"], depends=["Sentinels Nest", "Calore, the Lava Walker", "Land Forfex"]),
+Data("Off the Record Archeological - Resi Dist: Deliverance Park", rules=["Archeological 4", "Blade License"], depends=["Sentinels Nest", "Calore, the Lava Walker", "Land Forfex"]), # not quite sure but dont think it needs the field skill lvls
 Data("Phog 3 H2H - Resi Dist: Sports Complex", rules=["Phog 3"], depends=["Phog 2 H2H"]), 
 Data("Alien Wreckage 4 - Resi Dist: Sports Complex - Chp 8 - Archeological 4", rules=["Archeological 4"], depends=["Chapter 8"]),
 Data("Gwin 2 H2H - Resi Dist: Sports Complex - Late Night", rules=["Gwin 2"], depends=["Gwin 1 H2H"]), 
@@ -160,7 +160,7 @@ Data("Doug 1 H2H - Resi Dist: Ishmael Hills - Afternoon - Dog", rules=["Doug 1"]
 Data("Bread and a Circus - Resi Dist: Ishmael Hills - Chp 10", rules=["Slice of Bread"], depends=["Chapter 10", "Muimuis Meltdown"]),
 Data("Elma 2 H2H - Resi Dist: Water Puri Plant - Night - Cat", rules=["Elma 2"], depends=["Elma 1 H2H", "Nine Lives"]), 
 Data("New Frontier - Resi Dist: Cathedral - Chp 12", rules=["FNet", "Miranium 20", "Data Unit FN098"], depends=["Chapter 12", "Planetary Pioneer V", "Entrepreneurial Spirit", "Wrothian Innovation"]),
-Data("Off the Record Mechanical - Resi Dist: Cathedral", rules=["Mechanical 4", "Blade License", "Lvl 55"], depends=["Lyla's Galdr", "Mount Edge Peak", "Savage Sketch"]),
+Data("Off the Record Mechanical - Resi Dist: Cathedral", rules=["Mechanical 4", "Blade License", "Lvl 55"], depends=["Lyla's Galdr", "Mount Edge Peak", "Savage Sketch"]), # not quite sure but dont think it needs the field skill lvls
 Data("Mia 1 H2H - Resi Dist: Cathedral - Late Night", rules=["Mia 1"], depends=["Mia"]), 
 Data("Caroline - Aff Shift - Resi Dist: Ishmael Hills - Daytime - Chp 7", depends=["Chapter 7", "Circle of Life"]),
 Data("Alexs Last Stand - Resi Dist: Ishmael Hills - Chp 10", rules=["Lvl 43"], depends=["Chapter 10", "The Line of Fire"]),
@@ -206,7 +206,7 @@ Data("Rescue at the Ensconced Citadel - Admi Dist: BLADE Tower - Chp 6", rules=[
 Data("The Ultimate Price - Admi Dist: BLADE Tower - Chp 10", rules=["Lvl 38", "Crimson Tear"], depends=["Chapter 10", "Cavern Crushers"]),
 Data("The Handy Ma-non - Admi Dist: Hangar - Chp 5", rules=["Lvl 21", "Windshield Glass"], depends=["Chapter 5"]),
 Data("My Dream - Aff Mission - Admi Dist: Hangar - Chp 5", rules=["Lvl 22", "L-002 Experimental Plant"], depends=["Chapter 5"]),
-Data("Cedric - Aff Shift - Admi Dist: Hangar - Nighttime - Chp 5", depends=["Tree-mendous"]),
+Data("Cedric - Aff Shift - Admi Dist: Hangar - Nighttime - Chp 5", depends=["Tree-mendous", "A Day in the Life"]),
 Data("The Nopon Heir - Aff Mission - Admi Dist: Armory Alley - L 4 - Chp 12", rules=["L 4", "Lvl 49", "Guardian Etherscale"], depends=["Chapter 12", "BFFs", "A Girls Wings", "Ls Conundrum", "Divine Roost"]),
 Data("L - Admi Dist: Armory Alley - Chp 4", depends=["Chapter 4"]),
 Data("Thats In-Credible! - Admi Dist: BLADE Tower - Chp 5", rules=["Lvl 23", "Quest Thats Incredible"], depends=["Chapter 5"]),
