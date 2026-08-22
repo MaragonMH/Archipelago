@@ -32,12 +32,12 @@ need to configure and export a config file.
     - Skell Armor, Weapons, Augments, Frames
     - Armor, Weapons, Augments
     - Friendship Levels
-    - Overdrive, FrontierNav, BladeLicense, Skell License, Flight Module
+    - Overdrive, FrontierNav, Progressive License (BladeLicense, Skell License, Flight Module)
 3. The following changes have been made:
     - Mission Rewards, Treasures, Enemies no longer drop items
     - Field Skills, Arts, Overdrive, FrontierNav, BladeLicense, Skell License, Flight Module
       are no longer obtainable through the story and missions
-    - Class and Friendship experience can no longer be obtained
+    - Class, Friendship, Character (if enabled) experience can no longer be obtained
     - Skells are now delivered without any armor or weapons
     - Shop Terminal is disabled
     - Arms Manufacturer Terminal is disabled except for `Upgrade Battle Traits`
@@ -106,12 +106,12 @@ end of Chapter 3. The best way to get checks in the early game is to uncover new
 very weak and struggling to kill even basic enemies. You can not venture outside Primordia until you complete Chapter 3.
 During Chapter 2 you will notice that you dont unlock the `Frontier-Nav` this has very big implications because you will receive all the
 capabilites of it through the item `KEY: Fnet`. This includes fast travel, viewing the region maps with quest markers, installing dataprobes, 
-getting Fnet ingame locations and progressing the quest `Probe-fessional`. After Chapter 2 you will also not receive the `KEY: Blade License` 
+getting Fnet ingame locations and progressing the quest `Probe-fessional`. After Chapter 2 you will also not receive the `Blade License` 
 this means you are not able to raise your Blade Lvl and therefore unable to complete the quest `Blade Level Basics`. You can also not interact 
 with Blade Terminals, which includes the relocated L Shop the mission terminal, the shop terminals and the blade barracks terminal.
 
 ### Early Game
-After you completed Chapter 3 you can no longer progress in the story until you find both your `KEY: Fnet` and `KEY: Blade License`.
+After you completed Chapter 3 you can no longer progress in the story until you find both your `KEY: Fnet` and first `KEY: Progressive License` (Blade License).
 Both of these items can be very hard to get but are very beneficial because they open up a lot more locations.
 Getting these however can be a long task you might have to venture deep into late game areas like Cauldros. Because this game has so many
 locations its not really feasible to do all the locations to stumble onto them and the default hinting system does a very poor job at aiding you.
@@ -129,8 +129,8 @@ After you get those items you can start chapter 4.
 Once you managed to finish Chapter 4. You are now only locked by soft checks until the end of Chapter 10.
 To continue you mostly need the required affinity 1 out of 5 with Lao `FRD: Lao` which at this point you will probably already have, 
 to start the affinity mission `The Matchmaker` for Chapter 8. And complete segments and 
-affinity missions which shouln't be too hard for you. You can decide to take some detours to get either the `KEY: Skell License`,
-which allows you to pilot `Skells`, if you received specific skell models as items and already have the `KEY: Blade License`.
+affinity missions which shouln't be too hard for you. You can decide to take some detours to get either the second `KEY: Progressive License` (Skell License),
+which allows you to pilot `Skells`, if you received specific skell models as items.
 Just use the garage terminal. All skell equipment can be received through AP if enabled. Or get the `KEY: Overdrive` to grant you access
 to the Overdrive ability in combat. After that you should look for the `WPN: Solider Assault Rifle` this is required for the affinity mission `Boot Camp` for Chapter 11.
 The item exists multiple times, all of them work but the `WPN: Solider Assault Rifle_1` is the one in logic. Dont be afraid of selling items for credits, because all relevant
@@ -138,14 +138,14 @@ weapons, armor for quest chains is not sellable. If you do sell anything else th
 Similarly you need `FRD: Gwin` for this affinity mission.
 
 ### End Game
-For Chapter 12 you need to unlock both the `KEY: Skell License` and finish the missions `The Skell License` and `A Girl's Wings`. Usually during these quests you would be put into a
+For Chapter 12 you need to unlock both the third `KEY: Progressive License` (Flight Module) and finish the missions `The Skell License` and `A Girl's Wings`. Usually during these quests you would be put into a
 skell. This is disabled for AP, which also means that you have to complete `A Girl's Wings` with your own skell instead. Be careful to only start this affinity mission if you have a skell.
 Otherwise you might run into the issue mentioned in `Known Issues`.
-You dont need the `KEY: Flight Module` to get on top of `Talon Rock`.
+You dont need the `Flight Module` to get on top of `Talon Rock`.
 For the submissions of `The Skell License` you should watch the 15k credits in one Fnet tick,
 which just require a few FN-Nodes and Dataprobes and the slaying of the grexes, with a specific weapon. 
-There are three option available `WPN: Trial Knife` (this is the one in logic), `WPN: Trial Sword` and `WPN: Trial Assault Rifle`
-After that you need the `KEY: Flight Module` and a skell to not take a bath at the start of Chapter 12. Now you can finish the game.
+There are three option available `WPN: Trial Knife`, `WPN: Trial Sword` and `WPN: Trial Assault Rifle`
+After that you need the `Flight Module` and a skell to not take a bath at the start of Chapter 12. Now you can finish the game.
 
 ## Advanced Tech
 There are three techniques that are included in logic that you should know about.
@@ -174,8 +174,7 @@ If you would activate a cutscene after getting a specific item you will now just
 - The `AS0115 Formula XT` can somehow not be configured in the garage.
 - The main inventory can display items of the weapon and armor categories for skells and characters incorrectly. They correctly appear in the corresponding equip menus though.
 - If you enable all the Items and disable all the Locations you will be unable to fit all the progression items into the Multiworld. The generation will fail.
-- You can softlock yourself if you enabled `Important Items`, during Affinity Missions. Because some of them require `Important Items` and those can be placed behind other missions
+- You can softlock yourself, especially if you enabled `Important Items`, during Affinity Missions. Because some of them require `Important Items` and those can be placed behind other missions
   that you cant start if you already started a Affinity Mission. There are two solutions either dont save during Affinity Mission or make sure you have the required Items beforehand.
   You can send the item to yourself if you are stuck to rectifiy the situation.
-- On startup of Cemu the graphic pack settings will reset to the last settings if you click on the individual graphic packs without starting it once. Then the last settings can be applied by AP.
   

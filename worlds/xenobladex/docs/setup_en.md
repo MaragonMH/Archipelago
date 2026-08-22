@@ -36,6 +36,8 @@ You can also use the provided Templates of `Xenoblade X.yaml`.
 Select `Generate Template Options` within the `Archipelago Launcher`.
 You can edit the file to suit your preferences and create your own options.
 
+Or alternatively you can use the `Options Creator` within the `Archipelago Launcher`.
+
 ## Generation and Hosting
 For detailed instructions regarding Generation and Hosting read
 [this](tutorial/Archipelago/setup/en).
