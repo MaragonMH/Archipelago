@@ -226,7 +226,7 @@ class XenobladeXHttpServer(HTTPServer):
     def download_items(self, logic_level_steps: int) -> list[GameItem]:
         items: list[GameItem] = []
 
-        self._match_line(items, 0, r'^KY Id=([1-9a-fA-F]{1}) Fg=([0-9a-fA-F]{2})\n')
+        self._match_line(items, 0, r'^KY Id=([1-9a-fA-F]{1}) Fg=([0-9a-fA-F]{2})\n', has_lvl=True)
         self._match_line(items, 0, r'^KY Id=([eE]{1}) Fg=([0-9a-fA-F]{2})\n', has_lvl=True,
                          lvl_change=lambda lvl: get_logic_level_count(lvl, logic_level_steps))
         self._match_line(items, None, r'^IT Id=([0-9a-fA-F]{3}) Tp=([0-9a-fA-F]{2})(?:\n| S1Id)')

@@ -853,6 +853,11 @@ class LogicLevelOvercap(Range):
     range_end = 20
 
 
+class EarlyChapter4Logic(DefaultOnToggle):
+    """Forces FNet and Blade License to appear before Lvl 16"""
+    display_name = "Early Chapter 4 Logic"
+
+
 class DrifterRangedWeaponType(CemuChoice):
     """Select the ranged weapon starter type for the drifter class"""
     display_name = "Drifter Ranged Weapon Type"
@@ -967,6 +972,7 @@ class XenobladeXOptions(PerGameCommonOptions):
     # Logic
     logic_level_steps: LogicLevelSteps
     logic_level_overcap: LogicLevelOvercap
+    early_chapter4_logic: EarlyChapter4Logic
 
     # Customisation
     drifter_ranged_weapon_type: DrifterRangedWeaponType
@@ -1044,6 +1050,7 @@ option_groups: list[OptionGroup] = [
     OptionGroup("Logic", [
         LogicLevelSteps,
         LogicLevelOvercap,
+        EarlyChapter4Logic,
     ]),
     OptionGroup("Customisation", [
         DrifterRangedWeaponType,
