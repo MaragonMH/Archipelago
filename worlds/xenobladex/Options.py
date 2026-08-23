@@ -803,7 +803,7 @@ class DrifterMeleeWeaponType(CemuChoice):
 class CombatStartingItems(Range):
     """Start with the number of specified useful arts/skills/classes"""
     display_name = "Combat Starting Items"
-    default = 30
+    default = 15
     range_start = 0
     range_end = 252
 
