@@ -234,7 +234,7 @@ class XenobladeXHttpServer(HTTPServer):
         self._match_line(items, 0x1d, r'^IT Id=([0-9a-fA-F]{3}) Tp=1[dD] Cn=([0-9a-fA-F]{3})', has_lvl=True)
         equip_regex = r'^EQ CId=[0-9a-fA-F]{3} Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1})'
         self._match_line(items, 0x6, equip_regex, min=0, max=1)
-        self._match_line(items, 0x1, equip_regex, min=2, max=6)
+        self._match_line(items, 0x1, equip_regex, min=2, max=11)
         doll_regex = r'^DL GIx=[0-9a-fA-F]{2} Id=([0-9a-fA-F]{3}) Ix=([0-9a-fA-F]{1})'
         self._match_line(items, 0xf, doll_regex, min=0, max=0x9)
         self._match_line(items, 0x9, doll_regex, min=0xa, max=0xa)
