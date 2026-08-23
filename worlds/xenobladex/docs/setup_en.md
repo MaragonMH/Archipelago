@@ -61,6 +61,9 @@ If you migrated from an older version of Cemu you might need to freshly reinstal
 ### Xenoblade X is not receiving/sending any items
 Make sure that you are one one of the supported versions of Cemu and Xenoblade X.
 Make sure you reached the first day cutscene overlooking Primordia and time is progressing.
+There is a known issue that it sometimes does not work the first few times for unknown reasons.
+If you can see that the gear of your character has been successfully removed and you still dont get any 
+items you should restart from a fresh client a few times. It should eventually work.
 
 ### Xenoblade X crashed what should i do?
 If your client is still active just press `Disconnect` and then `Connect` and your game should reopen.
