@@ -154,6 +154,9 @@ shopTerminalScenarioFlagPtr = 0x20343634
 0x02a32720 = nop # skell weapon
 0x02a32748 = nop # skell armor
 
+# disable items from collepedia
+0x02a0acf4 = nop
+
 openHudTelop = 0x02c91f3c # ::MenuTask
 chkLv = 0x02af8e7c # ::menu::MenuDollGarage
 #endif
@@ -201,6 +204,9 @@ shopTerminalScenarioFlagPtr = 0x20343634-0xB821D
 0x02a326e8 = nop # ground armor
 0x02a32710 = nop # skell weapon
 0x02a32738 = nop # skell armor
+
+# disable items from collepedia
+0x02a0ace4 = nop
 
 openHudTelop = 0x02c91edc # ::MenuTask
 chkLv = 0x02af8e6c # ::menu::MenuDollGarage
