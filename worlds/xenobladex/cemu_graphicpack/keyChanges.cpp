@@ -102,10 +102,6 @@ addItem = 0x02365934
 
 0x02814cf4 = b _prepareBladeTerminal # in loadEnd::ScriptManager
 
-# reconfigure rentalCharTerminal to LShop
-0x028eacc8 = bl _prepareRentalCharTerminal
-beginScript = 0x028cb70c # ::Gimmick::GimmickMapObj
-
 # overwrite setLocal for blade flag
 0x0228f018 = bl _setLocal
 
@@ -245,8 +241,6 @@ int* getItem(int* ptr, int enemies, int boxes, int items);
 int getItemNum(int* ptr, int enemies, int boxes);
 
 int getFlagVal(int* bdatPtr, const char* flagName, int id, const char* columnName);
-
-int beginScript(int** scriptPtr);
 
 
 int _IsPermit(){
@@ -433,21 +427,6 @@ void _prepareBladeTerminal(){
 		if(_hasPreciousItem(24 + 5 - 1)) shopTerminalScenarioFlagPtr = 0;
 		else shopTerminalScenarioFlagPtr = 0x7fffff;
 	}
-}
-
-int _prepareRentalCharTerminal(int** scriptPtr){
-	int* fldConsoleParamPtr = scriptPtr[0x29];
-	if(__strcmp((char*)fldConsoleParamPtr,"fld_console.sb")) return beginScript(scriptPtr);
-	int fldConsoleScriptId = fldConsoleParamPtr[9];
-	if(fldConsoleScriptId == 2){
-		if(_hasPreciousItem(24 + 5 - 1)) return beginScript(scriptPtr + 0x98);
-		else {
-			openHudTelop(menuBasePtr, 52);
-			return 0; // does not matter
-		}
-	} 
-	if(fldConsoleScriptId == 0xb) return beginScript(scriptPtr - 0x98);
-	return beginScript(scriptPtr);
 }
 
 // Do not call this function directly, but rather call the first label

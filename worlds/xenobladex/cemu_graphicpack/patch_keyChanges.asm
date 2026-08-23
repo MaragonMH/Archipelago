@@ -965,89 +965,6 @@ _keyChanges_L87:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-_keyChanges_LC7:
-	.string "fld_console.sb"
-_prepareRentalCharTerminal:
-	stwu r1,-48(r1)
-	mflr r0
-	stw r0,52(r1)
-	stw r31,44(r1)
-	mr r31,r1
-	stw r3,24(r31)
-	lwz r9,24(r31)
-	lwz r9,164(r9)
-	stw r9,8(r31)
-	lis r9,_keyChanges_LC7@ha
-	addi r4,r9,_keyChanges_LC7@l
-	lwz r3,8(r31)
-	lis r12,_after_keyChanges_2__strcmp@ha
-	addi r12,r12,_after_keyChanges_2__strcmp@l
-	mtlr r12
-	lis r12,__strcmp@ha
-	addi r12,r12,__strcmp@l
-	mtctr r12
-	bctr
-_after_keyChanges_2__strcmp:
-	mr r9,r3
-	addic r10,r9,-1
-	subfe r9,r10,r9
-	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L89
-	lwz r3,24(r31)
-	bl beginScript
-	mr r9,r3
-	b _keyChanges_L90
-_keyChanges_L89:
-	lwz r9,8(r31)
-	lwz r9,36(r9)
-	stw r9,12(r31)
-	lwz r9,12(r31)
-	cmpwi cr0,r9,2
-	bne cr0,_keyChanges_L91
-	li r3,28
-	bl _hasPreciousItem
-	mr r9,r3
-	addic r10,r9,-1
-	subfe r9,r10,r9
-	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L92
-	lwz r9,24(r31)
-	addi r9,r9,608
-	mr r3,r9
-	bl beginScript
-	mr r9,r3
-	b _keyChanges_L90
-_keyChanges_L92:
-	lis r9,menuBasePtr@ha
-	lwz r9,menuBasePtr@l(r9)
-	li r4,52
-	mr r3,r9
-	bl openHudTelop
-	li r9,0
-	b _keyChanges_L90
-_keyChanges_L91:
-	lwz r9,12(r31)
-	cmpwi cr0,r9,11
-	bne cr0,_keyChanges_L93
-	lwz r9,24(r31)
-	addi r9,r9,-608
-	mr r3,r9
-	bl beginScript
-	mr r9,r3
-	b _keyChanges_L90
-_keyChanges_L93:
-	lwz r3,24(r31)
-	bl beginScript
-	mr r9,r3
-	nop
-_keyChanges_L90:
-	mr r3,r9
-	addi r11,r31,48
-	lwz r0,4(r11)
-	mtlr r0
-	lwz r31,-4(r11)
-	mr r1,r11
-	blr
 _preItemLoopAdjustmentWrapper:
 	stwu r1,-80(r1)
 	mflr r0
@@ -1086,12 +1003,12 @@ _preItemLoopAdjustment:
 	mr r18,r9
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_keyChanges_L95
+	bne cr0,_keyChanges_L89
 	lis r9,_itemLoopEnd@ha
 	addi r9,r9,_itemLoopEnd@l
 	mtctr r9
 	bctr
-_keyChanges_L95:
+_keyChanges_L89:
 	lis r9,_itemLoopStart@ha
 	addi r9,r9,_itemLoopStart@l
 	mtctr r9
@@ -1106,35 +1023,35 @@ _setLocal:
 	stw r4,12(r31)
 	lwz r9,8(r31)
 	cmpwi cr0,r9,2
-	bne cr0,_keyChanges_L97
+	bne cr0,_keyChanges_L91
 	mr r9,r5
 	cmpwi cr0,r9,1
-	bne cr0,_keyChanges_L97
+	bne cr0,_keyChanges_L91
 	lis r9,_collepediaFlag@ha
 	lwz r9,_collepediaFlag@l(r9)
 	lwz r10,12(r31)
 	cmpw cr0,r10,r9
-	beq cr0,_keyChanges_L98
+	beq cr0,_keyChanges_L92
 	lis r9,_bladeFlag@ha
 	lwz r9,_bladeFlag@l(r9)
 	lwz r10,12(r31)
 	cmpw cr0,r10,r9
-	bne cr0,_keyChanges_L99
-_keyChanges_L98:
+	bne cr0,_keyChanges_L93
+_keyChanges_L92:
 	li r3,28
 	bl _hasPreciousItem
 	mr r9,r3
 	cmpwi cr0,r9,0
-	bne cr0,_keyChanges_L99
+	bne cr0,_keyChanges_L93
 	li r9,1
-	b _keyChanges_L100
-_keyChanges_L99:
+	b _keyChanges_L94
+_keyChanges_L93:
 	li r9,0
-_keyChanges_L100:
+_keyChanges_L94:
 	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L97
+	beq cr0,_keyChanges_L91
 	li r5,0
-_keyChanges_L97:
+_keyChanges_L91:
 	lis r9, 0x103a
 	nop
 	addi r11,r31,32
@@ -1241,10 +1158,6 @@ addItem = 0x02365934
 0x0238e138 = nop
 
 0x02814cf4 = b _prepareBladeTerminal # in loadEnd::ScriptManager
-
-# reconfigure rentalCharTerminal to LShop
-0x028eacc8 = bl _prepareRentalCharTerminal
-beginScript = 0x028cb70c # ::Gimmick::GimmickMapObj
 
 # overwrite setLocal for blade flag
 0x0228f018 = bl _setLocal
