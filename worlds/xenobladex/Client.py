@@ -177,10 +177,7 @@ class XenobladeXHttpServer(HTTPServer):
         elif item_game_type < 0x23:
             self.items += f"F Id={item_game_id:08x} Lv={item_game_level * 10:08x}\n"
         elif item_game_type < 0x24:
-            # game crashes with field skill lvl 6+
-            if item_game_level > 4:
-                item_game_level = 4
-            self.items += f"D Id={item_game_id:08x} Lv={item_game_level + 1:08x}\n"
+            self.items += f"D Id={item_game_id:08x} Lv={min(item_game_level, 4) + 1:08x}\n"
         elif item_game_type < 0x25:
             self.items += f"C Id={item_game_id:08x} Lv={10:08x}\n"
 
