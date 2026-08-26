@@ -17,6 +17,13 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 ; 1.0.1E, 1.0.2U, 1.0.0E
 IsReady = 0x021ccdec
 0x024bf00c = bl _IsReadyAdjusted
 
+# disable lock party from affinity quests
+0x02296518 = nop
+0x02290ca4 = nop
+
+# max out fuel for doll with one refill
+0x025ce838 = nop
+
 # division points disable until KEY Blade license
 0x02847ef8 = bl _isUnlock
 0x02847fbc = bl _isUnlock
@@ -157,6 +164,9 @@ shopTerminalScenarioFlagPtr = 0x20343634
 # disable items from collepedia
 0x02a0acf4 = nop
 
+# miranium get not decreased after lshop upgrade
+0x02a40ecc = nop
+
 openHudTelop = 0x02c91f3c # ::MenuTask
 chkLv = 0x02af8e7c # ::menu::MenuDollGarage
 #endif
@@ -207,6 +217,9 @@ shopTerminalScenarioFlagPtr = 0x20343634-0xB821D
 
 # disable items from collepedia
 0x02a0ace4 = nop
+
+# miranium get not decreased after lshop upgrade
+0x02a40ebc = nop
 
 openHudTelop = 0x02c91edc # ::MenuTask
 chkLv = 0x02af8e6c # ::menu::MenuDollGarage
