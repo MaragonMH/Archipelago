@@ -1224,6 +1224,9 @@ shopTerminalScenarioFlagPtr = 0x20343634
 # miranium get not decreased after lshop upgrade
 0x02a40ecc = nop
 
+# extend system log duration
+0x02c04440 = li r9, 0xff
+
 openHudTelop = 0x02c91f3c # ::MenuTask
 chkLv = 0x02af8e7c # ::menu::MenuDollGarage
 
@@ -1277,6 +1280,9 @@ shopTerminalScenarioFlagPtr = 0x20343634-0xB821D
 
 # miranium get not decreased after lshop upgrade
 0x02a40ebc = nop
+
+# extend system log duration
+0x02c04430 = li r9, 0xff
 
 openHudTelop = 0x02c91edc # ::MenuTask
 chkLv = 0x02af8e6c # ::menu::MenuDollGarage
