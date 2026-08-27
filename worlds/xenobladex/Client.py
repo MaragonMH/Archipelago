@@ -145,14 +145,14 @@ class XenobladeXHttpServer(HTTPServer):
 
     # Example: Invoke-WebRequest http://localhost:45872/items -Method POST -Body "I Tp=00000007 Id=00000039`n"
     def upload_item(self, item_game_type: int, item_game_id: int, seed_name: Optional[str],
-                    item_name: str, player_name: str, item_game_level: int = 1,
+                    prefix: str, item_name: str, player_name: str, item_game_level: int = 1,
                     logic_level_steps: int = 0) -> None:
         if self.upload_count > self.upload_limit:
             return
         self.upload_count += 1
 
         if not item_name.startswith("DEBUG"):
-            self.upload_message(f"From {player_name}", item_name)
+            self.upload_message(f"{prefix} from {player_name}", item_name)
 
         if item_game_type == 0:
             if item_name == "Level":
@@ -412,6 +412,9 @@ class XenobladeXContext(CommonContext):
     def archipelago_item_to_name(self, archipelago_item_id: int) -> str:
         return re.sub(r"^[A-Z]*?: ", "", XenobladeXWorld.item_id_to_name[archipelago_item_id])
 
+    def archipelago_item_to_prefix(self, archipelago_item_id: int) -> str:
+        return XenobladeXWorld.item_id_to_name[archipelago_item_id].split(":")[0]
+
     def archipelago_item_to_game_item(self, archipelago_item_id: int) -> GameItem:
         game_item_type_offset = max([id for id in game_type_item_to_offset.values()
                                      if id < archipelago_item_id - XenobladeXWorld.base_id])
@@ -444,9 +447,10 @@ class XenobladeXContext(CommonContext):
             if level <= uploaded_level:
                 continue
             game_item = self.archipelago_item_to_game_item(item)
+            prefix = self.archipelago_item_to_prefix(item)
             item_name = self.archipelago_item_to_name(item)
             self.http_server.upload_item(game_item.type, game_item.id, self.seed_name,
-                                         item_name, player_item_names[item], level,
+                                         prefix, item_name, player_item_names[item], level,
                                          self.logic_level_steps)
             if item_name == "Victory":
                 await self.send_msgs([{"cmd": "StatusUpdate", "status": ClientStatus.CLIENT_GOAL}])
