@@ -205,6 +205,7 @@ Some of these are enabled through graphic packs. Some of them can be configured.
 - Segments are touchable by default.
 - Materials drop more often.
 - Drop boxes appear more often.
+- Affinity missions dont lock your party.
 
 ## What's next?
 - Add Shop items to the available locations.
@@ -218,4 +219,5 @@ Some of these are enabled through graphic packs. Some of them can be configured.
 - You can softlock yourself, especially if you enabled `Important Items`, during Affinity Missions. Because some of them require `Important Items` and those can be placed behind other missions
     that you can't start if you already started an Affinity Mission. There are two solutions either don't save during an Affinity Mission or make sure you have the required Items beforehand.
     You can send the item to yourself if you are stuck to rectify the situation.
+- You might be unable to enter your skell for unkown reasons.
   
