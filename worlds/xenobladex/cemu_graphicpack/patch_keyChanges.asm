@@ -1136,6 +1136,8 @@ addNum = 0x02779870
 0x022958f4 = bl _addRewardItemEquipment
 # filter treasure box rewards
 0x022d8d50 = bl _addRewardItemEquipment
+# disable itembox full message for the above
+0x022d8dc4 = nop
 # filter mission event rewards
 # important items
 0x027a3f28 = bl _addNumAdjusted 
