@@ -41,7 +41,6 @@ need to configure and export a config file.
     - Skells are now delivered without any armor or weapons
     - Shop Terminal is disabled
     - Arms Manufacturer Terminal is disabled except for `Upgrade Battle Traits`
-    - L's Shop has been relocated to the Blade Scout Terminal
     - For equipment these changes are not effective if disabled in the options
 4. Whenever you get equipment via Archipelago the traits will be seeded according to the possible
    traits from within the game. This means that you can only get the traits, that specific piece would 
@@ -108,7 +107,7 @@ During Chapter 2, you will notice that you don't unlock the `Frontier-Nav`. This
 capabilities of it through the item `KEY: Fnet`. This includes fast travel, viewing the region maps with quest markers, installing dataprobes,
 getting Fnet in-game locations and progressing the quest `Probe-fessional`. After Chapter 2 you will also not receive the `Blade License`
 This means you cannot raise your Blade Lvl and are therefore unable to complete the quest `Blade Level Basics`. You also cannot interact
-with Blade Terminals, including the relocated L Shop, the mission terminal, the shop terminals, and the Blade Barracks terminal.
+with Blade Terminals, the mission terminal, the shop terminals, and the Blade Barracks terminal.
 
 ### Early Game
 After completing Chapter 3, you can no longer progress in the story until you find both your `KEY: Fnet` and your first `KEY: Progressive License` (Blade License).
@@ -193,13 +192,26 @@ But that does not replace a tracker which is currently not fully ready. So if yo
 - [Frontiernav](https://frontiernav.net/wiki/xenoblade-chronicles-x/visualisations/maps)
 - [XenoSeriesWiki](https://www.xenoserieswiki.org/wiki/Xenoblade_Chronicles_X)
 
+## Quality of Life
+There are a few in-game changes to facilitate faster gameplay. These are not there to remove gameplay aspects but rather to avoid tedium.
+Some of these are enabled through graphic packs. Some of them can be configured.
+- Skells refuel all the way in the Blade Barracks.
+- Augmenting your equipment no longer consumes the miranium. You still need to obtain the required amount.
+- Running speed is increased.
+- Tp are maxed on teleport and reload.
+- Damaged skells get recovered on teleport and party change.
+- Battle point gain is increased.
+- Exp gain is increased (Only effective if levels are not present). 
+- Segments are touchable by default.
+- Materials drop more often.
+- Drop boxes appear more often.
+
 ## What's next?
 - Add Shop items to the available locations.
 - Add Schematics/Blueprints to the item pool.
 - Add Basic Quests to the available locations.
 
 ## Known Issues
-- The first time you talk with the new L'shop you will still get denied by the `Only available online` prompt. Just interact with it twice in quick succession.
 - The `AS0115 Formula XT` can somehow not be configured in the garage.
 - The main inventory can display items of the weapon and armor categories for skells and characters incorrectly. They correctly appear in the corresponding equip menus though.
 - If you enable all the Items and disable all the Locations you will be unable to fit all the progression items into the Multiworld. The generation will fail.
