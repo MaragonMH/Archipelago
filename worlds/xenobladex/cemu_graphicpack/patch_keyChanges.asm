@@ -1074,6 +1074,9 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 IsReady = 0x021ccdec
 0x024bf00c = bl _IsReadyAdjusted
 
+# affinity quests no longer lock you out of other quests
+0x022ce6c4 li r3,0
+
 # disable lock party from affinity quests
 0x02296518 = nop
 0x02290ca4 = nop
