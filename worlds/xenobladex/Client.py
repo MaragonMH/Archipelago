@@ -19,7 +19,7 @@ from itertools import groupby
 import colorama
 
 # CommonClient import first to trigger ModuleUpdater
-from CommonClient import CommonContext, server_loop, logger, get_base_parser, gui_enabled
+from CommonClient import (CommonContext, server_loop, logger, get_base_parser, gui_enabled)  # noqa: F401
 from settings import get_settings
 
 from worlds.xenobladex import XenobladeXWorld
@@ -37,6 +37,14 @@ from .items.dollWeapons import doll_weapons_type_data
 from .Items import game_type_item_to_offset
 from .Locations import game_type_location_to_offset
 from .Options import XenobladeXOption
+
+tracker_loaded = False
+try:
+    # Loaded from .apworld
+    from worlds.tracker.TrackerClient import TrackerGameContext as SuperContext  # type: ignore[import-not-found]
+    tracker_loaded = True
+except ModuleNotFoundError:
+    from CommonClient import CommonContext as SuperContext
 
 CEMU_MODS_NOT_FOUND = "Unable to find the Cemu Mods please make sure to download the community mods " \
                       "within Cemu settings first"
@@ -333,7 +341,7 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
             self.debug_post_items()
 
 
-class XenobladeXContext(CommonContext):
+class XenobladeXContext(SuperContext):  # type: ignore[misc]
     game = "Xenoblade X"
     items_handling = 0b111  # get items from your own world
     want_slot_data = True
@@ -370,6 +378,7 @@ class XenobladeXContext(CommonContext):
                 self.prepare_cemu(cemu_options)
         if cmd in {"RoomInfo"}:
             self.seed_name = args["seed_name"]
+        super().on_package(cmd, args)
 
     def on_deathlink(self, data: dict[str, Any]) -> None:
         self.death_link_pending = True
@@ -400,17 +409,10 @@ class XenobladeXContext(CommonContext):
             self.http_server.upload_message("Reached Goal", self.player_names[args["slot"]])
         super(XenobladeXContext, self).on_print_json(args)
 
-    def run_gui(self) -> None:
-        from kvui import GameManager
-
-        class XenobladeXManager(GameManager):
-            logging_pairs = [
-                ("Client", "Archipelago")
-            ]
-            base_title = "Archipelago Xenoblade X Client"
-
-        self.ui = XenobladeXManager(self)
-        self.ui_task = asyncio.create_task(self.ui.async_run(), name="UI")
+    def make_gui(self):
+        ui = super().make_gui()
+        ui.base_title = "Archipelago Xenoblade X Client"
+        return ui
 
     def get_level(self, archipelago_item_id: int) -> int:
         return len([item.item for item in self.items_received if item.item == archipelago_item_id])
@@ -649,6 +651,8 @@ async def main(args: dict[str, Any]) -> None:
     if ctx.server_task is None:
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
+    if tracker_loaded:
+        ctx.run_generator()
     if gui_enabled:
         ctx.run_gui()
     ctx.run_cli()
