@@ -225,7 +225,7 @@ Data("Setting Forth - Admi Dist: Mimeo Maint Center - Chp 8", rules=["Lvl 31", "
 Data("Nagi 1 H2H - Admi Dist: Mimeo Maint Center - Afternoon", rules=["Nagi 1"], depends=["Nagi"]), 
 Data("Planetary Pioneer IV - Admi Dist: Division Drive - Chp 8", rules=["FNet", "Lvl 25", "Data Unit FN096"], depends=["Chapter 8", "FN Node 408", "Planetary Pioneer III"]), # depends Sylvalum Trailblazing 1/2/3
 Data("Waste Not, Want Not - Admi Dist: Hangar - Chp 10", rules=["Cockpit Wreckage", "Engine Wreckage", "Zu Pharg Wreckage"], depends=["Chapter 10"]),
-Data("The Skell License - Admi Dist: Hangar - Chp 6", rules=["Credits 15", "Quest Skell License", "Skell License Certificate"], depends=["Chapter 6", "FN Node 117", "Shatskikh, the Flash", "The Pip-Squeak", "Thats In-Credible!", "The Handy Ma-non"]), # depends Proficiency Exam 1-8. only 1 of 3 quests
+Data("The Skell License - Admi Dist: Hangar - Chp 6", rules=["Credits 15", "Quest Skell License", "Skell License Certificate"], depends=["Chapter 6", "FN Node 117", "Shatskikh, the Flash"]), # depends Proficiency Exam 1-8. only 1 of 3 quests. truncated subquests to not need depends
 Data("Frye 2 H2H - Admi Dist: Hangar - Nighttime", rules=["Frye 2"], depends=["Frye 1 H2H"]), 
 Data("House of Cards - Admi Dist: Armory Alley - Chp 5", rules=["Keycard House of Cards"], depends=["Chapter 5", "Yardleys Scheme"]),
 Data("White Lifehold - Admi Dist: Armory Alley - Chp 11", rules=["Lvl 41", "Communication Data"], depends=["Chapter 11", "Waste Not, Want Not"]),
