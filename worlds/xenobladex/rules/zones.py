@@ -2,6 +2,7 @@ import dataclasses
 from typing import TYPE_CHECKING
 from typing_extensions import override
 from BaseClasses import CollectionState
+from NetUtils import JSONMessagePart
 from rule_builder.rules import Rule
 from ..Locations import xenobladeXSegmentLookup
 
@@ -35,6 +36,24 @@ class HasZoneCount(Rule["XenobladeXWorld"], game="Xenoblade X"):
         @override
         def region_dependencies(self) -> dict[str, set[int]]:
             return {reg: {id(self)} for reg in xenobladeXSegmentLookup[self.zone].keys()}
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            verb = "Missing " if state and not self(state) else "Has "
+            messages: list[JSONMessagePart] = [{"type": "text", "text": verb}]
+            messages.append({"type": "color", "color": "cyan", "text": str(self.target)})
+            messages.append({"type": "text", "text": "x Segs "})
+            color = "green" if state and self(state) else "salmon"
+            messages.append({"type": "color", "color": color, "text": self.zone})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return str(self)
+            prefix = "Has" if self(state) else "Missing"
+            count = f"{self.target}x Segs "
+            return f"{prefix} {count}{self.zone}"
 
 
 zone_rules: dict[str, Rule["XenobladeXWorld"]] = {

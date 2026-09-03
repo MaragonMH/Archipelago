@@ -2,6 +2,7 @@ import dataclasses
 from typing import TYPE_CHECKING
 from typing_extensions import override
 from BaseClasses import CollectionState
+from NetUtils import JSONMessagePart
 from rule_builder.rules import Has, HasAll, Rule
 from ..fnet.miranium import fnet_miranium_data
 from ..fnet.credits import fnet_credits_data
@@ -52,6 +53,24 @@ class HasMiranium(Rule["XenobladeXWorld"], game="Xenoblade X"):
                 "FLDSK: Mechanical": {id(self)},
             }
 
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            verb = "Missing " if state and not self(state) else "Has "
+            messages: list[JSONMessagePart] = [{"type": "text", "text": verb}]
+            messages.append({"type": "color", "color": "cyan", "text": str(self.target)})
+            messages.append({"type": "text", "text": "k "})
+            color = "green" if state and self(state) else "salmon"
+            messages.append({"type": "color", "color": color, "text": "Miranium"})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return str(self)
+            prefix = "Has" if self(state) else "Missing"
+            count = f"{self.target}k Miranium"
+            return f"{prefix} {count}"
+
 
 @dataclasses.dataclass()
 class HasCredits(Rule["XenobladeXWorld"], game="Xenoblade X"):
@@ -92,6 +111,24 @@ class HasCredits(Rule["XenobladeXWorld"], game="Xenoblade X"):
                 "DP: Booster Probe G2": {id(self)},
                 "FLDSK: Mechanical": {id(self)},
             }
+
+        @override
+        def explain_json(self, state: CollectionState | None = None) -> list[JSONMessagePart]:
+            verb = "Missing " if state and not self(state) else "Has "
+            messages: list[JSONMessagePart] = [{"type": "text", "text": verb}]
+            messages.append({"type": "color", "color": "cyan", "text": str(self.target)})
+            messages.append({"type": "text", "text": "k "})
+            color = "green" if state and self(state) else "salmon"
+            messages.append({"type": "color", "color": color, "text": "FNet Credits"})
+            return messages
+
+        @override
+        def explain_str(self, state: CollectionState | None = None) -> str:
+            if state is None:
+                return str(self)
+            prefix = "Has" if self(state) else "Missing"
+            count = f"{self.target}k FNet Credits"
+            return f"{prefix} {count}"
 
 
 fnet_rules: dict[str, Rule["XenobladeXWorld"]] = {
