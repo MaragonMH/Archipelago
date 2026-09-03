@@ -1,7 +1,7 @@
 from . import Loc as Data
 
 tmp_data: list[Data] = [
-    Data("Chapter 1", rules=["Lvl 4"]),
+    Data("Chapter 1", rules=["Lvl 4"], pooled=False),
     Data("Chapter 2", rules=["Lvl 5"], depends=["Chapter 1"], pooled=False),
     Data("Chapter 3", rules=["Lvl 10"], depends=["Chapter 2"], pooled=False),
     Data("Chapter 4", rules=["Prim 15", "Lvl 16"], depends=["Chapter 3", "The Probe-fessional", "BLADE Level Basics"],
