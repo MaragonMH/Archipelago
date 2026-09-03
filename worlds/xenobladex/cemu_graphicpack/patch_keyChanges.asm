@@ -1075,7 +1075,7 @@ IsReady = 0x021ccdec
 0x024bf00c = bl _IsReadyAdjusted
 
 # affinity quests no longer lock you out of other quests
-0x022ce6c4 li r3,0
+0x022ce6c4 = li r3,0
 
 # disable lock party from affinity quests
 0x02296518 = nop
