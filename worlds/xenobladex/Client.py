@@ -414,6 +414,10 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
         ui.base_title = "Archipelago Xenoblade X Client"
         return ui
 
+    @staticmethod
+    def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
+        return slot_data
+
     def get_level(self, archipelago_item_id: int) -> int:
         return len([item.item for item in self.items_received if item.item == archipelago_item_id])
 
