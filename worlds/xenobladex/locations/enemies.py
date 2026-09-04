@@ -1402,7 +1402,7 @@ Data("Buster Kaizer Qmoeva - Caul: Slavebird Isle", rules=["Lvl 51"], depends=["
 Data("Durvin, the Perceptive - Prim: Beast's Lair - Daytime", rules=["Lvl 70"]),
 Data("Star Cinicula - Noct: Qing Long Glade", rules=["Lvl 11"]),
 Data("Nocto Blatta - Prim: North Janpath Plain", rules=["Lvl 1"]),
-Data("Wood Potamus - The Ties That Bind", rules=["Lvl 21"], depends=["The Ties That Bind"]),
+Data("Wood Potamus - The Ties That Bind", rules=["Lvl 21"], depends=["The Ties That Bind"], valid=False), # missable
 Data("Buoyant Lophid - Prim: Janpath Lake - Nighttime", rules=["Lvl 11"]),
 Data("Young Unafulge - Sylv: Seabird's Beak", rules=["Lvl 1"]),
 Data("Marnuck Windtrooper - Prim: Castaway Cavern - Nighttime", rules=["Lvl 31"], depends=["Chapter 5"]),
