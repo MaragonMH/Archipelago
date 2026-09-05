@@ -45,7 +45,7 @@ Data("Hope 3 H2H - Indu Dist: Central - Morning ", rules=["Hope 3"], depends=["H
 Data("Pack It In - Indu Dist: Central - Chp 9", rules=["FNet Resource", "Lvl 36"], depends=["Chapter 9", "Dead Men Tell No Tales"]),
 Data("Irina 1 H2H - Indu Dist: Central - Night", rules=["Irina 1"], depends=["Irina"]), 
 Data("Frye 5 H2H - Indu Dist: Production Plant", rules=["Frye 5"], depends=["Frye 4 H2H"]), 
-Data("Alexa - Indu Dist: Test Hangar", rules=["Blade License", "Lvl 18", "Quest Weaponized"], depends=["Chapter 4"]),  # depends: Weaponized, Guinea Pigs Wanted!
+Data("Alexa - Indu Dist: Test Hangar", depends=["Chapter 1"]),
 Data("Celica 1 H2H - Indu Dist: Test Hangar - Afternoon", rules=["Celica 1"], depends=["Celica"]), 
 Data("Mystery Man - Indu Dist: Central - Chp 5", rules=["Lvl 18", "Tykki Sap"], depends=["Chapter 5"]),
 Data("The Voltant Visionary - Indu Dist: Central - Chp 7", rules=["Lvl 29"], depends=["Chapter 7", "Dead Men Tell No Tales", "A Dubious Operation"]), # dubious operation maybe not required
@@ -62,7 +62,7 @@ Data("Gwin 5 H2H - Comm Dist: West Melville Street - Evening", rules=["Gwin 5"],
 Data("Alien Nation - Comm Dist: West Melville Street - Chp 7", rules=["Lvl 33"], depends=["Chapter 7"]), # optional a concerned citizen
 Data("Lin 2 H2H - Comm Dist: West Melville Street - Afternoon", rules=["Lin 2"], depends=["Lin 1 H2H"]), 
 Data("Mia 4 H2H - Comm Dist: West Melville Street - Cat", rules=["Mia 4"], depends=["Mia 3 H2H", "Nine Lives"]), 
-Data("Boze - Comm Dist: West Melville Street", rules=["Blade License", "Lvl 20"], depends=["Chapter 5"]),  # depends: The Mad Monk
+Data("Boze - Comm Dist: West Melville Street", depends=["Chapter 1"]),
 Data("Celica 3 H2H - Comm Dist: West Melville Street - Morning", rules=["Celica 3"], depends=["Celica 2 H2H"]), 
 Data("Container 2 - Comm Dist: West Melville Street - Mechanical 2", rules=["Mechanical 2"]),
 Data("Stop, Thief! - Comm Dist: West Melville Street - Chp 9", rules=["Deep Blue Gem"], depends=["Chapter 9", "A Dubious Operation"]),
@@ -89,7 +89,7 @@ Data("Sparking a Smile - Comm Dist: Barista Court - Chp 8", rules=["Mira 40", "F
 Data("Unsatisfied Customer - Comm Dist: Barista Court - Chp 11", depends=["Chapter 11", "BFFs", "Floating Reef"]),
 Data("The Fashionista - Comm Dist: Central Melville Street - Chp 6", rules=["Lvl 4"], depends=["Chapter 6"]),
 Data("Planetary Pioneer III - Comm Dist: Central Melville Street - Chp 8", rules=["FNet", "Data Unit FN095"], depends=["Chapter 8", "FN Node 408", "Nectar Scirpo", "Planetary Pioneer II"]), # depends oblivia trailblazing 1/2/3
-Data("Yelv - Comm Dist: North Founder Street", rules=["Lvl 14", "Tissue Sample"], depends=["Chapter 3"]), # depends meeting yelv, mission a/b/c
+Data("Yelv - Comm Dist: North Founder Street", depends=["Chapter 1"]),
 Data("The Sword of Legendaryness - Comm Dist: Central Melville Street - Chp 11", rules=["Sword of Legendaryness"], depends=["Chapter 11", "Bread and a Circus"]),
 Data("Murderess 2 H2H - Comm Dist: North Founder Street - Nighttime", rules=["Murderess 2"], depends=["Murderess 1 H2H"]), 
 Data("Serial Thriller - Aff Mission - Comm Dist: North Founder Street - Chp 12", rules=["Murderess 4", "Lvl 53"], depends=["Chapter 12", "A False Hope", "The Little Rich Girl"]),
@@ -173,7 +173,7 @@ Data("L 3 H2H - Resi Dist: Cathedral - Cat", rules=["L 3"], depends=["L 2 H2H", 
 Data("Murderess 5 H2H - Resi Dist: Ishmael Hills", rules=["Murderess 5"], depends=["Murderess 4 H2H"]), 
 Data("Wendy - Aff Shift - Resi Dist: Ishmael Hills - Daytime", depends=["Special Delivery"]),
 Data("Nagi 5 H2H - Resi Dist: Ishmael Hills - Afternoon", rules=["Nagi 5"], depends=["Nagi 4 H2H"]), 
-Data("H.B. - Resi Dist: Water Puri Plant", rules=["FNet", "Lvl 15"], depends=["Chapter 3", "FN Node 118"]),  # depends A New Rival?, Installation, Research, Miranium
+Data("H.B. - Resi Dist: Water Puri Plant", depends=["Chapter 1"]),
 Data("Hope Springs Eternal - Aff Mission - Resi Dist: Cathedral - Chp 3", rules=["Blade License", "Lvl 21", "Natural Pearl"], depends=["Chapter 3"]),  # depends Marry Me!
 Data("The Miracle Maker - Resi Dist: Cathedral - Chp 6", rules=["Malyteths Bottle"], depends=["Chapter 6", "Water Woes"]),
 Data("The Divine Nopopon - Resi Dist: Ishmael Hills - Chp 12", rules=["Mira 80", "Lvl 68", "Nopon Gemstone"], depends=["Chapter 12", "BFFs"]),
