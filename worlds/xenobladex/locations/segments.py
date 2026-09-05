@@ -154,7 +154,7 @@ Data("Hope 4 H2H - Resi Dist: Sports Complex - Dog", rules=["Hope 4"], depends=[
 Data("Phog 5 H2H - Resi Dist: Water Puri Plant", rules=["Phog 5"], depends=["Phog 4 H2H", "Blitzkrieg"]), 
 Data("Foggy Dilemma - Aff Mission - Resi Dist: Water Puri Plant - Chp 4", rules=["Blade License", "Lvl 13"], depends=["Chapter 4"]),  # depends: Backup Request
 Data("Murderess 1 H2H - Resi Dist: Cathedral - Afternoon", rules=["Murderess 1"], depends=["Murderess"]), 
-Data("Murderess 4 H2H - Resi Dist: Cathedral - Cat", rules=["Murderess 4"], depends=["Murderess 3 H2H", "Nine Lives"]), 
+Data("Murderess 4 H2H - Resi Dist: Deliverance Park - Cat", rules=["Murderess 4"], depends=["Murderess 3 H2H", "Nine Lives"]), 
 Data("Alien Wreckage 5 - Resi Dist: Ishmael Hills - Chp 8 - Archeological 3", rules=["Archeological 3"], depends=["Chapter 8"]),
 Data("Doug 1 H2H - Resi Dist: Ishmael Hills - Afternoon - Dog", rules=["Doug 1"], depends=["Doug", "Nine Lives"]), 
 Data("Bread and a Circus - Resi Dist: Ishmael Hills - Chp 10", rules=["Slice of Bread"], depends=["Chapter 10", "Muimuis Meltdown"]),
