@@ -21,9 +21,9 @@ class EnemyAggro(CemuChoice):
     """Increase or decrease the enemy aggression"""
     display_name = "Enemy Aggro"
     option_none = 0
-    option_doubled_range = 2
-    option_half_range = 3
-    option_quarter_range = 4
+    option_doubled_range = 1
+    option_half_range = 2
+    option_quarter_range = 3
     cemu_pack = "BattleEscapeDistance"
     cemu_option = "Active Preset"
     cemu_selection_names = [
