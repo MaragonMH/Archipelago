@@ -18,6 +18,8 @@ $enemyBookThreshold = 3
 $characterLevel = 1
 $drifterRangedWeapon = 1;
 $drifterMeleeWeapon = 11;
+$fastRunSpeedFloat = 2.5;
+$fasterRunSpeedFloat = 10.0;
 $curlPort = 45872
 
 [Preset]

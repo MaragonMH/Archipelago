@@ -90,6 +90,9 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     content = re.sub(r"bl (__.*)", _generateAlternateCall, content)
     # Change register to condition registers for cmpw/cmpwi/cmplw/cmplwi and beq/bne/blt/ble/bgt/bge
     content = re.sub(r"(cmpw|cmpwi|cmplw|cmplwi|beq|bne|blt|ble|bgt|bge) (r[0-7])", "\\1 c\\2", content)
+    # Change register to floating point registers for fmr/lfs/stfs
+    content = re.sub(r"(lfs|stfs) r([0-7])", "\\1 f\\2", content)
+    content = re.sub(r"(fmr) r(\d+),r([\d+])", "\\1 f\\2,f\\3", content)
     # Change unsupported offset for symbols specifically for lis->addi and lis->lwz
     r = r"(lis (r\d+),.*?)\+(\d+)(@.*\n)(\t(?:addi|lwz) r\d+,r\d+,.*?)\+\d+(@.*)"
     content = re.sub(r, "\\1\\4\taddi \\2,\\2,\\3\n\\5\\6", content)
@@ -100,7 +103,10 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
 
     # Add Parameters from rules.txt file
     for parameter in parameters:
-        content = re.sub(rf"({parameter}:\n\t\.int\s+)0", f"\\1${parameter}", content)
+        if parameter.endswith("Float"):
+            content = re.sub(rf"({parameter}:\n\t\.)int(\s+)0", f"\\1float\\2${parameter}", content)
+        else:
+            content = re.sub(rf"({parameter}:\n\t\.int\s+)0", f"\\1${parameter}", content)
 
     # Prepare packages
     r = r"^#ifdef (?P<name>.*?)\nmoduleMatches *= *(?P<ids>.*?)" \

@@ -117,6 +117,11 @@ addItem = 0x02365934
 # overwrite setLocal for blade flag
 0x0228f018 = bl _setLocal
 
+# add new run speed
+0x0264332c = bl _setRunSpeed
+0x0240ab90 = bl _ToggleSuperRunningState
+0x025051fc = bl _UpdateRunningState
+
 addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
 getItem = 0x021ab180 # ::ItemDrop::ItemDropManager
 getItemNum = 0x021ab164 # ::ItemDrop::ItemDropManager
@@ -238,6 +243,8 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 
 // Parameters from rules.txt
 int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, drifterRangedWeapon, drifterMeleeWeapon;
+float fastRunSpeedFloat, fasterRunSpeedFloat;
+int fastRunningState = 0;
 
 extern int characterLevel;
 
@@ -323,6 +330,31 @@ int _getDefaultSkellWeapon(int* DEF_DlList_bdat, char weaponColumn[], int skellI
 	return 0;
 }
 
+void _setRunSpeed(){
+	register float value asm("fr1");
+	value = fastRunSpeedFloat;
+	if (fastRunningState == 1){
+		// Load float value
+		value = fasterRunSpeedFloat;
+	}
+}
+
+void _UpdateRunningState(int* ptr, int newRunningState){
+	fastRunningState = 0;
+
+	asm("lis r12, 0x101a");
+}
+
+void _ToggleSuperRunningState(){
+	if(fastRunningState == 0)
+		fastRunningState = 1;
+	else if(fastRunningState == 1)
+		fastRunningState = 0;
+
+	asm("cmpwi cr0, r3, 0");
+}
+
+
 void _SetBdatValue(const char* bdatName, const char* columnName, int rowId, int newValue, int valueSize){
 	int* bdat = getFP(bdatName);
 	int* columnPtr = getMember(bdat, columnName);
@@ -330,6 +362,7 @@ void _SetBdatValue(const char* bdatName, const char* columnName, int rowId, int 
 	// ignore value check for simplicity
 	// char* valCheckPtr = getValCheckSub(bdat, getMember(bdat, columnName), valueSize);
 	int baseOffset = *(short*)((char*)bdat + 0xe);
+	// needs work row is wrong
 	int rowOffset = *(short*)((char*)bdat + 0x8) * (rowId - 1);
 	int columnOffset = *(short*)((char*)bdat + 0x2 + columnOffsetBase);
 	char* valPtr = (char*)bdat + baseOffset + rowOffset + columnOffset;
