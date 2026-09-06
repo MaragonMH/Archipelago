@@ -346,6 +346,8 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
     items_handling = 0b111  # get items from your own world
     want_slot_data = True
 
+    tags = {"AP"}
+
     cemu_process: Optional[subprocess.Popen[bytes]] = None
     locations_checked: Set[int]
     death_link = False
