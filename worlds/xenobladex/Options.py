@@ -529,23 +529,103 @@ class MoonJumpHeight(CemuChoice):
     ]
 
 
-class RunForrestRun(CemuChoice):
-    """Alters the running speed"""
-    display_name = "Run Forrest, Run"
+# class RunForrestRun(CemuChoice):
+#     """Alters the running speed"""
+#     display_name = "Run Forrest, Run"
+#     option_none = 0
+#     option_speed_125_percent = 1
+#     option_speed_150_percent = 2
+#     option_speed_200_percent = 3
+#     option_speed_300_percent = 4
+#     default = 3
+#     cemu_pack = "PhysicsRunForrestRun"
+#     cemu_option = "Active preset"
+#     cemu_selection_names = [
+#         "off",
+#         "Speed x1.25",
+#         "Speed x1.5",
+#         "Speed x2",
+#         "Speed x3",
+#     ]
+
+
+class WereGoingToPladHorizontal(CemuChoice):
+    """Alters the skell flight speed"""
+    display_name = "Were Going To Plad"
     option_none = 0
     option_speed_125_percent = 1
     option_speed_150_percent = 2
     option_speed_200_percent = 3
     option_speed_300_percent = 4
     default = 3
-    cemu_pack = "PhysicsRunForrestRun"
-    cemu_option = "Active preset"
+    cemu_pack = "PhysicsWereGoingToPlad"
+    cemu_option = "Horizontal Speed"
     cemu_selection_names = [
-        "off",
+        "Speed x1",
         "Speed x1.25",
         "Speed x1.5",
         "Speed x2",
         "Speed x3",
+    ]
+
+
+class WereGoingToPladVertical(CemuChoice):
+    """Alters the skell flight speed"""
+    display_name = "Were Going To Plad"
+    option_none = 0
+    option_speed_125_percent = 1
+    option_speed_150_percent = 2
+    option_speed_200_percent = 3
+    option_speed_300_percent = 4
+    default = 3
+    cemu_pack = "PhysicsWereGoingToPlad"
+    cemu_option = "Vertical Speed"
+    cemu_selection_names = [
+        "Speed x1",
+        "Speed x1.25",
+        "Speed x1.5",
+        "Speed x2",
+        "Speed x3",
+    ]
+
+
+class FastRunSpeed(CemuChoice):
+    """Alters the running speed"""
+    display_name = "Fast Run Speed"
+    option_none = 0
+    option_speed_150_percent = 1
+    option_speed_200_percent = 2
+    option_speed_250_percent = 3
+    option_speed_300_percent = 4
+    default = 3
+    cemu_pack = "AP"
+    cemu_option = "FastRunSpeed"
+    cemu_selection_names = [
+        "1.0x",
+        "1.5x",
+        "2.0x",
+        "2.5x",
+        "3.0x",
+    ]
+
+
+class FasterRunSpeed(CemuChoice):
+    """Alters the new second stage running speed"""
+    display_name = "Faster Run Speed"
+    option_none = 0
+    option_speed_300_percent = 1
+    option_speed_500_percent = 2
+    option_speed_700_percent = 3
+    option_speed_1000_percent = 4
+    default = 4
+    cemu_pack = "AP"
+    cemu_option = "FasterRunSpeed"
+    cemu_selection_names = [
+        "1.0x",
+        "3.0x",
+        "5.0x",
+        "7.0x",
+        "10.0x",
     ]
 
 
@@ -906,7 +986,11 @@ class XenobladeXOptions(PerGameCommonOptions):
     treasure_quality: TreasureQuality
     moon_jump_width: MoonJumpWidth
     moon_jump_height: MoonJumpHeight
-    run_forrest_run: RunForrestRun
+    # run_forrest_run: RunForrestRun
+    were_going_to_plad_horizontal: WereGoingToPladHorizontal
+    were_going_to_plad_vertical: WereGoingToPladVertical
+    fast_run_speed: FastRunSpeed
+    faster_run_speed: FasterRunSpeed
 
     # Removed
     local_items: HiddenLocalItems  # pyright: ignore[reportIncompatibleVariableOverride]
@@ -982,6 +1066,10 @@ option_groups: list[OptionGroup] = [
         TreasureQuality,
         MoonJumpWidth,
         MoonJumpHeight,
-        RunForrestRun,
+        # RunForrestRun,
+        WereGoingToPladHorizontal,
+        WereGoingToPladVertical,
+        FastRunSpeed,
+        FasterRunSpeed,
     ])
 ]

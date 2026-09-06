@@ -203,3 +203,53 @@ $drifterMeleeWeapon = 10
 name = "Photon Sabre"
 category = "DrifterMeleeWeapon"
 $drifterMeleeWeapon = 12
+
+[Preset]
+name = "1.0x"
+category = "FastRunSpeed"
+$fastRunSpeedFloat = 1.0
+
+[Preset]
+name = "1.5x"
+category = "FastRunSpeed"
+$fastRunSpeedFloat = 1.5
+
+[Preset]
+name = "2.0x"
+category = "FastRunSpeed"
+$fastRunSpeedFloat = 2.0
+
+[Preset]
+name = "2.5x"
+category = "FastRunSpeed"
+$fastRunSpeedFloat = 2.5
+
+[Preset]
+name = "3.0x"
+category = "FastRunSpeed"
+$fastRunSpeedFloat = 3.0
+
+[Preset]
+name = "1.0x"
+category = "FasterRunSpeed"
+$fasterRunSpeedFloat = 1.0
+
+[Preset]
+name = "3.0x"
+category = "FasterRunSpeed"
+$fasterRunSpeedFloat = 3.0
+
+[Preset]
+name = "5.0x"
+category = "FasterRunSpeed"
+$fasterRunSpeedFloat = 5.0
+
+[Preset]
+name = "7.0x"
+category = "FasterRunSpeed"
+$fasterRunSpeedFloat = 7.0
+
+[Preset]
+name = "10.0x"
+category = "FasterRunSpeed"
+$fasterRunSpeedFloat = 10.0
