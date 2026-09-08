@@ -22,7 +22,7 @@ else:
 parameters = set(re.findall(r"(?<=^\$)\w*(?=\s)", rules, re.M))
 
 # Compile all *.cpp files
-for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.endswith(".cpp")):
+for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.endswith(".cpp")):  # noqa: C901
 
     # Read file
     try:
