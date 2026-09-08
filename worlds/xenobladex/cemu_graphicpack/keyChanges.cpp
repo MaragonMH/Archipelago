@@ -119,8 +119,9 @@ addItem = 0x02365934
 
 # add new run speed
 0x0264332c = bl _setRunSpeed
-0x0240ab90 = bl _ToggleSuperRunningState
-0x025051fc = bl _UpdateRunningState
+0x0240ab90 = stw r0, +0x14(r1) # swap order with following instruction
+0x0240ab94 = bl _ToggleSuperRunningState
+0x025051ec = bl _UpdateRunningState
 
 addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
 getItem = 0x021ab180 # ::ItemDrop::ItemDropManager
@@ -244,7 +245,7 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 // Parameters from rules.txt
 int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, drifterRangedWeapon, drifterMeleeWeapon;
 float fastRunSpeedFloat, fasterRunSpeedFloat;
-int fastRunningState = 0;
+int fastRunningState = 0, fasterRunPlaySound = 0, fasterRunningState = 0;
 
 extern int characterLevel;
 
@@ -278,6 +279,8 @@ int* getItem(int* ptr, int enemies, int boxes, int items);
 int getItemNum(int* ptr, int enemies, int boxes);
 
 int getFlagVal(int* bdatPtr, const char* flagName, int id, const char* columnName);
+
+void _playSound(int id);
 
 
 int _IsPermit(){
@@ -333,24 +336,40 @@ int _getDefaultSkellWeapon(int* DEF_DlList_bdat, char weaponColumn[], int skellI
 void _setRunSpeed(){
 	register float value asm("fr1");
 	value = fastRunSpeedFloat;
-	if (fastRunningState == 1){
+	if (fastRunningState == 1 && fasterRunningState == 1){
 		// Load float value
 		value = fasterRunSpeedFloat;
+		if (fasterRunPlaySound == 1){
+			fasterRunPlaySound = 0;
+			_playSound(0x2d4);
+		}
 	}
 }
 
 void _UpdateRunningState(int* ptr, int newRunningState){
-	fastRunningState = 0;
+	int backup;
+	register int original asm("r26");
+	backup = original;
 
-	asm("lis r12, 0x101a");
+	fastRunningState = original;
+	if(fastRunningState == 1)
+		fasterRunningState = 0;
+
+	original = backup;
+	asm("cmpwi cr0, r26, 0");
 }
 
 void _ToggleSuperRunningState(){
-	if(fastRunningState == 0)
-		fastRunningState = 1;
-	else if(fastRunningState == 1)
-		fastRunningState = 0;
-
+	int backup;
+	register int original asm("r3");
+	backup = original;
+	if(fasterRunningState == 0){
+		fasterRunningState = 1;
+		fasterRunPlaySound = 1;
+	}else if(fasterRunningState == 1)
+		fasterRunningState = 0;
+	// Restore condition register
+	original = backup;
 	asm("cmpwi cr0, r3, 0");
 }
 
