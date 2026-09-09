@@ -123,11 +123,16 @@ addItem = 0x02365934
 0x0240ab94 = bl _ToggleSuperRunningState
 0x025051ec = bl _UpdateRunningState
 
+# set movement variables
 setValueFloat = 0x02003148
+setValueBool = 0x02003178
+setValueInt = 0x0200a5d0
 getMappedId = 02007f90
 getValueName = 0x020030e0
-_refreshStateImpl = 0x02612810
-0x0263ec14 = bl _UpdateSystemVariables
+0x0263b660 = bl _initImplCharaAdjusted # innerChara
+initImpl_EventCharacter = 0x02635b80
+0x02617f04 = bl _initImplDollAdjusted # doll
+initImpl_UnitCharacter = 0x02612524
 
 
 addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
@@ -292,7 +297,8 @@ void _playSound(int id);
 char* getValueName(int* ptr, int id);
 int getMappedId(int* ptr, int zero, int id);
 void setValueFloat(float value, int* ptr, int mapId);
-void _refreshStateImpl(int** ptr);
+void initImpl_EventCharacter(int** ptr, int* ptr2);
+void initImpl_UnitCharacter(int** ptr, int* ptr2);
 
 int _IsPermit(){
 	return _hasPreciousItem(24 + 3 - 1);
@@ -384,23 +390,43 @@ void _ToggleSuperRunningState(){
 	asm("cmpwi cr0, r3, 0");
 }
 
-void _UpdateSystemVariables(int ** ptr){
+int _FindSystemVariableByName(int* valuePtr, char* name){
+	for (int id = 0; true; id++){
+		if(__strcmp(name, getValueName(valuePtr + 3, id)) == 0)
+			return id;
+	}
+}
+
+void _InitCharaSystemVariables(int ** ptr, int* ptr2){
 	int* valuePtr = ptr[1];
 
 	// Addional functions for debugging id mapping
-	// char* name = getValueName(valuePtr + 3, id);
 	// int mapId = getMappedId(valuePtr, 0, id);
-	// name = getValueName(valuePtr + 3, mapId);
+	char* name = (char*)"VF_MoveSpeedSwimRun";
+	setValueFloat(3.0, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+	name = (char*)"VF_MoveSpeedSwimDash";
+	setValueFloat(10.0, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 
+	// Available
+	// setValueBool(valuePtr + 3, mapId, true); // Start with VI_
+	// setValueInt(valuePtr + 3, id, newValueInt); // Start with VB_
 
-	setValueFloat(3.0, valuePtr + 3, 0x20f); // VF_MoveSpeedSwimRun
-	setValueFloat(10.0, valuePtr + 3, 0x212); // VF_MoveSpeedSwimDash
+}
 
-	// Available but not linked yet
-	// setValueBool(valuePtr + 3, mapId, true);
-	// setValueInt(valuePtr + 3, id, newValueInt);
+void _initImplCharaAdjusted(int ** ptr, int* ptr2){
+	_InitCharaSystemVariables(ptr, ptr2);
+	initImpl_EventCharacter(ptr, ptr2);
+}
 
-	_refreshStateImpl(ptr);
+void _InitDollSystemVariables(int ** ptr, int* ptr2){
+	int* valuePtr = ptr[1];
+
+	// setValueFloat(2.0, valuePtr + 3, _FindSystemVariableByName(valuePtr, (char*)"VF_MoveSpeedHoverDash"));
+}
+
+void _initImplDollAdjusted(int ** ptr, int* ptr2){
+	_InitDollSystemVariables(ptr, ptr2);
+	initImpl_UnitCharacter(ptr, ptr2);
 }
 
 
