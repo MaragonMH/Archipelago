@@ -123,6 +123,13 @@ addItem = 0x02365934
 0x0240ab94 = bl _ToggleSuperRunningState
 0x025051ec = bl _UpdateRunningState
 
+setValueFloat = 0x02003148
+getMappedId = 02007f90
+getValueName = 0x020030e0
+_refreshStateImpl = 0x02612810
+0x0263ec14 = bl _UpdateSystemVariables
+
+
 addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
 getItem = 0x021ab180 # ::ItemDrop::ItemDropManager
 getItemNum = 0x021ab164 # ::ItemDrop::ItemDropManager
@@ -282,6 +289,10 @@ int getFlagVal(int* bdatPtr, const char* flagName, int id, const char* columnNam
 
 void _playSound(int id);
 
+char* getValueName(int* ptr, int id);
+int getMappedId(int* ptr, int zero, int id);
+void setValueFloat(float value, int* ptr, int mapId);
+void _refreshStateImpl(int** ptr);
 
 int _IsPermit(){
 	return _hasPreciousItem(24 + 3 - 1);
@@ -371,6 +382,25 @@ void _ToggleSuperRunningState(){
 	// Restore condition register
 	original = backup;
 	asm("cmpwi cr0, r3, 0");
+}
+
+void _UpdateSystemVariables(int ** ptr){
+	int* valuePtr = ptr[1];
+
+	// Addional functions for debugging id mapping
+	// char* name = getValueName(valuePtr + 3, id);
+	// int mapId = getMappedId(valuePtr, 0, id);
+	// name = getValueName(valuePtr + 3, mapId);
+
+
+	setValueFloat(3.0, valuePtr + 3, 0x20f); // VF_MoveSpeedSwimRun
+	setValueFloat(10.0, valuePtr + 3, 0x212); // VF_MoveSpeedSwimDash
+
+	// Available but not linked yet
+	// setValueBool(valuePtr + 3, mapId, true);
+	// setValueInt(valuePtr + 3, id, newValueInt);
+
+	_refreshStateImpl(ptr);
 }
 
 
