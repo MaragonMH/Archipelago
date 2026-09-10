@@ -111,7 +111,7 @@ def create_optional_items(world: "XenobladeXWorld", count: int) -> list[Xenoblad
     optionals_length: int = sum(optionals_data.values())
     missing_item_count: int = min(count, optionals_length)
     # Throw error if overfilled. Make more graceful in future
-    assert missing_item_count >= 0, f"{world.get_player_name()} overfilled locations. " \
+    assert missing_item_count >= 0, f"{world.player_name} overfilled locations. " \
         "Please select more locations or less items"
 
     if len(optionals_data) > 0:
