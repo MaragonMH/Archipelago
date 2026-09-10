@@ -637,6 +637,23 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
     # endregion
 
 
+async def ensure_single_instance(ctx: XenobladeXContext) -> None:
+    try:
+        ctx.single_instance_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        ctx.single_instance_socket.bind(('localhost', ctx.xeno_port))
+    except Exception:
+        msg = "Client is already running"
+        detail = "Please use the open instance of the client"
+        logger.error(msg)
+        await asyncio.sleep(1)
+        ctx.gui_error(msg, detail)
+        while ctx.ui and ctx._messagebox and ctx._messagebox._is_open:
+            await asyncio.sleep(0.1)
+        if ctx.ui:
+            ctx.ui.stop()
+        ctx.exit_event.set()
+
+
 async def main(args: dict[str, Any]) -> None:
     Utils.init_logging("XenobladeXClient", exception_logger="Client")
 
@@ -662,6 +679,8 @@ async def main(args: dict[str, Any]) -> None:
     if gui_enabled:
         ctx.run_gui()
     ctx.run_cli()
+
+    await ensure_single_instance(ctx)
 
     asyncio.create_task(asyncio.to_thread(ctx.http_server.serve_forever), name="XenobladeXHttpServer")
     xeno_sync_task = asyncio.create_task(ctx.process_game(), name="XenobladeXSync")
