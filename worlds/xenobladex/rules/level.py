@@ -10,11 +10,15 @@ from ..Options import LogicLevelSteps, XenobladeXOptions
 
 # Convert the real level into the required logic count
 def get_logic_level_count(real_level: int, step_size: int) -> int:
+    if step_size == 0:
+        return 0
     return 1 + int(min(real_level, 50) / step_size) + int(max(real_level - 50, 0) / (step_size + 5))
 
 
 # Convert the logic level count back into the real level
 def get_upper_real_level_from_logic_count(logic_level: int, step_size: int) -> int:
+    if step_size == 0:
+        return 0
     lower_count = int(50 / step_size)
     if logic_level <= lower_count:
         return (logic_level * step_size) - 1
