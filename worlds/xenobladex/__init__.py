@@ -5,7 +5,7 @@ from worlds.LauncherComponents import Component, components, launch_subprocess, 
 from functools import partial
 from typing import ClassVar, cast
 
-from . import Slot, Items, Locations, Rules, Options, Settings, Tracker
+from . import Slot, Items, Locations, Rules, Options, Settings, Tracker, Regions
 
 
 def launch_client(*args: str) -> None:
@@ -59,6 +59,7 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
     }
 
     def create_regions(self) -> None:
+        Regions.init_region(self, "Menu")
         Locations.create_locations(self)
 
     def create_items(self) -> None:
