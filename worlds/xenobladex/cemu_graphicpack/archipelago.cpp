@@ -26,6 +26,7 @@ char* _postFriendList(char* stringStartPtr, char* stringCurrentPtr, char* string
 char* _postItemList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postLocationList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postSegmentList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
+char* _postShopList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postSkillsList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postKeyList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postEquipList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
@@ -103,6 +104,7 @@ void _postArchipelago(){
 	stringCurrentPtr = _postItemList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postLocationList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postSegmentList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
+	stringCurrentPtr = _postShopList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postSkillsList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postKeyList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postEquipList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);

@@ -175,14 +175,14 @@ bladeTerminalScenarioFlagPtr = 0x20343604
 shopTerminalScenarioFlagPtr = 0x20343634
 
 # mandatory disable shops
-0x02a32770 = nop # skell frame
-0x02a69954 = nop # augment menu
-0x02a69968 = nop # develop menu
+#0x02a32770 = nop # skell frame
+#0x02a69954 = nop # augment menu
+#0x02a69968 = nop # develop menu
 # optional shops # need paramaterization
-0x02a326d0 = nop # ground weapon
-0x02a326f8 = nop # ground armor
-0x02a32720 = nop # skell weapon
-0x02a32748 = nop # skell armor
+#0x02a326d0 = nop # ground weapon
+#0x02a326f8 = nop # ground armor
+#0x02a32720 = nop # skell weapon
+#0x02a32748 = nop # skell armor
 
 # disable items from collepedia
 0x02a0acf4 = nop

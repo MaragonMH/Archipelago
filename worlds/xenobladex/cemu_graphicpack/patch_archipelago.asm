@@ -115,6 +115,13 @@ _after_archipelago_1__malloc:
 	lwz r5,24(r31)
 	lwz r4,20(r31)
 	lwz r3,16(r31)
+	bl _postShopList
+	mr r9,r3
+	stw r9,20(r31)
+	lwz r6,12(r31)
+	lwz r5,24(r31)
+	lwz r4,20(r31)
+	lwz r3,16(r31)
 	bl _postSkillsList
 	mr r9,r3
 	stw r9,20(r31)
