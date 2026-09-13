@@ -15,6 +15,14 @@ $disableSkellAugments = 0
 $disableImportantItems = 1
 $disableBlueprints = 1
 $enemyBookThreshold = 3
+$includeShopBlueprints = 0
+$includeShopArmor = 1
+$includeShopWeapons = 1
+$includeShopAugments = 0
+$includeShopSkellArmor = 1
+$includeShopSkellWeapons = 1
+$includeShopSkellAugments = 0
+$includeShopSkellFrames = 1
 $characterLevel = 1
 $drifterRangedWeapon = 1;
 $drifterMeleeWeapon = 11;
@@ -130,6 +138,94 @@ name = "3"
 category = "EnemyBookThreshold"
 default = 1
 $enemyBookThreshold = 3
+
+[Preset]
+name = "disable"
+category = "ShopBlueprint"
+default = 1
+$includeShopBlueprints = 0
+
+[Preset]
+name = "on"
+category = "ShopBlueprint"
+$includeShopBlueprints = 1
+
+[Preset]
+name = "disable"
+category = "ShopAugment"
+default = 1
+$includeShopAugments = 0
+
+[Preset]
+name = "on"
+category = "ShopAugment"
+$includeShopAugments = 1
+
+[Preset]
+name = "disable"
+category = "ShopSkellAugment"
+default = 1
+$includeShopSkellAugments = 0
+
+[Preset]
+name = "on"
+category = "ShopSkellAugment"
+$includeShopSkellAugments = 1
+
+[Preset]
+name = "disable"
+category = "ShopArmor"
+$includeShopArmor = 0
+
+[Preset]
+name = "on"
+category = "ShopArmor"
+default = 1
+$includeShopArmor = 1
+
+[Preset]
+name = "disable"
+category = "ShopWeapon"
+$includeShopWeapons = 0
+
+[Preset]
+name = "on"
+category = "ShopWeapon"
+default = 1
+$includeShopWeapons = 1
+
+[Preset]
+name = "disable"
+category = "ShopSkellArmor"
+$includeShopSkellArmor = 0
+
+[Preset]
+name = "on"
+category = "ShopSkellArmor"
+default = 1
+$includeShopSkellArmor = 1
+
+[Preset]
+name = "disable"
+category = "ShopSkellWeapon"
+$includeShopSkellWeapons = 0
+
+[Preset]
+name = "on"
+category = "ShopSkellWeapon"
+default = 1
+$includeShopSkellWeapons = 1
+
+[Preset]
+name = "disable"
+category = "ShopSkellFrame"
+$includeShopSkellFrames = 0
+
+[Preset]
+name = "on"
+category = "ShopSkellFrame"
+default = 1
+$includeShopSkellFrames = 1
 
 [Preset]
 name = "on"

@@ -669,14 +669,112 @@ class IncludeQuestLocations(DefaultOnToggle):
     display_name = "Include Quest Locations"
 
 
-class IncludeShopLocations(CemuChoice):
-    """Allows you to receive items from the shop and adds those locations to the pool"""
-    display_name = "Include Shop Locations"
+class IncludeShopBlueprintLocations(CemuChoice):
+    """Allows you to receive items from the shop blueprints and adds those locations to the pool"""
+    display_name = "Include Shop Blueprint Locations"
+    default = 0
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "ShopBlueprint"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
+class IncludeShopArmorLocations(CemuChoice):
+    """Allows you to receive items from the shop armor and adds those locations to the pool"""
+    display_name = "Include Shop Armor Locations"
     default = 1
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
-    cemu_option = "Shops"
+    cemu_option = "ShopArmor"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
+class IncludeShopWeaponLocations(CemuChoice):
+    """Allows you to receive items from the shop weapons and adds those locations to the pool"""
+    display_name = "Include Shop Weapon Locations"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "ShopWeapon"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
+class IncludeShopAugmentLocations(CemuChoice):
+    """Allows you to receive items from the shop augments and adds those locations to the pool"""
+    display_name = "Include Shop Augment Locations"
+    default = 0
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "ShopAugment"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
+class IncludeShopSkellArmorLocations(CemuChoice):
+    """Allows you to receive items from the shop skell armor and adds those locations to the pool"""
+    display_name = "Include Shop Skell Armor Locations"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "ShopSkellArmor"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
+class IncludeShopSkellWeaponLocations(CemuChoice):
+    """Allows you to receive items from the shop skell weapon and adds those locations to the pool"""
+    display_name = "Include Shop Skell Weapon Locations"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "ShopSkellWeapon"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
+class IncludeShopSkellAugmentLocations(CemuChoice):
+    """Allows you to receive items from the shop skell augments and adds those locations to the pool"""
+    display_name = "Include Shop Skell Augment Locations"
+    default = 0
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "ShopSkellAugment"
+    cemu_selection_names = [
+        "disable",
+        "on",
+    ]
+
+
+class IncludeShopSkellFrameLocations(CemuChoice):
+    """Allows you to receive items from the shop skell frames and adds those locations to the pool"""
+    display_name = "Include Shop Skell Frame Locations"
+    default = 1
+    option_off = 0
+    option_on = 1
+    cemu_pack = "AP"
+    cemu_option = "ShopSkellFrame"
     cemu_selection_names = [
         "disable",
         "on",
@@ -935,6 +1033,14 @@ class XenobladeXOptions(PerGameCommonOptions):
     # qst: IncludeQuestLocations
     ebk: IncludeEnemyBookLocations
     enemy_book_threshold: EnemyBookThreshold
+    shpbp: IncludeShopBlueprintLocations
+    shpamr: IncludeShopArmorLocations
+    shpwpn: IncludeShopWeaponLocations
+    shpaug: IncludeShopAugmentLocations
+    shpskamr: IncludeShopSkellArmorLocations
+    shpskwpn: IncludeShopSkellWeaponLocations
+    shpskaug: IncludeShopSkellAugmentLocations
+    shpskf: IncludeShopSkellFrameLocations
 
     # Items
     amr: IncludeGroundArmor
@@ -1012,9 +1118,16 @@ option_groups: list[OptionGroup] = [
         IncludeCollectopediaLocations,
         IncludeLocationLocations,
         # IncludeQuestLocations,
-        # IncludeShopLocations,
         IncludeEnemyBookLocations,
         EnemyBookThreshold,
+        IncludeShopBlueprintLocations,
+        IncludeShopArmorLocations,
+        IncludeShopWeaponLocations,
+        IncludeShopAugmentLocations,
+        IncludeShopSkellArmorLocations,
+        IncludeShopSkellWeaponLocations,
+        IncludeShopSkellAugmentLocations,
+        IncludeShopSkellFrameLocations,
     ]),
     OptionGroup("Items", [
         IncludeGroundArmor,

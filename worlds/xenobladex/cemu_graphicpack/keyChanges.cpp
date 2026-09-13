@@ -175,14 +175,19 @@ bladeTerminalScenarioFlagPtr = 0x20343604
 shopTerminalScenarioFlagPtr = 0x20343634
 
 # mandatory disable shops
-#0x02a32770 = nop # skell frame
 #0x02a69954 = nop # augment menu
 #0x02a69968 = nop # develop menu
 # optional shops # need paramaterization
-#0x02a326d0 = nop # ground weapon
-#0x02a326f8 = nop # ground armor
-#0x02a32720 = nop # skell weapon
-#0x02a32748 = nop # skell armor
+makeWpnItemList = 0x02a2ca6c
+0x02a326d0 = bl makeWpnItemListAdjusted
+makeAmrItemList = 0x02a2da48
+0x02a326f8 = bl makeAmrItemListAdjusted
+makeDlWpnItemList = 0x02a2e608
+0x02a32720 = bl makeDlWpnItemListAdjusted
+makeDlAmrItemList = 0x02a2f088
+0x02a32748 = bl makeDlAmrItemListAdjusted
+makeDollItemList = 0x02a2fc78
+0x02a32770 = bl makeDollItemListAdjusted
 
 # disable items from collepedia
 0x02a0acf4 = nop
@@ -255,7 +260,8 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 #endif
 
 // Parameters from rules.txt
-int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, drifterRangedWeapon, drifterMeleeWeapon;
+int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, drifterRangedWeapon, drifterMeleeWeapon, includeShopBlueprints,
+includeShopArmor, includeShopWeapons, includeShopAugments, includeShopSkellArmor, includeShopSkellWeapons, includeShopSkellAugments, includeShopSkellFrames;
 float fastRunSpeedFloat, fasterRunSpeedFloat;
 int fastRunningState = 0, fasterRunPlaySound = 0, fasterRunningState = 0;
 
@@ -299,6 +305,38 @@ int getMappedId(int* ptr, int zero, int id);
 void setValueFloat(float value, int* ptr, int mapId);
 void initImpl_EventCharacter(int** ptr, int* ptr2);
 void initImpl_UnitCharacter(int** ptr, int* ptr2);
+
+void makeWpnItemList(int* cshop);
+void makeAmrItemList(int* cshop);
+void makeDlWpnList(int* cshop);
+void makeDlAmrList(int* cshop);
+void makeDollList(int* cshop);
+
+void makeWpnItemListAdjusted(int* cshop){
+	if(!includeShopWeapons && !disableGroundWeapons)
+		return;
+	makeWpnItemList(cshop);
+};
+void makeAmrItemListAdjusted(int* cshop){
+	if(!includeShopArmor && !disableGroundArmor)
+		return;
+	makeWpnItemList(cshop);
+};
+void makeDlWpnListAdjusted(int* cshop){
+	if(!includeShopSkellWeapons && !disableSkellWeapons)
+		return;
+	makeDlWpnList(cshop);
+};
+void makeDlAmrListAdjusted(int* cshop){
+	if(!includeShopSkellArmor && !disableSkellArmor)
+		return;
+	makeDlAmrList(cshop);
+};
+void makeDollListAdjusted(int* cshop){
+	if(!includeShopSkellFrames)
+		return;
+	makeDollList(cshop);
+};
 
 int _IsPermit(){
 	return _hasPreciousItem(24 + 3 - 1);
