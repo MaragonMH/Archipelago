@@ -74,6 +74,7 @@ xenobladeXAugments = [
     *_Itms.gen("SKAUG", type=0x16, type_count=3, data=doll_augments_data),
 ]
 xenobladeXImpItems = [*_Itms.gen("IMPIT", type=0x1d, data=important_items_data, prog=ItCl.progression_skip_balancing)]
+xenobladeXBattleItems = [*_Itms.gen("BTIT", type=0x1f, data=important_items_data, prog=ItCl.filler)]
 # xenobladeXBlueprints = [*_Itms.gen("BLP", type=0x41, data=blueprints_data)]
 
 xenobladeXOptionalItems: dict[str | None, list[Itm]] = {
@@ -89,10 +90,15 @@ xenobladeXOptionalFullItems: list[Itm] = [
     # *xenobladeXBlueprints,
 ]
 
+xenobladeXFillerItems: list[Itm] = [
+    *xenobladeXBattleItems,
+]
+
 xenobladeXItems: dict[str, Itm] = {
     **{itm.get_item(): itm for itm in xenobladeXImportantItems},
     **{itm.get_item(): itm for itm in xenobladeXOptionalFullItems},
     **{itm.get_item(): itm for itm in itertools.chain(*xenobladeXOptionalItems.values())},
+    **{itm.get_item(): itm for itm in xenobladeXFillerItems},
 }
 
 
@@ -115,7 +121,13 @@ def create_optional_items(world: "XenobladeXWorld", count: int) -> list[Xenoblad
         "Please select more locations or less items"
 
     if len(optionals_data) > 0:
-        max_category_size = 950  # -49 for shop item buffer
+        max_category_size = {
+            "WPN": 985,  # -14 for shop item buffer
+            "AMR": 998,  # -1 for shop item buffer
+            "AUG": 999,
+            "SKWPN": 999,
+            "SKAMR": 999,
+        }
         maxed_categories: list[str] = []
         optionals_counter: Counter[str] = Counter()
         while True:
@@ -124,27 +136,32 @@ def create_optional_items(world: "XenobladeXWorld", count: int) -> list[Xenoblad
             for prefix in maxed_categories:
                 optionals_data_temp.pop(prefix, None)
 
+            # Exit if all categories are full
+            if not optionals_data_temp:
+                break
+
             optional_roll = world.random.choices([*optionals_data_temp.keys()], [*optionals_data_temp.values()],
                                                  k=missing_item_count)
             optionals_counter += Counter(optional_roll)
 
-            # Some categories are too big
-            if max(optionals_counter.values()) > max_category_size:
-                # Reroll the optional items that overflow a category onto the other categories
-                missing_item_count = 0
-                for prefix, count in optionals_counter.items():
-                    if count > max_category_size:
-                        missing_item_count += count - max_category_size
-                        optionals_counter[prefix] = max_category_size
-                        maxed_categories += [prefix]
+            # Reroll the optional items that overflow a category onto the other categories
+            missing_item_count = 0
+            oversized_category = False
+            for prefix, count in optionals_counter.items():
+                if count > max_category_size[prefix]:
+                    oversized_category = True
+                    missing_item_count += count - max_category_size[prefix]
+                    optionals_counter[prefix] = max_category_size[prefix]
+                    maxed_categories += [prefix]
 
-            # No oversized categories detected
-            else:
-                for prefix, count in optionals_counter.items():
-                    # Cap count to list size, should have no effect in almost all cases except for SKWPN on reroll
-                    count = min(count, len(non_required_optional_items[prefix]))
-                    optional_items += world.random.sample(non_required_optional_items[prefix], count)
+            if not oversized_category:
                 break
+
+        for prefix, count in optionals_counter.items():
+            # Cap count to list size, should have no effect in almost all cases except for SKWPN on reroll
+            count = min(count, len(non_required_optional_items[prefix]))
+            optional_items += world.random.sample(non_required_optional_items[prefix], count)
+
     return [world.create_item(itm.get_item()) for itm in optional_items]
 
 
@@ -185,7 +202,8 @@ def create_items(world: "XenobladeXWorld") -> None:
             itempool += [xeno_item]
     world.multiworld.itempool += itempool
 
-    world.multiworld.itempool += [world.create_item(world.get_filler_item_name())
+    world.multiworld.itempool += [world.create_item(xenobladeXBattleItems[
+                                  world.random.randint(0, len(xenobladeXBattleItems) - 1)].get_item())
                                   for _ in range(total_locations - len(itempool))]
 
 
