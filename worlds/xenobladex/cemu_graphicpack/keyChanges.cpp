@@ -311,16 +311,16 @@ void initImpl_UnitCharacter(int** ptr, int* ptr2);
 
 void makeWpnItemList(int* cshop);
 void makeAmrItemList(int* cshop);
-void makeDlWpnList(int* cshop);
-void makeDlAmrList(int* cshop);
-void makeDollList(int* cshop);
+void makeDlWpnItemList(int* cshop);
+void makeDlAmrItemList(int* cshop);
+void makeDollItemList(int* cshop);
 
 
 void _filterDevices(){
 	register int selectedOption asm("r6");
 	register int errorMessage asm("r4");
-	register int* menuPtr asm("r30");
-	if(menuPtr[0x6b] == 4){
+	register char* menuPtr asm("r30");
+	if(menuPtr[0x1ac] == 4){
 		if(selectedOption >= 0 && selectedOption <= 1)
 			if(!includeShopAugments && !disableGroundAugments)
 				errorMessage = 485;
@@ -328,7 +328,7 @@ void _filterDevices(){
 			if(!includeShopSkellAugments && !disableSkellAugments)
 				errorMessage = 485;
 	}
-	else if(menuPtr[0x6b] == 3){
+	else if(menuPtr[0x1ac] == 3){
 		if(!includeShopBlueprints)
 			errorMessage = 485;
 	}
@@ -346,20 +346,20 @@ void makeAmrItemListAdjusted(int* cshop){
 		return;
 	makeWpnItemList(cshop);
 }
-void makeDlWpnListAdjusted(int* cshop){
+void makeDlWpnItemListAdjusted(int* cshop){
 	if(!includeShopSkellWeapons && !disableSkellWeapons)
 		return;
-	makeDlWpnList(cshop);
+	makeDlWpnItemList(cshop);
 }
-void makeDlAmrListAdjusted(int* cshop){
+void makeDlAmrItemListAdjusted(int* cshop){
 	if(!includeShopSkellArmor && !disableSkellArmor)
 		return;
-	makeDlAmrList(cshop);
+	makeDlAmrItemList(cshop);
 }
-void makeDollListAdjusted(int* cshop){
+void makeDollItemListAdjusted(int* cshop){
 	if(!includeShopSkellFrames)
 		return;
-	makeDollList(cshop);
+	makeDollItemList(cshop);
 }
 
 int _IsPermit(){

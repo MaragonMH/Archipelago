@@ -55,7 +55,7 @@ _filterDevices:
 	mr r31,r1
 	mr r9,r30
 	addi r9,r9,428
-	lwz r9,0(r9)
+	lbz r9,0(r9)
 	cmpwi cr0,r9,4
 	bne cr0,_keyChanges_L2
 	mr r9,r6
@@ -93,7 +93,7 @@ _keyChanges_L3:
 _keyChanges_L2:
 	mr r9,r30
 	addi r9,r9,428
-	lwz r9,0(r9)
+	lbz r9,0(r9)
 	cmpwi cr0,r9,3
 	bne cr0,_keyChanges_L4
 	lis r9,includeShopBlueprints@ha
@@ -165,7 +165,7 @@ _keyChanges_L9:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-makeDlWpnListAdjusted:
+makeDlWpnItemListAdjusted:
 	stwu r1,-32(r1)
 	mflr r0
 	stw r0,36(r1)
@@ -182,7 +182,7 @@ makeDlWpnListAdjusted:
 	beq cr0,_keyChanges_L16
 _keyChanges_L14:
 	lwz r3,8(r31)
-	bl makeDlWpnList
+	bl makeDlWpnItemList
 	b _keyChanges_L13
 _keyChanges_L16:
 	nop
@@ -193,7 +193,7 @@ _keyChanges_L13:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-makeDlAmrListAdjusted:
+makeDlAmrItemListAdjusted:
 	stwu r1,-32(r1)
 	mflr r0
 	stw r0,36(r1)
@@ -210,7 +210,7 @@ makeDlAmrListAdjusted:
 	beq cr0,_keyChanges_L20
 _keyChanges_L18:
 	lwz r3,8(r31)
-	bl makeDlAmrList
+	bl makeDlAmrItemList
 	b _keyChanges_L17
 _keyChanges_L20:
 	nop
@@ -221,7 +221,7 @@ _keyChanges_L17:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-makeDollListAdjusted:
+makeDollItemListAdjusted:
 	stwu r1,-32(r1)
 	mflr r0
 	stw r0,36(r1)
@@ -233,7 +233,7 @@ makeDollListAdjusted:
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L24
 	lwz r3,8(r31)
-	bl makeDollList
+	bl makeDollItemList
 	b _keyChanges_L21
 _keyChanges_L24:
 	nop

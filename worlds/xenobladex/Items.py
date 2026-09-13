@@ -25,6 +25,7 @@ from .items.groundArmor import ground_armor_data
 from .items.groundAugments import ground_augments_data
 from .items.groundWeapons import ground_weapons_data
 from .items.importantItems import important_items_data
+from .items.battleItems import battle_items_data
 # from .items.blueprints import blueprints_data
 from .items.keys import keys_data
 from .items.skills import skills_data
@@ -74,7 +75,7 @@ xenobladeXAugments = [
     *_Itms.gen("SKAUG", type=0x16, type_count=3, data=doll_augments_data),
 ]
 xenobladeXImpItems = [*_Itms.gen("IMPIT", type=0x1d, data=important_items_data, prog=ItCl.progression_skip_balancing)]
-xenobladeXBattleItems = [*_Itms.gen("BTIT", type=0x1f, data=important_items_data, prog=ItCl.filler)]
+xenobladeXBattleItems = [*_Itms.gen("BTIT", type=0x1f, data=battle_items_data, prog=ItCl.filler)]
 # xenobladeXBlueprints = [*_Itms.gen("BLP", type=0x41, data=blueprints_data)]
 
 xenobladeXOptionalItems: dict[str | None, list[Itm]] = {
