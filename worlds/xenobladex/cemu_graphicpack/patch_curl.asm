@@ -37,7 +37,7 @@ _initCurl:
 	addi r5,r9,_curl_LC0@l
 	li r4,40
 	mr r3,r10
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_curl_1__sprintf_s@ha
 	addi r12,r12,_after_curl_1__sprintf_s@l
 	mtlr r12
@@ -52,7 +52,7 @@ _after_curl_1__sprintf_s:
 	mr r5,r10
 	lwz r4,8(r31)
 	mr r3,r9
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
 	bl import.nlibcurl.curl_multi_init
 	mr r10,r3
@@ -68,7 +68,7 @@ _after_curl_1__sprintf_s:
 	addi r5,r9,_curl_LC1@l
 	li r4,40
 	mr r3,r10
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_curl_2__sprintf_s@ha
 	addi r12,r12,_after_curl_2__sprintf_s@l
 	mtlr r12
@@ -83,7 +83,7 @@ _after_curl_2__sprintf_s:
 	mr r5,r10
 	lwz r4,8(r31)
 	mr r3,r9
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
 	bl import.nlibcurl.curl_multi_init
 	mr r10,r3
@@ -121,14 +121,14 @@ _postCurl:
 	lwz r5,24(r31)
 	lwz r4,8(r31)
 	mr r3,r9
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
 	lis r9,_uploadHandle@ha
 	lwz r9,_uploadHandle@l(r9)
 	li r5,1
 	lwz r4,12(r31)
 	mr r3,r9
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
 _curl_L3:
 	lis r9,_uploadMultiHandle@ha
@@ -251,7 +251,7 @@ _getCurl:
 	addi r5,r9,_WriteCallback@l
 	lwz r4,8(r31)
 	mr r3,r10
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
 	lis r9,_downloadHandle@ha
 	lwz r9,_downloadHandle@l(r9)
@@ -259,7 +259,7 @@ _getCurl:
 	mr r5,r10
 	lwz r4,12(r31)
 	mr r3,r9
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
 _curl_L7:
 	lis r9,_downloadMultiHandle@ha

@@ -45,6 +45,7 @@ _playSound:
 	stw r9,12(r31)
 	lwz r9,28(r31)
 	srwi r9,r9,19
+	rlwinm r9,r9,0,20,31
 	stw r9,16(r31)
 	lwz r9,16(r31)
 	mulli r9,r9,12

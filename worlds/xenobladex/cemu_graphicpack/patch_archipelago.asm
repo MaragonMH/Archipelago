@@ -196,6 +196,7 @@ _getArchipelago:
 _archipelago_L22:
 	lwz r9,8(r31)
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	addi r9,r9,-10
 	cmplwi cr0,r9,73
 	bgt cr0,_archipelago_L6
@@ -686,6 +687,7 @@ _archipelago_L19:
 _archipelago_L18:
 	lwz r9,8(r31)
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,13
 	bne cr0,_archipelago_L19
 	lwz r9,8(r31)
@@ -704,6 +706,7 @@ _archipelago_L21:
 _archipelago_L20:
 	lwz r9,8(r31)
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,10
 	bne cr0,_archipelago_L21
 	lwz r9,8(r31)
@@ -738,6 +741,7 @@ _after_archipelago_23__free:
 _archipelago_L5:
 	lwz r9,8(r31)
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	bne cr0,_archipelago_L22
 	lwz r3,12(r31)

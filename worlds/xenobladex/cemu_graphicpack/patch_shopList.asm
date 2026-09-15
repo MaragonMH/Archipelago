@@ -25,6 +25,7 @@ _shopList_L5:
 	lwz r10,64(r31)
 	add r9,r10,r9
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	stw r9,68(r31)
 	lwz r9,68(r31)
 	cmpwi cr0,r9,3
@@ -36,7 +37,7 @@ _shopList_L5:
 	addi r5,r9,_formatShopText@l
 	mr r4,r10
 	lwz r3,76(r31)
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_shopList_1__sprintf_s@ha
 	addi r12,r12,_after_shopList_1__sprintf_s@l
 	mtlr r12
@@ -84,6 +85,7 @@ _shopList_L15:
 	lwz r10,16(r31)
 	add r9,r10,r9
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	stw r9,28(r31)
 	lwz r10,24(r31)
 	lwz r9,12(r31)
@@ -91,22 +93,30 @@ _shopList_L15:
 	lwz r10,16(r31)
 	add r9,r10,r9
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	stw r9,32(r31)
 	lwz r9,28(r31)
+	rlwinm r9,r9,0,30,30
 	stw r9,36(r31)
 	lwz r9,32(r31)
+	rlwinm r9,r9,0,30,30
 	stw r9,40(r31)
 	lwz r9,28(r31)
+	rlwinm r9,r9,0,29,29
 	stw r9,44(r31)
 	lwz r9,32(r31)
+	rlwinm r9,r9,0,29,29
 	stw r9,48(r31)
 	lwz r9,28(r31)
+	rlwinm r9,r9,0,28,28
 	stw r9,52(r31)
 	lwz r9,32(r31)
+	rlwinm r9,r9,0,28,28
 	stw r9,32(r31)
 	lwz r9,32(r31)
 	stw r9,56(r31)
 	lwz r9,28(r31)
+	rlwinm r9,r9,0,27,27
 	stw r9,60(r31)
 	lwz r9,56(r31)
 	cmpwi cr0,r9,0
@@ -118,7 +128,7 @@ _shopList_L15:
 	addi r5,r9,_formatShopText@l
 	mr r4,r10
 	lwz r3,76(r31)
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_shopList_2__sprintf_s@ha
 	addi r12,r12,_after_shopList_2__sprintf_s@l
 	mtlr r12
@@ -143,7 +153,7 @@ _shopList_L7:
 	addi r5,r9,_formatShopText@l
 	mr r4,r10
 	lwz r3,76(r31)
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_shopList_3__sprintf_s@ha
 	addi r12,r12,_after_shopList_3__sprintf_s@l
 	mtlr r12
@@ -168,7 +178,7 @@ _shopList_L8:
 	addi r5,r9,_formatShopText@l
 	mr r4,r10
 	lwz r3,76(r31)
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_shopList_4__sprintf_s@ha
 	addi r12,r12,_after_shopList_4__sprintf_s@l
 	mtlr r12
@@ -193,7 +203,7 @@ _shopList_L9:
 	addi r5,r9,_formatShopText@l
 	mr r4,r10
 	lwz r3,76(r31)
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_shopList_5__sprintf_s@ha
 	addi r12,r12,_after_shopList_5__sprintf_s@l
 	mtlr r12
@@ -218,7 +228,7 @@ _shopList_L10:
 	addi r5,r9,_formatShopText@l
 	mr r4,r10
 	lwz r3,76(r31)
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_shopList_6__sprintf_s@ha
 	addi r12,r12,_after_shopList_6__sprintf_s@l
 	mtlr r12
@@ -243,7 +253,7 @@ _shopList_L11:
 	addi r5,r9,_formatShopText@l
 	mr r4,r10
 	lwz r3,76(r31)
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_shopList_7__sprintf_s@ha
 	addi r12,r12,_after_shopList_7__sprintf_s@l
 	mtlr r12
@@ -268,7 +278,7 @@ _shopList_L12:
 	addi r5,r9,_formatShopText@l
 	mr r4,r10
 	lwz r3,76(r31)
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_shopList_8__sprintf_s@ha
 	addi r12,r12,_after_shopList_8__sprintf_s@l
 	mtlr r12

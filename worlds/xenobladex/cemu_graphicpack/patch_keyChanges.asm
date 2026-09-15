@@ -56,6 +56,7 @@ _filterDevices:
 	mr r9,r30
 	addi r9,r9,428
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,4
 	bne cr0,_keyChanges_L2
 	mr r9,r6
@@ -94,6 +95,7 @@ _keyChanges_L2:
 	mr r9,r30
 	addi r9,r9,428
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,3
 	bne cr0,_keyChanges_L4
 	lis r9,includeShopBlueprints@ha
@@ -466,6 +468,7 @@ _IsReadyAdjusted:
 	mr r9,r3
 	addic r10,r9,-1
 	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L50
 	lwz r3,8(r31)
@@ -495,6 +498,7 @@ _assignDollCheck:
 	mr r9,r3
 	cntlzw r9,r9
 	srwi r9,r9,5
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L53
 	lis r9,menuBasePtr@ha
@@ -511,6 +515,7 @@ _keyChanges_L53:
 	mr r9,r3
 	cntlzw r9,r9
 	srwi r9,r9,5
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L55
 	lis r9,menuBasePtr@ha
@@ -569,7 +574,7 @@ _getDefaultWeapon:
 	addi r5,r9,_keyChanges_LC2@l
 	li r4,32
 	mr r3,r10
-	crxor 6,6,6
+	crxor cr6,cr6,cr6
 	lis r12,_after_keyChanges_1__sprintf_s@ha
 	addi r12,r12,_after_keyChanges_1__sprintf_s@l
 	mtlr r12
@@ -746,6 +751,7 @@ _after_keyChanges_2__strcmp:
 	mr r9,r3
 	cntlzw r9,r9
 	srwi r9,r9,5
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L71
 	lwz r9,8(r31)
@@ -1032,6 +1038,7 @@ _isUnlock:
 	mr r9,r3
 	cntlzw r9,r9
 	srwi r9,r9,5
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L86
 	li r4,1
@@ -1191,6 +1198,7 @@ _addRewardItemEquipment:
 	mr r9,r3
 	addic r10,r9,-1
 	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L104
 	lwz r6,20(r31)
@@ -1225,6 +1233,7 @@ _addNumAdjusted:
 	mr r9,r3
 	addic r10,r9,-1
 	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L109
 	lwz r6,20(r31)
@@ -1255,6 +1264,7 @@ _addItemAdjusted:
 	mr r9,r3
 	addic r10,r9,-1
 	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L111
 	lwz r5,16(r31)
@@ -1481,12 +1491,14 @@ _keyChanges_L137:
 	bl getItem
 	mr r9,r3
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	stw r9,20(r31)
 	lwz r3,20(r31)
 	bl _checkType
 	mr r9,r3
 	addic r10,r9,-1
 	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L136
 	lwz r9,8(r31)
@@ -1527,12 +1539,14 @@ _itemLoopAdjustment:
 	bl getItem
 	mr r9,r3
 	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
 	stw r9,8(r31)
 	lwz r3,8(r31)
 	bl _checkType
 	mr r9,r3
 	addic r10,r9,-1
 	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L140
 	lwz r9,40(r31)
@@ -1594,6 +1608,7 @@ _prepareBladeTerminal:
 	mr r9,r3
 	addic r10,r9,-1
 	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L147
 	lis r9,bladeTerminalScenarioFlagPtr@ha
@@ -1615,6 +1630,7 @@ _keyChanges_L146:
 	mr r9,r3
 	addic r10,r9,-1
 	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L149
 	lis r9,shopTerminalScenarioFlagPtr@ha
@@ -1717,6 +1733,7 @@ _keyChanges_L155:
 _keyChanges_L156:
 	li r9,0
 _keyChanges_L157:
+	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L154
 	li r5,0
