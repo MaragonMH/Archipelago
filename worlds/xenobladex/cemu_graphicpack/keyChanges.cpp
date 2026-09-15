@@ -360,7 +360,7 @@ void makeWpnItemListAdjusted(int* cshop){
 void makeAmrItemListAdjusted(int* cshop){
 	if(!includeShopArmor && !disableGroundArmor)
 		return;
-	makeWpnItemList(cshop);
+	makeAmrItemList(cshop);
 }
 void makeDlWpnItemListAdjusted(int* cshop){
 	if(!includeShopSkellWeapons && !disableSkellWeapons)

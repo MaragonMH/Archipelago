@@ -156,7 +156,7 @@ makeAmrItemListAdjusted:
 	beq cr0,_keyChanges_L12
 _keyChanges_L10:
 	lwz r3,8(r31)
-	bl makeWpnItemList
+	bl makeAmrItemList
 	b _keyChanges_L9
 _keyChanges_L12:
 	nop
