@@ -175,7 +175,8 @@ bladeTerminalScenarioFlagPtr = 0x20343604
 shopTerminalScenarioFlagPtr = 0x20343634
 
 # mandatory disable shops
-0x02a79100 = bl _filterDevices
+0x02a79100 = bl _filterDevices  # blueprints + augments
+0x02a7ced4 = nop  # doll blueprints
 # optional shops # need paramaterization
 makeWpnItemList = 0x02a2ca6c
 0x02a326d0 = bl makeWpnItemListAdjusted
@@ -187,6 +188,12 @@ makeDlAmrItemList = 0x02a2f088
 0x02a32748 = bl makeDlAmrItemListAdjusted
 makeDollItemList = 0x02a2fc78
 0x02a32770 = bl makeDollItemListAdjusted
+
+# mark shop locations
+0x02a8334c = bl reqMenuAddAugmentFromIdAdjusted
+0x02a7ccfc = bl reqMenuAddBlueprintFromIdAdjusted
+0x02a40c00 = bl BuyDollAdjusted  # doll frame shop
+0x02a402a4 = bl reqMenuAddShopItemFromIdAdjusted
 
 # disable items from collepedia
 0x02a0acf4 = nop
@@ -237,6 +244,7 @@ shopTerminalScenarioFlagPtr = 0x20343634-0xB821D
 
 # mandatory disable shops
 0x02a790f0 = bl _filterDevices
+0x02a7cec4 = nop  # doll blueprints
 # optional shops # need paramaterization
 makeWpnItemList = 0x02a2ca5c
 0x02a326c0 = bl makeWpnItemListAdjusted
@@ -248,6 +256,12 @@ makeDlAmrItemList = 0x02a2f078
 0x02a32738 = bl makeDlAmrItemListAdjusted
 makeDollItemList = 0x02a2fc68
 0x02a32760 = bl makeDollItemListAdjusted
+
+# mark shop locations
+0x02a8333c = bl reqMenuAddAugmentFromIdAdjusted
+0x02a7ccec = bl reqMenuAddBlueprintFromIdAdjusted
+0x02a40bf0 = bl BuyDollAdjusted  # doll frame shop
+0x02a40294 = bl reqMenuAddShopItemFromIdAdjusted
 
 # disable items from collepedia
 0x02a0ace4 = nop
@@ -315,6 +329,8 @@ void makeDlWpnItemList(int* cshop);
 void makeDlAmrItemList(int* cshop);
 void makeDollItemList(int* cshop);
 
+void setKnowledgeBit(int id, int bit, int doll);
+void reqMenuAddItemFromId(int type, int id, int count);
 
 void _filterDevices(){
 	register int selectedOption asm("r6");
@@ -360,6 +376,35 @@ void makeDollItemListAdjusted(int* cshop){
 	if(!includeShopSkellFrames)
 		return;
 	makeDollItemList(cshop);
+}
+
+void reqMenuAddAugmentFromIdAdjusted(int type, int id, int count){
+	if((type == 0x14 || type == 0x15) && includeShopAugments)
+		setKnowledgeBit(id, 0x02, 0);
+	else if((type >= 0x16 || type <= 0x18) && includeShopSkellAugments)
+		setKnowledgeBit(id, 0x02, 1);
+	else
+		reqMenuAddItemFromId(type, id, count);
+}
+void reqMenuAddBlueprintFromIdAdjusted(int type, int id, int count){
+	if(!includeShopBlueprints)
+		reqMenuAddItemFromId(type, id, count);
+}
+void reqMenuAddShopItemFromIdAdjusted(int type, int id, int count){
+	if((type >= 1 || type <= 5) && includeShopArmor)
+		setKnowledgeBit(id, 0x08, 0);
+	else if((type >= 6 || type <= 7) && includeShopWeapons)
+		setKnowledgeBit(id, 0x04, 0);
+	else if((type >= 0xa || type <= 0xe) && includeShopSkellArmor)
+		setKnowledgeBit(id, 0x08, 1);
+	else if((type >= 0xf || type <= 0x13) && includeShopSkellWeapons)
+		setKnowledgeBit(id, 0x04, 1);
+	else
+		reqMenuAddItemFromId(type, id, count);
+}
+void BuyDollAdjusted(int id){
+	if(includeShopSkellFrames)
+		setKnowledgeBit(id, 0x10, 1);
 }
 
 int _IsPermit(){

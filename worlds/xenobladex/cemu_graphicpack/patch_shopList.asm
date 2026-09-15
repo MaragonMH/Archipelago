@@ -307,6 +307,51 @@ _shopList_L6:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
+setKnowledgeBit:
+	stwu r1,-64(r1)
+	mflr r0
+	stw r0,68(r1)
+	stw r31,60(r1)
+	mr r31,r1
+	stw r3,40(r31)
+	stw r4,44(r31)
+	stw r5,48(r31)
+	bl GetKnowledgePtr
+	mr r9,r3
+	stw r9,12(r31)
+	li r9,19364
+	stw r9,16(r31)
+	li r9,15364
+	stw r9,20(r31)
+	lwz r9,16(r31)
+	stw r9,8(r31)
+	lwz r9,48(r31)
+	cmpwi cr0,r9,0
+	bne cr0,_shopList_L18
+	lwz r9,20(r31)
+	stw r9,8(r31)
+_shopList_L18:
+	lwz r10,8(r31)
+	lwz r9,40(r31)
+	add r9,r10,r9
+	lwz r10,12(r31)
+	add r9,r10,r9
+	stw r9,24(r31)
+	lwz r9,24(r31)
+	lbz r9,0(r9)
+	mr r10,r9
+	lwz r9,44(r31)
+	or r9,r10,r9
+	mr r10,r9
+	lwz r9,24(r31)
+	stb r10,0(r9)
+	nop
+	addi r11,r31,64
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
 
 
 [Archipelago_shopList_ALL]
