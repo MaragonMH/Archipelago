@@ -75,6 +75,8 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     content = re.sub(r"(?<=[ ,(])([1-3]?[0-9])(?=[),])", "r\\1", content)
     # Add register prefix to all complex numbers
     content = re.sub(r"(\t(?:(?!i)\w)*(?: .*,|\s))([1-3]?[0-9])\n", "\\1r\\2\n", content)
+    # Add register for divs
+    content = re.sub(r"divw (r[0-9]+),(r[0-9]+),([0-9]+)", "divw \\1,\\2,r\\3", content)
     # Remove prefix from crxor
     content = re.sub(r"crxor r([0-9]+),r([0-9]+),r([0-9]+)", "crxor cr\\1,cr\\2,cr\\3", content)
     # Remove prefix from rlwinm
