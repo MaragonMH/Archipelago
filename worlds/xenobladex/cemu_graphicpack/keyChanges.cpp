@@ -561,8 +561,7 @@ void _SetBdatValue(const char* bdatName, const char* columnName, int rowId, int 
 	// ignore value check for simplicity
 	// char* valCheckPtr = getValCheckSub(bdat, getMember(bdat, columnName), valueSize);
 	int baseOffset = *(short*)((char*)bdat + 0xe);
-	// needs work row is wrong
-	int rowOffset = *(short*)((char*)bdat + 0x8) * (rowId - 1);
+	int rowOffset = (*(short*)((char*)bdat + 0x8) + 0x2) * (rowId - 1);
 	int columnOffset = *(short*)((char*)bdat + 0x2 + columnOffsetBase);
 	char* valPtr = (char*)bdat + baseOffset + rowOffset + columnOffset;
 	if (valueSize == 1)

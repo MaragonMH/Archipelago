@@ -1025,7 +1025,8 @@ _SetBdatValue:
 	lwz r9,8(r31)
 	addi r9,r9,8
 	lhz r9,0(r9)
-	extsh r10,r9
+	extsh r9,r9
+	addi r10,r9,2
 	lwz r9,48(r31)
 	addi r9,r9,-1
 	mullw r9,r10,r9
