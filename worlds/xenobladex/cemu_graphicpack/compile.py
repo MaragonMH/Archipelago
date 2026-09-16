@@ -8,21 +8,33 @@ import itertools
 # Set working directory to file directory
 os.chdir(sys.path[0])
 
-# Set mod name
-try:
-    with open("rules.txt", "r") as f:
-        rules = f.read()
-except Exception:
-    raise Exception("No rules.txt file")
-match = re.search(r"^\s*[nN]ame\s*=\s*[\'\"]?(.*?)[\'\"]?\s*$", rules, re.M)
-if match is not None:
-    modname = match.group(1)
-else:
-    raise Exception("Rules.txt file contains no name")
-parameters = set(re.findall(r"(?<=^\$)\w*(?=\s)", rules, re.M))
+modnames: dict[str, str] = {}
+parameters: dict[str, set[str]] = {}
 
-# Compile all *.cpp files
-for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.endswith(".cpp")):  # noqa: C901
+# Set mod name
+for filename in (os.path.splitext(os.path.join(root, file))[0]  # noqa: C901
+                 for root, _, files in os.walk(".")
+                 for file in files if file.endswith("rules.txt")):
+    dirname = os.path.dirname(filename)
+    try:
+        with open(f"{filename}.txt", "r") as f:
+            rules = f.read()
+    except Exception:
+        raise Exception("No rules.txt file")
+    match = re.search(r"^\s*[nN]ame\s*=\s*[\'\"]?(.*?)[\'\"]?\s*$", rules, re.M)
+    if match is not None:
+        modnames[dirname] = match.group(1)
+    else:
+        raise Exception("Rules.txt file contains no name")
+    parameters[dirname] = set(re.findall(r"(?<=^\$)\w*(?=\s)", rules, re.M))
+
+# Compile all *.cpp files, including those in subdirectories
+for filename in (os.path.splitext(os.path.join(root, file))[0]  # noqa: C901
+                 for root, _, files in os.walk(".")
+                 for file in files if file.endswith(".cpp")):
+
+    basename = os.path.basename(filename)
+    dirname = os.path.dirname(filename)
 
     # Read file
     try:
@@ -66,7 +78,7 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
                 return ".int    0"
     content = re.sub(r"\.zero\s*(\d)", _generateInitializer, content)
     # Replace invalid Labels
-    content = re.sub(r"[.](LC?[0-9]+)", f"_{filename}_\\1", content)
+    content = re.sub(r"[.](LC?[0-9]+)", f"_{basename}_\\1", content)
     # Remove global label
     content = re.sub(r"\t\.global .*\n", "", content)
     # Remove all function brackets
@@ -91,7 +103,7 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
 
     def _generateAlternateCall(match: re.Match[str]) -> str:
         name = match.group(1)
-        label = f"_after_{filename}_{next(counter)}{name}"
+        label = f"_after_{basename}_{next(counter)}{name}"
         return f"lis r12,{label}@ha\n\taddi r12,r12,{label}@l\n\tmtlr r12\n\tlis r12,{name}" \
                f"@ha\n\taddi r12,r12,{name}@l\n\tmtctr r12\n\tbctr\n{label}:"
     content = re.sub(r"bl (__.*)", _generateAlternateCall, content)
@@ -107,7 +119,7 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     content = re.sub(r"(bl.*)", lambda _: re.sub(r"::", ".", str(_.group(1))), content)
 
     # Add Parameters from rules.txt file
-    for parameter in parameters:
+    for parameter in parameters[dirname]:
         if parameter.endswith("Float"):
             content = re.sub(rf"({parameter}:\n\t\.)int(\s+)0", f"\\1float\\2${parameter}", content)
         else:
@@ -121,16 +133,17 @@ for filename in (os.path.splitext(file)[0] for file in os.listdir() if file.ends
     # Add cemu package information
     modules = f'{", ".join(package["ids"] for package in packages)} #' \
               f' {", ".join(package["versions"] for package in packages)}'
-    content = f"[{modname}_{filename}]\nmoduleMatches = {modules}\n.origin = codecave\n\n{content}\n\n"
+    content = f"[{modnames[dirname]}_{basename}]\nmoduleMatches = {modules}\n.origin = codecave\n\n{content}\n\n"
 
     # Add version specific addresses for symbols
     for package in packages:
-        content += f'[{modname}_{filename}_{package["name"]}]\nmoduleMatches = {package["ids"]} ' \
+        content += f'[{modnames[dirname]}_{basename}_{package["name"]}]\nmoduleMatches = {package["ids"]} ' \
                    f'# {package["versions"]}\n{package["content"]}\n\n'
 
     # Create file
     try:
-        with open(f"patch_{filename}.asm", "w") as f:
+        output_path = os.path.join(os.path.dirname(filename), f"patch_{basename}.asm")
+        with open(output_path, "w") as f:
             f.write(content)
     except Exception:
-        raise Exception(f"Unable to write to patch_{filename}.asm")
+        raise Exception(f"Unable to write to patch_{basename}.asm")
