@@ -392,13 +392,11 @@ void reqMenuAddBlueprintFromIdAdjusted(int type, int id, int count){
 }
 int _getShopIdx(const char* bdat_name, int itemId, bool dropLastColumn = false){
 	int* shpPtr = getFP(bdat_name);
-	int value, realRowSize;
+	int value;
 	int baseOffset = (int)((short*)shpPtr)[0x7];
 	// rowSize is dependant on alignment each row start on aligned 0x4 bytes
 	int rowSize = (int)((short*)shpPtr)[0x4] >> 1;
-	realRowSize = rowSize;
-	if(rowSize % 2 == 0)
-		realRowSize -= 1;
+	int realRowSize = rowSize - 1;
 	if(dropLastColumn)
 		realRowSize -= 1;
 	for(int row = 0; true; row++){
