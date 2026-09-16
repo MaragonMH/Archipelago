@@ -381,7 +381,7 @@ void makeDollItemListAdjusted(int* cshop){
 void reqMenuAddAugmentFromIdAdjusted(int type, int id, int count){
 	if((type == 0x14 || type == 0x15) && includeShopAugments)
 		setKnowledgeBit(id, 0x02, 0);
-	else if((type >= 0x16 || type <= 0x18) && includeShopSkellAugments)
+	else if(type >= 0x16 && type <= 0x18 && includeShopSkellAugments)
 		setKnowledgeBit(id, 0x02, 1);
 	else
 		reqMenuAddItemFromId(type, id, count);
@@ -390,15 +390,34 @@ void reqMenuAddBlueprintFromIdAdjusted(int type, int id, int count){
 	if(!includeShopBlueprints)
 		reqMenuAddItemFromId(type, id, count);
 }
+int _getShopIdx(const char* bdat_name, int itemId, bool dropLastColumn = false){
+	int* shpPtr = getFP(bdat_name);
+	int value, realRowSize;
+	int baseOffset = (int)((short*)shpPtr)[0x7];
+	// rowSize is dependant on alignment each row start on aligned 0x4 bytes
+	int rowSize = (int)((short*)shpPtr)[0x4] >> 1;
+	realRowSize = rowSize;
+	if(rowSize % 2 == 0)
+		realRowSize -= 1;
+	if(dropLastColumn)
+		realRowSize -= 1;
+	for(int row = 0; true; row++){
+		for(int column = 0; column < realRowSize; column++){
+			value = (int)((short*)((char*)shpPtr + baseOffset))[row * rowSize + column];
+			if(itemId == value)
+				return row * realRowSize + column + 1;
+		}
+	}
+}
 void reqMenuAddShopItemFromIdAdjusted(int type, int id, int count){
-	if((type >= 1 || type <= 5) && includeShopArmor)
-		setKnowledgeBit(id, 0x08, 0);
-	else if((type >= 6 || type <= 7) && includeShopWeapons)
-		setKnowledgeBit(id, 0x04, 0);
-	else if((type >= 0xa || type <= 0xe) && includeShopSkellArmor)
-		setKnowledgeBit(id, 0x08, 1);
-	else if((type >= 0xf || type <= 0x13) && includeShopSkellWeapons)
-		setKnowledgeBit(id, 0x04, 1);
+	if(type >= 1 && type <= 5 && includeShopArmor)
+		setKnowledgeBit(_getShopIdx("SHP_AmrPC", id), 0x08, 0);
+	else if(type >= 6 && type <= 7 && includeShopWeapons)
+		setKnowledgeBit(_getShopIdx("SHP_WpnPC", id, true), 0x04, 0);
+	else if(type >= 0xa && type <= 0xe && includeShopSkellArmor)
+		setKnowledgeBit(_getShopIdx("SHP_AmrDL", id), 0x08, 1);
+	else if(type >= 0xf && type <= 0x13 && includeShopSkellWeapons)
+		setKnowledgeBit(_getShopIdx("SHP_WpnDL", id), 0x04, 1);
 	else
 		reqMenuAddItemFromId(type, id, count);
 }
