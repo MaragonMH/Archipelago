@@ -64,12 +64,18 @@ class GameItem(NamedTuple):
     level: int = 1
 
 
+class GameLocation(NamedTuple):
+    type: int
+    id: int
+
+
 class XenobladeXHttpServer(HTTPServer):
     address_family = socket.AF_INET6
     locations = ""
     items = ""
     items_debug = ""
     death_link = ""
+    shop_names = ""
     messages: List[str] = []
     upload_count = 0
     upload_limit = 25
@@ -216,6 +222,13 @@ class XenobladeXHttpServer(HTTPServer):
     def _generate_message(self, heading: str, body: str) -> str:
         return f"M {self._sanitize_message(heading)}\r{(self._sanitize_message(body))[:60]}\n"
 
+    def generate_shop_name(self, game_loc: GameLocation, shop_name: str) -> str:
+        shop_name = self._sanitize_message(shop_name)
+        return f"{game_loc.type:02x}{game_loc.id:04x}{shop_name}"
+
+    def upload_shop_names(self, shop_names: str) -> None:
+        self.shop_names = shop_names
+
     def clear_locations(self) -> None:
         self.locations = ""
 
@@ -305,6 +318,10 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
             if items_text:
                 logger.debug(f"{items_text.encode()!r}")
 
+    def get_shop_names(self) -> None:
+        self.respond_success()
+        self.wfile.write(self.http_server.shop_names.encode())
+
     def post_locations(self) -> None:
         locations = (self.rfile.read(int(self.headers['content-length']))).decode('cp437').replace(":", "\n")
         self.respond_success()
@@ -333,6 +350,8 @@ class XenobladeXHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         if self.path == "/items":
             self.get_items()
+        if self.path == "/shops":
+            self.get_shop_names()
         if self.path == "/locations" and self.http_server.debug:
             self.debug_get_locations()
 
@@ -441,8 +460,24 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
     def game_item_to_archipelago_item(self, game_item: GameItem) -> int:
         return XenobladeXWorld.base_id + game_type_item_to_offset[game_item.type] + game_item.id
 
+    def archipelago_location_to_game_location(self, archipelago_location_id: int):
+        game_location_type_offset = max([id for id in game_type_item_to_offset.values()
+                                        if id < archipelago_location_id - XenobladeXWorld.base_id])
+        game_location_type = min([key for key, offset in game_type_item_to_offset.items()
+                                 if offset == game_location_type_offset])
+        return GameLocation(game_location_type,
+                            (archipelago_location_id - XenobladeXWorld.base_id) - game_location_type_offset)
+
     def game_location_to_archipelago_location(self, game_location: GameItem) -> int:
         return XenobladeXWorld.base_id + game_type_location_to_offset[game_location.type] + game_location.id
+
+    def upload_shop_names(self) -> None:
+        shop_names = ""
+        for network_item in self.locations_info.values():
+            shop_item_name = self.item_names.lookup_in_slot(network_item.item, network_item.player)
+            game_loc = self.archipelago_location_to_game_location(network_item.location)
+            shop_names += self.http_server.generate_shop_name(game_loc, shop_item_name)
+        self.http_server.upload_shop_names(shop_names)
 
     async def download_game_locations(self) -> None:
         game_locations = {self.game_location_to_archipelago_location(location)
@@ -476,6 +511,7 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
         while not self.exit_event.is_set():
             try:
                 await self.update_death_link(self.death_link)
+                self.upload_shop_names()
                 if self.http_server.process_game_event.is_set():
                     self.http_server.process_game_event.clear()
                     if "DeathLink" in self.tags and self.http_server.download_death():
