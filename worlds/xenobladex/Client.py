@@ -14,7 +14,7 @@ import urllib.parse
 import requests
 import Utils
 from NetUtils import ClientStatus, NetworkItem
-from typing import TYPE_CHECKING, Any, Counter, List, NamedTuple, Optional, Set, cast, Callable
+from typing import TYPE_CHECKING, Any, Counter, List, NamedTuple, Optional, cast, Callable
 from itertools import groupby
 import colorama
 
@@ -375,8 +375,9 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
     tags = {"AP"}
 
     cemu_process: Optional[subprocess.Popen[bytes]] = None
-    locations_checked: Set[int]
+    locations_checked: set[int]
     locations_info: dict[int, NetworkItem]
+    scout_ids: set[int] = set()
     death_link = False
     death_link_pending = False
     logic_level_steps = 0
@@ -420,9 +421,12 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
                     self.shop_skell_augments = options.get("shpskaug", 0) != 0
                     self.shop_skell_frames = options.get("shpskf", 0) != 0
                 self.http_server.clear_locations()
+                self.scout_ids = self.scout_shops()
                 self.prepare_cemu(cemu_options)
         if cmd in {"RoomInfo"}:
             self.seed_name = args["seed_name"]
+        if cmd in {"LocationInfo"}:
+            self.upload_shop_names()
         super().on_package(cmd, args)
 
     def on_deathlink(self, data: dict[str, Any]) -> None:
@@ -496,33 +500,28 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
     def game_location_to_archipelago_location(self, game_location: GameItem) -> int:
         return XenobladeXWorld.base_id + game_type_location_to_offset[game_location.type] + game_location.id
 
-    def category_to_archipelago_locations(self, category: str) -> list[int]:
-        return [id for id, name in XenobladeXWorld.location_id_to_name.items() if name.split(":")[0] == category]
+    def category_to_archipelago_locations(self, category: str) -> set[int]:
+        return set([id for id, name in XenobladeXWorld.location_id_to_name.items() if name.split(":")[0] == category])
 
-    async def scout_shops(self) -> None:
-        if self.locations_info == {}:
-            location_ids: list[int] = []
-            if self.shop_blueprints:
-                location_ids += self.category_to_archipelago_locations("SHPBP")
-            if self.shop_armor:
-                location_ids += self.category_to_archipelago_locations("SHPAMR")
-            if self.shop_weapons:
-                location_ids += self.category_to_archipelago_locations("SHPWPN")
-            if self.shop_augments:
-                location_ids += self.category_to_archipelago_locations("SHPAUG")
-            if self.shop_skell_armor:
-                location_ids += self.category_to_archipelago_locations("SHPSKAMR")
-            if self.shop_skell_weapons:
-                location_ids += self.category_to_archipelago_locations("SHPSKWPN")
-            if self.shop_skell_augments:
-                location_ids += self.category_to_archipelago_locations("SHPSKAUG")
-            if self.shop_skell_frames:
-                location_ids += self.category_to_archipelago_locations("SHPSKF")
-            await self.send_msgs([{
-                "cmd": "LocationScouts",
-                "locations": location_ids,
-                "create_as_hint": 0
-            }])
+    def scout_shops(self) -> set[int]:
+        location_ids: set[int] = set()
+        if self.shop_blueprints:
+            location_ids |= self.category_to_archipelago_locations("SHPBP")
+        if self.shop_armor:
+            location_ids |= self.category_to_archipelago_locations("SHPAMR")
+        if self.shop_weapons:
+            location_ids |= self.category_to_archipelago_locations("SHPWPN")
+        if self.shop_augments:
+            location_ids |= self.category_to_archipelago_locations("SHPAUG")
+        if self.shop_skell_armor:
+            location_ids |= self.category_to_archipelago_locations("SHPSKAMR")
+        if self.shop_skell_weapons:
+            location_ids |= self.category_to_archipelago_locations("SHPSKWPN")
+        if self.shop_skell_augments:
+            location_ids |= self.category_to_archipelago_locations("SHPSKAUG")
+        if self.shop_skell_frames:
+            location_ids |= self.category_to_archipelago_locations("SHPSKF")
+        return location_ids
 
     def upload_shop_names(self) -> None:
         shop_names = ""
@@ -532,13 +531,23 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
             shop_names += self.http_server.generate_shop_name(game_loc, shop_item_name)
         self.http_server.upload_shop_names(shop_names)
 
+    async def send_scouts(self) -> None:
+        new_scouts = self.scout_ids.difference(self.locations_scouted)
+        if new_scouts:
+            await self.send_msgs([{
+                "cmd": "LocationScouts",
+                "locations": new_scouts,
+                "create_as_hint": 0
+            }])
+            self.locations_scouted |= new_scouts
+
     async def download_game_locations(self) -> None:
         game_locations = {self.game_location_to_archipelago_location(location)
                           for location in self.http_server.download_locations()}
         new_locations = game_locations.difference(self.locations_checked)
         if new_locations:
             await self.send_msgs([{"cmd": 'LocationChecks', "locations": new_locations}])
-            self.locations_checked = game_locations
+            self.locations_checked |= new_locations
 
     async def upload_game_items(self) -> None:
         self.http_server.clear_uploaded_items()
@@ -565,9 +574,8 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
             try:
                 await self.update_death_link(self.death_link)
                 if self.http_server.process_game_event.is_set():
+                    await self.send_scouts()
                     self.http_server.process_game_event.clear()
-                    await self.scout_shops()
-                    self.upload_shop_names()
                     if "DeathLink" in self.tags and self.http_server.download_death():
                         if self.death_link_pending:
                             self.death_link_pending = False
