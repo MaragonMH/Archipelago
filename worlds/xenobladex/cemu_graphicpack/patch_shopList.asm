@@ -4,6 +4,22 @@ moduleMatches = 0xF882D5CF, 0x30B6E091, 0x218F6E07 # 1.0.1E, 1.0.2U, 1.0.0E
 
 _formatShopText:
 	.string "SH Id=%03x Tp=%01x:"
+_shopArmorNames:
+	.int    0
+_shopWeaponNames:
+	.int    0
+_shopDollArmorNames:
+	.int    0
+_shopDollWeaponNames:
+	.int    0
+_shopDollFrameNames:
+	.int    0
+_shopAugmentNames:
+	.int    0
+_shopDollAugmentNames:
+	.int    0
+_shopBlueprintNames:
+	.int    0
 _postShopList:
 	stwu r1,-96(r1)
 	mflr r0
@@ -357,6 +373,268 @@ _shopList_L18:
 	stb r10,0(r9)
 	nop
 	addi r11,r31,64
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+_initShopCache:
+	stwu r1,-32(r1)
+	mflr r0
+	stw r0,36(r1)
+	stw r31,28(r1)
+	mr r31,r1
+	stw r3,8(r31)
+	stw r4,12(r31)
+	lwz r9,8(r31)
+	cmpwi cr0,r9,0
+	bne cr0,_shopList_L22
+	lwz r9,12(r31)
+	li r4,1
+	mr r3,r9
+	lis r12,_after_shopList_9__calloc@ha
+	addi r12,r12,_after_shopList_9__calloc@l
+	mtlr r12
+	lis r12,__calloc@ha
+	addi r12,r12,__calloc@l
+	mtctr r12
+	bctr
+_after_shopList_9__calloc:
+	mr r9,r3
+	stw r9,8(r31)
+	b _shopList_L19
+_shopList_L22:
+	nop
+_shopList_L19:
+	addi r11,r31,32
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+_copyShopName:
+	stwu r1,-32(r1)
+	mflr r0
+	stw r0,36(r1)
+	stw r30,24(r1)
+	stw r31,28(r1)
+	mr r31,r1
+	stw r3,8(r31)
+	stw r4,12(r31)
+	stw r5,16(r31)
+	stw r6,20(r31)
+	lwz r9,12(r31)
+	slwi r9,r9,2
+	lwz r10,8(r31)
+	add r9,r10,r9
+	lwz r9,0(r9)
+	cmpwi cr0,r9,0
+	bne cr0,_shopList_L26
+	lwz r8,20(r31)
+	lwz r9,12(r31)
+	slwi r9,r9,2
+	lwz r10,8(r31)
+	add r30,r10,r9
+	li r4,1
+	mr r3,r8
+	lis r12,_after_shopList_10__calloc@ha
+	addi r12,r12,_after_shopList_10__calloc@l
+	mtlr r12
+	lis r12,__calloc@ha
+	addi r12,r12,__calloc@l
+	mtctr r12
+	bctr
+_after_shopList_10__calloc:
+	mr r9,r3
+	stw r9,0(r30)
+	lwz r9,12(r31)
+	slwi r9,r9,2
+	lwz r10,8(r31)
+	add r9,r10,r9
+	lwz r9,0(r9)
+	lwz r4,16(r31)
+	mr r3,r9
+	lis r12,_after_shopList_11__strcpy@ha
+	addi r12,r12,_after_shopList_11__strcpy@l
+	mtlr r12
+	lis r12,__strcpy@ha
+	addi r12,r12,__strcpy@l
+	mtctr r12
+	bctr
+_after_shopList_11__strcpy:
+	b _shopList_L23
+_shopList_L26:
+	nop
+_shopList_L23:
+	addi r11,r31,32
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r30,-8(r11)
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+_cacheShopItemName:
+	stwu r1,-48(r1)
+	mflr r0
+	stw r0,52(r1)
+	stw r31,44(r1)
+	mr r31,r1
+	stw r3,24(r31)
+	stw r4,28(r31)
+	stw r5,32(r31)
+	lwz r3,32(r31)
+	lis r12,_after_shopList_12__strlen@ha
+	addi r12,r12,_after_shopList_12__strlen@l
+	mtlr r12
+	lis r12,__strlen@ha
+	addi r12,r12,__strlen@l
+	mtctr r12
+	bctr
+_after_shopList_12__strlen:
+	mr r9,r3
+	stw r9,8(r31)
+	lwz r9,8(r31)
+	cmpwi cr0,r9,0
+	beq cr0,_shopList_L37
+	lwz r9,24(r31)
+	cmpwi cr0,r9,6
+	bne cr0,_shopList_L30
+	lis r9,_shopBlueprintNames@ha
+	lwz r9,_shopBlueprintNames@l(r9)
+	li r4,200
+	mr r3,r9
+	bl _initShopCache
+	lis r9,_shopBlueprintNames@ha
+	lwz r9,_shopBlueprintNames@l(r9)
+	lwz r6,8(r31)
+	lwz r5,32(r31)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl _copyShopName
+	b _shopList_L27
+_shopList_L30:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,7
+	bne cr0,_shopList_L31
+	lis r9,_shopArmorNames@ha
+	lwz r9,_shopArmorNames@l(r9)
+	li r4,1700
+	mr r3,r9
+	bl _initShopCache
+	lis r9,_shopArmorNames@ha
+	lwz r9,_shopArmorNames@l(r9)
+	lwz r6,8(r31)
+	lwz r5,32(r31)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl _copyShopName
+	b _shopList_L27
+_shopList_L31:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,8
+	bne cr0,_shopList_L32
+	lis r9,_shopWeaponNames@ha
+	lwz r9,_shopWeaponNames@l(r9)
+	li r4,1900
+	mr r3,r9
+	bl _initShopCache
+	lis r9,_shopWeaponNames@ha
+	lwz r9,_shopWeaponNames@l(r9)
+	lwz r6,8(r31)
+	lwz r5,32(r31)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl _copyShopName
+	b _shopList_L27
+_shopList_L32:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,9
+	bne cr0,_shopList_L33
+	lis r9,_shopAugmentNames@ha
+	lwz r9,_shopAugmentNames@l(r9)
+	li r4,3700
+	mr r3,r9
+	bl _initShopCache
+	lis r9,_shopAugmentNames@ha
+	lwz r9,_shopAugmentNames@l(r9)
+	lwz r6,8(r31)
+	lwz r5,32(r31)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl _copyShopName
+	b _shopList_L27
+_shopList_L33:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,10
+	bne cr0,_shopList_L34
+	lis r9,_shopDollArmorNames@ha
+	lwz r9,_shopDollArmorNames@l(r9)
+	li r4,300
+	mr r3,r9
+	bl _initShopCache
+	lis r9,_shopDollArmorNames@ha
+	lwz r9,_shopDollArmorNames@l(r9)
+	lwz r6,8(r31)
+	lwz r5,32(r31)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl _copyShopName
+	b _shopList_L27
+_shopList_L34:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,11
+	bne cr0,_shopList_L35
+	lis r9,_shopDollWeaponNames@ha
+	lwz r9,_shopDollWeaponNames@l(r9)
+	li r4,900
+	mr r3,r9
+	bl _initShopCache
+	lis r9,_shopDollWeaponNames@ha
+	lwz r9,_shopDollWeaponNames@l(r9)
+	lwz r6,8(r31)
+	lwz r5,32(r31)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl _copyShopName
+	b _shopList_L27
+_shopList_L35:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,12
+	bne cr0,_shopList_L36
+	lis r9,_shopDollAugmentNames@ha
+	lwz r9,_shopDollAugmentNames@l(r9)
+	li r4,3200
+	mr r3,r9
+	bl _initShopCache
+	lis r9,_shopDollAugmentNames@ha
+	lwz r9,_shopDollAugmentNames@l(r9)
+	lwz r6,8(r31)
+	lwz r5,32(r31)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl _copyShopName
+	b _shopList_L27
+_shopList_L36:
+	lwz r9,24(r31)
+	cmpwi cr0,r9,13
+	bne cr0,_shopList_L27
+	lis r9,_shopDollFrameNames@ha
+	lwz r9,_shopDollFrameNames@l(r9)
+	li r4,50
+	mr r3,r9
+	bl _initShopCache
+	lis r9,_shopDollFrameNames@ha
+	lwz r9,_shopDollFrameNames@l(r9)
+	lwz r6,8(r31)
+	lwz r5,32(r31)
+	lwz r4,28(r31)
+	mr r3,r9
+	bl _copyShopName
+	b _shopList_L27
+_shopList_L37:
+	nop
+_shopList_L27:
+	addi r11,r31,48
 	lwz r0,4(r11)
 	mtlr r0
 	lwz r31,-4(r11)

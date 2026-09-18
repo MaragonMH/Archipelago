@@ -184,7 +184,7 @@ _getArchipelago:
 	stw r0,116(r1)
 	stw r31,108(r1)
 	mr r31,r1
-	bl _getCurl
+	bl _getDownloadCurl
 	mr r9,r3
 	stw r9,12(r31)
 	lwz r9,12(r31)
@@ -763,6 +763,105 @@ _archipelago_L2:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
+_getArchipelagoShop:
+	stwu r1,-48(r1)
+	mflr r0
+	stw r0,52(r1)
+	stw r31,44(r1)
+	mr r31,r1
+	bl _getShopCurl
+	mr r9,r3
+	stw r9,12(r31)
+	lwz r9,12(r31)
+	cmpwi cr0,r9,0
+	beq cr0,_archipelago_L32
+	lwz r9,12(r31)
+	stw r9,8(r31)
+	b _archipelago_L27
+_archipelago_L30:
+	lwz r9,8(r31)
+	addi r9,r9,2
+	stw r9,24(r31)
+	addi r9,r31,24
+	li r5,16
+	mr r4,r9
+	lwz r3,8(r31)
+	lis r12,_after_archipelago_25__strtol@ha
+	addi r12,r12,_after_archipelago_25__strtol@l
+	mtlr r12
+	lis r12,__strtol@ha
+	addi r12,r12,__strtol@l
+	mtctr r12
+	bctr
+_after_archipelago_25__strtol:
+	mr r9,r3
+	stw r9,16(r31)
+	lwz r9,8(r31)
+	addi r9,r9,2
+	stw r9,8(r31)
+	lwz r9,8(r31)
+	addi r9,r9,4
+	stw r9,24(r31)
+	addi r9,r31,24
+	li r5,16
+	mr r4,r9
+	lwz r3,8(r31)
+	lis r12,_after_archipelago_26__strtol@ha
+	addi r12,r12,_after_archipelago_26__strtol@l
+	mtlr r12
+	lis r12,__strtol@ha
+	addi r12,r12,__strtol@l
+	mtctr r12
+	bctr
+_after_archipelago_26__strtol:
+	mr r9,r3
+	stw r9,20(r31)
+	lwz r9,8(r31)
+	addi r9,r9,4
+	stw r9,8(r31)
+	lwz r5,8(r31)
+	lwz r4,20(r31)
+	lwz r3,16(r31)
+	bl _cacheShopItemName
+	b _archipelago_L28
+_archipelago_L29:
+	lwz r9,8(r31)
+	addi r9,r9,1
+	stw r9,8(r31)
+_archipelago_L28:
+	lwz r9,8(r31)
+	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
+	cmpwi cr0,r9,10
+	bne cr0,_archipelago_L29
+	lwz r9,8(r31)
+	addi r9,r9,1
+	stw r9,8(r31)
+_archipelago_L27:
+	lwz r9,8(r31)
+	lbz r9,0(r9)
+	rlwinm r9,r9,0,24,31
+	cmpwi cr0,r9,0
+	bne cr0,_archipelago_L30
+	lwz r3,12(r31)
+	lis r12,_after_archipelago_27__free@ha
+	addi r12,r12,_after_archipelago_27__free@l
+	mtlr r12
+	lis r12,__free@ha
+	addi r12,r12,__free@l
+	mtctr r12
+	bctr
+_after_archipelago_27__free:
+	b _archipelago_L24
+_archipelago_L32:
+	nop
+_archipelago_L24:
+	addi r11,r31,48
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
 _networkCounter:
 	.int    0
 _mainArchipelago:
@@ -787,12 +886,13 @@ _mainArchipelago:
 	lis r9,_networkCounter@ha
 	lwz r9,_networkCounter@l(r9)
 	cmpwi cr0,r9,0
-	bne cr0,_archipelago_L25
+	bne cr0,_archipelago_L34
 	bl _getArchipelago
-	b _archipelago_L26
-_archipelago_L25:
+	bl _getArchipelagoShop
+	b _archipelago_L35
+_archipelago_L34:
 	bl _postArchipelago
-_archipelago_L26:
+_archipelago_L35:
 	lis r9,_networkCounter@ha
 	lwz r9,_networkCounter@l(r9)
 	addi r10,r9,1
@@ -827,8 +927,11 @@ writeSystemLog = 0x02c74290 #::MenuTask
 
 __sprintf_s = 0x03133354
 __malloc = 0x03b1aeb0
+__calloc = 0x03b1aed8
 __free = 0x03b1afe8
 __strtol = 0x03b1b27c
+__strlen = 0x03b16bdc
+__strcpy = 0x03b16c34
 
 
 [Archipelago_archipelago_V102U]
@@ -838,8 +941,11 @@ writeSystemLog = 0x02c74230 #::MenuTask
 
 __sprintf_s = 0x031332d4
 __malloc = 0x03b1ae30
+__calloc = 0x03b1ae58
 __free = 0x03b1af68
 __strtol = 0x03b1b1fc
+__strlen = 0x03b16b5c
+__strcpy = 0x03b16bb4
 
 
 [Archipelago_archipelago_Unsupported]

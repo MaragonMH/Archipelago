@@ -1,6 +1,10 @@
 #include <cstddef>
 
 int __sprintf_s(char *buffer, size_t sizeOfBuffer, const char *format, ...);
+void* __calloc (size_t num, size_t size);
+size_t __strlen (const char * str);
+char* __strcpy(char *dest, const char *src);
+void __free (void* ptr);
 
 void _postCurl(char[]);
 
@@ -12,6 +16,15 @@ GetBlueprintPtr = 0x027fbae4
 #endif
 
 char _formatShopText[] = "SH Id=%03x Tp=%01x:";
+
+char ** _shopArmorNames;
+char ** _shopWeaponNames;
+char ** _shopDollArmorNames;
+char ** _shopDollWeaponNames;
+char ** _shopDollFrameNames;
+char ** _shopAugmentNames;
+char ** _shopDollAugmentNames;
+char ** _shopBlueprintNames;
 
 char* GetKnowledgePtr();
 char* GetBlueprintPtr();
@@ -87,4 +100,45 @@ void setKnowledgeBit(int id, int bit, int doll){
 		offset = groundOffset;
 	char* valuePtr = knowledgePtr + offset + id;
 	*valuePtr = *valuePtr | bit;
+}
+
+void _initShopCache(char** shopPtr, int size){
+	if(shopPtr != nullptr) return;
+	shopPtr = (char**)__calloc(size, 1);
+}
+
+void _copyShopName(char** shopPtr, int id, char* name, int len){
+	if(shopPtr[id] != nullptr) return;
+	shopPtr[id] = (char *)__calloc(len, 1);
+	__strcpy(shopPtr[id], name);
+}
+
+void _cacheShopItemName(int type, int id, char* name){
+	int len = __strlen(name);
+	if (len == 0) return;
+	if(type == 6){
+		_initShopCache(_shopBlueprintNames, 200);
+		_copyShopName(_shopBlueprintNames, id, name, len);
+	}else if(type == 7){
+		_initShopCache(_shopArmorNames, 1700);
+		_copyShopName(_shopArmorNames, id, name, len);
+	}else if(type == 8){
+		_initShopCache(_shopWeaponNames, 1900);
+		_copyShopName(_shopWeaponNames, id, name, len);
+	}else if(type == 9){
+		_initShopCache(_shopAugmentNames, 3700);
+		_copyShopName(_shopAugmentNames, id, name, len);
+	}else if(type == 0xa){
+		_initShopCache(_shopDollArmorNames, 300);
+		_copyShopName(_shopDollArmorNames, id, name, len);
+	}else if(type == 0xb){
+		_initShopCache(_shopDollWeaponNames, 900);
+		_copyShopName(_shopDollWeaponNames, id, name, len);
+	}else if(type == 0xc){
+		_initShopCache(_shopDollAugmentNames, 3200);
+		_copyShopName(_shopDollAugmentNames, id, name, len);
+	}else if(type == 0xd){
+		_initShopCache(_shopDollFrameNames, 50);
+		_copyShopName(_shopDollFrameNames, id, name, len);
+	}
 }

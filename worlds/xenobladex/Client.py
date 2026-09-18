@@ -490,9 +490,9 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
         return XenobladeXWorld.base_id + game_type_item_to_offset[game_item.type] + game_item.id
 
     def archipelago_location_to_game_location(self, archipelago_location_id: int):
-        game_location_type_offset = max([id for id in game_type_item_to_offset.values()
+        game_location_type_offset = max([id for id in game_type_location_to_offset.values()
                                         if id < archipelago_location_id - XenobladeXWorld.base_id])
-        game_location_type = min([key for key, offset in game_type_item_to_offset.items()
+        game_location_type = min([key for key, offset in game_type_location_to_offset.items()
                                  if offset == game_location_type_offset])
         return GameLocation(game_location_type,
                             (archipelago_location_id - XenobladeXWorld.base_id) - game_location_type_offset)

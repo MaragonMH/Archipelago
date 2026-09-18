@@ -3,6 +3,7 @@
 #ifdef V101E
 moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 
+0x02a2d2c8 = bl _getShopWeaponName
 #endif
 
 #ifdef V102U
@@ -19,35 +20,76 @@ extern char ** _shopAugmentNames;
 extern char ** _shopDollAugmentNames;
 extern char ** _shopBlueprintNames;
 
-char* _getShopArmorName(){
-    register int id asm("r5");
-    return _shopArmorNames[id];
+extern int includeShopBlueprints;
+extern int includeShopArmor;
+extern int includeShopWeapons;
+extern int includeShopAugments;
+extern int includeShopSkellArmor;
+extern int includeShopSkellWeapons;
+extern int includeShopSkellAugments;
+extern int includeShopSkellFrames;
+
+int getVal(int* bdatPtr, const char* columnName, int id);
+
+char* _getShopName(char** shopPtr, int id, int enabled){
+    if(!enabled) return nullptr;
+    if(shopPtr == nullptr || shopPtr[id] == nullptr) return nullptr;
+    return shopPtr[id];
 }
-char* _getShopWeaponName(){
-    register int id asm("r5");
-    return _shopWeaponNames[id];
+
+char* _getShopArmorName(int* bdatPtr, const char* columnName, int id){
+    register int itemId asm("r22");
+    char* name = _getShopName(_shopArmorNames, itemId, includeShopArmor);
+    if (name == nullptr)
+        return (char *)getVal(bdatPtr, columnName, id);
+    return name;
 }
-char* _getShopDollFrameName(){
-    register int id asm("r5");
-    return _shopDollFrameNames[id];
+char* _getShopWeaponName(int* bdatPtr, const char* columnName, int id){
+    register int itemId asm("r23");
+    char* name = _getShopName(_shopWeaponNames, itemId, includeShopWeapons);
+    if (name == nullptr)
+        return (char *)getVal(bdatPtr, columnName, id);
+    return name;
 }
-char* _getShopAugmentName(){
-    register int id asm("r5");
-    return _shopAugmentNames[id];
+char* _getShopDollFrameName(int* bdatPtr, const char* columnName, int id){
+    register int itemId asm("r5");
+    char* name = _getShopName(_shopDollFrameNames, itemId, includeShopSkellFrames);
+    if (name == nullptr)
+        return (char *)getVal(bdatPtr, columnName, id);
+    return name;
 }
-char* _getShopDollArmorName(){
-    register int id asm("r5");
-    return _shopDollArmorNames[id];
+char* _getShopAugmentName(int* bdatPtr, const char* columnName, int id){
+    register int itemId asm("r5");
+    char* name = _getShopName(_shopAugmentNames, itemId, includeShopAugments);
+    if (name == nullptr)
+        return (char *)getVal(bdatPtr, columnName, id);
+    return name;
 }
-char* _getShopDollWeaponName(){
-    register int id asm("r5");
-    return _shopDollWeaponNames[id];
+char* _getShopDollArmorName(int* bdatPtr, const char* columnName, int id){
+    register int itemId asm("r21");
+    char* name = _getShopName(_shopDollArmorNames, itemId, includeShopSkellArmor);
+    if (name == nullptr)
+        return (char *)getVal(bdatPtr, columnName, id);
+    return name;
 }
-char* _getShopDollAugmentName(){
-    register int id asm("r5");
-    return _shopDollAugmentNames[id];
+char* _getShopDollWeaponName(int* bdatPtr, const char* columnName, int id){
+    register int itemId asm("r25");
+    char* name = _getShopName(_shopDollWeaponNames, itemId, includeShopSkellWeapons);
+    if (name == nullptr)
+        return (char *)getVal(bdatPtr, columnName, id);
+    return name;
 }
-char* _getShopBlueprintName(){
-    register int id asm("r5");
-    return _shopBlueprintNames[id];
+char* _getShopDollAugmentName(int* bdatPtr, const char* columnName, int id){
+    register int itemId asm("r5");
+    char* name = _getShopName(_shopDollAugmentNames, itemId, includeShopSkellAugments);
+    if (name == nullptr)
+        return (char *)getVal(bdatPtr, columnName, id);
+    return name;
+}
+char* _getShopBlueprintName(int* bdatPtr, const char* columnName, int id){
+    register int itemId asm("r5");
+    char* name = _getShopName(_shopBlueprintNames, itemId, includeShopBlueprints);
+    if (name == nullptr)
+        return (char *)getVal(bdatPtr, columnName, id);
+    return name;
 }

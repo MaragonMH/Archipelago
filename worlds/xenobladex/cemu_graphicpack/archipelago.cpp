@@ -4,7 +4,8 @@ extern int* menuBasePtr;
 
 void _initCurl();
 void _postCurl(char[]);
-char* _getCurl();
+char* _getDownloadCurl();
+char* _getShopCurl();
 void _cleanupCurl();
 
 void _addItem(int type, int id);
@@ -48,8 +49,11 @@ writeSystemLog = 0x02c74290 #::MenuTask
 
 __sprintf_s = 0x03133354
 __malloc = 0x03b1aeb0
+__calloc = 0x03b1aed8
 __free = 0x03b1afe8
 __strtol = 0x03b1b27c
+__strlen = 0x03b16bdc
+__strcpy = 0x03b16c34
 #endif
 
 #ifdef V102U
@@ -59,8 +63,11 @@ writeSystemLog = 0x02c74230 #::MenuTask
 
 __sprintf_s = 0x031332d4
 __malloc = 0x03b1ae30
+__calloc = 0x03b1ae58
 __free = 0x03b1af68
 __strtol = 0x03b1b1fc
+__strlen = 0x03b16b5c
+__strcpy = 0x03b16bb4
 #endif
 
 #ifdef Unsupported
@@ -76,6 +83,7 @@ int Unsupported_Game_Version;
 
 int changeTime(int hour, int minute);
 void writeSystemLog(int* menuBasePtr, char* str1, char* str2);
+void _cacheShopItemName(int type, int id, char* name);
 
 int __sprintf_s(char *buffer, size_t sizeOfBuffer, const char *format, ...);
 void* __malloc (size_t size);
@@ -120,7 +128,7 @@ void _postArchipelago(){
 }
 
 void _getArchipelago(){
-	char* outputPtr = _getCurl();
+	char* outputPtr = _getDownloadCurl();
 	if (outputPtr == nullptr) return;
 
 	char* outputCurrentPtr = outputPtr;
@@ -258,6 +266,28 @@ void _getArchipelago(){
 	__free(outputPtr);
 }
 
+void _getArchipelagoShop(){
+	char* outputPtr = _getShopCurl();
+	if (outputPtr == nullptr) return;
+
+	char* outputCurrentPtr = outputPtr;
+	char* endPtrValue;
+	while(*outputCurrentPtr != 0){
+		endPtrValue = outputCurrentPtr + 2;
+		int itemType = (int)__strtol(outputCurrentPtr, &endPtrValue, 16);
+		outputCurrentPtr += 2;
+		endPtrValue = outputCurrentPtr + 4;
+		int itemId = (int)__strtol(outputCurrentPtr, &endPtrValue, 16);
+		outputCurrentPtr += 4;
+		_cacheShopItemName(itemType, itemId, outputCurrentPtr);
+		while(*outputCurrentPtr != '\n'){
+			outputCurrentPtr += 1;
+		}
+		outputCurrentPtr += 1;
+	}
+	__free(outputPtr);
+}
+
 unsigned int _networkCounter = 0;
 int _mainArchipelago(int hour, int minute) {
 	// if(minute % 3 != 0) return changeTime(hour, minute);
@@ -266,7 +296,10 @@ int _mainArchipelago(int hour, int minute) {
 
 	_networkCounter = _networkCounter << 31;
 	_networkCounter = _networkCounter >> 31;
-	if(_networkCounter == 0) _getArchipelago();
+	if(_networkCounter == 0){
+		_getArchipelago();
+		_getArchipelagoShop();
+	}
 	else _postArchipelago();
 	_networkCounter = _networkCounter + 1;
 

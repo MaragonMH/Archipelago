@@ -12,6 +12,10 @@ _downloadHandle:
 	.int    0
 _downloadMultiHandle:
 	.int    0
+_shopHandle:
+	.int    0
+_shopMultiHandle:
+	.int    0
 _curl_LC0:
 	.string "http://localhost:%d/locations"
 _curl_LC1:
@@ -89,6 +93,37 @@ _after_curl_2__sprintf_s:
 	mr r10,r3
 	lis r9,_downloadMultiHandle@ha
 	stw r10,_downloadMultiHandle@l(r9)
+	bl import.nlibcurl.curl_easy_init
+	mr r10,r3
+	lis r9,_shopHandle@ha
+	stw r10,_shopHandle@l(r9)
+	addi r10,r31,16
+	lwz r6,12(r31)
+	lis r9,_curl_LC1@ha
+	addi r5,r9,_curl_LC1@l
+	li r4,40
+	mr r3,r10
+	crxor cr6,cr6,cr6
+	lis r12,_after_curl_3__sprintf_s@ha
+	addi r12,r12,_after_curl_3__sprintf_s@l
+	mtlr r12
+	lis r12,__sprintf_s@ha
+	addi r12,r12,__sprintf_s@l
+	mtctr r12
+	bctr
+_after_curl_3__sprintf_s:
+	lis r9,_shopHandle@ha
+	lwz r9,_shopHandle@l(r9)
+	addi r10,r31,16
+	mr r5,r10
+	lwz r4,8(r31)
+	mr r3,r9
+	crxor cr6,cr6,cr6
+	bl import.nlibcurl.curl_easy_setopt
+	bl import.nlibcurl.curl_multi_init
+	mr r10,r3
+	lis r9,_shopMultiHandle@ha
+	stw r10,_shopMultiHandle@l(r9)
 	nop
 	addi r11,r31,64
 	lwz r0,4(r11)
@@ -179,14 +214,14 @@ _WriteCallback:
 	addi r9,r9,1
 	mr r4,r9
 	mr r3,r8
-	lis r12,_after_curl_3__realloc@ha
-	addi r12,r12,_after_curl_3__realloc@l
+	lis r12,_after_curl_4__realloc@ha
+	addi r12,r12,_after_curl_4__realloc@l
 	mtlr r12
 	lis r12,__realloc@ha
 	addi r12,r12,__realloc@l
 	mtctr r12
 	bctr
-_after_curl_3__realloc:
+_after_curl_4__realloc:
 	mr r9,r3
 	stw r9,16(r31)
 	lwz r9,12(r31)
@@ -223,11 +258,13 @@ _after_curl_3__realloc:
 	mr r1,r11
 	blr
 _getCurl:
-	stwu r1,-48(r1)
+	stwu r1,-64(r1)
 	mflr r0
-	stw r0,52(r1)
-	stw r31,44(r1)
+	stw r0,68(r1)
+	stw r31,60(r1)
 	mr r31,r1
+	stw r3,40(r31)
+	stw r4,44(r31)
 	li r9,0
 	stw r9,16(r31)
 	li r9,0
@@ -238,49 +275,77 @@ _getCurl:
 	stw r9,8(r31)
 	li r9,10001
 	stw r9,12(r31)
-	lis r9,_downloadMultiHandle@ha
-	lwz r10,_downloadMultiHandle@l(r9)
-	lis r9,_downloadHandle@ha
-	lwz r9,_downloadHandle@l(r9)
-	mr r4,r9
-	mr r3,r10
+	lwz r4,40(r31)
+	lwz r3,44(r31)
 	bl import.nlibcurl.curl_multi_add_handle
-	lis r9,_downloadHandle@ha
-	lwz r10,_downloadHandle@l(r9)
 	lis r9,_WriteCallback@ha
 	addi r5,r9,_WriteCallback@l
 	lwz r4,8(r31)
-	mr r3,r10
+	lwz r3,40(r31)
 	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
-	lis r9,_downloadHandle@ha
-	lwz r9,_downloadHandle@l(r9)
-	addi r10,r31,16
-	mr r5,r10
+	addi r9,r31,16
+	mr r5,r9
 	lwz r4,12(r31)
-	mr r3,r9
+	lwz r3,40(r31)
 	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
 _curl_L7:
-	lis r9,_downloadMultiHandle@ha
-	lwz r9,_downloadMultiHandle@l(r9)
-	addi r10,r31,24
-	mr r4,r10
-	mr r3,r9
+	addi r9,r31,24
+	mr r4,r9
+	lwz r3,44(r31)
 	bl import.nlibcurl.curl_multi_perform
 	lwz r9,24(r31)
 	cmpwi cr0,r9,0
 	bne cr0,_curl_L7
-	lis r9,_downloadMultiHandle@ha
-	lwz r10,_downloadMultiHandle@l(r9)
-	lis r9,_downloadHandle@ha
-	lwz r9,_downloadHandle@l(r9)
-	mr r4,r9
-	mr r3,r10
+	lwz r4,40(r31)
+	lwz r3,44(r31)
 	bl import.nlibcurl.curl_multi_remove_handle
 	lwz r9,16(r31)
 	mr r3,r9
-	addi r11,r31,48
+	addi r11,r31,64
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+_getDownloadCurl:
+	stwu r1,-16(r1)
+	mflr r0
+	stw r0,20(r1)
+	stw r31,12(r1)
+	mr r31,r1
+	lis r9,_downloadHandle@ha
+	lwz r10,_downloadHandle@l(r9)
+	lis r9,_downloadMultiHandle@ha
+	lwz r9,_downloadMultiHandle@l(r9)
+	mr r4,r9
+	mr r3,r10
+	bl _getCurl
+	mr r9,r3
+	mr r3,r9
+	addi r11,r31,16
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+_getShopCurl:
+	stwu r1,-16(r1)
+	mflr r0
+	stw r0,20(r1)
+	stw r31,12(r1)
+	mr r31,r1
+	lis r9,_shopHandle@ha
+	lwz r10,_shopHandle@l(r9)
+	lis r9,_shopMultiHandle@ha
+	lwz r9,_shopMultiHandle@l(r9)
+	mr r4,r9
+	mr r3,r10
+	bl _getCurl
+	mr r9,r3
+	mr r3,r9
+	addi r11,r31,16
 	lwz r0,4(r11)
 	mtlr r0
 	lwz r31,-4(r11)
@@ -308,6 +373,14 @@ _cleanupCurl:
 	lwz r9,_downloadMultiHandle@l(r9)
 	mr r3,r9
 	bl import.nlibcurl.curl_multi_cleanup
+	lis r9,_shopHandle@ha
+	lwz r9,_shopHandle@l(r9)
+	mr r3,r9
+	bl import.nlibcurl.curl_easy_cleanup
+	lis r9,_shopMultiHandle@ha
+	lwz r9,_shopMultiHandle@l(r9)
+	mr r3,r9
+	bl import.nlibcurl.curl_multi_cleanup
 	lis r9,_uploadHandle@ha
 	li r10,0
 	stw r10,_uploadHandle@l(r9)
@@ -320,6 +393,12 @@ _cleanupCurl:
 	lis r9,_downloadMultiHandle@ha
 	li r10,0
 	stw r10,_downloadMultiHandle@l(r9)
+	lis r9,_shopHandle@ha
+	li r10,0
+	stw r10,_shopHandle@l(r9)
+	lis r9,_shopMultiHandle@ha
+	li r10,0
+	stw r10,_shopMultiHandle@l(r9)
 	nop
 	addi r11,r31,16
 	lwz r0,4(r11)

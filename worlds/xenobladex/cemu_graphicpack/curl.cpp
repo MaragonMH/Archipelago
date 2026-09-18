@@ -19,6 +19,8 @@ int* _uploadHandle = nullptr;
 int* _uploadMultiHandle = nullptr;
 int* _downloadHandle = nullptr;
 int* _downloadMultiHandle = nullptr;
+int* _shopHandle = nullptr;
+int* _shopMultiHandle = nullptr;
 
 
 namespace import{
@@ -57,6 +59,11 @@ void _initCurl(){
 	__sprintf_s(hostUrl, 40, "http://localhost:%d/items", port);
 	import::nlibcurl::curl_easy_setopt(_downloadHandle, curlOptUrl, hostUrl);
 	_downloadMultiHandle = import::nlibcurl::curl_multi_init();
+
+	_shopHandle = import::nlibcurl::curl_easy_init();
+	__sprintf_s(hostUrl, 40, "http://localhost:%d/items", port);
+	import::nlibcurl::curl_easy_setopt(_shopHandle, curlOptUrl, hostUrl);
+	_shopMultiHandle = import::nlibcurl::curl_multi_init();
 }
 
 void _postCurl(char text[]){
@@ -93,20 +100,28 @@ size_t _WriteCallback(void* data, size_t size, size_t nmemb, void* userp)
    return realsize;
 }
 
-char* _getCurl(){
+char* _getCurl(int* handle, int * multiHandle){
 	memory result = { nullptr, 0};
 	int leftRunning = 1;
 	int curlOptWriteFunction = 20011;
 	int curlOptWriteData = 10001;
 
-	import::nlibcurl::curl_multi_add_handle(_downloadMultiHandle, _downloadHandle);
-	import::nlibcurl::curl_easy_setopt(_downloadHandle, curlOptWriteFunction, _WriteCallback);
-	import::nlibcurl::curl_easy_setopt(_downloadHandle, curlOptWriteData, &result);
+	import::nlibcurl::curl_multi_add_handle(multiHandle, handle);
+	import::nlibcurl::curl_easy_setopt(handle, curlOptWriteFunction, _WriteCallback);
+	import::nlibcurl::curl_easy_setopt(handle, curlOptWriteData, &result);
 	do{
-		import::nlibcurl::curl_multi_perform(_downloadMultiHandle, &leftRunning);
+		import::nlibcurl::curl_multi_perform(multiHandle, &leftRunning);
 	} while(leftRunning != 0);
-	import::nlibcurl::curl_multi_remove_handle(_downloadMultiHandle, _downloadHandle);
+	import::nlibcurl::curl_multi_remove_handle(multiHandle, handle);
 	return result.response;
+}
+
+char* _getDownloadCurl(){
+	return _getCurl(_downloadHandle, _downloadMultiHandle);
+}
+
+char* _getShopCurl(){
+	return _getCurl(_shopHandle, _shopMultiHandle);
 }
 
 void _cleanupCurl(){
@@ -116,8 +131,13 @@ void _cleanupCurl(){
 	import::nlibcurl::curl_easy_cleanup(_downloadHandle);
 	import::nlibcurl::curl_multi_cleanup(_downloadMultiHandle);
 
+	import::nlibcurl::curl_easy_cleanup(_shopHandle);
+	import::nlibcurl::curl_multi_cleanup(_shopMultiHandle);
+
 	_uploadHandle = nullptr;
 	_uploadMultiHandle = nullptr;
 	_downloadHandle = nullptr;
 	_downloadMultiHandle = nullptr;
+	_shopHandle = nullptr;
+	_shopMultiHandle = nullptr;
 }
