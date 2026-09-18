@@ -774,17 +774,13 @@ _getArchipelagoShop:
 	stw r9,12(r31)
 	lwz r9,12(r31)
 	cmpwi cr0,r9,0
-	beq cr0,_archipelago_L32
+	beq cr0,_archipelago_L31
 	lwz r9,12(r31)
 	stw r9,8(r31)
 	b _archipelago_L27
 _archipelago_L30:
-	lwz r9,8(r31)
-	addi r9,r9,2
-	stw r9,24(r31)
-	addi r9,r31,24
 	li r5,16
-	mr r4,r9
+	li r4,0
 	lwz r3,8(r31)
 	lis r12,_after_archipelago_25__strtol@ha
 	addi r12,r12,_after_archipelago_25__strtol@l
@@ -797,14 +793,10 @@ _after_archipelago_25__strtol:
 	mr r9,r3
 	stw r9,16(r31)
 	lwz r9,8(r31)
-	addi r9,r9,2
+	addi r9,r9,3
 	stw r9,8(r31)
-	lwz r9,8(r31)
-	addi r9,r9,4
-	stw r9,24(r31)
-	addi r9,r31,24
 	li r5,16
-	mr r4,r9
+	li r4,0
 	lwz r3,8(r31)
 	lis r12,_after_archipelago_26__strtol@ha
 	addi r12,r12,_after_archipelago_26__strtol@l
@@ -817,12 +809,10 @@ _after_archipelago_26__strtol:
 	mr r9,r3
 	stw r9,20(r31)
 	lwz r9,8(r31)
-	addi r9,r9,4
+	addi r9,r9,5
 	stw r9,8(r31)
-	lwz r5,8(r31)
-	lwz r4,20(r31)
-	lwz r3,16(r31)
-	bl _cacheShopItemName
+	lwz r9,8(r31)
+	stw r9,24(r31)
 	b _archipelago_L28
 _archipelago_L29:
 	lwz r9,8(r31)
@@ -834,6 +824,13 @@ _archipelago_L28:
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,10
 	bne cr0,_archipelago_L29
+	lwz r9,8(r31)
+	li r10,0
+	stb r10,0(r9)
+	lwz r5,24(r31)
+	lwz r4,20(r31)
+	lwz r3,16(r31)
+	bl _cacheShopItemName
 	lwz r9,8(r31)
 	addi r9,r9,1
 	stw r9,8(r31)
@@ -853,7 +850,7 @@ _archipelago_L27:
 	bctr
 _after_archipelago_27__free:
 	b _archipelago_L24
-_archipelago_L32:
+_archipelago_L31:
 	nop
 _archipelago_L24:
 	addi r11,r31,48
@@ -886,13 +883,13 @@ _mainArchipelago:
 	lis r9,_networkCounter@ha
 	lwz r9,_networkCounter@l(r9)
 	cmpwi cr0,r9,0
-	bne cr0,_archipelago_L34
+	bne cr0,_archipelago_L33
 	bl _getArchipelago
 	bl _getArchipelagoShop
-	b _archipelago_L35
-_archipelago_L34:
+	b _archipelago_L34
+_archipelago_L33:
 	bl _postArchipelago
-_archipelago_L35:
+_archipelago_L34:
 	lis r9,_networkCounter@ha
 	lwz r9,_networkCounter@l(r9)
 	addi r10,r9,1

@@ -61,7 +61,7 @@ void _initCurl(){
 	_downloadMultiHandle = import::nlibcurl::curl_multi_init();
 
 	_shopHandle = import::nlibcurl::curl_easy_init();
-	__sprintf_s(hostUrl, 40, "http://localhost:%d/items", port);
+	__sprintf_s(hostUrl, 40, "http://localhost:%d/shops", port);
 	import::nlibcurl::curl_easy_setopt(_shopHandle, curlOptUrl, hostUrl);
 	_shopMultiHandle = import::nlibcurl::curl_multi_init();
 }

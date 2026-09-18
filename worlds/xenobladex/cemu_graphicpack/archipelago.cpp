@@ -270,19 +270,19 @@ void _getArchipelagoShop(){
 	char* outputPtr = _getShopCurl();
 	if (outputPtr == nullptr) return;
 
-	char* outputCurrentPtr = outputPtr;
-	char* endPtrValue;
+	char* outputCurrentPtr = outputPtr, *namePtr;
 	while(*outputCurrentPtr != 0){
-		endPtrValue = outputCurrentPtr + 2;
-		int itemType = (int)__strtol(outputCurrentPtr, &endPtrValue, 16);
-		outputCurrentPtr += 2;
-		endPtrValue = outputCurrentPtr + 4;
-		int itemId = (int)__strtol(outputCurrentPtr, &endPtrValue, 16);
-		outputCurrentPtr += 4;
-		_cacheShopItemName(itemType, itemId, outputCurrentPtr);
+		// Type Id + Id + Name
+		int itemType = (int)__strtol(outputCurrentPtr, nullptr, 16);
+		outputCurrentPtr += 3;
+		int itemId = (int)__strtol(outputCurrentPtr, nullptr, 16);
+		outputCurrentPtr += 5;
+		namePtr = outputCurrentPtr;
 		while(*outputCurrentPtr != '\n'){
 			outputCurrentPtr += 1;
 		}
+		*outputCurrentPtr = '\0';
+		_cacheShopItemName(itemType, itemId, namePtr);
 		outputCurrentPtr += 1;
 	}
 	__free(outputPtr);

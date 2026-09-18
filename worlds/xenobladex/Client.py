@@ -228,7 +228,7 @@ class XenobladeXHttpServer(HTTPServer):
 
     def generate_shop_name(self, game_loc: GameLocation, shop_name: str) -> str:
         shop_name = self._sanitize_message(shop_name)
-        return f"{game_loc.type:02x}{game_loc.id:04x}{shop_name}\n"
+        return f"{game_loc.type:02x} {game_loc.id:04x} {shop_name}\n"
 
     def upload_shop_names(self, shop_names: str) -> None:
         self.shop_names = shop_names

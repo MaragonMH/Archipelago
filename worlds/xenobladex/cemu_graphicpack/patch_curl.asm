@@ -20,6 +20,8 @@ _curl_LC0:
 	.string "http://localhost:%d/locations"
 _curl_LC1:
 	.string "http://localhost:%d/items"
+_curl_LC2:
+	.string "http://localhost:%d/shops"
 _initCurl:
 	stwu r1,-64(r1)
 	mflr r0
@@ -99,8 +101,8 @@ _after_curl_2__sprintf_s:
 	stw r10,_shopHandle@l(r9)
 	addi r10,r31,16
 	lwz r6,12(r31)
-	lis r9,_curl_LC1@ha
-	addi r5,r9,_curl_LC1@l
+	lis r9,_curl_LC2@ha
+	addi r5,r9,_curl_LC2@l
 	li r4,40
 	mr r3,r10
 	crxor cr6,cr6,cr6

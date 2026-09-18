@@ -104,12 +104,12 @@ void setKnowledgeBit(int id, int bit, int doll){
 
 void _initShopCache(char** shopPtr, int size){
 	if(shopPtr != nullptr) return;
-	shopPtr = (char**)__calloc(size, 1);
+	shopPtr = (char**)__calloc(size, 4);
 }
 
 void _copyShopName(char** shopPtr, int id, char* name, int len){
 	if(shopPtr[id] != nullptr) return;
-	shopPtr[id] = (char *)__calloc(len, 1);
+	shopPtr[id] = (char *)__calloc(len + 1, 1);
 	__strcpy(shopPtr[id], name);
 }
 

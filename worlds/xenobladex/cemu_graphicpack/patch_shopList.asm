@@ -390,7 +390,7 @@ _initShopCache:
 	cmpwi cr0,r9,0
 	bne cr0,_shopList_L22
 	lwz r9,12(r31)
-	li r4,1
+	li r4,4
 	mr r3,r9
 	lis r12,_after_shopList_9__calloc@ha
 	addi r12,r12,_after_shopList_9__calloc@l
@@ -430,7 +430,9 @@ _copyShopName:
 	lwz r9,0(r9)
 	cmpwi cr0,r9,0
 	bne cr0,_shopList_L26
-	lwz r8,20(r31)
+	lwz r9,20(r31)
+	addi r9,r9,1
+	mr r8,r9
 	lwz r9,12(r31)
 	slwi r9,r9,2
 	lwz r10,8(r31)
