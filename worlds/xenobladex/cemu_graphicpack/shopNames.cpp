@@ -7,6 +7,12 @@ moduleMatches = 0xF882D5CF, 0x218F6E07 ; 1.0.1E, 1.0.0E
 0x02a2e260 = bl _getShopArmorName
 0x02a2f8f0 = bl _getShopDollArmorName
 0x02a2eef8 = bl _getShopDollWeaponName
+0x02a304e0 = bl _getShopDollFrameName
+0x02a81cdc = bl _getShopAugmentName
+0x02a81da4 = bl _getShopAugmentName
+0x02a81e88 = bl _getShopAugmentName
+0x02a7b2d4 = bl _getShopBlueprintName  # gear
+0x02a7b35c = bl _getShopBlueprintName  # dolls
 #endif
 
 #ifdef V102U
@@ -16,6 +22,12 @@ moduleMatches = 0x30B6E091 ; 1.0.2U
 0x02a2e250 = bl _getShopArmorName
 0x02a2f8e0 = bl _getShopDollArmorName
 0x02a2eee8 = bl _getShopDollWeaponName
+0x02a304d0 = bl _getShopDollFrameName
+0x02a81ccc = bl _getShopAugmentName
+0x02a81d94 = bl _getShopAugmentName
+0x02a81e78 = bl _getShopAugmentName
+0x02a7b2c4 = bl _getShopBlueprintName  # gear
+0x02a7b34c = bl _getShopBlueprintName  # dolls
 #endif
 
 extern char** _shopArmorNames;
@@ -35,6 +47,8 @@ extern int includeShopSkellArmor;
 extern int includeShopSkellWeapons;
 extern int includeShopSkellAugments;
 extern int includeShopSkellFrames;
+
+extern int _augmentMenuType;
 
 int _getShopIdx(const char* bdat_name, int itemId, bool dropLastColumn = false);
 int getVal(int* bdatPtr, const char* columnName, int id);
@@ -60,15 +74,22 @@ char* _getShopWeaponName(int* bdatPtr, const char* columnName, int id){
     return name;
 }
 char* _getShopDollFrameName(int* bdatPtr, const char* columnName, int id){
-    register int itemId asm("r5");
+    register int itemId asm("r20");
     char* name = _getShopName(_shopDollFrameNames, itemId, includeShopSkellFrames);
     if (name == nullptr)
         return (char *)getVal(bdatPtr, columnName, id);
     return name;
 }
 char* _getShopAugmentName(int* bdatPtr, const char* columnName, int id){
-    register int itemId asm("r5");
-    char* name = _getShopName(_shopAugmentNames, itemId, includeShopAugments);
+    // Be careful here because we need r31 which gets overwrites so get it from stack, if you change anything here
+    // you have to change this instruction as well
+    asm("lwz r6,44(r1)");
+    register int itemId asm("r6");
+    char* name = nullptr;
+    if (_augmentMenuType == 0)
+        name = _getShopName(_shopAugmentNames, itemId, includeShopAugments);
+    if (_augmentMenuType == 1)
+        name = _getShopName(_shopDollAugmentNames, itemId, includeShopSkellAugments);
     if (name == nullptr)
         return (char *)getVal(bdatPtr, columnName, id);
     return name;
@@ -87,15 +108,8 @@ char* _getShopDollWeaponName(int* bdatPtr, const char* columnName, int id){
         return (char *)getVal(bdatPtr, columnName, id);
     return name;
 }
-char* _getShopDollAugmentName(int* bdatPtr, const char* columnName, int id){
-    register int itemId asm("r5");
-    char* name = _getShopName(_shopDollAugmentNames, itemId, includeShopSkellAugments);
-    if (name == nullptr)
-        return (char *)getVal(bdatPtr, columnName, id);
-    return name;
-}
 char* _getShopBlueprintName(int* bdatPtr, const char* columnName, int id){
-    register int itemId asm("r5");
+    register int itemId asm("r28");
     char* name = _getShopName(_shopBlueprintNames, itemId, includeShopBlueprints);
     if (name == nullptr)
         return (char *)getVal(bdatPtr, columnName, id);

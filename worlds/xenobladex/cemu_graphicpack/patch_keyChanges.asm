@@ -48,6 +48,8 @@ fasterRunPlaySound:
 	.int    0
 fasterRunningState:
 	.int    0
+_augmentMenuType:
+	.int    0
 _filterDevices:
 	stwu r1,-32(r1)
 	mflr r0
@@ -80,6 +82,9 @@ _filterDevices:
 	stw r9,8(r31)
 	b _keyChanges_L3
 _keyChanges_L4:
+	lis r9,_augmentMenuType@ha
+	li r10,0
+	stw r10,_augmentMenuType@l(r9)
 	bl _getArchipelagoShop
 _keyChanges_L3:
 	mr r9,r6
@@ -100,6 +105,9 @@ _keyChanges_L3:
 	stw r9,8(r31)
 	b _keyChanges_L6
 _keyChanges_L7:
+	lis r9,_augmentMenuType@ha
+	li r10,1
+	stw r10,_augmentMenuType@l(r9)
 	bl _getArchipelagoShop
 	b _keyChanges_L6
 _keyChanges_L2:

@@ -281,6 +281,7 @@ int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWea
 includeShopArmor, includeShopWeapons, includeShopAugments, includeShopSkellArmor, includeShopSkellWeapons, includeShopSkellAugments, includeShopSkellFrames;
 float fastRunSpeedFloat, fasterRunSpeedFloat;
 int fastRunningState = 0, fasterRunPlaySound = 0, fasterRunningState = 0;
+int _augmentMenuType = 0;
 
 extern int characterLevel;
 
@@ -342,13 +343,17 @@ void _filterDevices(){
 		if(selectedOption >= 0 && selectedOption <= 1)
 			if(!includeShopAugments && !disableGroundAugments)
 				backup = 485;
-			else
+			else{
+				_augmentMenuType = 0;
 				_getArchipelagoShop();
+			}
 		if(selectedOption >= 2 && selectedOption <= 4)
 			if(!includeShopSkellAugments && !disableSkellAugments)
 				backup = 485;
-			else
+			else {
+				_augmentMenuType = 1;
 				_getArchipelagoShop();
+			}
 	}
 	else if(menuPtr[0x1ac] == 3){
 		if(!includeShopBlueprints)

@@ -141,17 +141,18 @@ _shopNames_L11:
 	mr r1,r11
 	blr
 _getShopDollFrameName:
-	stwu r1,-48(r1)
+	stwu r1,-96(r1)
 	mflr r0
-	stw r0,52(r1)
-	stw r31,44(r1)
+	stw r0,100(r1)
+	stw r20,48(r1)
+	stw r31,92(r1)
 	mr r31,r1
 	stw r3,24(r31)
 	stw r4,28(r31)
 	stw r5,32(r31)
 	lis r9,_shopDollFrameNames@ha
 	lwz r10,_shopDollFrameNames@l(r9)
-	mr r8,r5
+	mr r8,r20
 	lis r9,includeShopSkellFrames@ha
 	lwz r9,includeShopSkellFrames@l(r9)
 	mr r5,r9
@@ -172,9 +173,10 @@ _shopNames_L13:
 	lwz r9,8(r31)
 _shopNames_L14:
 	mr r3,r9
-	addi r11,r31,48
+	addi r11,r31,96
 	lwz r0,4(r11)
 	mtlr r0
+	lwz r20,-48(r11)
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
@@ -187,9 +189,16 @@ _getShopAugmentName:
 	stw r3,24(r31)
 	stw r4,28(r31)
 	stw r5,32(r31)
+	lwz r6,44(r1)
+	li r9,0
+	stw r9,8(r31)
+	lis r9,_augmentMenuType@ha
+	lwz r9,_augmentMenuType@l(r9)
+	cmpwi cr0,r9,0
+	bne cr0,_shopNames_L16
 	lis r9,_shopAugmentNames@ha
 	lwz r10,_shopAugmentNames@l(r9)
-	mr r8,r5
+	mr r8,r6
 	lis r9,includeShopAugments@ha
 	lwz r9,includeShopAugments@l(r9)
 	mr r5,r9
@@ -197,18 +206,34 @@ _getShopAugmentName:
 	mr r3,r10
 	bl _getShopName
 	stw r3,8(r31)
+_shopNames_L16:
+	lis r9,_augmentMenuType@ha
+	lwz r9,_augmentMenuType@l(r9)
+	cmpwi cr0,r9,1
+	bne cr0,_shopNames_L17
+	lis r9,_shopDollAugmentNames@ha
+	lwz r10,_shopDollAugmentNames@l(r9)
+	mr r8,r6
+	lis r9,includeShopSkellAugments@ha
+	lwz r9,includeShopSkellAugments@l(r9)
+	mr r5,r9
+	mr r4,r8
+	mr r3,r10
+	bl _getShopName
+	stw r3,8(r31)
+_shopNames_L17:
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_shopNames_L16
+	bne cr0,_shopNames_L18
 	lwz r5,32(r31)
 	lwz r4,28(r31)
 	lwz r3,24(r31)
 	bl getVal
 	mr r9,r3
-	b _shopNames_L17
-_shopNames_L16:
+	b _shopNames_L19
+_shopNames_L18:
 	lwz r9,8(r31)
-_shopNames_L17:
+_shopNames_L19:
 	mr r3,r9
 	addi r11,r31,48
 	lwz r0,4(r11)
@@ -247,16 +272,16 @@ _getShopDollArmorName:
 	stw r3,8(r31)
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_shopNames_L19
+	bne cr0,_shopNames_L21
 	lwz r5,32(r31)
 	lwz r4,28(r31)
 	lwz r3,24(r31)
 	bl getVal
 	mr r9,r3
-	b _shopNames_L20
-_shopNames_L19:
+	b _shopNames_L22
+_shopNames_L21:
 	lwz r9,8(r31)
-_shopNames_L20:
+_shopNames_L22:
 	mr r3,r9
 	addi r11,r31,96
 	lwz r0,4(r11)
@@ -297,16 +322,16 @@ _getShopDollWeaponName:
 	stw r3,8(r31)
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_shopNames_L22
+	bne cr0,_shopNames_L24
 	lwz r5,32(r31)
 	lwz r4,28(r31)
 	lwz r3,24(r31)
 	bl getVal
 	mr r9,r3
-	b _shopNames_L23
-_shopNames_L22:
+	b _shopNames_L25
+_shopNames_L24:
 	lwz r9,8(r31)
-_shopNames_L23:
+_shopNames_L25:
 	mr r3,r9
 	addi r11,r31,80
 	lwz r0,4(r11)
@@ -316,56 +341,19 @@ _shopNames_L23:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-_getShopDollAugmentName:
-	stwu r1,-48(r1)
-	mflr r0
-	stw r0,52(r1)
-	stw r31,44(r1)
-	mr r31,r1
-	stw r3,24(r31)
-	stw r4,28(r31)
-	stw r5,32(r31)
-	lis r9,_shopDollAugmentNames@ha
-	lwz r10,_shopDollAugmentNames@l(r9)
-	mr r8,r5
-	lis r9,includeShopSkellAugments@ha
-	lwz r9,includeShopSkellAugments@l(r9)
-	mr r5,r9
-	mr r4,r8
-	mr r3,r10
-	bl _getShopName
-	stw r3,8(r31)
-	lwz r9,8(r31)
-	cmpwi cr0,r9,0
-	bne cr0,_shopNames_L25
-	lwz r5,32(r31)
-	lwz r4,28(r31)
-	lwz r3,24(r31)
-	bl getVal
-	mr r9,r3
-	b _shopNames_L26
-_shopNames_L25:
-	lwz r9,8(r31)
-_shopNames_L26:
-	mr r3,r9
-	addi r11,r31,48
-	lwz r0,4(r11)
-	mtlr r0
-	lwz r31,-4(r11)
-	mr r1,r11
-	blr
 _getShopBlueprintName:
-	stwu r1,-48(r1)
+	stwu r1,-64(r1)
 	mflr r0
-	stw r0,52(r1)
-	stw r31,44(r1)
+	stw r0,68(r1)
+	stw r28,48(r1)
+	stw r31,60(r1)
 	mr r31,r1
 	stw r3,24(r31)
 	stw r4,28(r31)
 	stw r5,32(r31)
 	lis r9,_shopBlueprintNames@ha
 	lwz r10,_shopBlueprintNames@l(r9)
-	mr r8,r5
+	mr r8,r28
 	lis r9,includeShopBlueprints@ha
 	lwz r9,includeShopBlueprints@l(r9)
 	mr r5,r9
@@ -375,20 +363,21 @@ _getShopBlueprintName:
 	stw r3,8(r31)
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_shopNames_L28
+	bne cr0,_shopNames_L27
 	lwz r5,32(r31)
 	lwz r4,28(r31)
 	lwz r3,24(r31)
 	bl getVal
 	mr r9,r3
-	b _shopNames_L29
-_shopNames_L28:
+	b _shopNames_L28
+_shopNames_L27:
 	lwz r9,8(r31)
-_shopNames_L29:
+_shopNames_L28:
 	mr r3,r9
-	addi r11,r31,48
+	addi r11,r31,64
 	lwz r0,4(r11)
 	mtlr r0
+	lwz r28,-16(r11)
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
@@ -401,6 +390,12 @@ moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
 0x02a2e260 = bl _getShopArmorName
 0x02a2f8f0 = bl _getShopDollArmorName
 0x02a2eef8 = bl _getShopDollWeaponName
+0x02a304e0 = bl _getShopDollFrameName
+0x02a81cdc = bl _getShopAugmentName
+0x02a81da4 = bl _getShopAugmentName
+0x02a81e88 = bl _getShopAugmentName
+0x02a7b2d4 = bl _getShopBlueprintName  # gear
+0x02a7b35c = bl _getShopBlueprintName  # dolls
 
 
 [Archipelago_shopNames_V102U]
@@ -410,5 +405,11 @@ moduleMatches = 0x30B6E091 # 1.0.2U
 0x02a2e250 = bl _getShopArmorName
 0x02a2f8e0 = bl _getShopDollArmorName
 0x02a2eee8 = bl _getShopDollWeaponName
+0x02a304d0 = bl _getShopDollFrameName
+0x02a81ccc = bl _getShopAugmentName
+0x02a81d94 = bl _getShopAugmentName
+0x02a81e78 = bl _getShopAugmentName
+0x02a7b2c4 = bl _getShopBlueprintName  # gear
+0x02a7b34c = bl _getShopBlueprintName  # dolls
 
 
