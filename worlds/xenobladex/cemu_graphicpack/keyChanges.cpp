@@ -331,50 +331,64 @@ void makeDollItemList(int* cshop);
 
 void setKnowledgeBit(int id, int bit, int doll);
 void reqMenuAddItemFromId(int type, int id, int count);
+void _getArchipelagoShop();
 
 void _filterDevices(){
 	register int selectedOption asm("r6");
 	register int errorMessage asm("r4");
 	register char* menuPtr asm("r30");
+	int backup = errorMessage;
 	if(menuPtr[0x1ac] == 4){
 		if(selectedOption >= 0 && selectedOption <= 1)
 			if(!includeShopAugments && !disableGroundAugments)
-				errorMessage = 485;
+				backup = 485;
+			else
+				_getArchipelagoShop();
 		if(selectedOption >= 2 && selectedOption <= 4)
 			if(!includeShopSkellAugments && !disableSkellAugments)
-				errorMessage = 485;
+				backup = 485;
+			else
+				_getArchipelagoShop();
 	}
 	else if(menuPtr[0x1ac] == 3){
 		if(!includeShopBlueprints)
-			errorMessage = 485;
+			backup = 485;
+		else
+			_getArchipelagoShop();
 	}
 	
+	errorMessage = backup;
 	asm("cmpwi cr0, r4, 0");
 }
 
 void makeWpnItemListAdjusted(int* cshop){
 	if(!includeShopWeapons && !disableGroundWeapons)
 		return;
+	_getArchipelagoShop();
 	makeWpnItemList(cshop);
 }
 void makeAmrItemListAdjusted(int* cshop){
 	if(!includeShopArmor && !disableGroundArmor)
 		return;
+	_getArchipelagoShop();
 	makeAmrItemList(cshop);
 }
 void makeDlWpnItemListAdjusted(int* cshop){
 	if(!includeShopSkellWeapons && !disableSkellWeapons)
 		return;
+	_getArchipelagoShop();
 	makeDlWpnItemList(cshop);
 }
 void makeDlAmrItemListAdjusted(int* cshop){
 	if(!includeShopSkellArmor && !disableSkellArmor)
 		return;
+	_getArchipelagoShop();
 	makeDlAmrItemList(cshop);
 }
 void makeDollItemListAdjusted(int* cshop){
 	if(!includeShopSkellFrames)
 		return;
+	_getArchipelagoShop();
 	makeDollItemList(cshop);
 }
 

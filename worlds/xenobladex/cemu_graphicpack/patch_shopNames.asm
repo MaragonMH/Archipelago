@@ -40,24 +40,33 @@ _shopNames_L3:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
+_shopNames_LC0:
+	.string "SHP_AmrPC"
 _getShopArmorName:
 	stwu r1,-80(r1)
 	mflr r0
 	stw r0,84(r1)
 	stw r22,40(r1)
+	stw r30,72(r1)
 	stw r31,76(r1)
 	mr r31,r1
 	stw r3,24(r31)
 	stw r4,28(r31)
 	stw r5,32(r31)
 	lis r9,_shopArmorNames@ha
-	lwz r10,_shopArmorNames@l(r9)
-	mr r8,r22
+	lwz r30,_shopArmorNames@l(r9)
+	mr r9,r22
+	li r5,0
+	mr r4,r9
+	lis r9,_shopNames_LC0@ha
+	addi r3,r9,_shopNames_LC0@l
+	bl _getShopIdx
+	mr r10,r3
 	lis r9,includeShopArmor@ha
 	lwz r9,includeShopArmor@l(r9)
 	mr r5,r9
-	mr r4,r8
-	mr r3,r10
+	mr r4,r10
+	mr r3,r30
 	bl _getShopName
 	stw r3,8(r31)
 	lwz r9,8(r31)
@@ -77,27 +86,37 @@ _shopNames_L8:
 	lwz r0,4(r11)
 	mtlr r0
 	lwz r22,-40(r11)
+	lwz r30,-8(r11)
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
+_shopNames_LC1:
+	.string "SHP_WpnPC"
 _getShopWeaponName:
 	stwu r1,-80(r1)
 	mflr r0
 	stw r0,84(r1)
 	stw r23,44(r1)
+	stw r30,72(r1)
 	stw r31,76(r1)
 	mr r31,r1
 	stw r3,24(r31)
 	stw r4,28(r31)
 	stw r5,32(r31)
 	lis r9,_shopWeaponNames@ha
-	lwz r10,_shopWeaponNames@l(r9)
-	mr r8,r23
+	lwz r30,_shopWeaponNames@l(r9)
+	mr r9,r23
+	li r5,1
+	mr r4,r9
+	lis r9,_shopNames_LC1@ha
+	addi r3,r9,_shopNames_LC1@l
+	bl _getShopIdx
+	mr r10,r3
 	lis r9,includeShopWeapons@ha
 	lwz r9,includeShopWeapons@l(r9)
 	mr r5,r9
-	mr r4,r8
-	mr r3,r10
+	mr r4,r10
+	mr r3,r30
 	bl _getShopName
 	stw r3,8(r31)
 	lwz r9,8(r31)
@@ -117,6 +136,7 @@ _shopNames_L11:
 	lwz r0,4(r11)
 	mtlr r0
 	lwz r23,-36(r11)
+	lwz r30,-8(r11)
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
@@ -196,24 +216,33 @@ _shopNames_L17:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
+_shopNames_LC2:
+	.string "SHP_AmrDL"
 _getShopDollArmorName:
 	stwu r1,-96(r1)
 	mflr r0
 	stw r0,100(r1)
 	stw r21,52(r1)
+	stw r30,88(r1)
 	stw r31,92(r1)
 	mr r31,r1
 	stw r3,24(r31)
 	stw r4,28(r31)
 	stw r5,32(r31)
 	lis r9,_shopDollArmorNames@ha
-	lwz r10,_shopDollArmorNames@l(r9)
-	mr r8,r21
+	lwz r30,_shopDollArmorNames@l(r9)
+	mr r9,r21
+	li r5,0
+	mr r4,r9
+	lis r9,_shopNames_LC2@ha
+	addi r3,r9,_shopNames_LC2@l
+	bl _getShopIdx
+	mr r10,r3
 	lis r9,includeShopSkellArmor@ha
 	lwz r9,includeShopSkellArmor@l(r9)
 	mr r5,r9
-	mr r4,r8
-	mr r3,r10
+	mr r4,r10
+	mr r3,r30
 	bl _getShopName
 	stw r3,8(r31)
 	lwz r9,8(r31)
@@ -233,27 +262,37 @@ _shopNames_L20:
 	lwz r0,4(r11)
 	mtlr r0
 	lwz r21,-44(r11)
+	lwz r30,-8(r11)
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
+_shopNames_LC3:
+	.string "SHP_WpnDL"
 _getShopDollWeaponName:
 	stwu r1,-80(r1)
 	mflr r0
 	stw r0,84(r1)
 	stw r25,52(r1)
+	stw r30,72(r1)
 	stw r31,76(r1)
 	mr r31,r1
 	stw r3,24(r31)
 	stw r4,28(r31)
 	stw r5,32(r31)
 	lis r9,_shopDollWeaponNames@ha
-	lwz r10,_shopDollWeaponNames@l(r9)
-	mr r8,r25
+	lwz r30,_shopDollWeaponNames@l(r9)
+	mr r9,r25
+	li r5,0
+	mr r4,r9
+	lis r9,_shopNames_LC3@ha
+	addi r3,r9,_shopNames_LC3@l
+	bl _getShopIdx
+	mr r10,r3
 	lis r9,includeShopSkellWeapons@ha
 	lwz r9,includeShopSkellWeapons@l(r9)
 	mr r5,r9
-	mr r4,r8
-	mr r3,r10
+	mr r4,r10
+	mr r3,r30
 	bl _getShopName
 	stw r3,8(r31)
 	lwz r9,8(r31)
@@ -273,6 +312,7 @@ _shopNames_L23:
 	lwz r0,4(r11)
 	mtlr r0
 	lwz r25,-28(r11)
+	lwz r30,-8(r11)
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
@@ -358,10 +398,17 @@ _shopNames_L29:
 moduleMatches = 0xF882D5CF, 0x218F6E07 # 1.0.1E, 1.0.0E
 
 0x02a2d2c8 = bl _getShopWeaponName
+0x02a2e260 = bl _getShopArmorName
+0x02a2f8f0 = bl _getShopDollArmorName
+0x02a2eef8 = bl _getShopDollWeaponName
 
 
 [Archipelago_shopNames_V102U]
 moduleMatches = 0x30B6E091 # 1.0.2U
 
+0x02a2d2b8 = bl _getShopWeaponName
+0x02a2e250 = bl _getShopArmorName
+0x02a2f8e0 = bl _getShopDollArmorName
+0x02a2eee8 = bl _getShopDollWeaponName
 
 

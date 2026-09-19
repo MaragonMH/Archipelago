@@ -769,6 +769,7 @@ _getArchipelagoShop:
 	stw r0,52(r1)
 	stw r31,44(r1)
 	mr r31,r1
+	bl _initShopCurl
 	bl _getShopCurl
 	mr r9,r3
 	stw r9,12(r31)
@@ -849,6 +850,7 @@ _archipelago_L27:
 	mtctr r12
 	bctr
 _after_archipelago_27__free:
+	bl _cleanupShopCurl
 	b _archipelago_L24
 _archipelago_L31:
 	nop
@@ -885,7 +887,6 @@ _mainArchipelago:
 	cmpwi cr0,r9,0
 	bne cr0,_archipelago_L33
 	bl _getArchipelago
-	bl _getArchipelagoShop
 	b _archipelago_L34
 _archipelago_L33:
 	bl _postArchipelago

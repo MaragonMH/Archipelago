@@ -102,9 +102,9 @@ void setKnowledgeBit(int id, int bit, int doll){
 	*valuePtr = *valuePtr | bit;
 }
 
-void _initShopCache(char** shopPtr, int size){
-	if(shopPtr != nullptr) return;
-	shopPtr = (char**)__calloc(size, 4);
+void _initShopCache(char*** shopPtrPtr, int size){
+	if(*shopPtrPtr != nullptr) return;
+	*shopPtrPtr = (char**)__calloc(size, 4);
 }
 
 void _copyShopName(char** shopPtr, int id, char* name, int len){
@@ -117,28 +117,28 @@ void _cacheShopItemName(int type, int id, char* name){
 	int len = __strlen(name);
 	if (len == 0) return;
 	if(type == 6){
-		_initShopCache(_shopBlueprintNames, 200);
+		_initShopCache(&_shopBlueprintNames, 200);
 		_copyShopName(_shopBlueprintNames, id, name, len);
 	}else if(type == 7){
-		_initShopCache(_shopArmorNames, 1700);
+		_initShopCache(&_shopArmorNames, 1700);
 		_copyShopName(_shopArmorNames, id, name, len);
 	}else if(type == 8){
-		_initShopCache(_shopWeaponNames, 1900);
+		_initShopCache(&_shopWeaponNames, 1900);
 		_copyShopName(_shopWeaponNames, id, name, len);
 	}else if(type == 9){
-		_initShopCache(_shopAugmentNames, 3700);
+		_initShopCache(&_shopAugmentNames, 3700);
 		_copyShopName(_shopAugmentNames, id, name, len);
 	}else if(type == 0xa){
-		_initShopCache(_shopDollArmorNames, 300);
+		_initShopCache(&_shopDollArmorNames, 300);
 		_copyShopName(_shopDollArmorNames, id, name, len);
 	}else if(type == 0xb){
-		_initShopCache(_shopDollWeaponNames, 900);
+		_initShopCache(&_shopDollWeaponNames, 900);
 		_copyShopName(_shopDollWeaponNames, id, name, len);
 	}else if(type == 0xc){
-		_initShopCache(_shopDollAugmentNames, 3200);
+		_initShopCache(&_shopDollAugmentNames, 3200);
 		_copyShopName(_shopDollAugmentNames, id, name, len);
 	}else if(type == 0xd){
-		_initShopCache(_shopDollFrameNames, 50);
+		_initShopCache(&_shopDollFrameNames, 50);
 		_copyShopName(_shopDollFrameNames, id, name, len);
 	}
 }

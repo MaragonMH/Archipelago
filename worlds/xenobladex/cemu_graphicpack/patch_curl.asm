@@ -20,8 +20,6 @@ _curl_LC0:
 	.string "http://localhost:%d/locations"
 _curl_LC1:
 	.string "http://localhost:%d/items"
-_curl_LC2:
-	.string "http://localhost:%d/shops"
 _initCurl:
 	stwu r1,-64(r1)
 	mflr r0
@@ -95,6 +93,26 @@ _after_curl_2__sprintf_s:
 	mr r10,r3
 	lis r9,_downloadMultiHandle@ha
 	stw r10,_downloadMultiHandle@l(r9)
+	nop
+	addi r11,r31,64
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+_curl_LC2:
+	.string "http://localhost:%d/shops"
+_initShopCurl:
+	stwu r1,-64(r1)
+	mflr r0
+	stw r0,68(r1)
+	stw r31,60(r1)
+	mr r31,r1
+	li r9,10002
+	stw r9,8(r31)
+	lis r9,curlPort@ha
+	lwz r9,curlPort@l(r9)
+	stw r9,12(r31)
 	bl import.nlibcurl.curl_easy_init
 	mr r10,r3
 	lis r9,_shopHandle@ha
@@ -167,7 +185,7 @@ _postCurl:
 	mr r3,r9
 	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
-_curl_L3:
+_curl_L4:
 	lis r9,_uploadMultiHandle@ha
 	lwz r9,_uploadMultiHandle@l(r9)
 	addi r10,r31,16
@@ -176,7 +194,7 @@ _curl_L3:
 	bl import.nlibcurl.curl_multi_perform
 	lwz r9,16(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_curl_L3
+	bne cr0,_curl_L4
 	lis r9,_uploadMultiHandle@ha
 	lwz r10,_uploadMultiHandle@l(r9)
 	lis r9,_uploadHandle@ha
@@ -292,14 +310,14 @@ _getCurl:
 	lwz r3,40(r31)
 	crxor cr6,cr6,cr6
 	bl import.nlibcurl.curl_easy_setopt
-_curl_L7:
+_curl_L8:
 	addi r9,r31,24
 	mr r4,r9
 	lwz r3,44(r31)
 	bl import.nlibcurl.curl_multi_perform
 	lwz r9,24(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_curl_L7
+	bne cr0,_curl_L8
 	lwz r4,40(r31)
 	lwz r3,44(r31)
 	bl import.nlibcurl.curl_multi_remove_handle
@@ -375,14 +393,6 @@ _cleanupCurl:
 	lwz r9,_downloadMultiHandle@l(r9)
 	mr r3,r9
 	bl import.nlibcurl.curl_multi_cleanup
-	lis r9,_shopHandle@ha
-	lwz r9,_shopHandle@l(r9)
-	mr r3,r9
-	bl import.nlibcurl.curl_easy_cleanup
-	lis r9,_shopMultiHandle@ha
-	lwz r9,_shopMultiHandle@l(r9)
-	mr r3,r9
-	bl import.nlibcurl.curl_multi_cleanup
 	lis r9,_uploadHandle@ha
 	li r10,0
 	stw r10,_uploadHandle@l(r9)
@@ -395,6 +405,27 @@ _cleanupCurl:
 	lis r9,_downloadMultiHandle@ha
 	li r10,0
 	stw r10,_downloadMultiHandle@l(r9)
+	nop
+	addi r11,r31,16
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+_cleanupShopCurl:
+	stwu r1,-16(r1)
+	mflr r0
+	stw r0,20(r1)
+	stw r31,12(r1)
+	mr r31,r1
+	lis r9,_shopHandle@ha
+	lwz r9,_shopHandle@l(r9)
+	mr r3,r9
+	bl import.nlibcurl.curl_easy_cleanup
+	lis r9,_shopMultiHandle@ha
+	lwz r9,_shopMultiHandle@l(r9)
+	mr r3,r9
+	bl import.nlibcurl.curl_multi_cleanup
 	lis r9,_shopHandle@ha
 	li r10,0
 	stw r10,_shopHandle@l(r9)

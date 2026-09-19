@@ -387,6 +387,7 @@ _initShopCache:
 	stw r3,8(r31)
 	stw r4,12(r31)
 	lwz r9,8(r31)
+	lwz r9,0(r9)
 	cmpwi cr0,r9,0
 	bne cr0,_shopList_L22
 	lwz r9,12(r31)
@@ -400,8 +401,9 @@ _initShopCache:
 	mtctr r12
 	bctr
 _after_shopList_9__calloc:
-	mr r9,r3
-	stw r9,8(r31)
+	mr r10,r3
+	lwz r9,8(r31)
+	stw r10,0(r9)
 	b _shopList_L19
 _shopList_L22:
 	nop
@@ -501,10 +503,9 @@ _after_shopList_12__strlen:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,6
 	bne cr0,_shopList_L30
-	lis r9,_shopBlueprintNames@ha
-	lwz r9,_shopBlueprintNames@l(r9)
 	li r4,200
-	mr r3,r9
+	lis r9,_shopBlueprintNames@ha
+	addi r3,r9,_shopBlueprintNames@l
 	bl _initShopCache
 	lis r9,_shopBlueprintNames@ha
 	lwz r9,_shopBlueprintNames@l(r9)
@@ -518,10 +519,9 @@ _shopList_L30:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,7
 	bne cr0,_shopList_L31
-	lis r9,_shopArmorNames@ha
-	lwz r9,_shopArmorNames@l(r9)
 	li r4,1700
-	mr r3,r9
+	lis r9,_shopArmorNames@ha
+	addi r3,r9,_shopArmorNames@l
 	bl _initShopCache
 	lis r9,_shopArmorNames@ha
 	lwz r9,_shopArmorNames@l(r9)
@@ -535,10 +535,9 @@ _shopList_L31:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,8
 	bne cr0,_shopList_L32
-	lis r9,_shopWeaponNames@ha
-	lwz r9,_shopWeaponNames@l(r9)
 	li r4,1900
-	mr r3,r9
+	lis r9,_shopWeaponNames@ha
+	addi r3,r9,_shopWeaponNames@l
 	bl _initShopCache
 	lis r9,_shopWeaponNames@ha
 	lwz r9,_shopWeaponNames@l(r9)
@@ -552,10 +551,9 @@ _shopList_L32:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,9
 	bne cr0,_shopList_L33
-	lis r9,_shopAugmentNames@ha
-	lwz r9,_shopAugmentNames@l(r9)
 	li r4,3700
-	mr r3,r9
+	lis r9,_shopAugmentNames@ha
+	addi r3,r9,_shopAugmentNames@l
 	bl _initShopCache
 	lis r9,_shopAugmentNames@ha
 	lwz r9,_shopAugmentNames@l(r9)
@@ -569,10 +567,9 @@ _shopList_L33:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,10
 	bne cr0,_shopList_L34
-	lis r9,_shopDollArmorNames@ha
-	lwz r9,_shopDollArmorNames@l(r9)
 	li r4,300
-	mr r3,r9
+	lis r9,_shopDollArmorNames@ha
+	addi r3,r9,_shopDollArmorNames@l
 	bl _initShopCache
 	lis r9,_shopDollArmorNames@ha
 	lwz r9,_shopDollArmorNames@l(r9)
@@ -586,10 +583,9 @@ _shopList_L34:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,11
 	bne cr0,_shopList_L35
-	lis r9,_shopDollWeaponNames@ha
-	lwz r9,_shopDollWeaponNames@l(r9)
 	li r4,900
-	mr r3,r9
+	lis r9,_shopDollWeaponNames@ha
+	addi r3,r9,_shopDollWeaponNames@l
 	bl _initShopCache
 	lis r9,_shopDollWeaponNames@ha
 	lwz r9,_shopDollWeaponNames@l(r9)
@@ -603,10 +599,9 @@ _shopList_L35:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,12
 	bne cr0,_shopList_L36
-	lis r9,_shopDollAugmentNames@ha
-	lwz r9,_shopDollAugmentNames@l(r9)
 	li r4,3200
-	mr r3,r9
+	lis r9,_shopDollAugmentNames@ha
+	addi r3,r9,_shopDollAugmentNames@l
 	bl _initShopCache
 	lis r9,_shopDollAugmentNames@ha
 	lwz r9,_shopDollAugmentNames@l(r9)
@@ -620,10 +615,9 @@ _shopList_L36:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,13
 	bne cr0,_shopList_L27
-	lis r9,_shopDollFrameNames@ha
-	lwz r9,_shopDollFrameNames@l(r9)
 	li r4,50
-	mr r3,r9
+	lis r9,_shopDollFrameNames@ha
+	addi r3,r9,_shopDollFrameNames@l
 	bl _initShopCache
 	lis r9,_shopDollFrameNames@ha
 	lwz r9,_shopDollFrameNames@l(r9)

@@ -3,10 +3,12 @@
 extern int* menuBasePtr;
 
 void _initCurl();
+void _initShopCurl();
 void _postCurl(char[]);
 char* _getDownloadCurl();
 char* _getShopCurl();
 void _cleanupCurl();
+void _cleanupShopCurl();
 
 void _addItem(int type, int id);
 void _addGear(int type, int id, int affixId1, int affixId2, int affixId3, int slotCount);
@@ -267,6 +269,8 @@ void _getArchipelago(){
 }
 
 void _getArchipelagoShop(){
+	_initShopCurl();
+
 	char* outputPtr = _getShopCurl();
 	if (outputPtr == nullptr) return;
 
@@ -286,6 +290,8 @@ void _getArchipelagoShop(){
 		outputCurrentPtr += 1;
 	}
 	__free(outputPtr);
+
+	_cleanupShopCurl();
 }
 
 unsigned int _networkCounter = 0;
@@ -296,10 +302,8 @@ int _mainArchipelago(int hour, int minute) {
 
 	_networkCounter = _networkCounter << 31;
 	_networkCounter = _networkCounter >> 31;
-	if(_networkCounter == 0){
+	if(_networkCounter == 0)
 		_getArchipelago();
-		_getArchipelagoShop();
-	}
 	else _postArchipelago();
 	_networkCounter = _networkCounter + 1;
 

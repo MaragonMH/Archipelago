@@ -59,6 +59,13 @@ void _initCurl(){
 	__sprintf_s(hostUrl, 40, "http://localhost:%d/items", port);
 	import::nlibcurl::curl_easy_setopt(_downloadHandle, curlOptUrl, hostUrl);
 	_downloadMultiHandle = import::nlibcurl::curl_multi_init();
+}
+
+// Using https://curl.se/libcurl/c/ but with the multi flow
+void _initShopCurl(){
+	int curlOptUrl = 10002;
+	int port = curlPort;
+	char hostUrl[40];
 
 	_shopHandle = import::nlibcurl::curl_easy_init();
 	__sprintf_s(hostUrl, 40, "http://localhost:%d/shops", port);
@@ -131,13 +138,16 @@ void _cleanupCurl(){
 	import::nlibcurl::curl_easy_cleanup(_downloadHandle);
 	import::nlibcurl::curl_multi_cleanup(_downloadMultiHandle);
 
-	import::nlibcurl::curl_easy_cleanup(_shopHandle);
-	import::nlibcurl::curl_multi_cleanup(_shopMultiHandle);
-
 	_uploadHandle = nullptr;
 	_uploadMultiHandle = nullptr;
 	_downloadHandle = nullptr;
 	_downloadMultiHandle = nullptr;
+}
+
+void _cleanupShopCurl(){
+	import::nlibcurl::curl_easy_cleanup(_shopHandle);
+	import::nlibcurl::curl_multi_cleanup(_shopMultiHandle);
+
 	_shopHandle = nullptr;
 	_shopMultiHandle = nullptr;
 }
