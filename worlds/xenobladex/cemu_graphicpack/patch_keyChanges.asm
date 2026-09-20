@@ -2082,6 +2082,9 @@ makeDlAmrItemList = 0x02a2f088
 0x02a32748 = bl makeDlAmrItemListAdjusted
 makeDollItemList = 0x02a2fc78
 0x02a32770 = bl makeDollItemListAdjusted
+# shop equip no longer upgrades but rather adds the new tiers
+0x02a2ca08 = nop  # ground
+0x02a2e5a4 = nop  # doll
 
 # mark shop locations
 0x02a8334c = bl reqMenuAddAugmentFromIdAdjusted
@@ -2150,6 +2153,9 @@ makeDlAmrItemList = 0x02a2f078
 0x02a32738 = bl makeDlAmrItemListAdjusted
 makeDollItemList = 0x02a2fc68
 0x02a32760 = bl makeDollItemListAdjusted
+# shop equip no longer upgrades but rather adds the new tiers
+0x02a2c9f8 = nop  # ground
+0x02a2e594 = nop  # doll
 
 # mark shop locations
 0x02a8333c = bl reqMenuAddAugmentFromIdAdjusted
