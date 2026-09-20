@@ -101,6 +101,16 @@ void setKnowledgeBit(int id, int bit, int doll){
 	char* valuePtr = knowledgePtr + offset + id;
 	*valuePtr = *valuePtr | bit;
 }
+int getKnowledgeBit(int id, int bit, int doll){
+	char* knowledgePtr = GetKnowledgePtr();
+	int dollOffset = 0x4ba4;  // type 0x4d
+	int groundOffset = 0x3c04; // type 0x4c
+	int offset = dollOffset;
+	if (doll == 0)
+		offset = groundOffset;
+	char* valuePtr = knowledgePtr + offset + id;
+	return *valuePtr & bit;
+}
 
 void _initShopCache(char*** shopPtrPtr, int size){
 	if(*shopPtrPtr != nullptr) return;

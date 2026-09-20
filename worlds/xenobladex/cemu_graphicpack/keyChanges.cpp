@@ -191,6 +191,40 @@ makeDollItemList = 0x02a2fc78
 # shop equip no longer upgrades but rather adds the new tiers
 0x02a2ca08 = nop  # ground
 0x02a2e5a4 = nop  # doll
+# shop buy equip no longer has an equip option
+0x02a4422c = li r4, 0xa  # use menu 10 instead of 4
+0x02a44234 = addi r5, r5, 0x3f4  # use the corresponding buy function
+# unlist items you already bought from shop
+isSellItemByMaker = 0x02a2c928
+isSellDollItemByMaker = 0x02a2e4c4
+# armor
+0x02a2db08 = bl isSellItemByMakerArmorPreAdjusted
+0x02a2db7c = bl isSellItemByMakerArmorPreAdjusted
+0x02a2dbf0 = bl isSellItemByMakerArmorPreAdjusted
+0x02a2dc64 = bl isSellItemByMakerArmorPreAdjusted
+0x02a2dcf8 = bl isSellItemByMakerArmorPreAdjusted
+0x02a2dea8 = bl isSellItemByMakerArmorAdjusted
+# weapons
+0x02a2cb2c = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cba0 = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cc14 = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cc88 = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cd24 = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cedc = bl isSellItemByMakerWeaponAdjusted
+# doll armor
+0x02a2f148 = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f1bc = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f230 = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f2a4 = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f338 = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f4e8 = bl isSellItemByMakerDollArmorAdjusted
+# doll weapons
+0x02a2e6c8 = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2e73c = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2e7b0 = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2e824 = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2e8b8 = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2ea54 = bl isSellItemByMakerDollWeaponAdjusted
 
 # mark shop locations
 0x02a8334c = bl reqMenuAddAugmentFromIdAdjusted
@@ -262,6 +296,40 @@ makeDollItemList = 0x02a2fc68
 # shop equip no longer upgrades but rather adds the new tiers
 0x02a2c9f8 = nop  # ground
 0x02a2e594 = nop  # doll
+# shop buy equip no longer has an equip option
+0x02a4421c = li r4, 0xa  # use menu 10 instead of 4
+0x02a44224 = addi r5, r5, 0x3e4  # use the corresponding buy function
+# unlist items you already bought from shop
+isSellItemByMaker = 0x02a2c918
+isSellDollItemByMaker = 0x02a2e4b4
+# armor
+0x02a2daf8 = bl isSellItemByMakerArmorPreAdjusted
+0x02a2db6c = bl isSellItemByMakerArmorPreAdjusted
+0x02a2dbe0 = bl isSellItemByMakerArmorPreAdjusted
+0x02a2dc54 = bl isSellItemByMakerArmorPreAdjusted
+0x02a2dce8 = bl isSellItemByMakerArmorPreAdjusted
+0x02a2de98 = bl isSellItemByMakerArmorAdjusted
+# weapons
+0x02a2cb1c = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cb90 = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cc04 = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cc78 = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cd14 = bl isSellItemByMakerWeaponPreAdjusted
+0x02a2cecc = bl isSellItemByMakerWeaponAdjusted
+# doll armor
+0x02a2f138 = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f1ac = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f220 = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f294 = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f328 = bl isSellItemByMakerDollArmorPreAdjusted
+0x02a2f4d8 = bl isSellItemByMakerDollArmorAdjusted
+# doll weapons
+0x02a2e6b8 = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2e72c = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2e7a0 = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2e814 = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2e8a8 = bl isSellItemByMakerDollWeaponPreAdjusted
+0x02a2ea44 = bl isSellItemByMakerDollWeaponAdjusted
 
 # mark shop locations
 0x02a8333c = bl reqMenuAddAugmentFromIdAdjusted
@@ -336,7 +404,11 @@ void makeDlWpnItemList(int* cshop);
 void makeDlAmrItemList(int* cshop);
 void makeDollItemList(int* cshop);
 
+int isSellItemByMaker(int* cshop, int makerId, int makerLvl);
+int isSellDollItemByMaker(int* cshop, int makerId, int makerLvl);
+
 void setKnowledgeBit(int id, int bit, int doll);
+int getKnowledgeBit(int id, int bit, int doll);
 void reqMenuAddItemFromId(int type, int id, int count);
 void _getArchipelagoShop();
 
@@ -447,6 +519,66 @@ void reqMenuAddShopItemFromIdAdjusted(int type, int id, int count){
 void BuyDollAdjusted(int id){
 	if(includeShopSkellFrames)
 		setKnowledgeBit(id, 0x10, 1);
+}
+
+int isSellItemByMakerArmorPreAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r20");
+	if(includeShopArmor && getKnowledgeBit(_getShopIdx("SHP_AmrPC", itemId), 0x08, 0) != 0)
+		return 0;
+	else
+		return isSellItemByMaker(cshop, makerId, makerLvl);
+}
+int isSellItemByMakerArmorAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r22");
+	if(includeShopArmor && getKnowledgeBit(_getShopIdx("SHP_AmrPC", itemId), 0x08, 0) != 0)
+		return 0;
+	else
+		return isSellItemByMaker(cshop, makerId, makerLvl);
+}
+
+int isSellItemByMakerWeaponPreAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r20");
+	if(includeShopWeapons && getKnowledgeBit(_getShopIdx("SHP_WpnPC", itemId, true), 0x04, 0) != 0)
+		return 0;
+	else
+		return isSellItemByMaker(cshop, makerId, makerLvl);
+}
+int isSellItemByMakerWeaponAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r23");
+	if(includeShopWeapons && getKnowledgeBit(_getShopIdx("SHP_WpnPC", itemId, true), 0x04, 0) != 0)
+		return 0;
+	else
+		return isSellItemByMaker(cshop, makerId, makerLvl);
+}
+
+int isSellItemByMakerDollArmorPreAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r20");
+	if(includeShopSkellArmor && getKnowledgeBit(_getShopIdx("SHP_AmrDL", itemId), 0x08, 1) != 0)
+		return 0;
+	else
+		return isSellItemByMaker(cshop, makerId, makerLvl);
+}
+int isSellItemByMakerDollArmorAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r21");
+	if(includeShopSkellArmor && getKnowledgeBit(_getShopIdx("SHP_AmrDL", itemId), 0x08, 1) != 0)
+		return 0;
+	else
+		return isSellItemByMaker(cshop, makerId, makerLvl);
+}
+
+int isSellItemByMakerDollWeaponPreAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r20");
+	if(includeShopSkellWeapons && getKnowledgeBit(_getShopIdx("SHP_WpnDL", itemId), 0x04, 1) != 0)
+		return 0;
+	else
+		return isSellItemByMaker(cshop, makerId, makerLvl);
+}
+int isSellItemByMakerDollWeaponAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r25");
+	if(includeShopSkellWeapons && getKnowledgeBit(_getShopIdx("SHP_WpnDL", itemId), 0x04, 1) != 0)
+		return 0;
+	else
+		return isSellItemByMaker(cshop, makerId, makerLvl);
 }
 
 int _IsPermit(){
@@ -586,7 +718,7 @@ void _SetBdatValue(const char* bdatName, const char* columnName, int rowId, int 
 	// ignore value check for simplicity
 	// char* valCheckPtr = getValCheckSub(bdat, getMember(bdat, columnName), valueSize);
 	int baseOffset = *(short*)((char*)bdat + 0xe);
-	int rowOffset = (*(short*)((char*)bdat + 0x8) + 0x2) * (rowId - 1);
+	int rowOffset = (*(short*)((char*)bdat + 0x8)) * (rowId - 1);
 	int columnOffset = *(short*)((char*)bdat + 0x2 + columnOffsetBase);
 	char* valPtr = (char*)bdat + baseOffset + rowOffset + columnOffset;
 	if (valueSize == 1)
@@ -602,6 +734,10 @@ void _Create_DataInit_Adjusted(){
 	_SetBdatValue("CHR_ClassInfo", "FarWeapon", 1, drifterRangedWeapon, 1);
 	_SetBdatValue("CHR_ClassInfo", "defNear", 1, drifterMeleeWeapon, 2);
 	_SetBdatValue("CHR_ClassInfo", "defFar", 1, drifterRangedWeapon, 2);
+
+	// from 0x02a3d604
+	int purchaseTitleNameOffset = 0xdf72;
+	_SetBdatValue("menu_program_ms", "name", 4439, purchaseTitleNameOffset, 4);
 
 	Create_DataInit();
 }
