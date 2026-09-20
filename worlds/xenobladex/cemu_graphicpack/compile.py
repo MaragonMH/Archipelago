@@ -54,7 +54,7 @@ for filename in (os.path.splitext(os.path.join(root, file))[0]  # noqa: C901
 
     # Print errors and warnings
     if jres["stderr"]:
-        print("\n".join(re.sub(r"(?<=^\033\[01m\033\[K<)source(?=>)", f"{filename}.cpp", line["text"])
+        print("\n".join(re.sub(r"(?<=^\033\[01m\033\[K<)source(?=>)", f"{basename}.cpp", line["text"])
                         for line in jres["stderr"]))
     if jres["code"] != 0:
         continue
