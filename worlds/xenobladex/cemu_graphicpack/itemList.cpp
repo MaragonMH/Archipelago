@@ -79,7 +79,7 @@ char* _postItemList(char* stringStartPtr, char* stringCurrentPtr, char* stringEn
 }
 
 char* _postBattleItemList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize) {
-    for(int id; id < 32; id++){
+    for(int id = 1; id < 32; id++){
         int value = getKnowledgeBit(4000 - id, 0xFF, 0);
         if (value == 0)
             continue;

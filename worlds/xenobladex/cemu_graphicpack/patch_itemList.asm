@@ -350,6 +350,8 @@ _postBattleItemList:
 	stw r4,28(r31)
 	stw r5,32(r31)
 	stw r6,36(r31)
+	li r9,1
+	stw r9,8(r31)
 	b _itemList_L24
 _itemList_L27:
 	lwz r9,8(r31)
