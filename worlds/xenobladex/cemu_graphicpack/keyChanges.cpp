@@ -197,6 +197,7 @@ makeDollItemList = 0x02a2fc78
 # unlist items you already bought from shop
 isSellItemByMaker = 0x02a2c928
 isSellDollItemByMaker = 0x02a2e4c4
+isSellDollAssetItemByMaker = 0x02a2fb58
 # armor
 0x02a2db08 = bl isSellItemByMakerArmorPreAdjusted
 0x02a2db7c = bl isSellItemByMakerArmorPreAdjusted
@@ -225,6 +226,13 @@ isSellDollItemByMaker = 0x02a2e4c4
 0x02a2e824 = bl isSellItemByMakerDollWeaponPreAdjusted
 0x02a2e8b8 = bl isSellItemByMakerDollWeaponPreAdjusted
 0x02a2ea54 = bl isSellItemByMakerDollWeaponAdjusted
+# doll frames
+0x02a2fda0 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a2fe18 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a2fe90 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a2ff08 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a2ffa8 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a30124 = bl isSellDollAssetItemByMakerDollFrameAdjusted
 
 # mark shop locations
 0x02a8334c = bl reqMenuAddAugmentFromIdAdjusted
@@ -302,6 +310,7 @@ makeDollItemList = 0x02a2fc68
 # unlist items you already bought from shop
 isSellItemByMaker = 0x02a2c918
 isSellDollItemByMaker = 0x02a2e4b4
+isSellDollAssetItemByMaker = 0x02a2fb48
 # armor
 0x02a2daf8 = bl isSellItemByMakerArmorPreAdjusted
 0x02a2db6c = bl isSellItemByMakerArmorPreAdjusted
@@ -330,6 +339,13 @@ isSellDollItemByMaker = 0x02a2e4b4
 0x02a2e814 = bl isSellItemByMakerDollWeaponPreAdjusted
 0x02a2e8a8 = bl isSellItemByMakerDollWeaponPreAdjusted
 0x02a2ea44 = bl isSellItemByMakerDollWeaponAdjusted
+# doll frames
+0x02a2fd90 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a2fe08 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a2fe80 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a2fef8 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a2ff98 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
+0x02a30114 = bl isSellDollAssetItemByMakerDollFrameAdjusted
 
 # mark shop locations
 0x02a8333c = bl reqMenuAddAugmentFromIdAdjusted
@@ -406,6 +422,7 @@ void makeDollItemList(int* cshop);
 
 int isSellItemByMaker(int* cshop, int makerId, int makerLvl);
 int isSellDollItemByMaker(int* cshop, int makerId, int makerLvl);
+int isSellDollAssetItemByMaker(int* cshop, int makerId, int makerLvl);
 
 void setKnowledgeBit(int id, int bit, int doll);
 int getKnowledgeBit(int id, int bit, int doll);
@@ -556,14 +573,14 @@ int isSellItemByMakerDollArmorPreAdjusted(int* cshop, int makerId, int makerLvl)
 	if(includeShopSkellArmor && getKnowledgeBit(_getShopIdx("SHP_AmrDL", itemId), 0x08, 1) != 0)
 		return 0;
 	else
-		return isSellItemByMaker(cshop, makerId, makerLvl);
+		return isSellDollItemByMaker(cshop, makerId, makerLvl);
 }
 int isSellItemByMakerDollArmorAdjusted(int* cshop, int makerId, int makerLvl){
 	register int itemId asm("r21");
 	if(includeShopSkellArmor && getKnowledgeBit(_getShopIdx("SHP_AmrDL", itemId), 0x08, 1) != 0)
 		return 0;
 	else
-		return isSellItemByMaker(cshop, makerId, makerLvl);
+		return isSellDollItemByMaker(cshop, makerId, makerLvl);
 }
 
 int isSellItemByMakerDollWeaponPreAdjusted(int* cshop, int makerId, int makerLvl){
@@ -571,14 +588,29 @@ int isSellItemByMakerDollWeaponPreAdjusted(int* cshop, int makerId, int makerLvl
 	if(includeShopSkellWeapons && getKnowledgeBit(_getShopIdx("SHP_WpnDL", itemId), 0x04, 1) != 0)
 		return 0;
 	else
-		return isSellItemByMaker(cshop, makerId, makerLvl);
+		return isSellDollItemByMaker(cshop, makerId, makerLvl);
 }
 int isSellItemByMakerDollWeaponAdjusted(int* cshop, int makerId, int makerLvl){
 	register int itemId asm("r25");
 	if(includeShopSkellWeapons && getKnowledgeBit(_getShopIdx("SHP_WpnDL", itemId), 0x04, 1) != 0)
 		return 0;
 	else
-		return isSellItemByMaker(cshop, makerId, makerLvl);
+		return isSellDollItemByMaker(cshop, makerId, makerLvl);
+}
+
+int isSellDollAssetItemByMakerDollFramePreAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemIdx asm("r23");
+	if(includeShopSkellFrames && getKnowledgeBit(itemIdx, 0x10, 1) != 0)
+		return 0;
+	else
+		return isSellDollAssetItemByMaker(cshop, makerId, makerLvl);
+}
+int isSellDollAssetItemByMakerDollFrameAdjusted(int* cshop, int makerId, int makerLvl){
+	register int itemId asm("r20");
+	if(includeShopSkellFrames && getKnowledgeBit(itemId, 0x10, 1) != 0)
+		return 0;
+	else
+		return isSellDollAssetItemByMaker(cshop, makerId, makerLvl);
 }
 
 int _IsPermit(){
