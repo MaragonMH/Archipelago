@@ -161,7 +161,7 @@ class XenobladeXHttpServer(HTTPServer):
             return item_game_type + doll_augments_type_data[augment_idx]
         return item_game_type
 
-    def _upload_gear(self, item_game_type: int, item_game_id: int, seed_name: Optional[str],
+    def _upload_gear(self, item_game_type: int, item_game_id: int, item_game_level: int, seed_name: Optional[str],
                      item_name: str) -> None:
         gear = self.generate_gear(item_name, seed_name)
         item_game_type = self.adjust_item_type(item_game_type, item_game_id)
@@ -171,7 +171,10 @@ class XenobladeXHttpServer(HTTPServer):
         else:
             if item_game_type == 0x9 and item_name in doll_frame_ids:
                 item_game_id = doll_frame_ids[item_name]
-            self.items += f"I Tp={item_game_type:08x} Id={item_game_id:08x}\n"
+            if item_game_type != 0x1f:
+                self.items += f"I Tp={item_game_type:08x} Id={item_game_id:08x}\n"
+            else:
+                self.items += f"I Tp={item_game_type:08x} Id={item_game_id:08x} Cn={item_game_level:08x}\n"
 
     # Example: Invoke-WebRequest http://localhost:45872/items -Method POST -Body "I Tp=00000007 Id=00000039`n"
     def upload_item(self, item_game_type: int, item_game_id: int, seed_name: Optional[str],
@@ -188,7 +191,7 @@ class XenobladeXHttpServer(HTTPServer):
                 item_game_level = get_upper_real_level_from_logic_count(item_game_level, logic_level_steps)
             self.items += f"K Id={item_game_id:08x} Fg={item_game_level:08x}\n"
         elif item_game_type < 0x20:
-            self._upload_gear(item_game_type, item_game_id, seed_name, item_name)
+            self._upload_gear(item_game_type, item_game_id, item_game_level, seed_name, item_name)
         elif item_game_type < 0x21:
             self.items += f"A Id={item_game_id:08x} Lv={1:08x}\n"
         elif item_game_type < 0x22:

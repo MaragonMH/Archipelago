@@ -10,7 +10,7 @@ char* _getShopCurl();
 void _cleanupCurl();
 void _cleanupShopCurl();
 
-void _addItem(int type, int id);
+void _addItem(int type, int id, int count = 1);
 void _addGear(int type, int id, int affixId1, int affixId2, int affixId3, int slotCount);
 void _addArt(int id, int lv);
 void _addSkill(int id, int lv);
@@ -27,6 +27,7 @@ char* _postFieldSkillsList(char* stringStartPtr, char* stringCurrentPtr, char* s
 char* _postFnNodeList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postFriendList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postItemList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
+char* _postBattleItemList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postLocationList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postSegmentList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
 char* _postShopList(char* stringStartPtr, char* stringCurrentPtr, char* stringEndPtr, int maxEntrySize);
@@ -112,6 +113,7 @@ void _postArchipelago(){
 	stringCurrentPtr = _postFnNodeList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postFriendList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postItemList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
+	stringCurrentPtr = _postBattleItemList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postLocationList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postSegmentList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
 	stringCurrentPtr = _postShopList(stringStartPtr, stringCurrentPtr, stringEndPtr, maxEntrySize);
@@ -144,7 +146,14 @@ void _getArchipelago(){
 				outputCurrentPtr += 8 + 4;
 				int itemId = (int)__strtol(outputCurrentPtr, nullptr, 16);
 				outputCurrentPtr += 8;
-				_addItem(itemType, itemId);
+				if(*outputCurrentPtr == '\n')
+					_addItem(itemType, itemId);
+				else{
+					outputCurrentPtr += 4;
+					int itemCount = (int)__strtol(outputCurrentPtr, nullptr, 16);
+					outputCurrentPtr += 8;
+					_addItem(itemType, itemId, itemCount);
+				}
 			}
 			break;
 

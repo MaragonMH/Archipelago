@@ -48,7 +48,8 @@ char* _postShopList(char* stringStartPtr, char* stringCurrentPtr, char* stringEn
 		}
 	}
 	
-    for(int id = 1; id < 4000; id++){
+	// Available until 4000 but unused last 50 reserved for the permanent storage of battle items
+    for(int id = 1; id < 3950; id++){
 		char* knowledgePtr = GetKnowledgePtr();
 		int dollOffset = 0x4ba4;  // type 0x4d
 		int groundOffset = 0x3c04; // type 0x4c
@@ -100,6 +101,16 @@ void setKnowledgeBit(int id, int bit, int doll){
 		offset = groundOffset;
 	char* valuePtr = knowledgePtr + offset + id;
 	*valuePtr = *valuePtr | bit;
+}
+void setKnowledgeValue(int id, int value, int doll){
+	char* knowledgePtr = GetKnowledgePtr();
+	int dollOffset = 0x4ba4;  // type 0x4d
+	int groundOffset = 0x3c04; // type 0x4c
+	int offset = dollOffset;
+	if (doll == 0)
+		offset = groundOffset;
+	char* valuePtr = knowledgePtr + offset + id;
+	*valuePtr = (unsigned char)value;
 }
 int getKnowledgeBit(int id, int bit, int doll){
 	char* knowledgePtr = GetKnowledgePtr();

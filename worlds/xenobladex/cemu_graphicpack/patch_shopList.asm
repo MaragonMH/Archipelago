@@ -323,7 +323,7 @@ _shopList_L14:
 	stw r9,12(r31)
 _shopList_L6:
 	lwz r9,12(r31)
-	cmpwi cr0,r9,3999
+	cmpwi cr0,r9,3949
 	ble cr0,_shopList_L15
 	lwz r9,76(r31)
 	mr r3,r9
@@ -378,7 +378,7 @@ _shopList_L18:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-getKnowledgeBit:
+setKnowledgeValue:
 	stwu r1,-64(r1)
 	mflr r0
 	stw r0,68(r1)
@@ -408,6 +408,47 @@ _shopList_L20:
 	lwz r10,12(r31)
 	add r9,r10,r9
 	stw r9,24(r31)
+	lwz r9,44(r31)
+	mr r10,r9
+	lwz r9,24(r31)
+	stb r10,0(r9)
+	nop
+	addi r11,r31,64
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+getKnowledgeBit:
+	stwu r1,-64(r1)
+	mflr r0
+	stw r0,68(r1)
+	stw r31,60(r1)
+	mr r31,r1
+	stw r3,40(r31)
+	stw r4,44(r31)
+	stw r5,48(r31)
+	bl GetKnowledgePtr
+	mr r9,r3
+	stw r9,12(r31)
+	li r9,19364
+	stw r9,16(r31)
+	li r9,15364
+	stw r9,20(r31)
+	lwz r9,16(r31)
+	stw r9,8(r31)
+	lwz r9,48(r31)
+	cmpwi cr0,r9,0
+	bne cr0,_shopList_L22
+	lwz r9,20(r31)
+	stw r9,8(r31)
+_shopList_L22:
+	lwz r10,8(r31)
+	lwz r9,40(r31)
+	add r9,r10,r9
+	lwz r10,12(r31)
+	add r9,r10,r9
+	stw r9,24(r31)
 	lwz r9,24(r31)
 	lbz r9,0(r9)
 	rlwinm r10,r9,0,24,31
@@ -431,7 +472,7 @@ _initShopCache:
 	lwz r9,8(r31)
 	lwz r9,0(r9)
 	cmpwi cr0,r9,0
-	bne cr0,_shopList_L25
+	bne cr0,_shopList_L27
 	lwz r9,12(r31)
 	li r4,4
 	mr r3,r9
@@ -446,10 +487,10 @@ _after_shopList_9__calloc:
 	mr r10,r3
 	lwz r9,8(r31)
 	stw r10,0(r9)
-	b _shopList_L22
-_shopList_L25:
+	b _shopList_L24
+_shopList_L27:
 	nop
-_shopList_L22:
+_shopList_L24:
 	addi r11,r31,32
 	lwz r0,4(r11)
 	mtlr r0
@@ -473,7 +514,7 @@ _copyShopName:
 	add r9,r10,r9
 	lwz r9,0(r9)
 	cmpwi cr0,r9,0
-	bne cr0,_shopList_L29
+	bne cr0,_shopList_L31
 	lwz r9,20(r31)
 	addi r9,r9,1
 	mr r8,r9
@@ -508,10 +549,10 @@ _after_shopList_10__calloc:
 	mtctr r12
 	bctr
 _after_shopList_11__strcpy:
-	b _shopList_L26
-_shopList_L29:
+	b _shopList_L28
+_shopList_L31:
 	nop
-_shopList_L26:
+_shopList_L28:
 	addi r11,r31,32
 	lwz r0,4(r11)
 	mtlr r0
@@ -541,10 +582,10 @@ _after_shopList_12__strlen:
 	stw r9,8(r31)
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	beq cr0,_shopList_L40
+	beq cr0,_shopList_L42
 	lwz r9,24(r31)
 	cmpwi cr0,r9,6
-	bne cr0,_shopList_L33
+	bne cr0,_shopList_L35
 	li r4,200
 	lis r9,_shopBlueprintNames@ha
 	addi r3,r9,_shopBlueprintNames@l
@@ -556,11 +597,11 @@ _after_shopList_12__strlen:
 	lwz r4,28(r31)
 	mr r3,r9
 	bl _copyShopName
-	b _shopList_L30
-_shopList_L33:
+	b _shopList_L32
+_shopList_L35:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,7
-	bne cr0,_shopList_L34
+	bne cr0,_shopList_L36
 	li r4,1700
 	lis r9,_shopArmorNames@ha
 	addi r3,r9,_shopArmorNames@l
@@ -572,11 +613,11 @@ _shopList_L33:
 	lwz r4,28(r31)
 	mr r3,r9
 	bl _copyShopName
-	b _shopList_L30
-_shopList_L34:
+	b _shopList_L32
+_shopList_L36:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,8
-	bne cr0,_shopList_L35
+	bne cr0,_shopList_L37
 	li r4,1900
 	lis r9,_shopWeaponNames@ha
 	addi r3,r9,_shopWeaponNames@l
@@ -588,11 +629,11 @@ _shopList_L34:
 	lwz r4,28(r31)
 	mr r3,r9
 	bl _copyShopName
-	b _shopList_L30
-_shopList_L35:
+	b _shopList_L32
+_shopList_L37:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,9
-	bne cr0,_shopList_L36
+	bne cr0,_shopList_L38
 	li r4,3700
 	lis r9,_shopAugmentNames@ha
 	addi r3,r9,_shopAugmentNames@l
@@ -604,11 +645,11 @@ _shopList_L35:
 	lwz r4,28(r31)
 	mr r3,r9
 	bl _copyShopName
-	b _shopList_L30
-_shopList_L36:
+	b _shopList_L32
+_shopList_L38:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,10
-	bne cr0,_shopList_L37
+	bne cr0,_shopList_L39
 	li r4,300
 	lis r9,_shopDollArmorNames@ha
 	addi r3,r9,_shopDollArmorNames@l
@@ -620,11 +661,11 @@ _shopList_L36:
 	lwz r4,28(r31)
 	mr r3,r9
 	bl _copyShopName
-	b _shopList_L30
-_shopList_L37:
+	b _shopList_L32
+_shopList_L39:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,11
-	bne cr0,_shopList_L38
+	bne cr0,_shopList_L40
 	li r4,900
 	lis r9,_shopDollWeaponNames@ha
 	addi r3,r9,_shopDollWeaponNames@l
@@ -636,11 +677,11 @@ _shopList_L37:
 	lwz r4,28(r31)
 	mr r3,r9
 	bl _copyShopName
-	b _shopList_L30
-_shopList_L38:
+	b _shopList_L32
+_shopList_L40:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,12
-	bne cr0,_shopList_L39
+	bne cr0,_shopList_L41
 	li r4,3200
 	lis r9,_shopDollAugmentNames@ha
 	addi r3,r9,_shopDollAugmentNames@l
@@ -652,11 +693,11 @@ _shopList_L38:
 	lwz r4,28(r31)
 	mr r3,r9
 	bl _copyShopName
-	b _shopList_L30
-_shopList_L39:
+	b _shopList_L32
+_shopList_L41:
 	lwz r9,24(r31)
 	cmpwi cr0,r9,13
-	bne cr0,_shopList_L30
+	bne cr0,_shopList_L32
 	li r4,50
 	lis r9,_shopDollFrameNames@ha
 	addi r3,r9,_shopDollFrameNames@l
@@ -668,10 +709,10 @@ _shopList_L39:
 	lwz r4,28(r31)
 	mr r3,r9
 	bl _copyShopName
-	b _shopList_L30
-_shopList_L40:
+	b _shopList_L32
+_shopList_L42:
 	nop
-_shopList_L30:
+_shopList_L32:
 	addi r11,r31,48
 	lwz r0,4(r11)
 	mtlr r0
