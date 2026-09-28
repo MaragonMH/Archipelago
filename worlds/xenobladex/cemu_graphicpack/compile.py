@@ -45,7 +45,7 @@ for filename in (os.path.splitext(os.path.join(root, file))[0]  # noqa: C901
 
     # Aquire assembly from https://godbolt.org/
     url = "https://godbolt.org/api/compiler/ppcg1320/compile"
-    res = requests.post(url=url, data=data, headers={"Accept": "application/json"})
+    res = requests.post(url=url, json={"source": data}, headers={"Accept": "application/json"})
     try:
         res.raise_for_status()
     except Exception:
