@@ -233,6 +233,10 @@ isSellDollAssetItemByMaker = 0x02a2fb58
 0x02a2ff08 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
 0x02a2ffa8 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
 0x02a30124 = bl isSellDollAssetItemByMakerDollFrameAdjusted
+# augments change text color to indicate already done
+writeText = 0x02c9c9c4
+0x02a82168 = bl writeTextAdjusted
+0x02a8207c = bl writeTextAdjusted
 
 # mark shop locations
 0x02a8334c = bl reqMenuAddAugmentFromIdAdjusted
@@ -346,6 +350,10 @@ isSellDollAssetItemByMaker = 0x02a2fb48
 0x02a2fef8 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
 0x02a2ff98 = bl isSellDollAssetItemByMakerDollFramePreAdjusted
 0x02a30114 = bl isSellDollAssetItemByMakerDollFrameAdjusted
+# augments change text color to indicate already done
+writeText = 0x02c9c964
+0x02a82158 = bl writeTextAdjusted
+0x02a8206c = bl writeTextAdjusted
 
 # mark shop locations
 0x02a8333c = bl reqMenuAddAugmentFromIdAdjusted
@@ -428,6 +436,8 @@ void setKnowledgeBit(int id, int bit, int doll);
 int getKnowledgeBit(int id, int bit, int doll);
 void reqMenuAddItemFromId(int type, int id, int count);
 void _getArchipelagoShop();
+
+void writeText(int* ptr, int* ptr2, char* text, int color, int glow, int v1, int v2);
 
 void _filterDevices(){
 	register int selectedOption asm("r6");
@@ -611,6 +621,20 @@ int isSellDollAssetItemByMakerDollFrameAdjusted(int* cshop, int makerId, int mak
 		return 0;
 	else
 		return isSellDollAssetItemByMaker(cshop, makerId, makerLvl);
+}
+
+void writeTextAdjusted(int* ptr, int* ptr2, char* text, int color, int glow, int v1, int v2){
+	register int idx asm("r29");
+	register char* basePtr asm("r23");
+	int id = (int)*(unsigned short*)(basePtr + idx * 0xc + 0x8);
+	int purpleColor = 0x18;
+	if(includeShopSkellAugments && _augmentMenuType == 1 && getKnowledgeBit(id, 0x2, 1) != 0){
+		writeText(ptr, ptr2, text, purpleColor, 0, v1, v2);
+	}else if(includeShopAugments && _augmentMenuType == 0 && getKnowledgeBit(id, 0x2, 0) != 0){
+		writeText(ptr, ptr2, text, purpleColor, 0, v1, v2);
+	}else{
+		writeText(ptr, ptr2, text, color, glow, v1, v2);
+	}
 }
 
 int _IsPermit(){
