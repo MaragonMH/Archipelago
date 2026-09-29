@@ -377,7 +377,7 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 // Parameters from rules.txt
 int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, drifterRangedWeapon, drifterMeleeWeapon, includeShopBlueprints,
 includeShopArmor, includeShopWeapons, includeShopAugments, includeShopSkellArmor, includeShopSkellWeapons, includeShopSkellAugments, includeShopSkellFrames;
-float fastRunSpeedFloat, fasterRunSpeedFloat;
+float fastRunSpeedFloat, fasterRunSpeedFloat, swimSpeedFloat, swimDashSpeedFloat;
 int fastRunningState = 0, fasterRunPlaySound = 0, fasterRunningState = 0;
 int _augmentMenuType = 0;
 
@@ -740,9 +740,9 @@ void _InitCharaSystemVariables(int ** ptr, int* ptr2){
 	// Addional functions for debugging id mapping
 	// int mapId = getMappedId(valuePtr, 0, id);
 	char* name = (char*)"VF_MoveSpeedSwimRun";
-	setValueFloat(3.0, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+	setValueFloat(swimSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 	name = (char*)"VF_MoveSpeedSwimDash";
-	setValueFloat(10.0, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+	setValueFloat(swimDashSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 
 	// Available
 	// setValueBool(valuePtr + 3, mapId, true); // Start with VI_

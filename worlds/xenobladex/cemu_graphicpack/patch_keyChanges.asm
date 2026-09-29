@@ -42,6 +42,10 @@ fastRunSpeedFloat:
 	.float    $fastRunSpeedFloat
 fasterRunSpeedFloat:
 	.float    $fasterRunSpeedFloat
+swimSpeedFloat:
+	.float    $swimSpeedFloat
+swimDashSpeedFloat:
+	.float    $swimDashSpeedFloat
 fastRunningState:
 	.int    0
 fasterRunPlaySound:
@@ -1554,14 +1558,15 @@ _keyChanges_L141:
 	blr
 _keyChanges_LC7:
 	.string "VF_MoveSpeedSwimRun"
-_keyChanges_LC9:
+_keyChanges_LC8:
 	.string "VF_MoveSpeedSwimDash"
 _InitCharaSystemVariables:
 	stwu r1,-48(r1)
 	mflr r0
 	stw r0,52(r1)
-	stw r30,40(r1)
-	stw r31,44(r1)
+	stfd f31,40(r1)
+	stw r30,32(r1)
+	stw r31,36(r1)
 	mr r31,r1
 	stw r3,24(r31)
 	stw r4,28(r31)
@@ -1571,39 +1576,40 @@ _InitCharaSystemVariables:
 	lis r9,_keyChanges_LC7@ha
 	addi r9,r9,_keyChanges_LC7@l
 	stw r9,12(r31)
+	lis r9,swimSpeedFloat@ha
+	lfs f31,swimSpeedFloat@l(r9)
 	lwz r9,8(r31)
 	addi r30,r9,12
 	lwz r4,12(r31)
 	lwz r3,8(r31)
 	bl _FindSystemVariableByName
-	mr r10,r3
-	lis r9,_keyChanges_LC8@ha
-	lfs f0,_keyChanges_LC8@l(r9)
-	mr r4,r10
+	mr r9,r3
+	mr r4,r9
 	mr r3,r30
-	fmr f1,f0
+	fmr f1,f31
 	bl setValueFloat
-	lis r9,_keyChanges_LC9@ha
-	addi r9,r9,_keyChanges_LC9@l
+	lis r9,_keyChanges_LC8@ha
+	addi r9,r9,_keyChanges_LC8@l
 	stw r9,12(r31)
+	lis r9,swimDashSpeedFloat@ha
+	lfs f31,swimDashSpeedFloat@l(r9)
 	lwz r9,8(r31)
 	addi r30,r9,12
 	lwz r4,12(r31)
 	lwz r3,8(r31)
 	bl _FindSystemVariableByName
-	mr r10,r3
-	lis r9,_keyChanges_LC10@ha
-	lfs f0,_keyChanges_LC10@l(r9)
-	mr r4,r10
+	mr r9,r3
+	mr r4,r9
 	mr r3,r30
-	fmr f1,f0
+	fmr f1,f31
 	bl setValueFloat
 	nop
 	addi r11,r31,48
 	lwz r0,4(r11)
 	mtlr r0
-	lwz r30,-8(r11)
-	lwz r31,-4(r11)
+	lwz r30,-16(r11)
+	lwz r31,-12(r11)
+	lfd f31,-8(r11)
 	mr r1,r11
 	blr
 _initImplCharaAdjusted:
@@ -1746,17 +1752,17 @@ _keyChanges_L150:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-_keyChanges_LC11:
+_keyChanges_LC9:
 	.string "NearWeapon"
-_keyChanges_LC12:
+_keyChanges_LC10:
 	.string "FarWeapon"
-_keyChanges_LC13:
+_keyChanges_LC11:
 	.string "defNear"
-_keyChanges_LC14:
+_keyChanges_LC12:
 	.string "defFar"
-_keyChanges_LC15:
+_keyChanges_LC13:
 	.string "name"
-_keyChanges_LC16:
+_keyChanges_LC14:
 	.string "menu_program_ms"
 _Create_DataInit_Adjusted:
 	stwu r1,-32(r1)
@@ -1769,8 +1775,8 @@ _Create_DataInit_Adjusted:
 	li r7,1
 	mr r6,r9
 	li r5,1
-	lis r9,_keyChanges_LC11@ha
-	addi r4,r9,_keyChanges_LC11@l
+	lis r9,_keyChanges_LC9@ha
+	addi r4,r9,_keyChanges_LC9@l
 	lis r9,_keyChanges_LC4@ha
 	addi r3,r9,_keyChanges_LC4@l
 	bl _SetBdatValue
@@ -1779,8 +1785,8 @@ _Create_DataInit_Adjusted:
 	li r7,1
 	mr r6,r9
 	li r5,1
-	lis r9,_keyChanges_LC12@ha
-	addi r4,r9,_keyChanges_LC12@l
+	lis r9,_keyChanges_LC10@ha
+	addi r4,r9,_keyChanges_LC10@l
 	lis r9,_keyChanges_LC4@ha
 	addi r3,r9,_keyChanges_LC4@l
 	bl _SetBdatValue
@@ -1789,8 +1795,8 @@ _Create_DataInit_Adjusted:
 	li r7,2
 	mr r6,r9
 	li r5,1
-	lis r9,_keyChanges_LC13@ha
-	addi r4,r9,_keyChanges_LC13@l
+	lis r9,_keyChanges_LC11@ha
+	addi r4,r9,_keyChanges_LC11@l
 	lis r9,_keyChanges_LC4@ha
 	addi r3,r9,_keyChanges_LC4@l
 	bl _SetBdatValue
@@ -1799,8 +1805,8 @@ _Create_DataInit_Adjusted:
 	li r7,2
 	mr r6,r9
 	li r5,1
-	lis r9,_keyChanges_LC14@ha
-	addi r4,r9,_keyChanges_LC14@l
+	lis r9,_keyChanges_LC12@ha
+	addi r4,r9,_keyChanges_LC12@l
 	lis r9,_keyChanges_LC4@ha
 	addi r3,r9,_keyChanges_LC4@l
 	bl _SetBdatValue
@@ -1810,10 +1816,10 @@ _Create_DataInit_Adjusted:
 	li r7,4
 	lwz r6,8(r31)
 	li r5,4439
-	lis r9,_keyChanges_LC15@ha
-	addi r4,r9,_keyChanges_LC15@l
-	lis r9,_keyChanges_LC16@ha
-	addi r3,r9,_keyChanges_LC16@l
+	lis r9,_keyChanges_LC13@ha
+	addi r4,r9,_keyChanges_LC13@l
+	lis r9,_keyChanges_LC14@ha
+	addi r3,r9,_keyChanges_LC14@l
 	bl _SetBdatValue
 	bl Create_DataInit
 	nop
@@ -2544,10 +2550,6 @@ _keyChanges_L221:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-_keyChanges_LC8:
-	.long   1077936128
-_keyChanges_LC10:
-	.long   1092616192
 
 
 [Archipelago_keyChanges_ALL]

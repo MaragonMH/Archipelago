@@ -30,6 +30,10 @@ $fastRunSpeedFloat = 2.5;
 $fasterRunSpeedFloat = 10.0;
 $curlPort = 45872
 
+# Customizeable variables
+$swimSpeedFloat = 3.0
+$swimDashSpeedFloat = 10.0
+
 [Preset]
 name = "on"
 category = "GroundArmor"
