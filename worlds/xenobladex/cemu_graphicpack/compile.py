@@ -110,7 +110,7 @@ for filename in (os.path.splitext(os.path.join(root, file))[0]  # noqa: C901
     # Change register to condition registers for cmpw/cmpwi/cmplw/cmplwi and beq/bne/blt/ble/bgt/bge
     content = re.sub(r"(cmpw|cmpwi|cmplw|cmplwi|beq|bne|blt|ble|bgt|bge) (r[0-7])", "\\1 c\\2", content)
     # Change register to floating point registers for fmr/lfs/stfs
-    content = re.sub(r"(lfs|stfs) r([0-7])", "\\1 f\\2", content)
+    content = re.sub(r"(lfs|lfd|stfs|stfd) r([0-7])", "\\1 f\\2", content)
     content = re.sub(r"(fmr) r(\d+),r([\d+])", "\\1 f\\2,f\\3", content)
     # Change unsupported offset for symbols specifically for lis->addi and lis->lwz
     r = r"(lis (r\d+),.*?)\+(\d+)(@.*\n)(\t(?:addi|lwz) r\d+,r\d+,.*?)\+\d+(@.*)"
