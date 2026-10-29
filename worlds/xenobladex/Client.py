@@ -745,8 +745,12 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
 
 async def ensure_single_instance(ctx: XenobladeXContext) -> None:
     try:
-        ctx.single_instance_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        ctx.single_instance_socket.bind(('localhost', ctx.xeno_port))
+        if Utils.is_windows:
+            ctx.single_instance_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            ctx.single_instance_socket.bind(('localhost', ctx.xeno_port))
+        elif Utils.is_linux:
+            ctx.single_instance_socket = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)  # type: ignore
+            ctx.single_instance_socket.bind("\0ArchipelagoXenobladeXClient")
     except Exception:
         msg = "Client is already running"
         detail = "Please use the open instance of the client"
