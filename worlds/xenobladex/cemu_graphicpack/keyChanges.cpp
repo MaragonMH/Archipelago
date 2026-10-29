@@ -127,7 +127,7 @@ addItem = 0x02365934
 setValueFloat = 0x02003148
 setValueBool = 0x02003178
 setValueInt = 0x0200a5d0
-getMappedId = 02007f90
+getMappedId = 0x02007f90
 getValueName = 0x020030e0
 0x0263b660 = bl _initImplCharaAdjusted # innerChara
 initImpl_EventCharacter = 0x02635b80
@@ -745,8 +745,8 @@ void _InitCharaSystemVariables(int ** ptr, int* ptr2){
 	setValueFloat(swimDashSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 
 	// Available
-	// setValueBool(valuePtr + 3, mapId, true); // Start with VI_
-	// setValueInt(valuePtr + 3, id, newValueInt); // Start with VB_
+	// setValueBool(valuePtr + 3, mapId, true); // Start with VB_
+	// setValueInt(valuePtr + 3, id, newValueInt); // Start with VI_
 
 }
 
