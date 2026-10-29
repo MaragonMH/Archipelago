@@ -23,6 +23,8 @@ IsReady = 0x021ccdec
 # disable lock party from affinity quests
 0x02296518 = nop
 0x02290ca4 = nop
+# disable lock for elma on new game
+0x027c5004 = li r4,0
 
 # max out fuel for doll with one refill
 0x025ce838 = nop
