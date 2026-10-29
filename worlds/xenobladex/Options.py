@@ -597,7 +597,7 @@ class FastRunSpeed(CemuChoice):
     option_speed_200_percent = 2
     option_speed_250_percent = 3
     option_speed_300_percent = 4
-    default = 3
+    default = 2
     cemu_pack = "AP"
     cemu_option = "FastRunSpeed"
     cemu_selection_names = [
@@ -670,7 +670,8 @@ class IncludeQuestLocations(DefaultOnToggle):
 
 
 class IncludeShopBlueprintLocations(CemuChoice):
-    """Allows you to receive items from the shop blueprints and adds those locations to the pool"""
+    """Allows you to receive items from the shop blueprints and adds those locations to the pool.
+    Logic is not fleshed out right now"""
     display_name = "Include Shop Blueprint Locations"
     default = 0
     option_off = 0
@@ -684,9 +685,10 @@ class IncludeShopBlueprintLocations(CemuChoice):
 
 
 class IncludeShopArmorLocations(CemuChoice):
-    """Allows you to receive items from the shop armor and adds those locations to the pool"""
+    """Allows you to receive items from the shop armor and adds those locations to the pool.
+    Logic is not fleshed out right now"""
     display_name = "Include Shop Armor Locations"
-    default = 1
+    default = 0
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
@@ -698,9 +700,10 @@ class IncludeShopArmorLocations(CemuChoice):
 
 
 class IncludeShopWeaponLocations(CemuChoice):
-    """Allows you to receive items from the shop weapons and adds those locations to the pool"""
+    """Allows you to receive items from the shop weapons and adds those locations to the pool.
+    Logic is not fleshed out right now"""
     display_name = "Include Shop Weapon Locations"
-    default = 1
+    default = 0
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
@@ -712,7 +715,8 @@ class IncludeShopWeaponLocations(CemuChoice):
 
 
 class IncludeShopAugmentLocations(CemuChoice):
-    """Allows you to receive items from the shop augments and adds those locations to the pool"""
+    """Allows you to receive items from the shop augments and adds those locations to the pool.
+    Logic is not fleshed out right now"""
     display_name = "Include Shop Augment Locations"
     default = 0
     option_off = 0
@@ -726,9 +730,10 @@ class IncludeShopAugmentLocations(CemuChoice):
 
 
 class IncludeShopSkellArmorLocations(CemuChoice):
-    """Allows you to receive items from the shop skell armor and adds those locations to the pool"""
+    """Allows you to receive items from the shop skell armor and adds those locations to the pool.
+    Logic is not fleshed out right now"""
     display_name = "Include Shop Skell Armor Locations"
-    default = 1
+    default = 0
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
@@ -740,9 +745,10 @@ class IncludeShopSkellArmorLocations(CemuChoice):
 
 
 class IncludeShopSkellWeaponLocations(CemuChoice):
-    """Allows you to receive items from the shop skell weapon and adds those locations to the pool"""
+    """Allows you to receive items from the shop skell weapon and adds those locations to the pool.
+    Logic is not fleshed out right now"""
     display_name = "Include Shop Skell Weapon Locations"
-    default = 1
+    default = 0
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
@@ -754,7 +760,8 @@ class IncludeShopSkellWeaponLocations(CemuChoice):
 
 
 class IncludeShopSkellAugmentLocations(CemuChoice):
-    """Allows you to receive items from the shop skell augments and adds those locations to the pool"""
+    """Allows you to receive items from the shop skell augments and adds those locations to the pool.
+    Logic is not fleshed out right now"""
     display_name = "Include Shop Skell Augment Locations"
     default = 0
     option_off = 0
@@ -768,9 +775,10 @@ class IncludeShopSkellAugmentLocations(CemuChoice):
 
 
 class IncludeShopSkellFrameLocations(CemuChoice):
-    """Allows you to receive items from the shop skell frames and adds those locations to the pool"""
+    """Allows you to receive items from the shop skell frames and adds those locations to the pool.
+    Logic is not fleshed out right now"""
     display_name = "Include Shop Skell Frame Locations"
-    default = 1
+    default = 0
     option_off = 0
     option_on = 1
     cemu_pack = "AP"
