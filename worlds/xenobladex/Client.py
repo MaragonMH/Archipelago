@@ -623,27 +623,30 @@ class XenobladeXContext(SuperContext):  # type: ignore[misc]
         try:
             mod_path = "graphicPacks/downloadedGraphicPacks/XenobladeChroniclesX/Mods/"
             settings_path = "settings.xml"
-            appdata = None
+            cemu_mod_path = ""
+            cemu_settings_path = ""
+
             if Utils.is_windows:
-                appdata = os.getenv('APPDATA')
+                cemu_appdata_path = os.path.join(os.getenv('APPDATA', ''), "Cemu")
+                cemu_mod_path = os.path.join(cemu_appdata_path, mod_path)
+                cemu_settings_path = os.path.join(cemu_appdata_path, settings_path)
+
             elif Utils.is_linux:
                 home_path = pathlib.Path.home()
-                appdata = os.path.join(home_path, ".var/app/info.cemu.Cemu/config")
-                if not os.path.isdir(appdata):
-                    appdata = os.path.join(home_path, ".local/share")
-            if not appdata:
-                raise Exception(CEMU_APPDATA_NOT_FOUND)
-            cemu_appdata_path = os.path.join(appdata, "Cemu")
-            if not os.path.isdir(cemu_appdata_path):
-                raise Exception(CEMU_SETTINGS_NOT_FOUND)
-            cemu_mod_path = os.path.join(cemu_appdata_path, mod_path)
-            cemu_settings_path = os.path.join(cemu_appdata_path, settings_path)
-            if Utils.is_linux:
+                appdata = os.path.join(home_path, ".local/share/Cemu")
+                cemu_mod_path = os.path.join(appdata, mod_path)
                 config = os.path.join(pathlib.Path.home(), ".config/Cemu")
+                cemu_settings_path = os.path.join(config, settings_path)
+
+            if not os.path.isdir(cemu_mod_path):
+                cemu_mod_path = get_settings()["xenobladex_options"]["cemu_mods"]
                 if not os.path.isdir(cemu_mod_path):
-                    cemu_mod_path = os.path.join(config, mod_path)
-                if not os.path.isdir(cemu_settings_path):
-                    cemu_settings_path = os.path.join(config, settings_path)
+                    raise Exception(CEMU_MODS_NOT_FOUND)
+            if not os.path.isfile(cemu_settings_path):
+                cemu_settings_path = get_settings()["xenobladex_options"]["cemu_settings"]
+                if not os.path.isfile(cemu_settings_path):
+                    raise Exception(CEMU_SETTINGS_NOT_FOUND)
+
             self.copy_cemu_files(cemu_mod_path)
             self.set_cemu_graphic_packs(cemu_settings_path, mod_path, options)
             self.copy_port(cemu_mod_path)
