@@ -135,11 +135,15 @@ getValueName = 0x020030e0
 initImpl_EventCharacter = 0x02635b80
 0x02617f04 = bl _initImplDollAdjusted # doll
 initImpl_UnitCharacter = 0x02612524
+0x0246eecc = bl _initDollActParam # doll act param
 
 
 addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
 getItem = 0x021ab180 # ::ItemDrop::ItemDropManager
 getItemNum = 0x021ab164 # ::ItemDrop::ItemDropManager
+
+# Temporary Debug Functions
+# 0x0200a634 = bl setValueFloatTemporary
 #endif
 
 #ifdef V101E
@@ -379,7 +383,7 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 // Parameters from rules.txt
 int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, drifterRangedWeapon, drifterMeleeWeapon, includeShopBlueprints,
 includeShopArmor, includeShopWeapons, includeShopAugments, includeShopSkellArmor, includeShopSkellWeapons, includeShopSkellAugments, includeShopSkellFrames;
-float fastRunSpeedFloat, fasterRunSpeedFloat, swimSpeedFloat, swimDashSpeedFloat;
+float fastRunSpeedFloat, fasterRunSpeedFloat, swimSpeedFloat, swimDashSpeedFloat, dollCarMaxSpeedFloat;
 int fastRunningState = 0, fasterRunPlaySound = 0, fasterRunningState = 0;
 int _augmentMenuType = 0;
 
@@ -438,6 +442,8 @@ void setKnowledgeBit(int id, int bit, int doll);
 int getKnowledgeBit(int id, int bit, int doll);
 void reqMenuAddItemFromId(int type, int id, int count);
 void _getArchipelagoShop();
+
+void _writeConsole(char* output);
 
 void writeText(int* ptr, int* ptr2, char* text, int color, int glow, int v1, int v2);
 
@@ -736,6 +742,16 @@ int _FindSystemVariableByName(int* valuePtr, char* name){
 	}
 }
 
+// Temporary Debug Function
+void setValueFloatTemporary(float value, int* ptr, int mapId){
+	char buffer[200];
+	int newValue = value * 1000;
+	if(mapId == 0x6) asm("nop");
+	__sprintf_s(buffer, 200, "Name: %s, Id: %d, Value: %d.%03d\n", getValueName(ptr, mapId), mapId, newValue / 1000, newValue % 1000);
+	_writeConsole(buffer);
+	return setValueFloat(value, ptr, mapId);
+}
+
 void _InitCharaSystemVariables(int ** ptr, int* ptr2){
 	int* valuePtr = ptr[1];
 
@@ -757,15 +773,27 @@ void _initImplCharaAdjusted(int ** ptr, int* ptr2){
 	initImpl_EventCharacter(ptr, ptr2);
 }
 
-void _InitDollSystemVariables(int ** ptr, int* ptr2){
+void _InitDollSystemVariables(int ** ptr){
 	int* valuePtr = ptr[1];
+
+	char* name = (char*)"VF_CarDashMaxVelocity";
+	setValueFloat(dollCarMaxSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 
 	// setValueFloat(2.0, valuePtr + 3, _FindSystemVariableByName(valuePtr, (char*)"VF_MoveSpeedHoverDash"));
 }
 
 void _initImplDollAdjusted(int ** ptr, int* ptr2){
-	_InitDollSystemVariables(ptr, ptr2);
+	_InitDollSystemVariables(ptr);
 	initImpl_UnitCharacter(ptr, ptr2);
+}
+
+// from https://xenoblade.github.io/xbx/bdat/common_local_us/CHR_DlActParam.html
+void _initDollActParam(){
+	register int*** self asm("r30");
+	_InitDollSystemVariables(self[5]);
+
+	// original instruction
+	asm("or r3,r26,r26");
 }
 
 
