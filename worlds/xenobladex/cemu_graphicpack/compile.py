@@ -112,6 +112,11 @@ for filename in (os.path.splitext(os.path.join(root, file))[0]  # noqa: C901
     # Change register to floating point registers for fmr/lfs/stfs
     content = re.sub(r"(lfs|lfd|stfs|stfd) r([0-7])", "\\1 f\\2", content)
     content = re.sub(r"(fmr) r(\d+),r([\d+])", "\\1 f\\2,f\\3", content)
+    # Change register to floating point registers for fctiwz/fmuls
+    content = re.sub(r"(fctiwz) r(\d+),(\d+)", "\\1 f\\2,f\\3", content)
+    content = re.sub(r"(fmuls) r(\d+),r(\d+),r(\d+)", "\\1 f\\2,f\\3,f\\4", content)
+    # Change register to floating point registers for fcmpu
+    content = re.sub(r"(fcmpu) r(\d+),r(\d+),r(\d+)", "\\1 cr\\2,f\\3,f\\4", content)
     # Change unsupported offset for symbols specifically for lis->addi and lis->lwz
     r = r"(lis (r\d+),.*?)\+(\d+)(@.*\n)(\t(?:addi|lwz) r\d+,r\d+,.*?)\+\d+(@.*)"
     content = re.sub(r, "\\1\\4\taddi \\2,\\2,\\3\n\\5\\6", content)
