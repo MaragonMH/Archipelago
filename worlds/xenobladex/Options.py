@@ -549,43 +549,63 @@ class MoonJumpHeight(CemuChoice):
 #     ]
 
 
-class WereGoingToPladHorizontal(CemuChoice):
-    """Alters the skell flight speed"""
-    display_name = "Were Going To Plad"
-    option_none = 0
-    option_speed_125_percent = 1
-    option_speed_150_percent = 2
-    option_speed_200_percent = 3
-    option_speed_300_percent = 4
-    default = 3
-    cemu_pack = "PhysicsWereGoingToPlad"
-    cemu_option = "Horizontal Speed"
-    cemu_selection_names = [
-        "Speed x1",
-        "Speed x1.25",
-        "Speed x1.5",
-        "Speed x2",
-        "Speed x3",
-    ]
+# class WereGoingToPladHorizontal(CemuChoice):
+#     """Alters the skell flight speed"""
+#     display_name = "Were Going To Plad"
+#     option_none = 0
+#     option_speed_125_percent = 1
+#     option_speed_150_percent = 2
+#     option_speed_200_percent = 3
+#     option_speed_300_percent = 4
+#     default = 3
+#     cemu_pack = "PhysicsWereGoingToPlad"
+#     cemu_option = "Horizontal Speed"
+#     cemu_selection_names = [
+#         "Speed x1",
+#         "Speed x1.25",
+#         "Speed x1.5",
+#         "Speed x2",
+#         "Speed x3",
+#     ]
 
 
-class WereGoingToPladVertical(CemuChoice):
-    """Alters the skell flight speed"""
-    display_name = "Were Going To Plad"
+# class WereGoingToPladVertical(CemuChoice):
+#     """Alters the skell flight speed"""
+#     display_name = "Were Going To Plad"
+#     option_none = 0
+#     option_speed_125_percent = 1
+#     option_speed_150_percent = 2
+#     option_speed_200_percent = 3
+#     option_speed_300_percent = 4
+#     default = 3
+#     cemu_pack = "PhysicsWereGoingToPlad"
+#     cemu_option = "Vertical Speed"
+#     cemu_selection_names = [
+#         "Speed x1",
+#         "Speed x1.25",
+#         "Speed x1.5",
+#         "Speed x2",
+#         "Speed x3",
+#     ]
+
+
+class FastWalkSpeed(CemuChoice):
+    """Alters the walking speed"""
+    display_name = "Fast Run Speed"
     option_none = 0
-    option_speed_125_percent = 1
-    option_speed_150_percent = 2
-    option_speed_200_percent = 3
+    option_speed_150_percent = 1
+    option_speed_200_percent = 2
+    option_speed_250_percent = 3
     option_speed_300_percent = 4
-    default = 3
-    cemu_pack = "PhysicsWereGoingToPlad"
-    cemu_option = "Vertical Speed"
+    default = 2
+    cemu_pack = "AP"
+    cemu_option = "FastRunSpeed"
     cemu_selection_names = [
-        "Speed x1",
-        "Speed x1.25",
-        "Speed x1.5",
-        "Speed x2",
-        "Speed x3",
+        "1.0x",
+        "1.5x",
+        "2.0x",
+        "2.5x",
+        "3.0x",
     ]
 
 
@@ -1037,7 +1057,6 @@ class XenobladeXOptions(PerGameCommonOptions):
     # Locations
     clp: IncludeCollectopediaLocations
     loc: IncludeLocationLocations
-    # shp: IncludeShopLocations
     # qst: IncludeQuestLocations
     ebk: IncludeEnemyBookLocations
     enemy_book_threshold: EnemyBookThreshold
@@ -1101,8 +1120,9 @@ class XenobladeXOptions(PerGameCommonOptions):
     moon_jump_width: MoonJumpWidth
     moon_jump_height: MoonJumpHeight
     # run_forrest_run: RunForrestRun
-    were_going_to_plad_horizontal: WereGoingToPladHorizontal
-    were_going_to_plad_vertical: WereGoingToPladVertical
+    # were_going_to_plad_horizontal: WereGoingToPladHorizontal
+    # were_going_to_plad_vertical: WereGoingToPladVertical
+    fast_walk_speed: FastRunSpeed
     fast_run_speed: FastRunSpeed
     faster_run_speed: FasterRunSpeed
 
@@ -1188,8 +1208,9 @@ option_groups: list[OptionGroup] = [
         MoonJumpWidth,
         MoonJumpHeight,
         # RunForrestRun,
-        WereGoingToPladHorizontal,
-        WereGoingToPladVertical,
+        # WereGoingToPladHorizontal,
+        # WereGoingToPladVertical,
+        FastWalkSpeed,
         FastRunSpeed,
         FasterRunSpeed,
     ])

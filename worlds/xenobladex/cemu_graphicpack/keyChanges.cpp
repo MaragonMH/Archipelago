@@ -137,6 +137,9 @@ initImpl_EventCharacter = 0x02635b80
 0x02617f04 = bl _initImplDollAdjusted # doll
 initImpl_UnitCharacter = 0x02612524
 0x0246eecc = bl _initDollActParam # doll act param
+# remove original hardcoded values
+0x02622110 = nop # just sets to 1.0 on entering run doll
+0x0261fed8 = nop # on entering walk doll
 
 
 addItemEquipment = 0x02366cf0 # ::ItemBox::ItemType::Type::ItemHandle
@@ -384,7 +387,7 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 // Parameters from rules.txt
 int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, drifterRangedWeapon, drifterMeleeWeapon, includeShopBlueprints,
 includeShopArmor, includeShopWeapons, includeShopAugments, includeShopSkellArmor, includeShopSkellWeapons, includeShopSkellAugments, includeShopSkellFrames;
-float fastRunSpeedFloat, fasterRunSpeedFloat, swimSpeedFloat, swimDashSpeedFloat, fasterSwimDashSpeedFloat, dollCarMaxSpeedFloat;
+float fastWalkSpeedFloat, fastRunSpeedFloat, fasterRunSpeedFloat;
 int fastRunningState = 0, fasterRunPlaySound = 0, fasterRunningState = 0;
 int _augmentMenuType = 0;
 
@@ -745,10 +748,10 @@ int _FindSystemVariableByName(int* valuePtr, char* name){
 
 int** _setFasterSwimSpeed(int** ptr){
 	char* name = (char*)"VF_MoveSpeedSwimDash";
-	float value = swimDashSpeedFloat;
+	float value = fastRunSpeedFloat;
 	if (fastRunningState == 1 && fasterRunningState == 1){
 		// Load float value
-		value = fasterSwimDashSpeedFloat;
+		value = fasterRunSpeedFloat;
 		if (fasterRunPlaySound == 1){
 			fasterRunPlaySound = 0;
 			_playSound(0x2d4);
@@ -762,11 +765,15 @@ int** _setFasterSwimSpeed(int** ptr){
 	return ptr;
 }
 
+float getValueFloatDirect(float** handle, int mapId){
+	return handle[0xa7][mapId * 3 + 2];
+}
+
 // Temporary Debug Function
 void setValueFloatTemporary(float value, int* ptr, int mapId){
 	char buffer[200];
 	int newValue = value * 1000;
-	// if(mapId == 0x6) asm("nop");
+	// if(mapId == 0x79) asm("nop");
 	__sprintf_s(buffer, 200, "Name: %s, Id: %d, Value: %d.%03d\n", getValueName(ptr, mapId), mapId, newValue / 1000, newValue % 1000);
 	_writeConsole(buffer);
 	return setValueFloat(value, ptr, mapId);
@@ -778,14 +785,16 @@ void _InitCharaSystemVariables(int ** ptr, int* ptr2){
 	// Addional functions for debugging id mapping
 	// int mapId = getMappedId(valuePtr, 0, id);
 	char* name = (char*)"VF_MoveSpeedSwimRun";
-	setValueFloat(swimSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+	setValueFloat(fastWalkSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 	name = (char*)"VF_MoveSpeedSwimDash";
-	setValueFloat(swimDashSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+	setValueFloat(fastRunSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+
+	name = (char*)"VF_MoveSpeedRun";
+	setValueFloat(fastRunSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 
 	// Available
 	// setValueBool(valuePtr + 3, mapId, true); // Start with VB_
 	// setValueInt(valuePtr + 3, id, newValueInt); // Start with VI_
-
 }
 
 void _initImplCharaAdjusted(int ** ptr, int* ptr2){
@@ -793,13 +802,24 @@ void _initImplCharaAdjusted(int ** ptr, int* ptr2){
 	initImpl_EventCharacter(ptr, ptr2);
 }
 
+float dollMaxVelocity = 1.0;
 void _InitDollSystemVariables(int ** ptr){
 	int* valuePtr = ptr[1];
 
 	char* name = (char*)"VF_CarDashMaxVelocity";
-	setValueFloat(dollCarMaxSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+	float value = getValueFloatDirect((float**)valuePtr, _FindSystemVariableByName(valuePtr, name));
+	if(value != dollMaxVelocity){
+		value *= fastRunSpeedFloat;
+		dollMaxVelocity = value;
+	}
+	setValueFloat(value, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 
-	// setValueFloat(2.0, valuePtr + 3, _FindSystemVariableByName(valuePtr, (char*)"VF_MoveSpeedHoverDash"));
+	name = (char*)"VF_MoveSpeedFieldMove";
+	setValueFloat(fastWalkSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+	name = (char*)"VF_MoveSpeedHoverDash";
+	setValueFloat(fastRunSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+	name = (char*)"VF_MoveSpeedRun";
+	setValueFloat(fastRunSpeedFloat, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
 }
 
 void _initImplDollAdjusted(int ** ptr, int* ptr2){

@@ -26,15 +26,10 @@ $includeShopSkellFrames = 1
 $characterLevel = 1
 $drifterRangedWeapon = 1;
 $drifterMeleeWeapon = 11;
-$fastRunSpeedFloat = 2.5;
+$fastWalkSpeedFloat = 2.0;
+$fastRunSpeedFloat = 2.0;
 $fasterRunSpeedFloat = 10.0;
 $curlPort = 45872
-
-# Customizeable variables
-$swimSpeedFloat = 3.0
-$swimDashSpeedFloat = 3.0
-$fasterSwimDashSpeedFloat = 10.0;
-$dollCarMaxSpeedFloat = 90.0
 
 [Preset]
 name = "on"
@@ -305,6 +300,31 @@ $drifterMeleeWeapon = 10
 name = "Photon Sabre"
 category = "DrifterMeleeWeapon"
 $drifterMeleeWeapon = 12
+
+[Preset]
+name = "1.0x"
+category = "FastWalkSpeed"
+$fastWalkSpeedFloat = 1.0
+
+[Preset]
+name = "1.5x"
+category = "FastWalkSpeed"
+$fastWalkSpeedFloat = 1.5
+
+[Preset]
+name = "2.0x"
+category = "FastWalkSpeed"
+$fastWalkSpeedFloat = 2.0
+
+[Preset]
+name = "2.5x"
+category = "FastWalkSpeed"
+$fastWalkSpeedFloat = 2.5
+
+[Preset]
+name = "3.0x"
+category = "FastWalkSpeed"
+$fastWalkSpeedFloat = 3.0
 
 [Preset]
 name = "1.0x"
