@@ -46,6 +46,8 @@ swimSpeedFloat:
 	.float    $swimSpeedFloat
 swimDashSpeedFloat:
 	.float    $swimDashSpeedFloat
+fasterSwimDashSpeedFloat:
+	.float    $fasterSwimDashSpeedFloat
 dollCarMaxSpeedFloat:
 	.float    $dollCarMaxSpeedFloat
 fastRunningState:
@@ -1558,7 +1560,67 @@ _keyChanges_L141:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-_keyChanges_LC8:
+_keyChanges_LC7:
+	.string "VF_MoveSpeedSwimDash"
+_setFasterSwimSpeed:
+	stwu r1,-48(r1)
+	mflr r0
+	stw r0,52(r1)
+	stw r30,40(r1)
+	stw r31,44(r1)
+	mr r31,r1
+	stw r3,24(r31)
+	lis r9,_keyChanges_LC7@ha
+	addi r9,r9,_keyChanges_LC7@l
+	stw r9,12(r31)
+	lis r9,swimDashSpeedFloat@ha
+	lfs f0,swimDashSpeedFloat@l(r9)
+	stfs f0,8(r31)
+	lis r9,fastRunningState@ha
+	lwz r9,fastRunningState@l(r9)
+	cmpwi cr0,r9,1
+	bne cr0,_keyChanges_L143
+	lis r9,fasterRunningState@ha
+	lwz r9,fasterRunningState@l(r9)
+	cmpwi cr0,r9,1
+	bne cr0,_keyChanges_L143
+	lis r9,fasterSwimDashSpeedFloat@ha
+	lfs f0,fasterSwimDashSpeedFloat@l(r9)
+	stfs f0,8(r31)
+	lis r9,fasterRunPlaySound@ha
+	lwz r9,fasterRunPlaySound@l(r9)
+	cmpwi cr0,r9,1
+	bne cr0,_keyChanges_L143
+	lis r9,fasterRunPlaySound@ha
+	li r10,0
+	stw r10,fasterRunPlaySound@l(r9)
+	li r3,724
+	bl _playSound
+_keyChanges_L143:
+	lwz r9,24(r31)
+	lwz r9,4(r9)
+	stw r9,16(r31)
+	lwz r9,16(r31)
+	addi r30,r9,12
+	lwz r4,12(r31)
+	lwz r3,16(r31)
+	bl _FindSystemVariableByName
+	mr r9,r3
+	mr r4,r9
+	mr r3,r30
+	lfs f1,8(r31)
+	bl setValueFloat
+	li r4,2
+	lwz r9,24(r31)
+	mr r3,r9
+	addi r11,r31,48
+	lwz r0,4(r11)
+	mtlr r0
+	lwz r30,-8(r11)
+	lwz r31,-4(r11)
+	mr r1,r11
+	blr
+_keyChanges_LC9:
 	.string "Name: %s, Id: %d, Value: %d.%03d\n"
 setValueFloatTemporary:
 	stwu r1,-256(r1)
@@ -1570,18 +1632,13 @@ setValueFloatTemporary:
 	stw r3,220(r31)
 	stw r4,224(r31)
 	lfs f12,216(r31)
-	lis r9,_keyChanges_LC7@ha
-	lfs f0,_keyChanges_LC7@l(r9)
+	lis r9,_keyChanges_LC8@ha
+	lfs f0,_keyChanges_LC8@l(r9)
 	fmuls f0,f12,f0
 	fctiwz f0,f0
 	stfd f0,232(r31)
 	lwz r9,236(r31)
 	stw r9,8(r31)
-	lwz r9,224(r31)
-	cmpwi cr0,r9,6
-	bne cr0,_keyChanges_L143
-	nop
-_keyChanges_L143:
 	lwz r4,224(r31)
 	lwz r3,220(r31)
 	bl getValueName
@@ -1606,8 +1663,8 @@ _keyChanges_L143:
 	mr r9,r10
 	mr r8,r7
 	lwz r7,224(r31)
-	lis r10,_keyChanges_LC8@ha
-	addi r5,r10,_keyChanges_LC8@l
+	lis r10,_keyChanges_LC9@ha
+	addi r5,r10,_keyChanges_LC9@l
 	li r4,200
 	crxor cr6,cr6,cr6
 	lis r12,_after_keyChanges_3__sprintf_s@ha
@@ -1632,10 +1689,8 @@ _after_keyChanges_3__sprintf_s:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-_keyChanges_LC9:
-	.string "VF_MoveSpeedSwimRun"
 _keyChanges_LC10:
-	.string "VF_MoveSpeedSwimDash"
+	.string "VF_MoveSpeedSwimRun"
 _InitCharaSystemVariables:
 	stwu r1,-48(r1)
 	mflr r0
@@ -1649,8 +1704,8 @@ _InitCharaSystemVariables:
 	lwz r9,24(r31)
 	lwz r9,4(r9)
 	stw r9,8(r31)
-	lis r9,_keyChanges_LC9@ha
-	addi r9,r9,_keyChanges_LC9@l
+	lis r9,_keyChanges_LC10@ha
+	addi r9,r9,_keyChanges_LC10@l
 	stw r9,12(r31)
 	lis r9,swimSpeedFloat@ha
 	lfs f31,swimSpeedFloat@l(r9)
@@ -1664,8 +1719,8 @@ _InitCharaSystemVariables:
 	mr r3,r30
 	fmr f1,f31
 	bl setValueFloat
-	lis r9,_keyChanges_LC10@ha
-	addi r9,r9,_keyChanges_LC10@l
+	lis r9,_keyChanges_LC7@ha
+	addi r9,r9,_keyChanges_LC7@l
 	stw r9,12(r31)
 	lis r9,swimDashSpeedFloat@ha
 	lfs f31,swimDashSpeedFloat@l(r9)
@@ -1842,29 +1897,29 @@ _SetBdatValue:
 	stw r9,32(r31)
 	lwz r9,56(r31)
 	cmpwi cr0,r9,1
-	bne cr0,_keyChanges_L151
-	lwz r9,52(r31)
-	mr r10,r9
-	lwz r9,32(r31)
-	stb r10,0(r9)
-	b _keyChanges_L154
-_keyChanges_L151:
-	lwz r9,56(r31)
-	cmpwi cr0,r9,2
 	bne cr0,_keyChanges_L153
 	lwz r9,52(r31)
 	mr r10,r9
 	lwz r9,32(r31)
-	sth r10,0(r9)
-	b _keyChanges_L154
+	stb r10,0(r9)
+	b _keyChanges_L156
 _keyChanges_L153:
 	lwz r9,56(r31)
+	cmpwi cr0,r9,2
+	bne cr0,_keyChanges_L155
+	lwz r9,52(r31)
+	mr r10,r9
+	lwz r9,32(r31)
+	sth r10,0(r9)
+	b _keyChanges_L156
+_keyChanges_L155:
+	lwz r9,56(r31)
 	cmpwi cr0,r9,4
-	bne cr0,_keyChanges_L154
+	bne cr0,_keyChanges_L156
 	lwz r9,32(r31)
 	lwz r10,52(r31)
 	stw r10,0(r9)
-_keyChanges_L154:
+_keyChanges_L156:
 	nop
 	addi r11,r31,80
 	lwz r0,4(r11)
@@ -1964,11 +2019,11 @@ _isUnlock:
 	srwi r9,r9,5
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L157
+	beq cr0,_keyChanges_L159
 	li r4,1
 	lwz r3,8(r31)
 	bl EntryUnion
-_keyChanges_L157:
+_keyChanges_L159:
 	li r3,28
 	bl _hasPreciousItem
 	mr r9,r3
@@ -2019,89 +2074,89 @@ _checkType:
 	stw r3,8(r31)
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	ble cr0,_keyChanges_L164
-	lwz r9,8(r31)
-	cmpwi cr0,r9,5
-	bgt cr0,_keyChanges_L164
-	lis r9,disableGroundArmor@ha
-	lwz r9,disableGroundArmor@l(r9)
-	b _keyChanges_L165
-_keyChanges_L164:
-	lwz r9,8(r31)
-	cmpwi cr0,r9,5
 	ble cr0,_keyChanges_L166
 	lwz r9,8(r31)
-	cmpwi cr0,r9,7
+	cmpwi cr0,r9,5
 	bgt cr0,_keyChanges_L166
-	lis r9,disableGroundWeapons@ha
-	lwz r9,disableGroundWeapons@l(r9)
-	b _keyChanges_L165
+	lis r9,disableGroundArmor@ha
+	lwz r9,disableGroundArmor@l(r9)
+	b _keyChanges_L167
 _keyChanges_L166:
 	lwz r9,8(r31)
-	cmpwi cr0,r9,9
-	ble cr0,_keyChanges_L167
-	lwz r9,8(r31)
-	cmpwi cr0,r9,14
-	bgt cr0,_keyChanges_L167
-	lis r9,disableSkellArmor@ha
-	lwz r9,disableSkellArmor@l(r9)
-	b _keyChanges_L165
-_keyChanges_L167:
-	lwz r9,8(r31)
-	cmpwi cr0,r9,14
+	cmpwi cr0,r9,5
 	ble cr0,_keyChanges_L168
 	lwz r9,8(r31)
-	cmpwi cr0,r9,19
+	cmpwi cr0,r9,7
 	bgt cr0,_keyChanges_L168
-	lis r9,disableSkellWeapons@ha
-	lwz r9,disableSkellWeapons@l(r9)
-	b _keyChanges_L165
+	lis r9,disableGroundWeapons@ha
+	lwz r9,disableGroundWeapons@l(r9)
+	b _keyChanges_L167
 _keyChanges_L168:
 	lwz r9,8(r31)
-	cmpwi cr0,r9,19
+	cmpwi cr0,r9,9
 	ble cr0,_keyChanges_L169
 	lwz r9,8(r31)
-	cmpwi cr0,r9,21
+	cmpwi cr0,r9,14
 	bgt cr0,_keyChanges_L169
-	lis r9,disableGroundAugments@ha
-	lwz r9,disableGroundAugments@l(r9)
-	b _keyChanges_L165
+	lis r9,disableSkellArmor@ha
+	lwz r9,disableSkellArmor@l(r9)
+	b _keyChanges_L167
 _keyChanges_L169:
 	lwz r9,8(r31)
-	cmpwi cr0,r9,21
+	cmpwi cr0,r9,14
 	ble cr0,_keyChanges_L170
 	lwz r9,8(r31)
-	cmpwi cr0,r9,24
+	cmpwi cr0,r9,19
 	bgt cr0,_keyChanges_L170
-	lis r9,disableSkellAugments@ha
-	lwz r9,disableSkellAugments@l(r9)
-	b _keyChanges_L165
+	lis r9,disableSkellWeapons@ha
+	lwz r9,disableSkellWeapons@l(r9)
+	b _keyChanges_L167
 _keyChanges_L170:
 	lwz r9,8(r31)
-	cmpwi cr0,r9,29
-	bne cr0,_keyChanges_L171
-	lis r9,disableImportantItems@ha
-	lwz r9,disableImportantItems@l(r9)
-	b _keyChanges_L165
+	cmpwi cr0,r9,19
+	ble cr0,_keyChanges_L171
+	lwz r9,8(r31)
+	cmpwi cr0,r9,21
+	bgt cr0,_keyChanges_L171
+	lis r9,disableGroundAugments@ha
+	lwz r9,disableGroundAugments@l(r9)
+	b _keyChanges_L167
 _keyChanges_L171:
 	lwz r9,8(r31)
-	cmpwi cr0,r9,65
-	bne cr0,_keyChanges_L172
-	lis r9,disableBlueprints@ha
-	lwz r9,disableBlueprints@l(r9)
-	b _keyChanges_L165
+	cmpwi cr0,r9,21
+	ble cr0,_keyChanges_L172
+	lwz r9,8(r31)
+	cmpwi cr0,r9,24
+	bgt cr0,_keyChanges_L172
+	lis r9,disableSkellAugments@ha
+	lwz r9,disableSkellAugments@l(r9)
+	b _keyChanges_L167
 _keyChanges_L172:
 	lwz r9,8(r31)
+	cmpwi cr0,r9,29
+	bne cr0,_keyChanges_L173
+	lis r9,disableImportantItems@ha
+	lwz r9,disableImportantItems@l(r9)
+	b _keyChanges_L167
+_keyChanges_L173:
+	lwz r9,8(r31)
+	cmpwi cr0,r9,65
+	bne cr0,_keyChanges_L174
+	lis r9,disableBlueprints@ha
+	lwz r9,disableBlueprints@l(r9)
+	b _keyChanges_L167
+_keyChanges_L174:
+	lwz r9,8(r31)
 	cmpwi cr0,r9,23
-	ble cr0,_keyChanges_L173
+	ble cr0,_keyChanges_L175
 	lwz r9,8(r31)
 	cmpwi cr0,r9,28
-	beq cr0,_keyChanges_L173
+	beq cr0,_keyChanges_L175
 	li r9,1
-	b _keyChanges_L165
-_keyChanges_L173:
+	b _keyChanges_L167
+_keyChanges_L175:
 	li r9,0
-_keyChanges_L165:
+_keyChanges_L167:
 	mr r3,r9
 	addi r11,r31,32
 	lwz r31,-4(r11)
@@ -2124,17 +2179,17 @@ _addRewardItemEquipment:
 	subfe r9,r10,r9
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L175
+	beq cr0,_keyChanges_L177
 	lwz r6,20(r31)
 	lwz r5,16(r31)
 	lwz r4,12(r31)
 	lwz r3,8(r31)
 	bl addItemEquipment
 	mr r9,r3
-	b _keyChanges_L176
-_keyChanges_L175:
+	b _keyChanges_L178
+_keyChanges_L177:
 	li r9,0
-_keyChanges_L176:
+_keyChanges_L178:
 	mr r3,r9
 	addi r11,r31,32
 	lwz r0,4(r11)
@@ -2159,14 +2214,14 @@ _addNumAdjusted:
 	subfe r9,r10,r9
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L180
+	beq cr0,_keyChanges_L182
 	lwz r6,20(r31)
 	lwz r5,16(r31)
 	lwz r4,12(r31)
 	lwz r3,8(r31)
 	bl addNum
 	nop
-_keyChanges_L180:
+_keyChanges_L182:
 	nop
 	addi r11,r31,32
 	lwz r0,4(r11)
@@ -2190,16 +2245,16 @@ _addItemAdjusted:
 	subfe r9,r10,r9
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L182
+	beq cr0,_keyChanges_L184
 	lwz r5,16(r31)
 	lwz r4,12(r31)
 	lwz r3,8(r31)
 	bl addItem
 	mr r9,r3
-	b _keyChanges_L183
-_keyChanges_L182:
+	b _keyChanges_L185
+_keyChanges_L184:
 	li r9,0
-_keyChanges_L183:
+_keyChanges_L185:
 	mr r3,r9
 	addi r11,r31,32
 	lwz r0,4(r11)
@@ -2219,12 +2274,12 @@ _addInnerExpAdjusted:
 	lis r9,characterLevel@ha
 	lwz r9,characterLevel@l(r9)
 	cmpwi cr0,r9,0
-	bne cr0,_keyChanges_L186
+	bne cr0,_keyChanges_L188
 	lwz r5,16(r31)
 	lwz r4,12(r31)
 	lwz r3,8(r31)
 	bl addInnerExp
-_keyChanges_L186:
+_keyChanges_L188:
 	nop
 	addi r11,r31,32
 	lwz r0,4(r11)
@@ -2245,132 +2300,132 @@ _getFlagValAdjusted:
 	stw r6,20(r31)
 	mr r9,r30
 	cmpwi cr0,r9,2
-	bne cr0,_keyChanges_L188
+	bne cr0,_keyChanges_L190
 	lwz r9,16(r31)
 	cmpwi cr0,r9,246
-	beq cr0,_keyChanges_L189
+	beq cr0,_keyChanges_L191
 	lwz r9,16(r31)
 	cmpwi cr0,r9,251
-	beq cr0,_keyChanges_L189
+	beq cr0,_keyChanges_L191
 	lwz r9,16(r31)
 	cmpwi cr0,r9,256
-	bne cr0,_keyChanges_L188
-_keyChanges_L189:
-	li r9,1
-	b _keyChanges_L190
-_keyChanges_L188:
-	mr r9,r30
-	cmpwi cr0,r9,7
-	bne cr0,_keyChanges_L191
-	lwz r9,16(r31)
-	cmpwi cr0,r9,26
-	beq cr0,_keyChanges_L192
-	lwz r9,16(r31)
-	cmpwi cr0,r9,27
-	beq cr0,_keyChanges_L192
-	lwz r9,16(r31)
-	cmpwi cr0,r9,28
-	bne cr0,_keyChanges_L191
-_keyChanges_L192:
-	li r9,1
-	b _keyChanges_L190
+	bne cr0,_keyChanges_L190
 _keyChanges_L191:
+	li r9,1
+	b _keyChanges_L192
+_keyChanges_L190:
 	mr r9,r30
 	cmpwi cr0,r9,7
 	bne cr0,_keyChanges_L193
 	lwz r9,16(r31)
-	cmpwi cr0,r9,32
+	cmpwi cr0,r9,26
 	beq cr0,_keyChanges_L194
 	lwz r9,16(r31)
-	cmpwi cr0,r9,33
+	cmpwi cr0,r9,27
 	beq cr0,_keyChanges_L194
 	lwz r9,16(r31)
-	cmpwi cr0,r9,34
+	cmpwi cr0,r9,28
 	bne cr0,_keyChanges_L193
 _keyChanges_L194:
 	li r9,1
-	b _keyChanges_L190
+	b _keyChanges_L192
 _keyChanges_L193:
 	mr r9,r30
 	cmpwi cr0,r9,7
 	bne cr0,_keyChanges_L195
 	lwz r9,16(r31)
-	cmpwi cr0,r9,287
+	cmpwi cr0,r9,32
 	beq cr0,_keyChanges_L196
 	lwz r9,16(r31)
-	cmpwi cr0,r9,288
+	cmpwi cr0,r9,33
 	beq cr0,_keyChanges_L196
 	lwz r9,16(r31)
-	cmpwi cr0,r9,289
+	cmpwi cr0,r9,34
 	bne cr0,_keyChanges_L195
 _keyChanges_L196:
 	li r9,1
-	b _keyChanges_L190
+	b _keyChanges_L192
 _keyChanges_L195:
 	mr r9,r30
 	cmpwi cr0,r9,7
 	bne cr0,_keyChanges_L197
 	lwz r9,16(r31)
-	cmpwi cr0,r9,550
+	cmpwi cr0,r9,287
 	beq cr0,_keyChanges_L198
 	lwz r9,16(r31)
-	cmpwi cr0,r9,551
+	cmpwi cr0,r9,288
 	beq cr0,_keyChanges_L198
 	lwz r9,16(r31)
-	cmpwi cr0,r9,552
+	cmpwi cr0,r9,289
 	bne cr0,_keyChanges_L197
 _keyChanges_L198:
 	li r9,1
-	b _keyChanges_L190
+	b _keyChanges_L192
 _keyChanges_L197:
 	mr r9,r30
 	cmpwi cr0,r9,7
 	bne cr0,_keyChanges_L199
 	lwz r9,16(r31)
-	cmpwi cr0,r9,810
+	cmpwi cr0,r9,550
 	beq cr0,_keyChanges_L200
 	lwz r9,16(r31)
-	cmpwi cr0,r9,811
+	cmpwi cr0,r9,551
 	beq cr0,_keyChanges_L200
 	lwz r9,16(r31)
-	cmpwi cr0,r9,812
+	cmpwi cr0,r9,552
 	bne cr0,_keyChanges_L199
 _keyChanges_L200:
 	li r9,1
-	b _keyChanges_L190
+	b _keyChanges_L192
 _keyChanges_L199:
 	mr r9,r30
-	cmpwi cr0,r9,6
+	cmpwi cr0,r9,7
 	bne cr0,_keyChanges_L201
 	lwz r9,16(r31)
-	cmpwi cr0,r9,1587
+	cmpwi cr0,r9,810
 	beq cr0,_keyChanges_L202
 	lwz r9,16(r31)
-	cmpwi cr0,r9,1588
+	cmpwi cr0,r9,811
 	beq cr0,_keyChanges_L202
 	lwz r9,16(r31)
-	cmpwi cr0,r9,1589
+	cmpwi cr0,r9,812
 	bne cr0,_keyChanges_L201
 _keyChanges_L202:
 	li r9,1
-	b _keyChanges_L190
+	b _keyChanges_L192
 _keyChanges_L201:
 	mr r9,r30
 	cmpwi cr0,r9,6
 	bne cr0,_keyChanges_L203
 	lwz r9,16(r31)
-	cmpwi cr0,r9,1590
+	cmpwi cr0,r9,1587
 	beq cr0,_keyChanges_L204
 	lwz r9,16(r31)
-	cmpwi cr0,r9,1591
+	cmpwi cr0,r9,1588
 	beq cr0,_keyChanges_L204
 	lwz r9,16(r31)
-	cmpwi cr0,r9,1592
+	cmpwi cr0,r9,1589
 	bne cr0,_keyChanges_L203
 _keyChanges_L204:
 	li r9,1
-	b _keyChanges_L190
+	b _keyChanges_L192
 _keyChanges_L203:
+	mr r9,r30
+	cmpwi cr0,r9,6
+	bne cr0,_keyChanges_L205
+	lwz r9,16(r31)
+	cmpwi cr0,r9,1590
+	beq cr0,_keyChanges_L206
+	lwz r9,16(r31)
+	cmpwi cr0,r9,1591
+	beq cr0,_keyChanges_L206
+	lwz r9,16(r31)
+	cmpwi cr0,r9,1592
+	bne cr0,_keyChanges_L205
+_keyChanges_L206:
+	li r9,1
+	b _keyChanges_L192
+_keyChanges_L205:
 	lwz r6,20(r31)
 	lwz r5,16(r31)
 	lwz r4,12(r31)
@@ -2378,7 +2433,7 @@ _keyChanges_L203:
 	bl getFlagVal
 	mr r9,r3
 	nop
-_keyChanges_L190:
+_keyChanges_L192:
 	mr r3,r9
 	addi r11,r31,32
 	lwz r0,4(r11)
@@ -2406,8 +2461,8 @@ _getItemNumAdjusted:
 	stw r9,16(r31)
 	li r9,0
 	stw r9,12(r31)
-	b _keyChanges_L206
-_keyChanges_L208:
+	b _keyChanges_L208
+_keyChanges_L210:
 	lwz r6,12(r31)
 	lwz r5,32(r31)
 	lwz r4,28(r31)
@@ -2424,19 +2479,19 @@ _keyChanges_L208:
 	subfe r9,r10,r9
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L207
+	beq cr0,_keyChanges_L209
 	lwz r9,8(r31)
 	addi r9,r9,1
 	stw r9,8(r31)
-_keyChanges_L207:
+_keyChanges_L209:
 	lwz r9,12(r31)
 	addi r9,r9,1
 	stw r9,12(r31)
-_keyChanges_L206:
+_keyChanges_L208:
 	lwz r10,12(r31)
 	lwz r9,16(r31)
 	cmpw cr0,r10,r9
-	blt cr0,_keyChanges_L208
+	blt cr0,_keyChanges_L210
 	lwz r9,8(r31)
 	mr r3,r9
 	addi r11,r31,48
@@ -2472,11 +2527,11 @@ _itemLoopAdjustment:
 	subfe r9,r10,r9
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L211
+	beq cr0,_keyChanges_L213
 	lwz r9,40(r31)
 	addi r9,r9,28
 	stw r9,40(r31)
-_keyChanges_L211:
+_keyChanges_L213:
 	lwz r9,40(r31)
 	mr r3,r9
 	addi r11,r31,64
@@ -2504,12 +2559,12 @@ _itemLoopContinue:
 	lwz r10,36(r31)
 	lwz r9,8(r31)
 	cmpw cr0,r10,r9
-	bge cr0,_keyChanges_L214
+	bge cr0,_keyChanges_L216
 	li r9,1
-	b _keyChanges_L215
-_keyChanges_L214:
+	b _keyChanges_L217
+_keyChanges_L216:
 	li r9,0
-_keyChanges_L215:
+_keyChanges_L217:
 	mr r3,r9
 	addi r11,r31,48
 	lwz r0,4(r11)
@@ -2526,29 +2581,7 @@ _prepareBladeTerminal:
 	lis r9,bladeTerminalScenarioFlagPtr@ha
 	lwz r9,bladeTerminalScenarioFlagPtr@l(r9)
 	cmpwi cr0,r9,3001
-	bne cr0,_keyChanges_L217
-	li r3,28
-	bl _hasPreciousItem
-	mr r9,r3
-	addic r10,r9,-1
-	subfe r9,r10,r9
-	rlwinm r9,r9,0,24,31
-	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L218
-	lis r9,bladeTerminalScenarioFlagPtr@ha
-	li r10,0
-	stw r10,bladeTerminalScenarioFlagPtr@l(r9)
-	b _keyChanges_L217
-_keyChanges_L218:
-	lis r9,bladeTerminalScenarioFlagPtr@ha
-	lis r10,0x7f
-	ori r10,r10,0xffff
-	stw r10,bladeTerminalScenarioFlagPtr@l(r9)
-_keyChanges_L217:
-	lis r9,shopTerminalScenarioFlagPtr@ha
-	lwz r9,shopTerminalScenarioFlagPtr@l(r9)
-	cmpwi cr0,r9,2001
-	bne cr0,_keyChanges_L221
+	bne cr0,_keyChanges_L219
 	li r3,28
 	bl _hasPreciousItem
 	mr r9,r3
@@ -2557,16 +2590,38 @@ _keyChanges_L217:
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
 	beq cr0,_keyChanges_L220
+	lis r9,bladeTerminalScenarioFlagPtr@ha
+	li r10,0
+	stw r10,bladeTerminalScenarioFlagPtr@l(r9)
+	b _keyChanges_L219
+_keyChanges_L220:
+	lis r9,bladeTerminalScenarioFlagPtr@ha
+	lis r10,0x7f
+	ori r10,r10,0xffff
+	stw r10,bladeTerminalScenarioFlagPtr@l(r9)
+_keyChanges_L219:
+	lis r9,shopTerminalScenarioFlagPtr@ha
+	lwz r9,shopTerminalScenarioFlagPtr@l(r9)
+	cmpwi cr0,r9,2001
+	bne cr0,_keyChanges_L223
+	li r3,28
+	bl _hasPreciousItem
+	mr r9,r3
+	addic r10,r9,-1
+	subfe r9,r10,r9
+	rlwinm r9,r9,0,24,31
+	cmpwi cr0,r9,0
+	beq cr0,_keyChanges_L222
 	lis r9,shopTerminalScenarioFlagPtr@ha
 	li r10,0
 	stw r10,shopTerminalScenarioFlagPtr@l(r9)
-	b _keyChanges_L221
-_keyChanges_L220:
+	b _keyChanges_L223
+_keyChanges_L222:
 	lis r9,shopTerminalScenarioFlagPtr@ha
 	lis r10,0x7f
 	ori r10,r10,0xffff
 	stw r10,shopTerminalScenarioFlagPtr@l(r9)
-_keyChanges_L221:
+_keyChanges_L223:
 	nop
 	addi r11,r31,16
 	lwz r0,4(r11)
@@ -2612,12 +2667,12 @@ _preItemLoopAdjustment:
 	mr r18,r9
 	lwz r9,8(r31)
 	cmpwi cr0,r9,0
-	bne cr0,_keyChanges_L223
+	bne cr0,_keyChanges_L225
 	lis r9,_itemLoopEnd@ha
 	addi r9,r9,_itemLoopEnd@l
 	mtctr r9
 	bctr
-_keyChanges_L223:
+_keyChanges_L225:
 	lis r9,_itemLoopStart@ha
 	addi r9,r9,_itemLoopStart@l
 	mtctr r9
@@ -2632,36 +2687,36 @@ _setLocal:
 	stw r4,12(r31)
 	lwz r9,8(r31)
 	cmpwi cr0,r9,2
-	bne cr0,_keyChanges_L225
+	bne cr0,_keyChanges_L227
 	mr r9,r5
 	cmpwi cr0,r9,1
-	bne cr0,_keyChanges_L225
+	bne cr0,_keyChanges_L227
 	lis r9,_collepediaFlag@ha
 	lwz r9,_collepediaFlag@l(r9)
 	lwz r10,12(r31)
 	cmpw cr0,r10,r9
-	beq cr0,_keyChanges_L226
+	beq cr0,_keyChanges_L228
 	lis r9,_bladeFlag@ha
 	lwz r9,_bladeFlag@l(r9)
 	lwz r10,12(r31)
 	cmpw cr0,r10,r9
-	bne cr0,_keyChanges_L227
-_keyChanges_L226:
+	bne cr0,_keyChanges_L229
+_keyChanges_L228:
 	li r3,28
 	bl _hasPreciousItem
 	mr r9,r3
 	cmpwi cr0,r9,0
-	bne cr0,_keyChanges_L227
+	bne cr0,_keyChanges_L229
 	li r9,1
-	b _keyChanges_L228
-_keyChanges_L227:
+	b _keyChanges_L230
+_keyChanges_L229:
 	li r9,0
-_keyChanges_L228:
+_keyChanges_L230:
 	rlwinm r9,r9,0,24,31
 	cmpwi cr0,r9,0
-	beq cr0,_keyChanges_L225
+	beq cr0,_keyChanges_L227
 	li r5,0
-_keyChanges_L225:
+_keyChanges_L227:
 	lis r9, 0x103a
 	nop
 	addi r11,r31,32
@@ -2670,7 +2725,7 @@ _keyChanges_L225:
 	lwz r31,-4(r11)
 	mr r1,r11
 	blr
-_keyChanges_LC7:
+_keyChanges_LC8:
 	.long   1148846080
 
 
@@ -2793,6 +2848,7 @@ addItem = 0x02365934
 0x0240ab90 = stw r0, +0x14(r1) # swap order with following instruction
 0x0240ab94 = bl _ToggleSuperRunningState
 0x025051ec = bl _UpdateRunningState
+0x02646808 = bl _setFasterSwimSpeed
 
 # set movement variables
 setValueFloat = 0x02003148

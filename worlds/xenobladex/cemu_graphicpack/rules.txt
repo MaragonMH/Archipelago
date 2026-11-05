@@ -33,6 +33,7 @@ $curlPort = 45872
 # Customizeable variables
 $swimSpeedFloat = 3.0
 $swimDashSpeedFloat = 3.0
+$fasterSwimDashSpeedFloat = 10.0;
 $dollCarMaxSpeedFloat = 90.0
 
 [Preset]

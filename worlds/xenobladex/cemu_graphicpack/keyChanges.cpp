@@ -124,6 +124,7 @@ addItem = 0x02365934
 0x0240ab90 = stw r0, +0x14(r1) # swap order with following instruction
 0x0240ab94 = bl _ToggleSuperRunningState
 0x025051ec = bl _UpdateRunningState
+0x02646808 = bl _setFasterSwimSpeed
 
 # set movement variables
 setValueFloat = 0x02003148
@@ -383,7 +384,7 @@ chkLv = 0x02af8e6c # ::menu::MenuDollGarage
 // Parameters from rules.txt
 int disableGroundArmor, disableGroundWeapons, disableSkellArmor, disableSkellWeapons, disableGroundAugments, disableSkellAugments, disableImportantItems, disableBlueprints, drifterRangedWeapon, drifterMeleeWeapon, includeShopBlueprints,
 includeShopArmor, includeShopWeapons, includeShopAugments, includeShopSkellArmor, includeShopSkellWeapons, includeShopSkellAugments, includeShopSkellFrames;
-float fastRunSpeedFloat, fasterRunSpeedFloat, swimSpeedFloat, swimDashSpeedFloat, dollCarMaxSpeedFloat;
+float fastRunSpeedFloat, fasterRunSpeedFloat, swimSpeedFloat, swimDashSpeedFloat, fasterSwimDashSpeedFloat, dollCarMaxSpeedFloat;
 int fastRunningState = 0, fasterRunPlaySound = 0, fasterRunningState = 0;
 int _augmentMenuType = 0;
 
@@ -742,11 +743,30 @@ int _FindSystemVariableByName(int* valuePtr, char* name){
 	}
 }
 
+int** _setFasterSwimSpeed(int** ptr){
+	char* name = (char*)"VF_MoveSpeedSwimDash";
+	float value = swimDashSpeedFloat;
+	if (fastRunningState == 1 && fasterRunningState == 1){
+		// Load float value
+		value = fasterSwimDashSpeedFloat;
+		if (fasterRunPlaySound == 1){
+			fasterRunPlaySound = 0;
+			_playSound(0x2d4);
+		}
+	}
+	int* valuePtr = ptr[1];
+	setValueFloat(value, valuePtr + 3, _FindSystemVariableByName(valuePtr, name));
+
+	// original instruction
+	asm("li r4,2");
+	return ptr;
+}
+
 // Temporary Debug Function
 void setValueFloatTemporary(float value, int* ptr, int mapId){
 	char buffer[200];
 	int newValue = value * 1000;
-	if(mapId == 0x6) asm("nop");
+	// if(mapId == 0x6) asm("nop");
 	__sprintf_s(buffer, 200, "Name: %s, Id: %d, Value: %d.%03d\n", getValueName(ptr, mapId), mapId, newValue / 1000, newValue % 1000);
 	_writeConsole(buffer);
 	return setValueFloat(value, ptr, mapId);
