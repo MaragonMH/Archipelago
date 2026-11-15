@@ -1015,6 +1015,13 @@ void _setLocal(const int width, const int position){
 	int _partySpareSlotsFlag = 0x128d;
 	if(width == 2 && position == _partySpareSlotsFlag)
 		value = 0;
+	
+	// Ignore for now because i dont know the value and its hard to test.
+	// Set character availability to always
+	// this should avoid you from inviting other party members when they are excluded by affinity quests
+	// int _partyBase = 0x7613, characterLength = 18;
+	// if(width == 1 && position > _partyBase && position <= _partyBase + characterLength)
+	// 	value = 1;
 
 	// original instruction from 0x0228f018
 	asm("lis r9, 0x103a");
