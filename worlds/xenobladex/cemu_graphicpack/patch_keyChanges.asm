@@ -2856,6 +2856,13 @@ IsReady = 0x021ccdec
 # affinity quests no longer lock you out of other quests
 0x022ce6c4 = li r3,0
 
+# affinity quests ignore required members
+0x02266418 = nop
+0x02266438 = li r3,1
+# affinity quests ignore excluded members
+0x0226663c = nop
+0x0226665c = li r3,1
+
 # disable lock party from affinity quests
 0x02296518 = nop
 0x02290ca4 = nop
