@@ -116,7 +116,7 @@ addItem = 0x02365934
 
 0x02814cf4 = b _prepareBladeTerminal # in loadEnd::ScriptManager
 
-# overwrite setLocal for blade flag
+# overwrite setLocal for blade flag & setting party size limit
 0x0228f018 = bl _setLocal
 
 # add new run speed
@@ -995,13 +995,19 @@ void _preItemLoopAdjustmentWrapper(){
 	goto *&_itemLoopStart;
 }
 
-// Overwrite the unlock BladeLvl flag from add.cpp
 void _setLocal(const int width, const int position){
 	register int value asm("r5");
+
+	// Overwrite the unlock BladeLvl flag from add.cpp
 	if(width == 2 && value == 1){
 		if((position == _collepediaFlag || position == _bladeFlag) && !_hasPreciousItem(24 + 5 - 1))
 			value = 0;
 	}
+
+	// Overwrite the party size limit
+	int _partySpareSlotsFlag = 0x128d;
+	if(width == 2 && position == _partySpareSlotsFlag)
+		value = 0;
 
 	// original instruction from 0x0228f018
 	asm("lis r9, 0x103a");
