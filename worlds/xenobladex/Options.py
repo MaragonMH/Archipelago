@@ -918,6 +918,17 @@ class IncludeBlueprints(CemuChoice):
     ]
 
 
+class BattleItemRatio(Range):
+    """
+    Transforms a percentage of the gear items into battle items.
+     Recommended values are < 15.
+    """
+    display_name = "Battle Item Ratio"
+    default = 7
+    range_start = 0
+    range_end = 99
+
+
 class IncludeCharacterLevel(CemuChoice):
     """Connects your logic level to your character level. This disables the normal way to increase your level.
      Dont enable if Logic Level Steps is disabled."""
@@ -1075,6 +1086,7 @@ class XenobladeXOptions(PerGameCommonOptions):
     skaug: IncludeSkellAugments
     impit: IncludeImportantItems
     # blp: IncludeBlueprints
+    battle_item_ratio: BattleItemRatio
     character_level: IncludeCharacterLevel
 
     # Logic
@@ -1163,6 +1175,7 @@ option_groups: list[OptionGroup] = [
         IncludeSkellAugments,
         IncludeImportantItems,
         # IncludeBlueprints,
+        BattleItemRatio,
         IncludeCharacterLevel,
     ]),
     OptionGroup("Logic", [

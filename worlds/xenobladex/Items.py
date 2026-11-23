@@ -198,7 +198,10 @@ def create_items(world: "XenobladeXWorld") -> None:
             if idx < item_count - world.multiworld.precollected_items[world.player].count(xeno_item):
                 itempool += [xeno_item]
 
-    for xeno_item in create_optional_items(world, total_locations - len(itempool)):
+    battle_item_ratio = options.battle_item_ratio.value
+    optionalItemCount = total_locations - len(itempool)
+    optionalItemCount -= int(optionalItemCount * (battle_item_ratio / 100.0))
+    for xeno_item in create_optional_items(world, optionalItemCount):
         if xeno_item not in world.multiworld.precollected_items[world.player]:
             itempool += [xeno_item]
     world.multiworld.itempool += itempool
