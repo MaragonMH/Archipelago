@@ -58,6 +58,9 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
         for prefix in {itm.prefix for itm in Items.xenobladeXItems.values()} if prefix
     }
 
+    def generate_early(self) -> None:
+        Tracker.prepare_tracker(self)
+
     def create_regions(self) -> None:
         Regions.init_region(self, "Menu")
         Locations.create_locations(self)
@@ -73,9 +76,6 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
 
     def set_rules(self) -> None:
         Rules.set_rules(self)
-
-    def generate_early(self) -> None:
-        Tracker.prepare_tracker(self)
 
     def generate_basic(self) -> None:
         pass
