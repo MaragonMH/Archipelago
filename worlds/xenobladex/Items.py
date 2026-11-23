@@ -198,17 +198,28 @@ def create_items(world: "XenobladeXWorld") -> None:
             if idx < item_count - world.multiworld.precollected_items[world.player].count(xeno_item):
                 itempool += [xeno_item]
 
+    fillerItempool: list[Item] = []
     battle_item_ratio = options.battle_item_ratio.value
     optionalItemCount = total_locations - len(itempool)
     optionalItemCount -= int(optionalItemCount * (battle_item_ratio / 100.0))
     for xeno_item in create_optional_items(world, optionalItemCount):
         if xeno_item not in world.multiworld.precollected_items[world.player]:
-            itempool += [xeno_item]
-    world.multiworld.itempool += itempool
+            fillerItempool += [xeno_item]
 
-    world.multiworld.itempool += [world.create_item(xenobladeXBattleItems[
-                                  world.random.randint(0, len(xenobladeXBattleItems) - 1)].get_item())
-                                  for _ in range(total_locations - len(itempool))]
+    # Fill up the leftover item spots with BattleItems
+    fillerItempool += [world.create_item(xenobladeXBattleItems[
+                       world.random.randint(0, len(xenobladeXBattleItems) - 1)].get_item())
+                       for _ in range(total_locations - (len(itempool) + len(fillerItempool)))]
+
+    # Keep local item for local fill if required
+    local_fill = options.local_fill.value
+    if local_fill > 0 and world.multiworld.players > 1:
+        localFillerCount = int(len(fillerItempool) * (local_fill / 100.0))
+        world.random.shuffle(fillerItempool)
+        world.local_fill_items = fillerItempool[:localFillerCount]
+        fillerItempool = fillerItempool[localFillerCount:]
+
+    world.multiworld.itempool += itempool + fillerItempool
 
 
 def create_item(world:  "XenobladeXWorld", item_name: str) -> XenobladeXItem:

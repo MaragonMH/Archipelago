@@ -1,11 +1,11 @@
-from BaseClasses import Tutorial
+from BaseClasses import Item, Tutorial
 from rule_builder.cached_world import CachedRuleBuilderWorld
 from ..AutoWorld import WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess, Type
 from functools import partial
 from typing import ClassVar, cast
 
-from . import Slot, Items, Locations, Rules, Options, Settings, Tracker, Regions
+from . import Slot, Items, Locations, Rules, Options, Settings, Tracker, Regions, Fill
 
 
 def launch_client(*args: str) -> None:
@@ -47,6 +47,9 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
 
     settings: ClassVar[Settings.XenobladeXSettings]  # pyright: ignore[reportIncompatibleVariableOverride]
 
+    # for the local fill option
+    local_fill_items: list[Item] = []
+
     item_name_to_id = (lambda b_id: {item.get_item(): b_id + item.id
                                      for item in Items.xenobladeXItems.values() if item.id is not None})(base_id)
     location_name_to_id = (lambda b_id: {location.get_location(): b_id + location.id
@@ -79,6 +82,9 @@ class XenobladeXWorld(CachedRuleBuilderWorld):
 
     def generate_basic(self) -> None:
         pass
+
+    def pre_fill(self) -> None:
+        Fill.local_fill(self)
 
     def fill_slot_data(self) -> dict[str, object]:
         return Slot.generate_slot_data(cast(Options.XenobladeXOptions, self.options))

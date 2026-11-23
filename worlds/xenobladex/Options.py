@@ -651,6 +651,17 @@ class FasterRunSpeed(CemuChoice):
     ]
 
 
+class LocalFill(Range):
+    """
+    Choose the percentage of your non-progression items that will be kept local.
+    """
+    internal_name = "local_fill"
+    display_name = "Local Fill Percent"
+    range_start = 0
+    range_end = 99
+    default = 0
+
+
 class IncludeCollectopediaLocations(DefaultOnToggle):
     """Allows you to get items from collectopedia entries and adds those locations to the pool"""
     display_name = "Include Collectopedia Locations"
@@ -1061,6 +1072,7 @@ class HiddenPriorityLocations(PriorityLocations):
 class XenobladeXOptions(PerGameCommonOptions):
     # Game
     death_link: DeathLink
+    local_fill: LocalFill
 
     # Locations
     clp: IncludeCollectopediaLocations
