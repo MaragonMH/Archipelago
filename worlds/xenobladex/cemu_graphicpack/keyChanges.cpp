@@ -180,6 +180,24 @@ getMember = 0x029c1ddc
 # required quest items from equipment disallow sell
 0x02b73a20 = bl _getFlagValAdjusted
 
+# cap upgrade and augment cost at 1 material
+getArrayVal = 0x029c2328
+0x02a6de14 = bl _getArrayValAdjusted
+0x02a6debc = bl _getArrayValAdjusted
+0x02a6df64 = bl _getArrayValAdjusted
+0x02a71d98 = bl _getArrayValAdjusted
+0x02a71dec = bl _getArrayValAdjusted
+0x02a71e3c = bl _getArrayValAdjusted
+0x02a71e8c = bl _getArrayValAdjusted
+0x02a71edc = bl _getArrayValAdjusted
+0x02a813f8 = bl _getArrayValAdjusted
+0x02a81470 = bl _getArrayValAdjusted
+0x02a814dc = bl _getArrayValAdjusted
+0x02a81550 = bl _getArrayValAdjusted
+# cap blueprint cost at 1
+0x02a7a534 = bl _getValAdjusted
+0x02a7a5c4 = bl _getValAdjusted
+
 # filter enemy rewards
 0x02b07540 = bl _getItemNumAdjusted
 0x02b076d4 = b _preItemLoopAdjustment
@@ -296,6 +314,24 @@ getMember = 0x029c1dcc
 
 # required quest items from equipment disallow sell
 0x02b73a10 = bl _getFlagValAdjusted
+
+# cap upgrade and augment cost at 1 material
+getArrayVal = 0x029c2318
+0x02a6de04 = bl _getArrayValAdjusted
+0x02a6deac = bl _getArrayValAdjusted
+0x02a6df54 = bl _getArrayValAdjusted
+0x02a71d88 = bl _getArrayValAdjusted
+0x02a71ddc = bl _getArrayValAdjusted
+0x02a71e2c = bl _getArrayValAdjusted
+0x02a71e7c = bl _getArrayValAdjusted
+0x02a71ecc = bl _getArrayValAdjusted
+0x02a813e8 = bl _getArrayValAdjusted
+0x02a81460 = bl _getArrayValAdjusted
+0x02a814cc = bl _getArrayValAdjusted
+0x02a81540 = bl _getArrayValAdjusted
+# cap blueprint cost at 1
+0x02a7a524 = bl _getValAdjusted
+0x02a7a5b4 = bl _getValAdjusted
 
 # filter enemy rewards
 0x02b07530 = bl _getItemNumAdjusted
@@ -434,6 +470,8 @@ int* getItem(int* ptr, int enemies, int boxes, int items);
 int getItemNum(int* ptr, int enemies, int boxes);
 
 int getFlagVal(int* bdatPtr, const char* flagName, int id, const char* columnName);
+int getArrayVal(int* bdatPtr, const char* name, int id, int idx);
+unsigned int getVal(int* bdatPtr, const char* columnName, int id);
 
 void _playSound(int id);
 
@@ -955,6 +993,23 @@ int _getFlagValAdjusted(int* bdatPtr, const char* flagName, int id, const char* 
 	// WPN: Warrior Assault Rifle
 	if(type == 0x6 && (id == 1590 || id == 1591 || id == 1592)) return 1;
 	return getFlagVal(bdatPtr, flagName, id, columnName);
+}
+
+unsigned int _getArrayValAdjusted(int* bdatPtr, const char* name, int id, int idx){
+	// Set upgrade and augment creation cost to 1 if greater
+	unsigned int value = getArrayVal(bdatPtr, name, id, idx);
+	if(value > 1)
+		if(__strcmp(name, "mctMA") == 0 || __strcmp(name, "mctST") == 0)
+			return 0x1 << 0x18;
+	return value;
+}
+
+unsigned int _getValAdjusted(int* bdatPtr, const char* name, int id){
+	// set blueprint cost to 1 if greater
+	unsigned int value = getVal(bdatPtr, name, id);
+	if(value > 1)
+		return 0x1 << 0x18;
+	return value;
 }
 
 int _getItemNumAdjusted(int* ptr, int enemies, int boxes){
